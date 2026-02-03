@@ -1,0 +1,450 @@
+{
+  "app_name": "Kamasutra & Couple Games",
+  
+  "common": {
+    "continue": "Continue",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "skip": "Not tonight, thanks",
+    "done": "Done",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "Error",
+    "retry": "Retry",
+    "search": "Search",
+    "filter": "Filter",
+    "clear_filters": "Clear filters",
+    "no_results": "No results",
+    "settings": "Settings"
+  },
+
+  "age_gate": {
+    "title": "Welcome",
+    "subtitle": "This app contains adult content",
+    "question": "Are you at least 18 years old?",
+    "confirm": "Yes, I'm 18+",
+    "deny": "No, I'm not 18",
+    "denied_message": "You must be at least 18 years old to use this app.",
+    "legal_notice": "By continuing, you confirm you are of legal age in your country."
+  },
+
+  "onboarding": {
+    "welcome_title": "Welcome back, explorers",
+    "welcome_subtitle": "Ready for a new adventure together?",
+    "page1_title": "Explore Together",
+    "page1_subtitle": "Over 200 illustrated positions with smart filters for every moment",
+    "page2_title": "Play and Connect",
+    "page2_subtitle": "12 mini-games to rediscover each other every evening",
+    "page3_title": "Total Privacy",
+    "page3_subtitle": "No account, no cloud, everything stays local on your device",
+    "get_started": "Start the evening"
+  },
+
+  "pin": {
+    "enter_pin": "Enter PIN",
+    "create_pin": "Create a PIN",
+    "confirm_pin": "Confirm PIN",
+    "wrong_pin": "Wrong PIN",
+    "pins_dont_match": "PINs don't match",
+    "use_biometric": "Use Face ID / Touch ID",
+    "forgot_pin": "Forgot PIN?"
+  },
+
+  "nav": {
+    "catalog": "Catalog",
+    "shuffle": "Shuffle",
+    "games": "Games",
+    "progress": "Progress",
+    "settings": "More"
+  },
+
+  "catalog": {
+    "title": "Catalog",
+    "search_hint": "Search positions...",
+    "favorites": "Favorites",
+    "all_positions": "All positions",
+    "no_favorites": "No favorites yet. Explore and save your discoveries!",
+    "added_to_favorites": "Added to your secret collection ✨",
+    "removed_from_favorites": "Removed from favorites",
+    "position_count": "{count} positions",
+    "filter_by": "Filter by",
+    "difficulty": "Difficulty",
+    "energy": "Energy",
+    "duration": "Duration",
+    "category": "Category",
+    "focus": "Focus"
+  },
+
+  "position": {
+    "difficulty": "Difficulty",
+    "energy": "Energy",
+    "duration": "Duration",
+    "cautions": "Caution",
+    "easy_version": "Comfy version",
+    "setup": "Setup",
+    "check_in": "Check-in",
+    "prerequisites": "Prerequisites",
+    "tags": "Tags",
+    "try_this": "Try this",
+    "similar_positions": "Similar positions"
+  },
+
+  "categories": {
+    "romantic": "Romantic",
+    "beginner": "Beginner",
+    "athletic": "Athletic",
+    "supported": "Supported",
+    "low_impact": "Low Impact",
+    "adventurous": "Adventurous",
+    "reconnect": "Reconnect",
+    "quickie": "Quickie"
+  },
+
+  "energy_levels": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+
+  "durations": {
+    "brief": "Brief",
+    "medium": "Medium",
+    "long": "Long"
+  },
+
+  "focus_areas": {
+    "intimacy": "Intimacy",
+    "variety": "Variety",
+    "connection": "Connection",
+    "relax": "Relax",
+    "playfulness": "Playfulness",
+    "passion": "Passion",
+    "trust": "Trust"
+  },
+
+  "shuffle": {
+    "title": "Shuffle",
+    "subtitle": "Let yourself be surprised",
+    "card_count": "Number of cards",
+    "cards": "{count} cards",
+    "start_session": "Start the evening",
+    "filters_active": "Filters active",
+    "no_filters": "No filters",
+    "session_complete": "Session complete!",
+    "next_card": "Next",
+    "save_card": "Save",
+    "try_easy": "Comfy version"
+  },
+
+  "games": {
+    "title": "Games",
+    "subtitle": "Choose your adventure",
+    "players": "{count} players",
+    "duration": "{minutes} min",
+    "start_game": "Start",
+    "end_game": "End game",
+    "pause": "Pause",
+    "resume": "Resume",
+    "your_turn": "Your turn!",
+    "partner_turn": "Partner's turn!",
+    "both_turn": "Both of you!",
+    "roll_dice": "Roll the dice",
+    "draw_card": "Draw a card",
+    "complete": "Complete!",
+    "skip_card": "Skip (pause)",
+    "safe_word_hint": "Press pause to skip without penalty"
+  },
+
+  "goose_game": {
+    "title": "Game of the Goose",
+    "subtitle": "A journey of challenges and discoveries",
+    "setup_title": "Set up the game",
+    "board_size": "Board size",
+    "quick": "Quick (15-20 min)",
+    "medium": "Medium (30-40 min)",
+    "long": "Long (60+ min)",
+    "play_mode": "Play mode",
+    "cooperative": "Cooperative",
+    "cooperative_desc": "Advance together, one pawn",
+    "sweet_challenge": "Sweet Challenge",
+    "sweet_challenge_desc": "Two pawns, both win",
+    "intensity": "Intensity",
+    "soft": "🌸 Soft",
+    "spicy": "🔥 Spicy",
+    "extra_spicy": "🌶️ Extra Spicy",
+    "rigged_dice": "Smooth dice (3-5)",
+    "square_challenge": "🎯 Challenge",
+    "square_truth": "💬 Truth",
+    "square_bonus": "⭐ Bonus",
+    "square_goose": "🪿 Goose",
+    "square_bridge": "🌉 Bridge",
+    "square_well": "🕳️ Well",
+    "square_labyrinth": "🌀 Labyrinth",
+    "square_inn": "🏨 Inn",
+    "square_couple": "💑 Couple",
+    "square_finish": "🏁 Finish",
+    "checkpoint": "Milestone! 🎉",
+    "checkpoint_message": "You've reached square {number}! You deserve a little celebration.",
+    "well_escape": "Escape the well with a sincere compliment!",
+    "inn_message": "Romantic pause: choose a position from the catalog",
+    "finish_exact": "Need exactly {count} to win!",
+    "bounce_back": "Too much! You bounce back {count}",
+    "victory": "Victory! 🎊",
+    "victory_message": "You've completed the journey together!"
+  },
+
+  "truth_dare": {
+    "title": "Truth or Dare",
+    "subtitle": "Intimacy Edition",
+    "truth": "💬 Truth",
+    "dare": "🎯 Dare",
+    "pass": "Pass",
+    "passes_left": "{count} passes left",
+    "double_dare": "Double Dare",
+    "swap": "Swap roles"
+  },
+
+  "wheel": {
+    "title": "Wheel of Fortune",
+    "subtitle": "Romantic Edition",
+    "spin": "Spin!",
+    "customize": "Customize",
+    "add_slice": "Add slice",
+    "remove_slice": "Remove slice",
+    "modifiers": "Modifiers",
+    "blindfolded": "...blindfolded",
+    "in_silence": "...in silence",
+    "timed": "...timed"
+  },
+
+  "hot_cold": {
+    "title": "Hot & Cold",
+    "subtitle": "Guided only by words",
+    "cold": "Cold ❄️",
+    "warm": "Warm",
+    "hot": "Hot 🔥",
+    "boiling": "Boiling! 🌋",
+    "mission_complete": "Mission complete!",
+    "new_mission": "New mission",
+    "blindfold_mode": "Blindfold mode"
+  },
+
+  "love_notes": {
+    "title": "Love Notes",
+    "subtitle": "Write from the heart",
+    "prompt": "Prompt",
+    "write": "Write...",
+    "read_aloud": "Read aloud",
+    "save_to_box": "Save to box",
+    "saved": "Saved to memories ❤️",
+    "your_notes": "Your notes"
+  },
+
+  "fantasy_builder": {
+    "title": "Build a Fantasy",
+    "subtitle": "Create your story together",
+    "opening": "Opening",
+    "your_turn_to_add": "Add a sentence...",
+    "gentle_veto": "Gentle veto",
+    "save_scenario": "Save scenario",
+    "your_scenarios": "Your scenarios"
+  },
+
+  "compliment_battle": {
+    "title": "Compliment Battle",
+    "subtitle": "Who appreciates more?",
+    "timer": "Timer",
+    "accepted": "Accepted ✓",
+    "rejected": "Already said / Generic ✗",
+    "score": "Score",
+    "winner": "Winner!",
+    "categories": {
+      "physical": "Physical only",
+      "personality": "Personality only",
+      "actions": "Actions only",
+      "free": "Free"
+    }
+  },
+
+  "question_quest": {
+    "title": "Question Quest",
+    "subtitle": "36 questions to fall in love (again)",
+    "level": "Level {number}",
+    "surface": "Surface",
+    "depth": "Depth",
+    "ready_to_advance": "Ready to advance?",
+    "both_confirm": "Both must confirm"
+  },
+
+  "two_minutes": {
+    "title": "2 Minutes of Us",
+    "subtitle": "A moment of connection",
+    "start": "Start",
+    "how_do_you_feel": "How do you feel?",
+    "activities": {
+      "eye_contact": "Eye contact in silence",
+      "hug": "Hug without speaking",
+      "breathing": "Synchronized breathing",
+      "gratitude": "One grateful thought each"
+    }
+  },
+
+  "intimacy_map": {
+    "title": "Intimacy Map",
+    "subtitle": "Explore your preferences",
+    "instructions": "Color the zones with your code",
+    "green": "💚 I like",
+    "yellow": "💛 Depends / Curious",
+    "red": "🔴 Prefer not",
+    "compare": "Compare",
+    "matches": "Matches",
+    "discoveries": "Discoveries"
+  },
+
+  "soundtrack": {
+    "title": "Our Soundtrack",
+    "subtitle": "The songs of your story",
+    "prompts": {
+      "first_kiss": "First kiss song",
+      "represents_us": "Song that represents us",
+      "romantic_evening": "Song for a romantic evening",
+      "first_dance": "First dance song",
+      "road_trip": "Road trip song"
+    },
+    "compare_choices": "Compare choices",
+    "create_playlist": "Create playlist"
+  },
+
+  "mirror_challenge": {
+    "title": "Mirror Challenge",
+    "subtitle": "Connection without words",
+    "leader": "Leader",
+    "mirror": "Mirror",
+    "swap_roles": "Swap roles",
+    "eyes_closed": "Eyes closed mode"
+  },
+
+  "progress": {
+    "title": "Progress",
+    "badges": "Badges",
+    "streaks": "Streaks",
+    "statistics": "Statistics",
+    "current_streak": "Current streak",
+    "longest_streak": "Longest streak",
+    "days": "days",
+    "grace_days": "Grace days remaining: {count}",
+    "streak_broken": "Life happens. Restart whenever — we're here.",
+    "positions_explored": "Positions explored",
+    "games_played": "Games played",
+    "total_time": "Time together",
+    "favorites_count": "Favorites saved",
+    "badge_unlocked": "New achievement unlocked! 🎉"
+  },
+
+  "badges": {
+    "explorer": {
+      "name": "Explorer",
+      "description": "Viewed 10 different positions"
+    },
+    "adventurer": {
+      "name": "Adventurer",
+      "description": "Tried 5 athletic positions"
+    },
+    "romantic": {
+      "name": "Romantic",
+      "description": "10 romantic positions explored"
+    },
+    "collector": {
+      "name": "Collector",
+      "description": "25 favorites saved"
+    },
+    "dedicated": {
+      "name": "Dedicated",
+      "description": "7 days in a row"
+    },
+    "soul_explorers": {
+      "name": "Soul Explorers",
+      "description": "Completed Question Quest"
+    },
+    "intimacy_cartographers": {
+      "name": "Intimacy Cartographers",
+      "description": "First Intimacy Map completed"
+    },
+    "poet": {
+      "name": "Poet",
+      "description": "20 notes saved"
+    },
+    "supreme_flatterer": {
+      "name": "Supreme Flatterer",
+      "description": "100 compliments accepted"
+    },
+    "shared_confessions": {
+      "name": "Shared Confessions",
+      "description": "50 truths told"
+    },
+    "adventurers": {
+      "name": "Adventurers",
+      "description": "50 dares completed"
+    }
+  },
+
+  "settings": {
+    "title": "Settings",
+    "privacy": "Privacy",
+    "pin_lock": "PIN Lock",
+    "biometric": "Face ID / Touch ID",
+    "discrete_icon": "Discrete icon",
+    "panic_exit": "Panic exit",
+    "preferences": "Preferences",
+    "language": "Language",
+    "default_intensity": "Default intensity",
+    "illustration_style": "Illustration style",
+    "sound_effects": "Sound effects",
+    "haptic_feedback": "Haptic feedback",
+    "dark_mode": "Dark mode",
+    "consent_interval": "Consent check-in interval",
+    "data": "Data",
+    "clear_history": "Clear history",
+    "clear_all_data": "Clear all data",
+    "export_data": "Export data",
+    "about": "About",
+    "version": "Version",
+    "feedback": "Send feedback",
+    "rate_app": "Rate the app",
+    "privacy_policy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "upgrade": "Upgrade to full version",
+    "restore_purchase": "Restore purchase"
+  },
+
+  "consent": {
+    "check_in": "All good? A nice moment for a check-in.",
+    "all_good": "👍 All good",
+    "lets_pause": "🛑 Let's pause",
+    "safe_word": "Pause",
+    "paused_title": "Paused",
+    "paused_message": "Take all the time you need. We're here when you want to continue.",
+    "resume": "Resume",
+    "end_session": "End session"
+  },
+
+  "reactions": {
+    "loved": "❤️ Loved",
+    "liked": "👍 Liked",
+    "neutral": "😐 Neutral",
+    "skipped": "⏭️ Skipped",
+    "too_hard": "😅 Too hard"
+  },
+
+  "errors": {
+    "generic": "Something went wrong",
+    "no_positions": "No positions found with these filters",
+    "try_different_filters": "Try different filters"
+  }
+}
