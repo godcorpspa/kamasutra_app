@@ -114,12 +114,12 @@ class Position extends Equatable {
   String? getCheckin(String locale) => locale == 'it' ? checkinIt : checkinEn;
 
   // Convenience getters (default to English)
-  String get name => nameEn;
-  String? get alias => aliasEn;
-  String? get cautions => cautionsEn;
-  String? get easyVariant => easyVariantEn;
-  String? get setup => setupEn;
-  String? get checkin => checkinEn;
+  String get name => nameIt;
+  String? get alias => aliasIt;
+  String? get cautions => cautionsIt;
+  String? get easyVariant => easyVariantIt;
+  String? get setup => setupIt;
+  String? get checkin => checkinIt;
   String get localizedName => nameEn;
   String? get localizedAlias => aliasEn;
 

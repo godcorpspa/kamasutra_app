@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#722F37"/>
+      <stop offset="100%" style="stop-color:#F4C2C2"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="90" fill="url(#logoGrad)"/>
+  <path d="M100 50 C60 50 50 80 50 100 C50 140 100 170 100 170 C100 170 150 140 150 100 C150 80 140 50 100 50" fill="#FFF8E7" opacity="0.9"/>
+  <text x="100" y="195" text-anchor="middle" fill="#722F37" font-family="serif" font-size="14" font-weight="bold">KS</text>
+</svg>

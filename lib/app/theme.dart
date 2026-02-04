@@ -43,7 +43,6 @@ class AppColors {
   static const Color softPink = Color(0xFFFFB6C1);    // 🌸 Soft
   static const Color spicyOrange = Color(0xFFFF6B35); // 🔥 Spicy
   static const Color extraSpicyRed = Color(0xFFDC143C); // 🌶️ Extra Spicy
-  static const Color accent = gold;
   
   // Intensity color aliases
   static const Color soft = softPink;
@@ -60,13 +59,23 @@ class AppColors {
   
   // Additional accent colors
   static const Color romantic = blush;
+  static const Color accent = gold;
   
-  // Dark theme specific
-  static const Color darkBackground = Color(0xFF121212);
-  static const Color darkSurface = Color(0xFF1E1E1E);
-  static const Color darkCard = Color(0xFF2D2D2D);
+  // Dark theme specific - Viola/Fucsia erotico
+  static const Color darkBackground = Color(0xFF1A0A1F);  // Viola scuro
+  static const Color darkSurface = Color(0xFF2D1536);     // Viola medio
+  static const Color darkCard = Color(0xFF3D2046);        // Viola card
+  
+  // Additional purple/fuchsia colors
+  static const Color purple = Color(0xFF6B2D5B);
+  static const Color purpleLight = Color(0xFF8B4078);
+  static const Color purpleDark = Color(0xFF4A1D40);
+  static const Color fuchsia = Color(0xFFD946EF);
+  static const Color fuchsiaLight = Color(0xFFE879F9);
+  static const Color fuchsiaDark = Color(0xFFA21CAF);
 }
 
+/// App animation durations
 class AppAnimations {
   static const Duration fast = Duration(milliseconds: 200);
   static const Duration normal = Duration(milliseconds: 300);
@@ -319,13 +328,13 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     
-    // Colors
+    // Colors - Viola/Fucsia erotico
     colorScheme: const ColorScheme.dark(
-      primary: AppColors.blush,
-      primaryContainer: AppColors.burgundy,
-      secondary: AppColors.gold,
-      secondaryContainer: AppColors.navyDark,
-      tertiary: AppColors.goldLight,
+      primary: AppColors.fuchsiaLight,
+      primaryContainer: AppColors.purple,
+      secondary: AppColors.blush,
+      secondaryContainer: AppColors.purpleDark,
+      tertiary: AppColors.gold,
       surface: AppColors.darkSurface,
       error: AppColors.error,
       onPrimary: AppColors.grey900,
@@ -342,17 +351,17 @@ class AppTheme {
       displayColor: AppColors.cream,
     ),
     
-    // AppBar
+    // AppBar - Viola
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
-      foregroundColor: AppColors.blush,
+      backgroundColor: AppColors.purple,
+      foregroundColor: AppColors.cream,
       elevation: 0,
       centerTitle: true,
       titleTextStyle: TextStyle(
         fontFamily: AppTypography.displayFont,
         fontSize: 20,
         fontWeight: FontWeight.w700,
-        color: AppColors.blush,
+        color: AppColors.cream,
       ),
     ),
     
@@ -365,10 +374,10 @@ class AppTheme {
       ),
     ),
     
-    // Buttons
+    // Buttons - Viola/Fucsia
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.burgundy,
+        backgroundColor: AppColors.purple,
         foregroundColor: AppColors.cream,
         elevation: 4,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
@@ -385,8 +394,8 @@ class AppTheme {
     
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.blush,
-        side: const BorderSide(color: AppColors.blush, width: 1.5),
+        foregroundColor: AppColors.fuchsiaLight,
+        side: const BorderSide(color: AppColors.fuchsiaLight, width: 1.5),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -405,38 +414,38 @@ class AppTheme {
       ),
     ),
     
-    // Bottom Navigation
+    // Bottom Navigation - Viola
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: AppColors.darkSurface,
-      selectedItemColor: AppColors.blush,
+      selectedItemColor: AppColors.fuchsiaLight,
       unselectedItemColor: AppColors.grey500,
       type: BottomNavigationBarType.fixed,
       elevation: 8,
     ),
     
-    // Input
+    // Input - Viola
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.darkCard,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.grey700),
+        borderSide: const BorderSide(color: AppColors.purpleLight),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.grey700),
+        borderSide: const BorderSide(color: AppColors.purpleLight),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.blush, width: 2),
+        borderSide: const BorderSide(color: AppColors.fuchsia, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     ),
     
-    // Chips
+    // Chips - Viola
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.darkCard,
-      selectedColor: AppColors.burgundy,
+      selectedColor: AppColors.purple,
       labelStyle: const TextStyle(
         fontFamily: AppTypography.bodyFont,
         fontSize: 14,

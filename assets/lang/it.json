@@ -24,6 +24,34 @@
     "settings": "Impostazioni"
   },
 
+  "energy": {
+    "low": "Bassa",
+    "medium": "Media",
+    "high": "Alta"
+  },
+
+  "duration": {
+    "brief": "Breve",
+    "medium": "Media",
+    "long": "Lunga"
+  },
+
+  "focus": {
+    "intimacy": "Intimità",
+    "variety": "Varietà",
+    "connection": "Connessione",
+    "relax": "Relax",
+    "playfulness": "Giocosità",
+    "passion": "Passione",
+    "trust": "Fiducia"
+  },
+
+  "intensity": {
+    "soft": "🌸 Soft",
+    "spicy": "🔥 Piccante",
+    "extraSpicy": "🌶️ Extra Piccante"
+  },
+
   "age_gate": {
     "title": "Benvenuto",
     "subtitle": "Questa app contiene contenuti per adulti",
@@ -100,32 +128,10 @@
     "beginner": "Per iniziare",
     "athletic": "Atletico",
     "supported": "Con supporto",
-    "low_impact": "Basso impatto",
+    "lowImpact": "Basso impatto",
     "adventurous": "Avventuroso",
     "reconnect": "Riconnessione",
     "quickie": "Veloce"
-  },
-
-  "energy_levels": {
-    "low": "Bassa",
-    "medium": "Media",
-    "high": "Alta"
-  },
-
-  "durations": {
-    "brief": "Breve",
-    "medium": "Media",
-    "long": "Lunga"
-  },
-
-  "focus_areas": {
-    "intimacy": "Intimità",
-    "variety": "Varietà",
-    "connection": "Connessione",
-    "relax": "Relax",
-    "playfulness": "Giocosità",
-    "passion": "Passione",
-    "trust": "Fiducia"
   },
 
   "shuffle": {
@@ -158,176 +164,176 @@
     "draw_card": "Pesca una carta",
     "complete": "Completato!",
     "skip_card": "Salta (pausa)",
-    "safe_word_hint": "Premi pausa per saltare senza penalità"
-  },
-
-  "goose_game": {
-    "title": "Gioco dell'Oca",
-    "subtitle": "Un percorso di sfide e scoperte",
-    "setup_title": "Configura la partita",
-    "board_size": "Dimensione tabellone",
-    "quick": "Veloce (15-20 min)",
-    "medium": "Medio (30-40 min)",
-    "long": "Lungo (60+ min)",
-    "play_mode": "Modalità di gioco",
-    "cooperative": "Cooperativo",
-    "cooperative_desc": "Avanzate insieme, un solo pedone",
-    "sweet_challenge": "Dolce Sfida",
-    "sweet_challenge_desc": "Due pedine, entrambi vincete",
-    "intensity": "Intensità",
-    "soft": "🌸 Soft",
-    "spicy": "🔥 Spicy",
-    "extra_spicy": "🌶️ Extra Spicy",
-    "rigged_dice": "Dado facilitato (3-5)",
-    "square_challenge": "🎯 Sfida",
-    "square_truth": "💬 Verità",
-    "square_bonus": "⭐ Bonus",
-    "square_goose": "🪿 Oca",
-    "square_bridge": "🌉 Ponte",
-    "square_well": "🕳️ Pozzo",
-    "square_labyrinth": "🌀 Labirinto",
-    "square_inn": "🏨 Locanda",
-    "square_couple": "💑 Coppia",
-    "square_finish": "🏁 Arrivo",
-    "checkpoint": "Traguardo! 🎉",
-    "checkpoint_message": "Avete raggiunto la casella {number}! Meritate una piccola celebrazione.",
-    "well_escape": "Scappa dal pozzo con un complimento sincero!",
-    "inn_message": "Pausa romantica: scegliete una posizione dal catalogo",
-    "finish_exact": "Servono esattamente {count} per vincere!",
-    "bounce_back": "Troppo! Rimbalzi indietro di {count}",
-    "victory": "Vittoria! 🎊",
-    "victory_message": "Avete completato il percorso insieme!"
-  },
-
-  "truth_dare": {
-    "title": "Verità o Osare",
-    "subtitle": "Edizione Intimità",
-    "truth": "💬 Verità",
-    "dare": "🎯 Osare",
-    "pass": "Passo",
-    "passes_left": "{count} passi rimasti",
-    "double_dare": "Doppio Osare",
-    "swap": "Scambio ruoli"
-  },
-
-  "wheel": {
-    "title": "Ruota della Fortuna",
-    "subtitle": "Edizione Romantica",
-    "spin": "Gira!",
-    "customize": "Personalizza",
-    "add_slice": "Aggiungi spicchio",
-    "remove_slice": "Rimuovi spicchio",
-    "modifiers": "Modificatori",
-    "blindfolded": "...bendati",
-    "in_silence": "...in silenzio",
-    "timed": "...a tempo"
-  },
-
-  "hot_cold": {
-    "title": "Caldo & Freddo",
-    "subtitle": "Guidati solo dalle parole",
-    "cold": "Freddo ❄️",
-    "warm": "Tiepido",
-    "hot": "Caldo 🔥",
-    "boiling": "Bollente! 🌋",
-    "mission_complete": "Missione compiuta!",
-    "new_mission": "Nuova missione",
-    "blindfold_mode": "Modalità bendati"
-  },
-
-  "love_notes": {
-    "title": "Bigliettini d'Amore",
-    "subtitle": "Scrivete dal cuore",
-    "prompt": "Spunto",
-    "write": "Scrivi...",
-    "read_aloud": "Leggete ad alta voce",
-    "save_to_box": "Salva nella scatola",
-    "saved": "Salvato nei ricordi ❤️",
-    "your_notes": "I vostri bigliettini"
-  },
-
-  "fantasy_builder": {
-    "title": "Costruiamo una Fantasia",
-    "subtitle": "Create insieme la vostra storia",
-    "opening": "Inizio",
-    "your_turn_to_add": "Aggiungi una frase...",
-    "gentle_veto": "Veto gentile",
-    "save_scenario": "Salva scenario",
-    "your_scenarios": "I vostri scenari"
-  },
-
-  "compliment_battle": {
-    "title": "Gara di Complimenti",
-    "subtitle": "Chi sa apprezzare di più?",
-    "timer": "Timer",
-    "accepted": "Accettato ✓",
-    "rejected": "Già detto / Generico ✗",
-    "score": "Punteggio",
-    "winner": "Vincitore!",
-    "categories": {
-      "physical": "Solo fisici",
-      "personality": "Solo personalità",
-      "actions": "Solo azioni",
-      "free": "Libero"
-    }
-  },
-
-  "question_quest": {
-    "title": "Caccia alle Domande",
-    "subtitle": "36 domande per (ri)innamorarsi",
-    "level": "Livello {number}",
-    "surface": "Superficie",
-    "depth": "Profondità",
-    "ready_to_advance": "Pronti ad avanzare?",
-    "both_confirm": "Entrambi devono confermare"
-  },
-
-  "two_minutes": {
-    "title": "2 Minuti di Noi",
-    "subtitle": "Un momento di connessione",
-    "start": "Inizia",
-    "how_do_you_feel": "Come vi sentite?",
-    "activities": {
-      "eye_contact": "Contatto visivo in silenzio",
-      "hug": "Abbraccio senza parlare",
-      "breathing": "Respirazione sincronizzata",
-      "gratitude": "Un pensiero di gratitudine ciascuno"
-    }
-  },
-
-  "intimacy_map": {
-    "title": "Mappa dell'Intimità",
-    "subtitle": "Esplorate le vostre preferenze",
-    "instructions": "Colorate le zone con il vostro codice",
-    "green": "💚 Mi piace",
-    "yellow": "💛 Dipende / Curioso",
-    "red": "🔴 Preferisco di no",
-    "compare": "Confronta",
-    "matches": "Abbinamenti",
-    "discoveries": "Scoperte"
-  },
-
-  "soundtrack": {
-    "title": "La Nostra Colonna Sonora",
-    "subtitle": "Le canzoni della vostra storia",
-    "prompts": {
-      "first_kiss": "Canzone del primo bacio",
-      "represents_us": "Canzone che ci rappresenta",
-      "romantic_evening": "Canzone per una serata romantica",
-      "first_dance": "Canzone del primo ballo",
-      "road_trip": "Canzone dei nostri viaggi"
+    "safe_word_hint": "Premi pausa per saltare senza penalità",
+    
+    "goose_game": {
+      "title": "Gioco dell'Oca",
+      "description": "Un percorso di sfide e scoperte",
+      "setup_title": "Configura la partita",
+      "board_size": "Dimensione tabellone",
+      "quick": "Veloce (15-20 min)",
+      "medium": "Medio (30-40 min)",
+      "long": "Lungo (60+ min)",
+      "play_mode": "Modalità di gioco",
+      "cooperative": "Cooperativo",
+      "cooperative_desc": "Avanzate insieme, un solo pedone",
+      "sweetChallenge": "Dolce Sfida",
+      "sweet_challenge_desc": "Due pedine, entrambi vincete",
+      "intensity": "Intensità",
+      "soft": "🌸 Soft",
+      "spicy": "🔥 Spicy",
+      "extra_spicy": "🌶️ Extra Spicy",
+      "rigged_dice": "Dado facilitato (3-5)",
+      "square_challenge": "🎯 Sfida",
+      "square_truth": "💬 Verità",
+      "square_bonus": "⭐ Bonus",
+      "square_goose": "🪿 Oca",
+      "square_bridge": "🌉 Ponte",
+      "square_well": "🕳️ Pozzo",
+      "square_labyrinth": "🌀 Labirinto",
+      "square_inn": "🏨 Locanda",
+      "square_couple": "💑 Coppia",
+      "square_finish": "🏁 Arrivo",
+      "checkpoint": "Traguardo! 🎉",
+      "checkpoint_message": "Avete raggiunto la casella {number}! Meritate una piccola celebrazione.",
+      "well_escape": "Scappa dal pozzo con un complimento sincero!",
+      "inn_message": "Pausa romantica: scegliete una posizione dal catalogo",
+      "finish_exact": "Servono esattamente {count} per vincere!",
+      "bounce_back": "Troppo! Rimbalzi indietro di {count}",
+      "victory": "Vittoria! 🎊",
+      "victory_message": "Avete completato il percorso insieme!"
     },
-    "compare_choices": "Confronta le scelte",
-    "create_playlist": "Crea playlist"
-  },
-
-  "mirror_challenge": {
-    "title": "Sfida allo Specchio",
-    "subtitle": "Connessione senza parole",
-    "leader": "Guida",
-    "mirror": "Specchio",
-    "swap_roles": "Scambia ruoli",
-    "eyes_closed": "Modalità occhi chiusi"
+    
+    "truth_dare": {
+      "title": "Verità o Osare",
+      "subtitle": "Edizione Intimità",
+      "truth": "💬 Verità",
+      "dare": "🎯 Osare",
+      "pass": "Passo",
+      "passes_left": "{count} passi rimasti",
+      "double_dare": "Doppio Osare",
+      "swap": "Scambio ruoli"
+    },
+    
+    "wheel": {
+      "title": "Ruota della Fortuna",
+      "subtitle": "Edizione Romantica",
+      "spin": "Gira!",
+      "customize": "Personalizza",
+      "add_slice": "Aggiungi spicchio",
+      "remove_slice": "Rimuovi spicchio",
+      "modifiers": "Modificatori",
+      "blindfolded": "...bendati",
+      "in_silence": "...in silenzio",
+      "timed": "...a tempo"
+    },
+    
+    "hot_cold": {
+      "title": "Caldo & Freddo",
+      "subtitle": "Guidati solo dalle parole",
+      "cold": "Freddo ❄️",
+      "warm": "Tiepido",
+      "hot": "Caldo 🔥",
+      "boiling": "Bollente! 🌋",
+      "mission_complete": "Missione compiuta!",
+      "new_mission": "Nuova missione",
+      "blindfold_mode": "Modalità bendati"
+    },
+    
+    "love_notes": {
+      "title": "Bigliettini d'Amore",
+      "subtitle": "Scrivete dal cuore",
+      "prompt": "Spunto",
+      "write": "Scrivi...",
+      "read_aloud": "Leggete ad alta voce",
+      "save_to_box": "Salva nella scatola",
+      "saved": "Salvato nei ricordi ❤️",
+      "your_notes": "I vostri bigliettini"
+    },
+    
+    "fantasy_builder": {
+      "title": "Costruiamo una Fantasia",
+      "subtitle": "Create insieme la vostra storia",
+      "opening": "Inizio",
+      "your_turn_to_add": "Aggiungi una frase...",
+      "gentle_veto": "Veto gentile",
+      "save_scenario": "Salva scenario",
+      "your_scenarios": "I vostri scenari"
+    },
+    
+    "compliment_battle": {
+      "title": "Gara di Complimenti",
+      "subtitle": "Chi sa apprezzare di più?",
+      "timer": "Timer",
+      "accepted": "Accettato ✓",
+      "rejected": "Già detto / Generico ✗",
+      "score": "Punteggio",
+      "winner": "Vincitore!",
+      "categories": {
+        "physical": "Solo fisici",
+        "personality": "Solo personalità",
+        "actions": "Solo azioni",
+        "free": "Libero"
+      }
+    },
+    
+    "question_quest": {
+      "title": "Caccia alle Domande",
+      "subtitle": "36 domande per (ri)innamorarsi",
+      "level": "Livello {number}",
+      "surface": "Superficie",
+      "depth": "Profondità",
+      "ready_to_advance": "Pronti ad avanzare?",
+      "both_confirm": "Entrambi devono confermare"
+    },
+    
+    "two_minutes": {
+      "title": "2 Minuti di Noi",
+      "subtitle": "Un momento di connessione",
+      "start": "Inizia",
+      "how_do_you_feel": "Come vi sentite?",
+      "activities": {
+        "eye_contact": "Contatto visivo in silenzio",
+        "hug": "Abbraccio senza parlare",
+        "breathing": "Respirazione sincronizzata",
+        "gratitude": "Un pensiero di gratitudine ciascuno"
+      }
+    },
+    
+    "intimacy_map": {
+      "title": "Mappa dell'Intimità",
+      "subtitle": "Esplorate le vostre preferenze",
+      "instructions": "Colorate le zone con il vostro codice",
+      "green": "💚 Mi piace",
+      "yellow": "💛 Dipende / Curioso",
+      "red": "🔴 Preferisco di no",
+      "compare": "Confronta",
+      "matches": "Abbinamenti",
+      "discoveries": "Scoperte"
+    },
+    
+    "soundtrack": {
+      "title": "La Nostra Colonna Sonora",
+      "subtitle": "Le canzoni della vostra storia",
+      "prompts": {
+        "first_kiss": "Canzone del primo bacio",
+        "represents_us": "Canzone che ci rappresenta",
+        "romantic_evening": "Canzone per una serata romantica",
+        "first_dance": "Canzone del primo ballo",
+        "road_trip": "Canzone dei nostri viaggi"
+      },
+      "compare_choices": "Confronta le scelte",
+      "create_playlist": "Crea playlist"
+    },
+    
+    "mirror_challenge": {
+      "title": "Sfida allo Specchio",
+      "subtitle": "Connessione senza parole",
+      "leader": "Guida",
+      "mirror": "Specchio",
+      "swap_roles": "Scambia ruoli",
+      "eyes_closed": "Modalità occhi chiusi"
+    }
   },
 
   "progress": {

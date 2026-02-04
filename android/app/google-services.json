@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "18076765697",
+    "project_id": "kamasutra-48c9d",
+    "storage_bucket": "kamasutra-48c9d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18076765697:android:50faf9f4301e2b9407fa00",
+        "android_client_info": {
+          "package_name": "com.example.kamasutra_app_new"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7CojH9VvQCU9gTb0H1giuCcd874KvznY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
