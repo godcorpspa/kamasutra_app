@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../data/models/goose_game.dart';
 import '../data/models/position.dart';
+import '../features/auth/presentation/login_screen.dart';
 import '../features/onboarding/presentation/age_gate_screen.dart';
 import '../features/onboarding/presentation/pin_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
@@ -32,6 +34,9 @@ import '../data/services/preferences_service.dart';
 
 /// Route names
 class AppRoutes {
+  // Auth
+  static const String login = '/login';
+  
   // Onboarding
   static const String ageGate = '/age-gate';
   static const String pin = '/pin';
@@ -76,23 +81,47 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppRoutes.ageGate,
+    initialLocation: AppRoutes.login,
     debugLogDiagnostics: true,
     
     // Redirect logic
     redirect: (context, state) async {
       final prefs = PreferencesService.instance;
+      
+      // Verifica autenticazione Firebase
+      final isLoggedIn = FirebaseAuth.instance.currentUser != null;
+      
       final isAgeVerified = prefs.isAgeVerified;
       final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
       final isPinEnabled = prefs.isPinEnabled;
       final isAuthenticated = prefs.isSessionAuthenticated;
       
+      final isOnLogin = state.matchedLocation == AppRoutes.login;
       final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;
       final isOnOnboarding = state.matchedLocation == AppRoutes.onboarding;
       final isOnPin = state.matchedLocation == AppRoutes.pin;
       
-      // Not age verified -> age gate
-      if (!isAgeVerified && !isOnAgeGate) {
+      // Non loggato -> vai al login
+      if (!isLoggedIn && !isOnLogin) {
+        return AppRoutes.login;
+      }
+      
+      // Loggato ma sulla pagina login -> procedi
+      if (isLoggedIn && isOnLogin) {
+        if (!isAgeVerified) {
+          return AppRoutes.ageGate;
+        }
+        if (isPinEnabled && !isAuthenticated) {
+          return AppRoutes.pin;
+        }
+        if (!hasCompletedOnboarding) {
+          return AppRoutes.onboarding;
+        }
+        return AppRoutes.catalog;
+      }
+      
+      // Non age verified -> age gate (solo se loggato)
+      if (isLoggedIn && !isAgeVerified && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.ageGate;
       }
       
@@ -108,12 +137,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
       
       // PIN required but not authenticated
-      if (isPinEnabled && !isAuthenticated && !isOnPin && !isOnAgeGate) {
+      if (isPinEnabled && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.pin;
       }
       
       // Onboarding not completed
-      if (!hasCompletedOnboarding && !isOnOnboarding && !isOnAgeGate && !isOnPin) {
+      if (!hasCompletedOnboarding && !isOnOnboarding && !isOnAgeGate && !isOnPin && !isOnLogin) {
         return AppRoutes.onboarding;
       }
       
@@ -121,6 +150,12 @@ final routerProvider = Provider<GoRouter>((ref) {
     },
     
     routes: [
+      // Auth route
+      GoRoute(
+        path: AppRoutes.login,
+        builder: (context, state) => const LoginScreen(),
+      ),
+      
       // Onboarding routes
       GoRoute(
         path: AppRoutes.ageGate,

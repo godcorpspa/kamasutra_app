@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:go_router/go_router.dart';
+import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/models/game.dart';
@@ -269,38 +272,107 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildAboutSection() {
-    return Column(
-      children: [
-        _buildListTile(
-          icon: Icons.info_outline,
-          title: 'settings.version'.tr(),
-          subtitle: 'v1.0.0',
+  return Column(
+    children: [
+      // AGGIUNGI LOGOUT ALL'INIZIO
+      _buildListTile(
+        icon: Icons.logout,
+        title: 'Esci dall\'account',
+        subtitle: 'Disconnetti e torna al login',
+        onTap: () => _showLogoutDialog(),
+        isDestructive: true,
+      ),
+      
+      const Divider(indent: 72),
+      
+      _buildListTile(
+        icon: Icons.info_outline,
+        title: 'settings.version'.tr(),
+        subtitle: 'v1.0.0',
+      ),
+      _buildListTile(
+        icon: Icons.description_outlined,
+        title: 'settings.privacy_policy'.tr(),
+        onTap: () {
+          // Open privacy policy
+        },
+      ),
+      _buildListTile(
+        icon: Icons.gavel_outlined,
+        title: 'settings.terms'.tr(),
+        onTap: () {
+          // Open terms
+        },
+      ),
+      _buildListTile(
+        icon: Icons.email_outlined,
+        title: 'settings.contact'.tr(),
+        subtitle: 'Feedback e suggerimenti',
+        onTap: () {
+          // Open email
+        },
+      ),
+    ],
+  );
+}
+
+// AGGIUNGI QUESTO NUOVO METODO
+void _showLogoutDialog() {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Esci dall\'account'),
+      content: const Text(
+        'Sei sicuro di voler uscire? Dovrai effettuare nuovamente l\'accesso.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text('common.cancel'.tr()),
         ),
-        _buildListTile(
-          icon: Icons.description_outlined,
-          title: 'settings.privacy_policy'.tr(),
-          onTap: () {
-            // Open privacy policy
+        TextButton(
+          onPressed: () async {
+            Navigator.pop(context);
+            await _performLogout();
           },
-        ),
-        _buildListTile(
-          icon: Icons.gavel_outlined,
-          title: 'settings.terms'.tr(),
-          onTap: () {
-            // Open terms
-          },
-        ),
-        _buildListTile(
-          icon: Icons.email_outlined,
-          title: 'settings.contact'.tr(),
-          subtitle: 'Feedback e suggerimenti',
-          onTap: () {
-            // Open email
-          },
+          style: TextButton.styleFrom(foregroundColor: AppColors.error),
+          child: const Text('Esci'),
         ),
       ],
-    );
+    ),
+  );
+}
+
+Future<void> _performLogout() async {
+  try {
+    // Logout da Firebase
+    await FirebaseAuth.instance.signOut();
+    
+    // Logout da Google se era connesso
+    final googleSignIn = GoogleSignIn();
+    if (await googleSignIn.isSignedIn()) {
+      await googleSignIn.signOut();
+    }
+    
+    // Reset sessione locale
+    PreferencesService.instance.setSessionAuthenticated(false);
+    
+    // Naviga al login
+    if (mounted) {
+      context.go(AppRoutes.login);
+    }
+  } catch (e) {
+    debugPrint('Errore logout: $e');
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Errore durante il logout'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
+}
 
   Widget _buildSwitchTile({
     required IconData icon,
