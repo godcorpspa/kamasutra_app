@@ -28,7 +28,7 @@ import '../features/games/mirror_challenge/presentation/mirror_challenge_screen.
 import '../features/progress/presentation/progress_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../shared/widgets/main_scaffold.dart';
-import '../data/local/preferences_service.dart';
+import '../data/services/preferences_service.dart';
 
 /// Route names
 class AppRoutes {
@@ -82,10 +82,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     // Redirect logic
     redirect: (context, state) async {
       final prefs = PreferencesService.instance;
-      final isAgeVerified = prefs.getBool('age_verified') ?? false;
-      final hasCompletedOnboarding = prefs.getBool('onboarding_completed') ?? false;
-      final isPinEnabled = prefs.getBool('pin_enabled') ?? false;
-      final isAuthenticated = prefs.getBool('is_authenticated') ?? false;
+      final isAgeVerified = prefs.isAgeVerified;
+      final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
+      final isPinEnabled = prefs.isPinEnabled;
+      final isAuthenticated = prefs.isSessionAuthenticated;
       
       final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;
       final isOnOnboarding = state.matchedLocation == AppRoutes.onboarding;

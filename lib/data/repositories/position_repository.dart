@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 import '../models/position.dart';
-import '../local/database_service.dart';
+import '../services/preferences_service.dart';
 
 /// Repository for managing positions data
 class PositionRepository {
@@ -34,8 +34,10 @@ class PositionRepository {
   Future<void> _loadUserData() async {
     if (_positions == null) return;
     
+    final prefs = PreferencesService.instance;
+    
     for (final position in _positions!) {
-      final data = await DatabaseService.instance.getPositionUserData(position.id);
+      final data = await prefs.getPositionUserData(position.id);
       if (data != null) {
         _userData[position.id] = PositionUserData(
           positionId: data['positionId'] as String? ?? position.id,
@@ -92,7 +94,7 @@ class PositionRepository {
     
     final newStatus = !position.isFavorite;
     
-    await DatabaseService.instance.updatePositionUserData(
+    await PreferencesService.instance.updatePositionUserData(
       positionId,
       isFavorite: newStatus,
     );
@@ -113,7 +115,7 @@ class PositionRepository {
     final newCount = (existing?.timesViewed ?? 0) + 1;
     final now = DateTime.now();
     
-    await DatabaseService.instance.updatePositionUserData(
+    await PreferencesService.instance.updatePositionUserData(
       positionId,
       timesViewed: newCount,
       lastViewed: now,

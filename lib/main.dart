@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'app/app.dart';
-import 'data/local/database_service.dart';
-import 'data/local/preferences_service.dart';
+import 'data/services/preferences_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,14 +13,16 @@ void main() async {
   // Initialize localization
   await EasyLocalization.ensureInitialized();
   
-  // Initialize Hive for preferences
-  await Hive.initFlutter();
-  
-  // Initialize database
-  await DatabaseService.instance.initialize();
-  
-  // Initialize preferences
+  // Initialize preferences (SharedPreferences)
   await PreferencesService.instance.initialize();
+  
+  // Initialize Firebase
+  try {
+    await Firebase.initializeApp();
+    debugPrint('✅ Firebase inizializzato');
+  } catch (e) {
+    debugPrint('⚠️ Firebase non disponibile: $e');
+  }
   
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([
@@ -34,7 +35,7 @@ void main() async {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.black,
+      systemNavigationBarColor: Color(0xFF1A0A1F),
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
@@ -46,7 +47,7 @@ void main() async {
         Locale('en'),
       ],
       path: 'assets/lang',
-      fallbackLocale: const Locale('en'),
+      fallbackLocale: const Locale('it'),
       child: const ProviderScope(
         child: KamasutraApp(),
       ),

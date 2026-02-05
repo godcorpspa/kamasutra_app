@@ -374,3 +374,29 @@ class Streak extends Equatable {
     graceDaysUsed, graceDaysAllowed,
   ];
 }
+class GameInfo extends Equatable {
+  final String id;
+  final String titleKey;
+  final String descriptionKey;
+  final String icon;
+  final int minPlayers;
+  final int maxPlayers;
+  final int durationMinutes;
+  final List<GameIntensity> intensities;
+
+  const GameInfo({
+    required this.id,
+    required this.titleKey,
+    required this.descriptionKey,
+    required this.icon,
+    this.minPlayers = 2,
+    this.maxPlayers = 2,
+    required this.durationMinutes,
+    this.intensities = GameIntensity.values,
+  });
+
+  @override
+  List<Object?> get props => [
+    id, titleKey, descriptionKey, icon, minPlayers, maxPlayers, durationMinutes, intensities,
+  ];
+}

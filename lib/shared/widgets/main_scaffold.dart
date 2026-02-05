@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../app/theme.dart';
 import '../../app/router.dart';
-import '../../data/local/preferences_service.dart';
+import '../../data/services/preferences_service.dart';
 
 /// Main scaffold with bottom navigation
 class MainScaffold extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:crypto/crypto.dart';
 
 import '../../../app/theme.dart';
 import '../../../app/router.dart';
-import '../../../data/local/preferences_service.dart';
+import '../../../data/services/preferences_service.dart';
 
 /// PIN entry/creation screen
 class PinScreen extends StatefulWidget {
@@ -142,7 +142,7 @@ class _PinScreenState extends State<PinScreen> {
 
   void _onAuthenticationSuccess() {
     HapticFeedback.mediumImpact();
-    PreferencesService.instance.setAuthenticated(true);
+    PreferencesService.instance.setSessionAuthenticated(true);
     
     if (!PreferencesService.instance.hasCompletedOnboarding) {
       context.go(AppRoutes.onboarding);

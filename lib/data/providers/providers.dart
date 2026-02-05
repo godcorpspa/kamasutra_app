@@ -4,8 +4,7 @@ import '../models/position.dart';
 import '../models/game.dart';
 import '../models/goose_game.dart';
 import '../repositories/position_repository.dart';
-import '../local/database_service.dart';
-import '../local/preferences_service.dart';
+import '../services/preferences_service.dart';
 
 // ============================================================
 // Position Providers
@@ -149,17 +148,15 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
     
     final sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     
-    // Save session to database
-    final session = Session(
-      id: sessionId,
-      type: SessionType.shuffle,
-      startedAt: DateTime.now(),
-      filters: filter?.toJson(),
-      positionIds: positions.map((p) => p.id).toList(),
-      currentIndex: 0,
-      completed: false,
-    );
-    await DatabaseService.instance.saveSession(session.toJson());
+    // Save session to preferences
+    await PreferencesService.instance.saveSession({
+      'id': sessionId,
+      'type': 'shuffle',
+      'startedAt': DateTime.now().toIso8601String(),
+      'positionIds': positions.map((p) => p.id).toList(),
+      'currentIndex': 0,
+      'completed': false,
+    });
     
     state = ShuffleSession(
       positions: positions,
@@ -172,14 +169,12 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
   void next() {
     if (state == null || !state!.hasNext) return;
     state = state!.copyWith(currentIndex: state!.currentIndex + 1);
-    _updateSessionInDb();
   }
 
   /// Move to previous position
   void previous() {
     if (state == null || !state!.hasPrevious) return;
     state = state!.copyWith(currentIndex: state!.currentIndex - 1);
-    _updateSessionInDb();
   }
 
   /// Go to a specific position
@@ -187,7 +182,6 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
     if (state == null) return;
     if (index < 0 || index >= state!.positions.length) return;
     state = state!.copyWith(currentIndex: index);
-    _updateSessionInDb();
   }
 
   /// Mark current position as viewed with reaction
@@ -197,53 +191,23 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
     final repo = _ref.read(positionRepositoryProvider);
     await repo.recordView(state!.currentPosition!.id);
     
-    final entry = HistoryEntry(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      positionId: state!.currentPosition!.id,
-      viewedAt: DateTime.now(),
-      reaction: reaction.name,
-      notes: notes,
-    );
-    await DatabaseService.instance.addHistoryEntry(entry.toJson());
+    await PreferencesService.instance.addHistoryEntry({
+      'positionId': state!.currentPosition!.id,
+      'viewedAt': DateTime.now().toIso8601String(),
+      'reaction': reaction.name,
+      'notes': notes,
+    });
   }
 
   /// Complete the session
   Future<void> completeSession() async {
     if (state == null) return;
-    
     state = state!.copyWith(isComplete: true);
-    
-    if (state!.sessionId != null) {
-      final session = Session(
-        id: state!.sessionId!,
-        type: SessionType.shuffle,
-        startedAt: DateTime.now(),
-        endedAt: DateTime.now(),
-        positionIds: state!.positions.map((p) => p.id).toList(),
-        currentIndex: state!.currentIndex,
-        completed: true,
-      );
-      await DatabaseService.instance.saveSession(session.toJson());
-    }
   }
 
   /// End and clear session
   void endSession() {
     state = null;
-  }
-
-  Future<void> _updateSessionInDb() async {
-    if (state?.sessionId == null) return;
-    
-    final session = Session(
-      id: state!.sessionId!,
-      type: SessionType.shuffle,
-      startedAt: DateTime.now(),
-      positionIds: state!.positions.map((p) => p.id).toList(),
-      currentIndex: state!.currentIndex,
-      completed: false,
-    );
-    await DatabaseService.instance.saveSession(session.toJson());
   }
 }
 
@@ -251,376 +215,306 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
 // Game Providers
 // ============================================================
 
-/// Provider for available games
-final gamesProvider = Provider<List<MiniGame>>((ref) {
+/// Available games list
+final gamesProvider = Provider<List<GameInfo>>((ref) {
   return [
-    MiniGame(
-      id: 'goose',
-      type: GameType.gooseGame,
-      nameIt: 'Gioco dell\'Oca Piccante',
-      nameEn: 'Spicy Goose Game',
-      descriptionIt: 'Il classico gioco dell\'oca rivisitato per coppie',
-      descriptionEn: 'The classic goose game reimagined for couples',
-      rulesIt: 'Tira il dado, avanza sulla casella e segui le istruzioni. '
-          'Caselle speciali offrono sfide, verità o bonus. '
-          'Vince chi raggiunge il traguardo per primo!',
-      rulesEn: 'Roll the dice, advance to the square and follow instructions. '
-          'Special squares offer challenges, truths or bonuses. '
-          'First to reach the finish wins!',
+    const GameInfo(
+      id: 'goose_game',
+      titleKey: 'games.goose_game.title',
+      descriptionKey: 'games.goose_game.description',
+      icon: '🪿',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 30,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'goose',
-      isUnlocked: true,
+      intensities: GameIntensity.values,
     ),
-    MiniGame(
+    const GameInfo(
       id: 'truth_dare',
-      type: GameType.truthDare,
-      nameIt: 'Verità o Sfida',
-      nameEn: 'Truth or Dare',
-      descriptionIt: 'Sfide e confessioni per scoprirsi di più',
-      descriptionEn: 'Challenges and confessions to discover more',
-      rulesIt: 'A turno scegliete verità o sfida. '
-          'Rispondete sinceramente o completate la sfida!',
-      rulesEn: 'Take turns choosing truth or dare. '
-          'Answer honestly or complete the challenge!',
+      titleKey: 'games.truth_dare.title',
+      descriptionKey: 'games.truth_dare.subtitle',
+      icon: '🎯',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 20,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'truth_dare',
-      isUnlocked: true,
+      intensities: GameIntensity.values,
     ),
-    MiniGame(
+    const GameInfo(
       id: 'wheel',
-      type: GameType.wheel,
-      nameIt: 'Ruota del Destino',
-      nameEn: 'Wheel of Fortune',
-      descriptionIt: 'Gira la ruota e lasciati sorprendere',
-      descriptionEn: 'Spin the wheel and let yourself be surprised',
-      rulesIt: 'Girate la ruota insieme e scoprite cosa il destino ha in serbo per voi!',
-      rulesEn: 'Spin the wheel together and discover what fate has in store!',
+      titleKey: 'games.wheel.title',
+      descriptionKey: 'games.wheel.subtitle',
+      icon: '🎡',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 15,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'wheel',
-      isUnlocked: true,
+      intensities: GameIntensity.values,
     ),
-    MiniGame(
+    const GameInfo(
       id: 'hot_cold',
-      type: GameType.hotCold,
-      nameIt: 'Caldo o Freddo',
-      nameEn: 'Hot or Cold',
-      descriptionIt: 'Scopri cosa piace al partner con un gioco sensoriale',
-      descriptionEn: 'Discover what your partner likes with a sensory game',
-      rulesIt: 'Un partner guida, l\'altro esplora. '
-          'Sussurrate "caldo" o "freddo" per guidare verso il punto perfetto!',
-      rulesEn: 'One partner guides, the other explores. '
-          'Whisper "hot" or "cold" to guide toward the perfect spot!',
-      minPlayers: 2,
-      maxPlayers: 2,
-      durationMinutes: 15,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'hot_cold',
-      isUnlocked: true,
-    ),
-    MiniGame(
-      id: 'love_notes',
-      type: GameType.loveNotes,
-      nameIt: 'Bigliettini Segreti',
-      nameEn: 'Secret Love Notes',
-      descriptionIt: 'Scrivete messaggi anonimi da rivelare insieme',
-      descriptionEn: 'Write anonymous messages to reveal together',
-      rulesIt: 'Entrambi scrivete un messaggio segreto sullo stesso tema. '
-          'Poi rivelateli insieme e scoprite quanto vi conoscete!',
-      rulesEn: 'Both write a secret message on the same theme. '
-          'Then reveal them together and discover how well you know each other!',
-      minPlayers: 2,
-      maxPlayers: 2,
-      durationMinutes: 15,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy],
-      iconRef: 'love_notes',
-      isUnlocked: true,
-    ),
-    MiniGame(
-      id: 'fantasy_builder',
-      type: GameType.fantasyBuilder,
-      nameIt: 'Costruttore di Fantasie',
-      nameEn: 'Fantasy Builder',
-      descriptionIt: 'Create insieme uno scenario romantico passo dopo passo',
-      descriptionEn: 'Build a romantic scenario together step by step',
-      rulesIt: 'A turno aggiungete elementi a una fantasia condivisa. '
-          'Luogo, ambientazione, azioni... costruite insieme il momento perfetto!',
-      rulesEn: 'Take turns adding elements to a shared fantasy. '
-          'Place, setting, actions... build the perfect moment together!',
-      minPlayers: 2,
-      maxPlayers: 2,
-      durationMinutes: 20,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'fantasy',
-      isUnlocked: true,
-    ),
-    MiniGame(
-      id: 'compliment_battle',
-      type: GameType.complimentBattle,
-      nameIt: 'Battaglia di Complimenti',
-      nameEn: 'Compliment Battle',
-      descriptionIt: 'Chi riesce a far arrossire l\'altro per primo?',
-      descriptionEn: 'Who can make the other blush first?',
-      rulesIt: 'A turno fatevi i complimenti più sinceri e creativi. '
-          'Chi fa arrossire l\'altro guadagna un punto!',
-      rulesEn: 'Take turns giving the most sincere and creative compliments. '
-          'Make your partner blush and earn a point!',
+      titleKey: 'games.hot_cold.title',
+      descriptionKey: 'games.hot_cold.subtitle',
+      icon: '🔥',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 10,
-      availableIntensities: [GameIntensity.soft],
-      iconRef: 'compliment',
-      isUnlocked: true,
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
     ),
-    MiniGame(
-      id: 'question_quest',
-      type: GameType.questionQuest,
-      nameIt: 'Missione Domande',
-      nameEn: 'Question Quest',
-      descriptionIt: 'Domande sempre più profonde per conoscervi meglio',
-      descriptionEn: 'Increasingly deep questions to know each other better',
-      rulesIt: 'Rispondete insieme a domande che vanno dal leggero al profondo. '
-          'Scoprite nuovi lati del vostro partner!',
-      rulesEn: 'Answer questions together that go from light to deep. '
-          'Discover new sides of your partner!',
-      minPlayers: 2,
-      maxPlayers: 2,
-      durationMinutes: 25,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy],
-      iconRef: 'question',
-      isUnlocked: true,
-    ),
-    MiniGame(
-      id: 'two_minutes',
-      type: GameType.twoMinutes,
-      nameIt: '2 Minuti di Cielo',
-      nameEn: '2 Minutes in Heaven',
-      descriptionIt: 'Timer sfidante per azioni romantiche',
-      descriptionEn: 'Challenging timer for romantic actions',
-      rulesIt: 'Pescate una carta e avete esattamente 2 minuti '
-          'per completare l\'azione descritta!',
-      rulesEn: 'Draw a card and you have exactly 2 minutes '
-          'to complete the action described!',
+    const GameInfo(
+      id: 'love_notes',
+      titleKey: 'games.love_notes.title',
+      descriptionKey: 'games.love_notes.subtitle',
+      icon: '💌',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 15,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy, GameIntensity.extraSpicy],
-      iconRef: 'timer',
-      isUnlocked: true,
+      intensities: [GameIntensity.soft],
     ),
-    MiniGame(
-      id: 'intimacy_map',
-      type: GameType.intimacyMap,
-      nameIt: 'Mappa dell\'Intimità',
-      nameEn: 'Intimacy Map',
-      descriptionIt: 'Mappate insieme le zone di piacere',
-      descriptionEn: 'Map the pleasure zones together',
-      rulesIt: 'Create insieme una mappa delle preferenze. '
-          'Segnate cosa vi piace, cosa vorreste provare, cosa evitare.',
-      rulesEn: 'Create a preferences map together. '
-          'Mark what you like, what you\'d like to try, what to avoid.',
-      minPlayers: 2,
-      maxPlayers: 2,
-      durationMinutes: 30,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy],
-      iconRef: 'map',
-      isUnlocked: true,
-    ),
-    MiniGame(
-      id: 'soundtrack',
-      type: GameType.soundtrack,
-      nameIt: 'La Nostra Colonna Sonora',
-      nameEn: 'Our Soundtrack',
-      descriptionIt: 'Create la playlist perfetta per la serata',
-      descriptionEn: 'Create the perfect playlist for the evening',
-      rulesIt: 'A turno scegliete canzoni che rappresentano momenti, '
-          'emozioni o desideri da condividere.',
-      rulesEn: 'Take turns choosing songs that represent moments, '
-          'emotions or desires to share.',
+    const GameInfo(
+      id: 'fantasy_builder',
+      titleKey: 'games.fantasy_builder.title',
+      descriptionKey: 'games.fantasy_builder.subtitle',
+      icon: '✨',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 20,
-      availableIntensities: [GameIntensity.soft],
-      iconRef: 'music',
-      isUnlocked: true,
+      intensities: GameIntensity.values,
     ),
-    MiniGame(
-      id: 'mirror',
-      type: GameType.mirrorChallenge,
-      nameIt: 'Sfida allo Specchio',
-      nameEn: 'Mirror Challenge',
-      descriptionIt: 'Guardarsi negli occhi senza distogliere lo sguardo',
-      descriptionEn: 'Look into each other\'s eyes without looking away',
-      rulesIt: 'Seduti uno di fronte all\'altro, guardate negli occhi del partner. '
-          'Seguite le istruzioni senza distogliere lo sguardo!',
-      rulesEn: 'Sitting face to face, look into your partner\'s eyes. '
-          'Follow the instructions without looking away!',
+    const GameInfo(
+      id: 'compliment_battle',
+      titleKey: 'games.compliment_battle.title',
+      descriptionKey: 'games.compliment_battle.subtitle',
+      icon: '💕',
+      minPlayers: 2,
+      maxPlayers: 2,
+      durationMinutes: 10,
+      intensities: [GameIntensity.soft],
+    ),
+    const GameInfo(
+      id: 'question_quest',
+      titleKey: 'games.question_quest.title',
+      descriptionKey: 'games.question_quest.subtitle',
+      icon: '❓',
+      minPlayers: 2,
+      maxPlayers: 2,
+      durationMinutes: 30,
+      intensities: [GameIntensity.soft],
+    ),
+    const GameInfo(
+      id: 'two_minutes',
+      titleKey: 'games.two_minutes.title',
+      descriptionKey: 'games.two_minutes.subtitle',
+      icon: '⏱️',
+      minPlayers: 2,
+      maxPlayers: 2,
+      durationMinutes: 5,
+      intensities: [GameIntensity.soft],
+    ),
+    const GameInfo(
+      id: 'intimacy_map',
+      titleKey: 'games.intimacy_map.title',
+      descriptionKey: 'games.intimacy_map.subtitle',
+      icon: '🗺️',
+      minPlayers: 2,
+      maxPlayers: 2,
+      durationMinutes: 20,
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
+    ),
+    const GameInfo(
+      id: 'soundtrack',
+      titleKey: 'games.soundtrack.title',
+      descriptionKey: 'games.soundtrack.subtitle',
+      icon: '🎵',
       minPlayers: 2,
       maxPlayers: 2,
       durationMinutes: 15,
-      availableIntensities: [GameIntensity.soft, GameIntensity.spicy],
-      iconRef: 'mirror',
-      isUnlocked: true,
+      intensities: [GameIntensity.soft],
+    ),
+    const GameInfo(
+      id: 'mirror_challenge',
+      titleKey: 'games.mirror_challenge.title',
+      descriptionKey: 'games.mirror_challenge.subtitle',
+      icon: '🪞',
+      minPlayers: 2,
+      maxPlayers: 2,
+      durationMinutes: 10,
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
     ),
   ];
 });
 
-/// Current selected game
-final currentGameProvider = StateProvider<MiniGame?>((ref) => null);
+// ============================================================
+// Goose Game Provider
+// ============================================================
 
-/// Goose game state provider
 final gooseGameProvider = StateNotifierProvider<GooseGameNotifier, GooseGameState?>((ref) {
   return GooseGameNotifier();
 });
 
+class GooseGameState {
+  final GooseGameConfig config;
+  final List<GooseSquare> board;
+  final int player1Position;
+  final int player2Position;
+  final int currentPlayer;
+  final int? lastDiceRoll;
+  final GooseSquare? currentSquare;
+  final bool isGameOver;
+  final int? winner;
+  final bool player1InWell;
+  final bool player2InWell;
+
+  GooseGameState({
+    required this.config,
+    required this.board,
+    this.player1Position = 0,
+    this.player2Position = 0,
+    this.currentPlayer = 1,
+    this.lastDiceRoll,
+    this.currentSquare,
+    this.isGameOver = false,
+    this.winner,
+    this.player1InWell = false,
+    this.player2InWell = false,
+  });
+
+  GooseGameState copyWith({
+    GooseGameConfig? config,
+    List<GooseSquare>? board,
+    int? player1Position,
+    int? player2Position,
+    int? currentPlayer,
+    int? lastDiceRoll,
+    GooseSquare? currentSquare,
+    bool? isGameOver,
+    int? winner,
+    bool? player1InWell,
+    bool? player2InWell,
+  }) {
+    return GooseGameState(
+      config: config ?? this.config,
+      board: board ?? this.board,
+      player1Position: player1Position ?? this.player1Position,
+      player2Position: player2Position ?? this.player2Position,
+      currentPlayer: currentPlayer ?? this.currentPlayer,
+      lastDiceRoll: lastDiceRoll ?? this.lastDiceRoll,
+      currentSquare: currentSquare ?? this.currentSquare,
+      isGameOver: isGameOver ?? this.isGameOver,
+      winner: winner ?? this.winner,
+      player1InWell: player1InWell ?? this.player1InWell,
+      player2InWell: player2InWell ?? this.player2InWell,
+    );
+  }
+}
+
 class GooseGameNotifier extends StateNotifier<GooseGameState?> {
   GooseGameNotifier() : super(null);
 
-  /// Start a new goose game
   void startGame(GooseGameConfig config) {
-    final board = _generateBoard(config.boardSize, config.excludedSquareTypes);
-    
+    final board = _generateBoard(config);
     state = GooseGameState(
       config: config,
       board: board,
-      player1Position: 0,
-      player2Position: 0,
-      currentPlayer: 1,
-      startedAt: DateTime.now(),
     );
   }
 
-  List<GooseSquare> _generateBoard(GooseBoardSize size, List<GooseSquareType> excluded) {
-    final totalSquares = size.totalSquares;
-    final board = <GooseSquare>[];
+  List<GooseSquare> _generateBoard(GooseGameConfig config) {
+    final size = config.boardSize.totalSquares;
+    final squares = <GooseSquare>[];
     
-    // Start square
-    board.add(const GooseSquare(position: 0, type: GooseSquareType.normal));
-    
-    // Generate middle squares
-    for (var i = 1; i < totalSquares - 1; i++) {
+    for (var i = 0; i < size; i++) {
       GooseSquareType type;
       
-      // Special squares at specific positions
-      if (i == 6 && !excluded.contains(GooseSquareType.bridge)) {
-        type = GooseSquareType.bridge;
-      } else if (i == totalSquares ~/ 3 && !excluded.contains(GooseSquareType.well)) {
-        type = GooseSquareType.well;
-      } else if (i == totalSquares ~/ 2 && !excluded.contains(GooseSquareType.labyrinth)) {
-        type = GooseSquareType.labyrinth;
-      } else if (i == (totalSquares * 2 ~/ 3) && !excluded.contains(GooseSquareType.inn)) {
-        type = GooseSquareType.inn;
-      } else if (i % 9 == 0 && !excluded.contains(GooseSquareType.goose)) {
+      if (i == 0) {
+        type = GooseSquareType.normal;
+      } else if (i == size - 1) {
+        type = GooseSquareType.finish;
+      } else if (i % 9 == 0) {
         type = GooseSquareType.goose;
-      } else if (i % 7 == 0 && !excluded.contains(GooseSquareType.challenge)) {
+      } else if (i == 6 || i == 12) {
+        type = GooseSquareType.bridge;
+      } else if (i == 19) {
+        type = GooseSquareType.inn;
+      } else if (i == 31) {
+        type = GooseSquareType.well;
+      } else if (i == 42) {
+        type = GooseSquareType.labyrinth;
+      } else if (i % 5 == 0) {
         type = GooseSquareType.challenge;
-      } else if (i % 11 == 0 && !excluded.contains(GooseSquareType.truth)) {
+      } else if (i % 7 == 0) {
         type = GooseSquareType.truth;
-      } else if (i % 13 == 0 && !excluded.contains(GooseSquareType.bonus)) {
+      } else if (i % 11 == 0) {
         type = GooseSquareType.bonus;
-      } else if (i % 15 == 0 && !excluded.contains(GooseSquareType.couple)) {
-        type = GooseSquareType.couple;
       } else {
         type = GooseSquareType.normal;
       }
       
-      board.add(GooseSquare(position: i, type: type));
+      squares.add(GooseSquare(
+        position : i,
+        type: type,
+      ));
     }
     
-    // Finish square
-    board.add(GooseSquare(position: totalSquares - 1, type: GooseSquareType.finish));
-    
-    return board;
+    return squares;
   }
 
-  /// Roll dice and move current player
-  int rollDice() {
-    if (state == null) return 0;
+  void rollDice() {
+    if (state == null || state!.isGameOver) return;
     
-    final useRigged = state!.config.useRiggedDice;
-    final roll = useRigged
-        ? (DateTime.now().millisecond % 3) + 3 // 3-5
-        : (DateTime.now().millisecond % 6) + 1; // 1-6
-    
-    state = state!.copyWith(lastDiceRoll: roll);
-    return roll;
-  }
-
-  /// Move the current player
-  void movePlayer(int spaces) {
-    if (state == null) return;
+    final roll = state!.config.useRiggedDice 
+        ? 3 + (DateTime.now().millisecond % 3)
+        : 1 + (DateTime.now().millisecond % 6);
     
     final currentPos = state!.currentPlayer == 1
         ? state!.player1Position
         : state!.player2Position;
     
-    var newPos = currentPos + spaces;
+    var newPos = currentPos + roll;
     final maxPos = state!.board.length - 1;
     
-    // Bounce back if overshooting
     if (newPos > maxPos) {
       newPos = maxPos - (newPos - maxPos);
     }
     
+    final newSquare = state!.board[newPos];
+    
     if (state!.currentPlayer == 1) {
-      state = state!.copyWith(player1Position: newPos);
+      state = state!.copyWith(
+        player1Position: newPos,
+        lastDiceRoll: roll,
+        currentSquare: newSquare,
+        isGameOver: newPos == maxPos,
+        winner: newPos == maxPos ? 1 : null,
+      );
     } else {
-      state = state!.copyWith(player2Position: newPos);
+      state = state!.copyWith(
+        player2Position: newPos,
+        lastDiceRoll: roll,
+        currentSquare: newSquare,
+        isGameOver: newPos == maxPos,
+        winner: newPos == maxPos ? 2 : null,
+      );
     }
     
-    // Check if won
-    if (newPos == maxPos) {
-      state = state!.copyWith(gameCompleted: true);
-    }
+    _handleSquareEffect(newSquare);
   }
 
-  /// Get the square type at current player's position
-  GooseSquareType getCurrentSquareType() {
-    if (state == null) return GooseSquareType.normal;
-    
-    final pos = state!.currentPlayer == 1
-        ? state!.player1Position
-        : state!.player2Position;
-    
-    return state!.board[pos].type;
-  }
-
-  /// Set the current card being displayed
-  void setCurrentCard(GooseCard? card) {
-    if (state == null) return;
-    state = state!.copyWith(currentCard: card);
-  }
-
-  /// Handle special square effects
-  void handleSpecialSquare(GooseSquareType type) {
+  void _handleSquareEffect(GooseSquare square) {
     if (state == null) return;
     
-    switch (type) {
+    switch (square.type) {
       case GooseSquareType.goose:
-        // Double move - roll again
+        rollDice();
         break;
       case GooseSquareType.bridge:
-        // Jump ahead
-        final currentPos = state!.currentPlayer == 1
+        final newPos = (state!.currentPlayer == 1
             ? state!.player1Position
-            : state!.player2Position;
-        final jumpTo = (currentPos + 6).clamp(0, state!.board.length - 1);
+            : state!.player2Position) + 6;
         if (state!.currentPlayer == 1) {
-          state = state!.copyWith(player1Position: jumpTo);
+          state = state!.copyWith(player1Position: newPos);
         } else {
-          state = state!.copyWith(player2Position: jumpTo);
+          state = state!.copyWith(player2Position: newPos);
         }
         break;
       case GooseSquareType.well:
-        // Skip a turn
         if (state!.currentPlayer == 1) {
           state = state!.copyWith(player1InWell: true);
         } else {
@@ -628,7 +522,6 @@ class GooseGameNotifier extends StateNotifier<GooseGameState?> {
         }
         break;
       case GooseSquareType.labyrinth:
-        // Go back several spaces
         final currentPos = state!.currentPlayer == 1
             ? state!.player1Position
             : state!.player2Position;
@@ -640,7 +533,6 @@ class GooseGameNotifier extends StateNotifier<GooseGameState?> {
         }
         break;
       case GooseSquareType.inn:
-        // Skip next turn
         if (state!.currentPlayer == 1) {
           state = state!.copyWith(player1InWell: true);
         } else {
@@ -652,17 +544,14 @@ class GooseGameNotifier extends StateNotifier<GooseGameState?> {
     }
   }
 
-  /// Switch to next player
   void nextPlayer() {
     if (state == null) return;
     
     final nextPlayer = state!.currentPlayer == 1 ? 2 : 1;
     
-    // Check if next player is in well/inn
     final isInWell = nextPlayer == 1 ? state!.player1InWell : state!.player2InWell;
     
     if (isInWell) {
-      // Release from well but still skip
       if (nextPlayer == 1) {
         state = state!.copyWith(player1InWell: false, currentPlayer: state!.currentPlayer);
       } else {
@@ -673,7 +562,6 @@ class GooseGameNotifier extends StateNotifier<GooseGameState?> {
     }
   }
 
-  /// End the game
   void endGame() {
     state = null;
   }
@@ -762,15 +650,15 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
         orElse: () => GameIntensity.soft,
       ),
       isDarkMode: prefs.isDarkMode ?? true,
-      soundEffectsEnabled: prefs.areSoundEffectsEnabled ?? true,
-      hapticFeedbackEnabled: prefs.isHapticFeedbackEnabled ?? true,
-      shuffleCardCount: prefs.shuffleCardCount ?? 5,
-      consentCheckInMinutes: prefs.consentCheckInInterval ?? 15,
-      isPinEnabled: prefs.isPinEnabled ?? false,
-      isBiometricEnabled: prefs.isBiometricEnabled ?? false,
-      isDiscreteIconEnabled: prefs.isDiscreteIconEnabled ?? false,
-      isPanicExitEnabled: prefs.isPanicExitEnabled ?? true,
-      illustrationStyle: prefs.illustrationStyle ?? 'line_art',
+      soundEffectsEnabled: prefs.areSoundEffectsEnabled,
+      hapticFeedbackEnabled: prefs.isHapticFeedbackEnabled,
+      shuffleCardCount: prefs.shuffleCardCount,
+      consentCheckInMinutes: prefs.consentCheckInInterval,
+      isPinEnabled: prefs.isPinEnabled,
+      isBiometricEnabled: prefs.isBiometricEnabled,
+      isDiscreteIconEnabled: prefs.isDiscreteIconEnabled,
+      isPanicExitEnabled: prefs.isPanicExitEnabled,
+      illustrationStyle: prefs.illustrationStyle,
     );
   }
 
@@ -841,10 +729,10 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
 
 /// User statistics
 final userStatsProvider = FutureProvider<UserStats>((ref) async {
-  final db = DatabaseService.instance;
-  final history = await db.getHistory(limit: 1000);
-  final streak = await db.getStreak();
-  final badges = await db.getUnlockedBadgeIds();
+  final prefs = PreferencesService.instance;
+  final history = await prefs.getHistory(limit: 1000);
+  final streak = await prefs.getStreak();
+  final badges = await prefs.getUnlockedBadgeIds();
   
   return UserStats(
     positionsExplored: history.map((h) => h['positionId'] as String?).whereType<String>().toSet().length,

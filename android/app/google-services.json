@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "18076765697",
-    "project_id": "kamasutra-48c9d",
-    "storage_bucket": "kamasutra-48c9d.firebasestorage.app"
+    "project_number": "831594038090",
+    "project_id": "kamasutra-593f9",
+    "storage_bucket": "kamasutra-593f9.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:18076765697:android:50faf9f4301e2b9407fa00",
+        "mobilesdk_app_id": "1:831594038090:android:d39c5f48933b3fd74af7b3",
         "android_client_info": {
           "package_name": "com.example.kamasutra_app_new"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "831594038090-q9cs17u8v2ldnb29mipspl3l82h30sg7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kamasutra_app_new",
+            "certificate_hash": "1b8cb0e081a7bb23004eef20e6ae25668569c716"
+          }
+        },
+        {
+          "client_id": "831594038090-tv2vrp1tbcvvo1jkh6np6nr6jsemmbhl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyB7CojH9VvQCU9gTb0H1giuCcd874KvznY"
+          "current_key": "AIzaSyDghFqPQq06FeY6p-UYTCJvpTOUQ_hRD80"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831594038090-tv2vrp1tbcvvo1jkh6np6nr6jsemmbhl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

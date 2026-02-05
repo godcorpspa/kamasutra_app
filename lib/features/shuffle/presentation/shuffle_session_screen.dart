@@ -7,10 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 
 import '../../../app/theme.dart';
+import '../../../app/router.dart';
 import '../../../data/models/position.dart';
 import '../../../data/models/game.dart';
 import '../../../data/providers/providers.dart';
-import '../../../data/local/database_service.dart';
+import '../../../data/services/preferences_service.dart';
 import '../../catalog/presentation/position_detail_screen.dart';
 
 /// Shuffle session - swipeable card stack experience
@@ -123,13 +124,12 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   void _recordReaction(PositionReaction reaction) {
     if (_currentIndex < _positions.length) {
       final position = _positions[_currentIndex];
-      final entry = HistoryEntry(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        positionId: position.id,
-        viewedAt: DateTime.now(),
-        reaction: reaction.name,
-      );
-      DatabaseService.instance.addHistoryEntry(entry.toJson());
+      // Save to PreferencesService instead of DatabaseService
+      PreferencesService.instance.addHistoryEntry({
+        'positionId': position.id,
+        'viewedAt': DateTime.now().toIso8601String(),
+        'reaction': reaction.name,
+      });
     }
   }
 
@@ -267,21 +267,24 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             ),
             const SizedBox(height: AppSpacing.xl),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                OutlinedButton(
+                OutlinedButton.icon(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Esci'),
+                ),
+                ElevatedButton.icon(
                   onPressed: () {
                     setState(() {
+                      _isLoading = true;
                       _currentIndex = 0;
                       _sessionComplete = false;
                     });
+                    _loadPositions();
                   },
-                  child: const Text('Rivedi'),
-                ),
-                const SizedBox(width: AppSpacing.md),
-                ElevatedButton(
-                  onPressed: () => context.pop(),
-                  child: Text('common.done'.tr()),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Ancora'),
                 ),
               ],
             ),
@@ -294,44 +297,36 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   Widget _buildCardStack() {
     return Column(
       children: [
-        // Card area
         Expanded(
           child: Center(
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // Background cards (next cards preview)
+                // Background cards (preview)
                 if (_currentIndex + 2 < _positions.length)
                   Transform.scale(
                     scale: 0.9,
-                    child: Transform.translate(
-                      offset: const Offset(0, 20),
-                      child: _buildCard(_positions[_currentIndex + 2], isBackground: true),
-                    ),
+                    child: _buildCard(_positions[_currentIndex + 2], isBackground: true),
                   ),
                 if (_currentIndex + 1 < _positions.length)
                   Transform.scale(
                     scale: 0.95,
-                    child: Transform.translate(
-                      offset: const Offset(0, 10),
-                      child: _buildCard(_positions[_currentIndex + 1], isBackground: true),
-                    ),
+                    child: _buildCard(_positions[_currentIndex + 1], isBackground: true),
                   ),
                   
                 // Current card
-                if (_currentIndex < _positions.length)
-                  GestureDetector(
-                    onPanUpdate: _onPanUpdate,
-                    onPanEnd: _onPanEnd,
-                    onTap: _showPositionDetail,
-                    child: Transform.translate(
-                      offset: _dragOffset,
-                      child: Transform.rotate(
-                        angle: _dragOffset.dx * 0.001,
-                        child: _buildCard(_positions[_currentIndex]),
-                      ),
+                GestureDetector(
+                  onTap: _showPositionDetail,
+                  onPanUpdate: _onPanUpdate,
+                  onPanEnd: _onPanEnd,
+                  child: Transform.translate(
+                    offset: _dragOffset,
+                    child: Transform.rotate(
+                      angle: _dragOffset.dx * 0.001,
+                      child: _buildCard(_positions[_currentIndex]),
                     ),
                   ),
+                ),
                   
                 // Swipe indicators
                 if (_dragOffset.dx > 50)
