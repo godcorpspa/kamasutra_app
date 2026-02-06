@@ -1,329 +1,178 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class QuestionQuestScreen extends StatefulWidget {
+import '../../../../app/theme.dart';
+import '../../../../data/models/user_data.dart';
+import '../../../../data/services/firebase_user_service.dart';
+import '../../../../data/providers/user_data_provider.dart';
+
+class QuestionQuestScreen extends ConsumerStatefulWidget {
   const QuestionQuestScreen({super.key});
 
   @override
-  State<QuestionQuestScreen> createState() => _QuestionQuestScreenState();
+  ConsumerState<QuestionQuestScreen> createState() => _QuestionQuestScreenState();
 }
 
-class _QuestionQuestScreenState extends State<QuestionQuestScreen>
-    with SingleTickerProviderStateMixin {
+class _QuestionQuestScreenState extends ConsumerState<QuestionQuestScreen> {
   bool _gameStarted = false;
+  bool _isLoading = false;
+  int _currentLevel = 1;
   int _currentQuestionIndex = 0;
-  String _selectedCategory = 'all';
-  String _selectedDepth = 'medium';
-  bool _showingQuestion = false;
+  List<String> _answeredQuestions = [];
   
-  late AnimationController _cardController;
-  late Animation<double> _cardAnimation;
-
-  final List<Map<String, String>> _categories = [
-    {'id': 'all', 'name': 'Tutte', 'emoji': '🎯'},
-    {'id': 'dreams', 'name': 'Sogni', 'emoji': '✨'},
-    {'id': 'memories', 'name': 'Ricordi', 'emoji': '📸'},
-    {'id': 'desires', 'name': 'Desideri', 'emoji': '💫'},
-    {'id': 'fears', 'name': 'Paure', 'emoji': '🌙'},
-    {'id': 'future', 'name': 'Futuro', 'emoji': '🔮'},
-    {'id': 'intimacy', 'name': 'Intimità', 'emoji': '💕'},
-  ];
-
-  final List<Map<String, String>> _depths = [
-    {'id': 'light', 'name': 'Leggero', 'emoji': '☀️', 'desc': 'Domande semplici per rompere il ghiaccio'},
-    {'id': 'medium', 'name': 'Profondo', 'emoji': '🌊', 'desc': 'Domande che richiedono riflessione'},
-    {'id': 'deep', 'name': 'Abisso', 'emoji': '🌌', 'desc': 'Domande che toccano l\'anima'},
-  ];
-
-  // Mock questions by category and depth
-  final Map<String, Map<String, List<String>>> _questions = {
-    'light': {
-      'dreams': [
-        'Qual è il sogno più strano che ricordi?',
-        'Se potessi sognare qualsiasi cosa stanotte, cosa sceglieresti?',
-        'Hai mai fatto un sogno ricorrente?',
-      ],
-      'memories': [
-        'Qual è il tuo primo ricordo d\'infanzia?',
-        'Qual è stato il momento più divertente della tua vita?',
-        'Racconta il tuo ricordo preferito di noi due.',
-      ],
-      'desires': [
-        'Qual è un piccolo piacere che ti rende felice?',
-        'Cosa vorresti fare questo weekend?',
-        'Qual è il tuo comfort food preferito?',
-      ],
-      'fears': [
-        'Qual è la cosa più buffa di cui hai paura?',
-        'Hai paura del buio?',
-        'Qual è l\'ultima cosa che ti ha spaventato in un film?',
-      ],
-      'future': [
-        'Dove ti vedi tra 5 anni?',
-        'Qual è il prossimo viaggio che vorresti fare?',
-        'Cosa vorresti imparare a fare?',
-      ],
-      'intimacy': [
-        'Qual è il tuo modo preferito di ricevere affetto?',
-        'Ti piacciono di più le coccole mattutine o serali?',
-        'Qual è il complimento più bello che ti ho fatto?',
-      ],
-    },
-    'medium': {
-      'dreams': [
-        'Se potessi realizzare un sogno impossibile, quale sarebbe?',
-        'Qual è un sogno che hai abbandonato e perché?',
-        'Cosa significa per te "avere successo"?',
-      ],
-      'memories': [
-        'Qual è il momento in cui ti sei sentito più orgoglioso di te stesso?',
-        'Racconta un momento difficile che ti ha reso più forte.',
-        'Qual è il ricordo più prezioso della tua famiglia?',
-      ],
-      'desires': [
-        'Cosa desideri di più in questo momento della tua vita?',
-        'C\'è qualcosa che non hai mai osato chiedermi?',
-        'Qual è il tuo desiderio segreto?',
-      ],
-      'fears': [
-        'Qual è la tua paura più grande riguardo al futuro?',
-        'C\'è qualcosa che eviti di fare per paura?',
-        'Qual è stata l\'ultima volta che hai affrontato una paura?',
-      ],
-      'future': [
-        'Come immagini la nostra vita tra 10 anni?',
-        'Qual è un obiettivo che vuoi assolutamente raggiungere?',
-        'Se potessi cambiare una cosa del tuo futuro, cosa sarebbe?',
-      ],
-      'intimacy': [
-        'Cosa ti fa sentire più amato/a?',
-        'Qual è il momento in cui ti sei sentito più connesso a me?',
-        'C\'è qualcosa che vorresti migliorare nella nostra intimità?',
-      ],
-    },
-    'deep': {
-      'dreams': [
-        'Se oggi fosse l\'ultimo giorno, di cosa ti pentiresti?',
-        'Qual è il sogno che non hai mai detto a nessuno?',
-        'Cosa sacrificheresti per realizzare il tuo sogno più grande?',
-      ],
-      'memories': [
-        'Qual è il momento che ti ha cambiato la vita per sempre?',
-        'C\'è un ricordo doloroso che ancora ti accompagna?',
-        'Qual è la lezione più importante che la vita ti ha insegnato?',
-      ],
-      'desires': [
-        'Qual è il desiderio più profondo del tuo cuore?',
-        'Cosa desideri veramente dalla nostra relazione?',
-        'Se potessi avere una risposta a qualsiasi domanda, quale faresti?',
-      ],
-      'fears': [
-        'Qual è la paura che ti tiene sveglio la notte?',
-        'Di cosa hai paura nella nostra relazione?',
-        'Qual è la verità che hai paura di affrontare?',
-      ],
-      'future': [
-        'Cosa vuoi che si ricordi di te quando non ci sarai più?',
-        'Qual è il tuo scopo nella vita?',
-        'Come vuoi invecchiare insieme?',
-      ],
-      'intimacy': [
-        'Qual è la cosa più vulnerabile che puoi condividere con me?',
-        'Cosa significa per te l\'amore vero?',
-        'Qual è il momento in cui ti sei sentito completamente al sicuro con me?',
-      ],
-    },
+  final Map<int, List<String>> _questions = {
+    1: [ // Getting to Know
+      'Qual è il tuo primo ricordo d\'infanzia?',
+      'Se potessi cenare con una persona famosa, chi sceglieresti?',
+      'Qual è la cosa che ti rende più felice nella vita?',
+      'Qual è il tuo più grande sogno?',
+      'Cosa faresti se vincessi alla lotteria?',
+      'Qual è la tua paura più grande?',
+      'Descrivi il tuo giorno perfetto',
+      'Qual è il miglior consiglio che hai ricevuto?',
+    ],
+    2: [ // Dreams & Goals
+      'Dove ti vedi tra 10 anni?',
+      'Qual è un obiettivo che vorresti raggiungere insieme?',
+      'Se potessi vivere ovunque, dove andresti?',
+      'Qual è qualcosa che hai sempre voluto imparare?',
+      'Come immagini la nostra vita tra 5 anni?',
+      'Qual è il tuo più grande rimpianto?',
+      'Cosa vorresti che la gente ricordasse di te?',
+      'Qual è la tua definizione di successo?',
+    ],
+    3: [ // Relationship Deep Dive
+      'Qual è il tuo ricordo preferito di noi?',
+      'Cosa ti ha fatto innamorare di me?',
+      'Qual è la cosa che ammiri di più della nostra relazione?',
+      'C\'è qualcosa che vorresti migliorare tra noi?',
+      'Qual è stato il momento più difficile insieme?',
+      'Cosa ti fa sentire più amato/a da me?',
+      'Qual è la nostra forza come coppia?',
+      'Come posso supportarti meglio?',
+    ],
+    4: [ // Vulnerability
+      'Qual è la tua insicurezza più grande?',
+      'C\'è qualcosa di te che non ti ho mai detto?',
+      'Qual è il tuo bisogno emotivo più importante?',
+      'Quando ti senti più vulnerabile?',
+      'Cosa ti spaventa del futuro insieme?',
+      'C\'è qualcosa per cui vorresti essere perdonato/a?',
+      'Qual è la cosa più difficile che hai dovuto superare?',
+      'Quando hai capito che potevi fidarti di me?',
+    ],
+    5: [ // Intimacy & Connection
+      'Come ti senti più connesso/a a me?',
+      'Qual è la tua lingua dell\'amore?',
+      'Cosa significa intimità per te?',
+      'Come posso farti sentire più desiderato/a?',
+      'Qual è il tuo modo preferito di ricevere affetto?',
+      'C\'è qualcosa che vorresti provare insieme?',
+      'Quando ti senti più vicino/a a me?',
+      'Qual è il tuo ricordo più intimo di noi?',
+    ],
   };
-
-  List<String> _currentQuestions = [];
-  int _player1Score = 0;
-  int _player2Score = 0;
-  int _currentPlayer = 1;
 
   @override
   void initState() {
     super.initState();
-    _cardController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    _cardAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _cardController, curve: Curves.easeOutBack),
-    );
+    _loadProgress();
   }
 
-  @override
-  void dispose() {
-    _cardController.dispose();
-    super.dispose();
+  Future<void> _loadProgress() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final data = await FirebaseUserService().getQuestionQuest();
+      setState(() {
+        _currentLevel = data.currentLevel;
+        _answeredQuestions = List.from(data.answeredQuestions);
+      });
+    } catch (e) {
+      debugPrint('Error loading progress: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _saveProgress() async {
+    try {
+      await FirebaseUserService().saveQuestionQuest(QuestionQuestData(
+        currentLevel: _currentLevel,
+        answeredQuestions: _answeredQuestions,
+      ));
+    } catch (e) {
+      debugPrint('Error saving progress: $e');
+    }
   }
 
   void _startGame() {
-    _loadQuestions();
     setState(() {
       _gameStarted = true;
       _currentQuestionIndex = 0;
-      _player1Score = 0;
-      _player2Score = 0;
-      _currentPlayer = 1;
     });
+    
+    ref.read(progressNotifierProvider.notifier).incrementGamesPlayed();
   }
 
-  void _loadQuestions() {
-    List<String> allQuestions = [];
+  void _answerQuestion() async {
+    final questionKey = 'L${_currentLevel}_Q$_currentQuestionIndex';
     
-    if (_selectedCategory == 'all') {
-      for (var category in _questions[_selectedDepth]!.values) {
-        allQuestions.addAll(category);
+    if (!_answeredQuestions.contains(questionKey)) {
+      _answeredQuestions.add(questionKey);
+    }
+    
+    final levelQuestions = _questions[_currentLevel]!;
+    
+    if (_currentQuestionIndex < levelQuestions.length - 1) {
+      setState(() => _currentQuestionIndex++);
+    } else {
+      // Level complete
+      if (_currentLevel < 5) {
+        setState(() {
+          _currentLevel++;
+          _currentQuestionIndex = 0;
+        });
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('🎉 Livello ${_currentLevel - 1} completato! Benvenuti al livello $_currentLevel'),
+            backgroundColor: AppColors.burgundy,
+          ),
+        );
+      } else {
+        // All levels complete
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('🏆 Congratulazioni! Avete completato tutti i livelli!'),
+            backgroundColor: AppColors.gold,
+          ),
+        );
       }
-    } else {
-      allQuestions = List.from(_questions[_selectedDepth]![_selectedCategory] ?? []);
     }
     
-    allQuestions.shuffle();
-    _currentQuestions = allQuestions.take(10).toList();
+    await _saveProgress();
   }
 
-  void _revealQuestion() {
-    setState(() {
-      _showingQuestion = true;
-    });
-    _cardController.forward(from: 0);
-  }
-
-  void _answerQuestion(bool answered) {
-    if (answered) {
-      setState(() {
-        if (_currentPlayer == 1) {
-          _player1Score++;
-        } else {
-          _player2Score++;
-        }
-      });
-    }
-    
-    _nextQuestion();
-  }
-
-  void _nextQuestion() {
-    if (_currentQuestionIndex < _currentQuestions.length - 1) {
-      setState(() {
-        _currentQuestionIndex++;
-        _currentPlayer = _currentPlayer == 1 ? 2 : 1;
-        _showingQuestion = false;
-      });
-    } else {
-      _showResults();
-    }
-  }
-
-  void _showResults() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1A2E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          '🎉 Viaggio Completato!',
-          style: TextStyle(color: Colors.white),
-          textAlign: TextAlign.center,
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Avete esplorato l\'anima dell\'altro.',
-              style: TextStyle(color: Colors.white70),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildScoreCard('Partner 1', _player1Score, const Color(0xFF8B5CF6)),
-                _buildScoreCard('Partner 2', _player2Score, const Color(0xFFEC4899)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Domande risposte: ${_player1Score + _player2Score}/${_currentQuestions.length}',
-              style: const TextStyle(color: Colors.white54),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              setState(() {
-                _gameStarted = false;
-              });
-            },
-            child: const Text('Menu'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _startGame();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6366F1),
-            ),
-            child: const Text('Gioca Ancora'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildScoreCard(String player, int score, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            player,
-            style: TextStyle(color: color, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '$score',
-            style: TextStyle(
-              color: color,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
+  int _getLevelProgress(int level) {
+    return _answeredQuestions.where((q) => q.startsWith('L${level}_')).length;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F1A),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
           'Question Quest',
-          style: TextStyle(
-            fontFamily: 'PlayfairDisplay',
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          style: TextStyle(fontFamily: 'PlayfairDisplay', fontWeight: FontWeight.bold),
         ),
       ),
-      body: _gameStarted ? _buildGameView() : _buildSetupView(),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _gameStarted ? _buildGameView() : _buildSetupView(),
     );
   }
 
@@ -331,167 +180,117 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Center(
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                ),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: const Icon(
-                Icons.psychology,
-                size: 50,
-                color: Colors.white,
-              ),
-            ),
-          ),
+          const Text('❓', style: TextStyle(fontSize: 64)),
           const SizedBox(height: 16),
-          const Center(
-            child: Text(
-              'Esplora l\'anima del tuo partner',
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 16,
+          Text(
+            'Question Quest',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Un viaggio di scoperta attraverso 5 livelli di intimità',
+            style: TextStyle(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          
+          // Level progress
+          ...List.generate(5, (index) {
+            final level = index + 1;
+            final progress = _getLevelProgress(level);
+            final total = _questions[level]!.length;
+            final isUnlocked = level <= _currentLevel;
+            final isComplete = progress >= total;
+            
+            return Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isUnlocked ? AppColors.surface : AppColors.surface.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                border: level == _currentLevel ? Border.all(color: AppColors.burgundy) : null,
               ),
-            ),
-          ),
-          const SizedBox(height: 32),
-
-          // Category Selection
-          const Text(
-            'Categoria',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _categories.map((category) {
-              final isSelected = _selectedCategory == category['id'];
-              return GestureDetector(
-                onTap: () => setState(() => _selectedCategory = category['id']!),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: isSelected 
-                        ? const Color(0xFF6366F1) 
-                        : Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected 
-                          ? const Color(0xFF6366F1) 
-                          : Colors.white.withOpacity(0.2),
+              child: Row(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isComplete 
+                          ? AppColors.gold 
+                          : isUnlocked 
+                              ? AppColors.burgundy.withOpacity(0.2) 
+                              : Colors.grey.withOpacity(0.2),
+                      shape: BoxShape.circle,
                     ),
-                  ),
-                  child: Text(
-                    '${category['emoji']} ${category['name']}',
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.white70,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 32),
-
-          // Depth Selection
-          const Text(
-            'Profondità',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          ...List.generate(_depths.length, (index) {
-            final depth = _depths[index];
-            final isSelected = _selectedDepth == depth['id'];
-            return GestureDetector(
-              onTap: () => setState(() => _selectedDepth = depth['id']!),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isSelected 
-                      ? const Color(0xFF6366F1).withOpacity(0.2) 
-                      : Colors.white.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected 
-                        ? const Color(0xFF6366F1) 
-                        : Colors.white.withOpacity(0.1),
-                    width: isSelected ? 2 : 1,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Text(
-                      depth['emoji']!,
-                      style: const TextStyle(fontSize: 28),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            depth['name']!,
-                            style: TextStyle(
-                              color: isSelected ? Colors.white : Colors.white70,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                    child: Center(
+                      child: isComplete
+                          ? const Icon(Icons.check, color: Colors.white)
+                          : Text(
+                              '$level',
+                              style: TextStyle(
+                                color: isUnlocked ? AppColors.burgundy : Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            depth['desc']!,
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-                    if (isSelected)
-                      const Icon(Icons.check_circle, color: Color(0xFF6366F1)),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _getLevelName(level),
+                          style: TextStyle(
+                            color: isUnlocked ? AppColors.textPrimary : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: progress / total,
+                          backgroundColor: Colors.grey.withOpacity(0.2),
+                          valueColor: AlwaysStoppedAnimation(
+                            isComplete ? AppColors.gold : AppColors.burgundy,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$progress/$total completate',
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isUnlocked)
+                    const Icon(Icons.lock, color: Colors.grey),
+                ],
               ),
             );
           }),
-          const SizedBox(height: 32),
-
-          // Start Button
+          
+          const SizedBox(height: 24),
+          
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _startGame,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6366F1),
+                backgroundColor: AppColors.burgundy,
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              child: const Text(
-                'Inizia il Viaggio',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Text(
+                _answeredQuestions.isEmpty ? 'Inizia il viaggio' : 'Continua il viaggio',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -500,221 +299,130 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
     );
   }
 
+  String _getLevelName(int level) {
+    switch (level) {
+      case 1: return 'Conoscersi';
+      case 2: return 'Sogni e Obiettivi';
+      case 3: return 'La Relazione';
+      case 4: return 'Vulnerabilità';
+      case 5: return 'Intimità Profonda';
+      default: return 'Livello $level';
+    }
+  }
+
   Widget _buildGameView() {
+    final levelQuestions = _questions[_currentLevel]!;
+    final currentQuestion = levelQuestions[_currentQuestionIndex];
+    
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
-          // Progress
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Domanda ${_currentQuestionIndex + 1}/${_currentQuestions.length}',
-                style: const TextStyle(color: Colors.white70),
+          // Level indicator
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.burgundy.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Livello $_currentLevel: ${_getLevelName(_currentLevel)}',
+              style: TextStyle(
+                color: AppColors.burgundy,
+                fontWeight: FontWeight.bold,
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: _currentPlayer == 1 
-                      ? const Color(0xFF8B5CF6).withOpacity(0.3)
-                      : const Color(0xFFEC4899).withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  'Partner $_currentPlayer risponde',
-                  style: TextStyle(
-                    color: _currentPlayer == 1 
-                        ? const Color(0xFF8B5CF6)
-                        : const Color(0xFFEC4899),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
           const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: (_currentQuestionIndex + 1) / _currentQuestions.length,
-            backgroundColor: Colors.white.withOpacity(0.1),
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
-          ),
-          
-          // Scores
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _buildMiniScore('P1', _player1Score, const Color(0xFF8B5CF6)),
-              const SizedBox(width: 24),
-              _buildMiniScore('P2', _player2Score, const Color(0xFFEC4899)),
-            ],
+          Text(
+            'Domanda ${_currentQuestionIndex + 1}/${levelQuestions.length}',
+            style: TextStyle(color: AppColors.textSecondary),
           ),
           
           const Spacer(),
           
-          // Question Card
-          if (!_showingQuestion)
-            GestureDetector(
-              onTap: _revealQuestion,
-              child: Container(
-                width: double.infinity,
-                height: 300,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF6366F1).withOpacity(0.4),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.touch_app,
-                      size: 60,
-                      color: Colors.white70,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Tocca per rivelare',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'la domanda',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
+          // Question card
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.burgundy.withOpacity(0.2),
+                  AppColors.romantic.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-            )
-          else
-            AnimatedBuilder(
-              animation: _cardAnimation,
-              builder: (context, child) {
-                return Transform.scale(
-                  scale: _cardAnimation.value,
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(32),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1A1A2E),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: const Color(0xFF6366F1).withOpacity(0.5),
-                        width: 2,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.format_quote,
-                          size: 40,
-                          color: Color(0xFF6366F1),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _currentQuestions[_currentQuestionIndex],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            height: 1.4,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: AppColors.burgundy.withOpacity(0.3)),
             ),
+            child: Column(
+              children: [
+                const Text('💭', style: TextStyle(fontSize: 48)),
+                const SizedBox(height: 24),
+                Text(
+                  currentQuestion,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: AppColors.textPrimary,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
           
           const Spacer(),
           
-          // Action Buttons
-          if (_showingQuestion)
-            Row(
+          // Instructions
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
               children: [
+                const Text('💡', style: TextStyle(fontSize: 24)),
+                const SizedBox(width: 12),
                 Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _answerQuestion(false),
-                    icon: const Icon(Icons.skip_next),
-                    label: const Text('Salta'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.white70,
-                      side: BorderSide(color: Colors.white.withOpacity(0.3)),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton.icon(
-                    onPressed: () => _answerQuestion(true),
-                    icon: const Icon(Icons.check),
-                    label: const Text('Ho Risposto'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6366F1),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                  child: Text(
+                    'Rispondete a turno, ascoltandovi con attenzione. Non c\'è fretta.',
+                    style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
                   ),
                 ),
               ],
             ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMiniScore(String label, int score, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
           ),
-          const SizedBox(width: 8),
-          Text(
-            '$score',
-            style: TextStyle(
-              color: color,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          
+          const SizedBox(height: 24),
+          
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => setState(() => _gameStarted = false),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Pausa'),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: _answerQuestion,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.burgundy,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Abbiamo risposto ✓'),
+                ),
+              ),
+            ],
           ),
         ],
       ),

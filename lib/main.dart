@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'app/app.dart';
 import 'data/services/preferences_service.dart';
+import 'data/services/firebase_user_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,13 +14,17 @@ void main() async {
   // Initialize localization
   await EasyLocalization.ensureInitialized();
   
-  // Initialize preferences (SharedPreferences)
+  // Initialize local preferences (for PIN, age gate, etc.)
   await PreferencesService.instance.initialize();
   
   // Initialize Firebase
   try {
     await Firebase.initializeApp();
-    debugPrint('✅ Firebase inizializzato');
+    
+    // Initialize Firestore with offline persistence
+    await FirebaseUserService.initialize();
+    
+    debugPrint('✅ Firebase inizializzato con persistenza offline');
   } catch (e) {
     debugPrint('⚠️ Firebase non disponibile: $e');
   }

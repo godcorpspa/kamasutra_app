@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
 
+/// 
 /// A card displaying a position preview
 class PositionCard extends StatelessWidget {
   final Position position;

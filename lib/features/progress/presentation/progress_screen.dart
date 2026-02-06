@@ -4,9 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
-import '../../../data/models/game.dart';
+import '../../../data/providers/user_data_provider.dart';
+import '../../../data/models/user_data.dart';
 
 /// Progress screen showing badges, streaks, and statistics
+/// NOW USING FIREBASE DATA
 class ProgressScreen extends ConsumerStatefulWidget {
   const ProgressScreen({super.key});
 
@@ -33,6 +35,9 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Watch the progress stream for real-time updates
+    final progressAsync = ref.watch(userProgressStreamProvider);
+    
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -48,7 +53,11 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                     style: Theme.of(context).textTheme.headlineLarge,
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildStreakCard(),
+                  progressAsync.when(
+                    data: (progress) => _buildStreakCard(progress),
+                    loading: () => _buildStreakCardLoading(),
+                    error: (e, _) => _buildStreakCard(const UserProgress()),
+                  ),
                 ],
               ),
             ),
@@ -80,12 +89,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildStreakCard() {
-    // Mock streak data - in real app, would come from provider
-    const currentStreak = 5;
-    const longestStreak = 12;
-    const graceDaysRemaining = 2;
-
+  Widget _buildStreakCard(UserProgress progress) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
@@ -101,8 +105,8 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         children: [
           // Flame icon
           Container(
-            width: 60,
-            height: 60,
+            width: 56,
+            height: 56,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.2),
               shape: BoxShape.circle,
@@ -110,70 +114,84 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
             child: const Center(
               child: Text(
                 '🔥',
-                style: TextStyle(fontSize: 32),
+                style: TextStyle(fontSize: 28),
               ),
             ),
           ),
-          const SizedBox(width: AppSpacing.lg),
+          const SizedBox(width: AppSpacing.md),
           
-          // Streak info
+          // Current streak
           Expanded(
+            flex: 2,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'progress.current_streak'.tr(),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.white.withOpacity(0.8),
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                const SizedBox(height: 2),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
-                      '$currentStreak',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      '${progress.currentStreak}',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(width: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        'progress.days'.tr(),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withOpacity(0.8),
-                        ),
+                    Text(
+                      'progress.days'.tr(),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white.withOpacity(0.8),
                       ),
                     ),
                   ],
                 ),
+                if (progress.currentStreak > 0) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    '${progress.graceDaysRemaining} giorni di grazia',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.gold,
+                      fontSize: 11,
+                    ),
+                    maxLines: 1,
+                  ),
+                ],
               ],
             ),
           ),
           
+          const SizedBox(width: AppSpacing.sm),
+          
           // Best streak
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 'progress.longest_streak'.tr(),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: Colors.white.withOpacity(0.8),
+                  fontSize: 11,
                 ),
+                maxLines: 1,
               ),
+              const SizedBox(height: 2),
               Text(
-                '$longestStreak ${'progress.days'.tr()}',
+                '${progress.longestStreak} ${'progress.days'.tr()}',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '$graceDaysRemaining ${'progress.grace_days'.tr()}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.gold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -183,69 +201,124 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildBadgesTab() {
-    return GridView.builder(
+  Widget _buildStreakCardLoading() {
+    return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        mainAxisSpacing: AppSpacing.md,
-        crossAxisSpacing: AppSpacing.md,
-        childAspectRatio: 0.8,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.burgundy,
+            AppColors.burgundy.withOpacity(0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      itemCount: _badges.length,
-      itemBuilder: (context, index) {
-        final badge = _badges[index];
-        return _BadgeCard(badge: badge);
-      },
+      child: const Center(
+        child: CircularProgressIndicator(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _buildBadgesTab() {
+    final progressAsync = ref.watch(userProgressStreamProvider);
+    
+    return progressAsync.when(
+      data: (progress) => GridView.builder(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: AppSpacing.md,
+          crossAxisSpacing: AppSpacing.md,
+          childAspectRatio: 0.8,
+        ),
+        itemCount: _allBadges.length,
+        itemBuilder: (context, index) {
+          final badgeData = _allBadges[index];
+          final isUnlocked = progress.unlockedBadges.contains(badgeData.id);
+          final unlockedAt = progress.badgeUnlockDates[badgeData.id];
+          
+          return _BadgeCard(
+            badge: badgeData,
+            isUnlocked: isUnlocked,
+            unlockedAt: unlockedAt,
+          );
+        },
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Errore: $e')),
     );
   }
 
   Widget _buildStatisticsTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        children: [
-          _buildStatRow(
-            icon: Icons.explore,
-            label: 'progress.positions_explored'.tr(),
-            value: '42',
-            color: AppColors.burgundy,
+    final progressAsync = ref.watch(userProgressStreamProvider);
+    final favoritesAsync = ref.watch(favoritesStreamProvider);
+    
+    return progressAsync.when(
+      data: (progress) {
+        final favoritesCount = favoritesAsync.when(
+          data: (list) => list.length,
+          loading: () => 0,
+          error: (_, __) => 0,
+        );
+        
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            children: [
+              _buildStatRow(
+                icon: Icons.explore,
+                label: 'progress.positions_explored'.tr(),
+                value: '${progress.gamesPlayed}', // TODO: track positions separately
+                color: AppColors.burgundy,
+              ),
+              _buildStatRow(
+                icon: Icons.casino,
+                label: 'progress.games_played'.tr(),
+                value: '${progress.gamesPlayed}',
+                color: AppColors.gold,
+              ),
+              _buildStatRow(
+                icon: Icons.timer,
+                label: 'progress.total_time'.tr(),
+                value: progress.formattedTotalTime,
+                color: AppColors.navy,
+              ),
+              _buildStatRow(
+                icon: Icons.favorite,
+                label: 'progress.favorites_count'.tr(),
+                value: '$favoritesCount',
+                color: AppColors.blush,
+              ),
+              
+              if (progress.gamesPlayed == 0 && progress.currentStreak == 0) ...[
+                const SizedBox(height: AppSpacing.xl),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xl),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.bar_chart,
+                        size: 64,
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Text(
+                        'Inizia a esplorare per vedere le tue statistiche!',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
           ),
-          _buildStatRow(
-            icon: Icons.casino,
-            label: 'progress.games_played'.tr(),
-            value: '18',
-            color: AppColors.gold,
-          ),
-          _buildStatRow(
-            icon: Icons.timer,
-            label: 'progress.total_time'.tr(),
-            value: '12h 30m',
-            color: AppColors.navy,
-          ),
-          _buildStatRow(
-            icon: Icons.favorite,
-            label: 'progress.favorites_count'.tr(),
-            value: '15',
-            color: AppColors.blush,
-          ),
-          
-          const SizedBox(height: AppSpacing.xl),
-          
-          // Category breakdown
-          Text(
-            'Categorie esplorate',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          
-          _buildCategoryProgress('Romantiche', 0.8, AppColors.burgundy),
-          _buildCategoryProgress('Per iniziare', 0.6, AppColors.soft),
-          _buildCategoryProgress('Atletiche', 0.3, AppColors.spicy),
-          _buildCategoryProgress('Avventurose', 0.2, AppColors.extraSpicy),
-          _buildCategoryProgress('Low Impact', 0.5, AppColors.navy),
-        ],
-      ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Errore: $e')),
     );
   }
 
@@ -294,56 +367,59 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
-  Widget _buildCategoryProgress(String category, double progress, Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(category, style: Theme.of(context).textTheme.bodySmall),
-              Text(
-                '${(progress * 100).round()}%',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: color.withOpacity(0.1),
-            valueColor: AlwaysStoppedAnimation(color),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHistoryTab() {
-    // Mock history data
-    final history = [
-      _HistoryItem(date: DateTime.now(), positionName: 'Posizione romantica', reaction: '❤️'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 1)), positionName: 'Posizione avventurosa', reaction: '👍'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 2)), positionName: 'Posizione rilassante', reaction: '😐'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 3)), positionName: 'Posizione atletica', reaction: '😅'),
-    ];
+    final historyAsync = ref.watch(historyStreamProvider);
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: history.length,
-      itemBuilder: (context, index) {
-        final item = history[index];
-        return _buildHistoryItem(item);
+    return historyAsync.when(
+      data: (history) {
+        if (history.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.history,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'La tua cronologia apparirà qui',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'Esplora posizioni per iniziare a tracciare i tuoi progressi!',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          itemCount: history.length,
+          itemBuilder: (context, index) {
+            final item = history[index];
+            return _buildHistoryItem(item);
+          },
+        );
       },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text('Errore: $e')),
     );
   }
 
-  Widget _buildHistoryItem(_HistoryItem item) {
+  Widget _buildHistoryItem(HistoryEntry item) {
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       padding: const EdgeInsets.all(AppSpacing.md),
@@ -381,110 +457,43 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
   }
 }
 
-class _HistoryItem {
-  final DateTime date;
-  final String positionName;
-  final String reaction;
-
-  _HistoryItem({
-    required this.date,
-    required this.positionName,
-    required this.reaction,
-  });
-}
-
-// Badge data
-final List<_BadgeData> _badges = [
-  _BadgeData(
-    id: 'explorer',
-    emoji: '🧭',
-    nameKey: 'badges.explorer.name',
-    descriptionKey: 'badges.explorer.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 10)),
-  ),
-  _BadgeData(
-    id: 'adventurer',
-    emoji: '🏔️',
-    nameKey: 'badges.adventurer.name',
-    descriptionKey: 'badges.adventurer.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 5)),
-  ),
-  _BadgeData(
-    id: 'romantic',
-    emoji: '💕',
-    nameKey: 'badges.romantic.name',
-    descriptionKey: 'badges.romantic.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'collector',
-    emoji: '📚',
-    nameKey: 'badges.collector.name',
-    descriptionKey: 'badges.collector.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'dedicated',
-    emoji: '🔥',
-    nameKey: 'badges.dedicated.name',
-    descriptionKey: 'badges.dedicated.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 2)),
-  ),
-  _BadgeData(
-    id: 'soul_explorers',
-    emoji: '✨',
-    nameKey: 'badges.soul_explorers.name',
-    descriptionKey: 'badges.soul_explorers.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'intimacy_cartographers',
-    emoji: '🗺️',
-    nameKey: 'badges.intimacy_cartographers.name',
-    descriptionKey: 'badges.intimacy_cartographers.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'poet',
-    emoji: '📝',
-    nameKey: 'badges.poet.name',
-    descriptionKey: 'badges.poet.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'supreme_flatterer',
-    emoji: '👑',
-    nameKey: 'badges.supreme_flatterer.name',
-    descriptionKey: 'badges.supreme_flatterer.description',
-    isUnlocked: false,
-  ),
-];
-
-class _BadgeData {
+// Badge definitions (same as before)
+class BadgeData {
   final String id;
   final String emoji;
   final String nameKey;
   final String descriptionKey;
-  final bool isUnlocked;
-  final DateTime? unlockedAt;
 
-  _BadgeData({
+  const BadgeData({
     required this.id,
     required this.emoji,
     required this.nameKey,
     required this.descriptionKey,
-    required this.isUnlocked,
-    this.unlockedAt,
   });
 }
 
-class _BadgeCard extends StatelessWidget {
-  final _BadgeData badge;
+const List<BadgeData> _allBadges = [
+  BadgeData(id: 'explorer', emoji: '🧭', nameKey: 'badges.explorer.name', descriptionKey: 'badges.explorer.description'),
+  BadgeData(id: 'adventurer', emoji: '🏔️', nameKey: 'badges.adventurer.name', descriptionKey: 'badges.adventurer.description'),
+  BadgeData(id: 'romantic', emoji: '💕', nameKey: 'badges.romantic.name', descriptionKey: 'badges.romantic.description'),
+  BadgeData(id: 'collector', emoji: '📚', nameKey: 'badges.collector.name', descriptionKey: 'badges.collector.description'),
+  BadgeData(id: 'dedicated', emoji: '🔥', nameKey: 'badges.dedicated.name', descriptionKey: 'badges.dedicated.description'),
+  BadgeData(id: 'soul_explorers', emoji: '✨', nameKey: 'badges.soul_explorers.name', descriptionKey: 'badges.soul_explorers.description'),
+  BadgeData(id: 'intimacy_cartographers', emoji: '🗺️', nameKey: 'badges.intimacy_cartographers.name', descriptionKey: 'badges.intimacy_cartographers.description'),
+  BadgeData(id: 'poet', emoji: '📝', nameKey: 'badges.poet.name', descriptionKey: 'badges.poet.description'),
+  BadgeData(id: 'supreme_flatterer', emoji: '👑', nameKey: 'badges.supreme_flatterer.name', descriptionKey: 'badges.supreme_flatterer.description'),
+];
 
-  const _BadgeCard({required this.badge});
+class _BadgeCard extends StatelessWidget {
+  final BadgeData badge;
+  final bool isUnlocked;
+  final DateTime? unlockedAt;
+
+  const _BadgeCard({
+    required this.badge,
+    required this.isUnlocked,
+    this.unlockedAt,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -493,11 +502,11 @@ class _BadgeCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(AppSpacing.sm),
         decoration: BoxDecoration(
-          color: badge.isUnlocked
+          color: isUnlocked
               ? Theme.of(context).colorScheme.surface
               : Theme.of(context).colorScheme.surface.withOpacity(0.5),
           borderRadius: BorderRadius.circular(AppRadius.md),
-          border: badge.isUnlocked
+          border: isUnlocked
               ? Border.all(color: AppColors.gold.withOpacity(0.5))
               : null,
         ),
@@ -505,10 +514,10 @@ class _BadgeCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              badge.isUnlocked ? badge.emoji : '🔒',
+              isUnlocked ? badge.emoji : '🔒',
               style: TextStyle(
                 fontSize: 36,
-                color: badge.isUnlocked ? null : Colors.grey,
+                color: isUnlocked ? null : Colors.grey,
               ),
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -516,7 +525,7 @@ class _BadgeCard extends StatelessWidget {
               badge.nameKey.tr(),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: badge.isUnlocked 
+                color: isUnlocked 
                     ? null 
                     : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
@@ -552,16 +561,16 @@ class _BadgeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(badge.descriptionKey.tr()),
-            if (badge.isUnlocked && badge.unlockedAt != null) ...[
+            if (isUnlocked && unlockedAt != null) ...[
               const SizedBox(height: AppSpacing.md),
               Text(
-                'Sbloccato il ${DateFormat('d MMMM yyyy', 'it').format(badge.unlockedAt!)}',
+                'Sbloccato il ${DateFormat('d MMMM yyyy', 'it').format(unlockedAt!)}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppColors.gold,
                 ),
               ),
             ],
-            if (!badge.isUnlocked) ...[
+            if (!isUnlocked) ...[
               const SizedBox(height: AppSpacing.md),
               Text(
                 'Continua a esplorare per sbloccare!',

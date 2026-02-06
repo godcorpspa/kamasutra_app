@@ -4,10 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:kamasutra_app/data/repositories/position_repository_firebase.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
-import '../../../data/providers/providers.dart';
+import '../../../data/providers/providers.dart' hide positionRepositoryProvider;
 import '../widgets/position_card.dart';
 import '../widgets/filter_sheet.dart';
 

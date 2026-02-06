@@ -599,39 +599,38 @@ class _GoosePlayScreenState extends ConsumerState<GoosePlayScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Last roll display
-                if (_gameState.lastDiceRoll != null)
-                  AnimatedBuilder(
-                    animation: _diceController,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _isRolling ? _diceController.value * 2 * pi : 0,
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              _isRolling ? '?' : '${_gameState.lastDiceRoll}',
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.navy,
-                              ),
+                AnimatedBuilder(
+                  animation: _diceController,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _isRolling ? _diceController.value * 2 * pi : 0,
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              blurRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            _isRolling ? '?' : '${_gameState.lastDiceRoll}',
+                            style: const TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
                             ),
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                ),
                 
                 const SizedBox(width: AppSpacing.lg),
                 

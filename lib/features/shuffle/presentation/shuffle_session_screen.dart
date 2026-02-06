@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 
 import '../../../app/theme.dart';
-import '../../../app/router.dart';
 import '../../../data/models/position.dart';
 import '../../../data/models/game.dart';
 import '../../../data/providers/providers.dart';
@@ -38,7 +37,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   bool _sessionComplete = false;
   
   late AnimationController _cardController;
-  late Animation<Offset> _cardAnimation;
   Offset _dragOffset = Offset.zero;
   
   late ConfettiController _confettiController;
@@ -56,13 +54,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    _cardAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _cardController,
-      curve: Curves.easeOut,
-    ));
   }
 
   Future<void> _loadPositions() async {

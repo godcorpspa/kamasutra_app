@@ -1,23 +1,28 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import '../../../../app/theme.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoveNotesScreen extends StatefulWidget {
+import '../../../../app/theme.dart';
+import '../../../../data/services/firebase_user_service.dart';
+import '../../../../data/providers/user_data_provider.dart';
+
+class LoveNotesScreen extends ConsumerStatefulWidget {
   const LoveNotesScreen({super.key});
 
   @override
-  State<LoveNotesScreen> createState() => _LoveNotesScreenState();
+  ConsumerState<LoveNotesScreen> createState() => _LoveNotesScreenState();
 }
 
-class _LoveNotesScreenState extends State<LoveNotesScreen> {
+class _LoveNotesScreenState extends ConsumerState<LoveNotesScreen> {
   bool _gameStarted = false;
   String _currentPrompt = '';
   int _currentPlayer = 1;
   int _roundNumber = 1;
   int _totalRounds = 5;
   final TextEditingController _noteController = TextEditingController();
-  final List<Map<String, dynamic>> _savedNotes = [];
+  final List<Map<String, dynamic>> _sessionNotes = []; // Current session notes
   String _category = 'romantic';
+  bool _isLoading = false;
   
   final Map<String, List<String>> _prompts = {
     'romantic': [
@@ -70,8 +75,11 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
       _gameStarted = true;
       _currentPlayer = 1;
       _roundNumber = 1;
-      _savedNotes.clear();
+      _sessionNotes.clear();
     });
+    
+    // Record game played
+    ref.read(progressNotifierProvider.notifier).incrementGamesPlayed();
   }
 
   void _pickNewPrompt() {
@@ -79,7 +87,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
     _currentPrompt = prompts[Random().nextInt(prompts.length)];
   }
 
-  void _submitNote() {
+  void _submitNote() async {
     if (_noteController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -90,23 +98,24 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
       return;
     }
 
+    final note = {
+      'player': _currentPlayer,
+      'prompt': _currentPrompt,
+      'note': _noteController.text.trim(),
+      'round': _roundNumber,
+      'timestamp': DateTime.now().toIso8601String(),
+    };
+
     setState(() {
-      _savedNotes.add({
-        'player': _currentPlayer,
-        'prompt': _currentPrompt,
-        'note': _noteController.text.trim(),
-        'round': _roundNumber,
-      });
+      _sessionNotes.add(note);
       _noteController.clear();
     });
 
     if (_currentPlayer == 1) {
-      // Player 2's turn with same prompt
       setState(() {
         _currentPlayer = 2;
       });
     } else {
-      // Both players done, next round or end
       if (_roundNumber < _totalRounds) {
         _pickNewPrompt();
         setState(() {
@@ -116,6 +125,39 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
       } else {
         _showResults();
       }
+    }
+  }
+
+  Future<void> _saveNotesToFirebase() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final service = FirebaseUserService();
+      
+      // Save each note pair
+      for (final note in _sessionNotes) {
+        await service.saveLoveNote({
+          ...note,
+          'category': _category,
+          'savedAt': DateTime.now().toIso8601String(),
+        });
+      }
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Note salvate! 💕'),
+          backgroundColor: AppColors.burgundy,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Errore nel salvataggio: $e'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -151,10 +193,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    const Text(
-                      '💌',
-                      style: TextStyle(fontSize: 48),
-                    ),
+                    const Text('💌', style: TextStyle(fontSize: 48)),
                     const SizedBox(height: 8),
                     Text(
                       'Le vostre note d\'amore',
@@ -181,7 +220,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: _totalRounds,
                   itemBuilder: (context, roundIndex) {
-                    final roundNotes = _savedNotes
+                    final roundNotes = _sessionNotes
                         .where((n) => n['round'] == roundIndex + 1)
                         .toList();
                     
@@ -197,7 +236,6 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Prompt
                           Text(
                             '📝 ${roundNotes.first['prompt']}',
                             style: const TextStyle(
@@ -207,7 +245,6 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                           ),
                           const SizedBox(height: 12),
                           
-                          // Player 1's note
                           if (roundNotes.any((n) => n['player'] == 1))
                             _buildNoteCard(
                               'Giocatore 1',
@@ -217,7 +254,6 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                           
                           const SizedBox(height: 8),
                           
-                          // Player 2's note
                           if (roundNotes.any((n) => n['player'] == 2))
                             _buildNoteCard(
                               'Giocatore 2',
@@ -240,28 +276,38 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                       child: OutlinedButton(
                         onPressed: () {
                           Navigator.pop(context);
-                          _startGame();
+                          setState(() {
+                            _gameStarted = false;
+                            _sessionNotes.clear();
+                          });
                         },
                         style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.textSecondary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Gioca ancora'),
+                        child: const Text('Nuova partita'),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
+                        onPressed: _isLoading ? null : () async {
+                          await _saveNotesToFirebase();
                           Navigator.pop(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.burgundy,
-                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Fine'),
+                        child: _isLoading 
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text('💾 Salva note'),
                       ),
                     ),
                   ],
@@ -297,10 +343,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
           const SizedBox(height: 4),
           Text(
             note,
-            style: const TextStyle(
-              color: AppColors.textPrimary,
-              fontStyle: FontStyle.italic,
-            ),
+            style: const TextStyle(color: AppColors.textPrimary),
           ),
         ],
       ),
@@ -312,336 +355,448 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Love Notes'),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        title: const Text(
+          'Bigliettini d\'Amore',
+          style: TextStyle(
+            fontFamily: 'PlayfairDisplay',
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         actions: [
+          if (!_gameStarted)
+            IconButton(
+              icon: const Icon(Icons.history),
+              onPressed: _showSavedNotes,
+              tooltip: 'Note salvate',
+            ),
           IconButton(
             icon: const Icon(Icons.help_outline),
             onPressed: _showRules,
           ),
         ],
       ),
-      body: _gameStarted ? _buildGameScreen() : _buildSetupScreen(),
+      body: _gameStarted ? _buildGameView() : _buildSetupView(),
     );
   }
 
-  Widget _buildSetupScreen() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Center(
-              child: Column(
-                children: [
-                  const Text(
-                    '💌',
-                    style: TextStyle(fontSize: 64),
+  void _showSavedNotes() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final data = await FirebaseUserService().getLoveNotes();
+      
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => DraggableScrollableSheet(
+          initialChildSize: 0.7,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          builder: (context, scrollController) => Container(
+            decoration: const BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.textSecondary.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Love Notes',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Text(
+                    'Le vostre note salvate (${data.savedNotes.length})',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Scrivetevi messaggi d\'amore segreti',
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            // Category selection
-            Text(
-              'Categoria',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildCategoryOption('romantic', '💕 Romantico', 'Dolcezza e sentimenti'),
-            const SizedBox(height: 8),
-            _buildCategoryOption('compliment', '✨ Complimenti', 'Elogi e ammirazione'),
-            const SizedBox(height: 8),
-            _buildCategoryOption('spicy', '🔥 Piccante', 'Desideri e passione'),
-            
-            const SizedBox(height: 24),
-            
-            // Rounds selection
-            Text(
-              'Numero di round',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [3, 5, 7].map((rounds) {
-                final isSelected = _totalRounds == rounds;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => _totalRounds = rounds),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.burgundy : AppColors.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isSelected ? AppColors.burgundy : AppColors.textSecondary.withOpacity(0.3),
+                ),
+                Expanded(
+                  child: data.savedNotes.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('💌', style: TextStyle(fontSize: 64)),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Nessuna nota salvata ancora',
+                                style: TextStyle(
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: scrollController,
+                          padding: const EdgeInsets.all(16),
+                          itemCount: data.savedNotes.length,
+                          itemBuilder: (context, index) {
+                            final note = data.savedNotes[index];
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    note['prompt'] ?? '',
+                                    style: TextStyle(
+                                      color: AppColors.gold,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    note['note'] ?? '',
+                                    style: const TextStyle(
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$rounds',
-                          style: TextStyle(
-                            color: isSelected ? Colors.white : AppColors.textPrimary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Errore: $e')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Widget _buildSetupView() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        children: [
+          // Header
+          const Text('💌', style: TextStyle(fontSize: 64)),
+          const SizedBox(height: 16),
+          Text(
+            'Bigliettini d\'Amore',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Scrivete messaggi segreti l\'uno per l\'altra',
+            style: TextStyle(color: AppColors.textSecondary),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+
+          // Category selection
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Scegli categoria',
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildCategoryChip('romantic', '💕 Romantico'),
+                const SizedBox(height: 8),
+                _buildCategoryChip('compliment', '🌟 Complimenti'),
+                const SizedBox(height: 8),
+                _buildCategoryChip('spicy', '🔥 Piccante'),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Rounds selection
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Numero di round',
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [3, 5, 7, 10].map((n) {
+                    final isSelected = _totalRounds == n;
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() => _totalRounds = n),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          decoration: BoxDecoration(
+                            color: isSelected 
+                                ? AppColors.burgundy 
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isSelected 
+                                  ? AppColors.burgundy 
+                                  : AppColors.textSecondary.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '$n',
+                              style: TextStyle(
+                                color: isSelected 
+                                    ? Colors.white 
+                                    : AppColors.textPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            
-            const Spacer(),
-            
-            // Start button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _startGame,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.burgundy,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                    );
+                  }).toList(),
                 ),
-                child: const Text(
-                  'Inizia a scrivere',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ],
+            ),
+          ),
+          const SizedBox(height: 32),
+
+          // Start button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _startGame,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.burgundy,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
               ),
+              child: const Text(
+                'Inizia a scrivere 💝',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildCategoryOption(String value, String label, String description) {
+  Widget _buildCategoryChip(String value, String label) {
     final isSelected = _category == value;
     return GestureDetector(
       onTap: () => setState(() => _category = value),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.burgundy.withOpacity(0.2) : AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
+          color: isSelected ? AppColors.burgundy.withOpacity(0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected ? AppColors.burgundy : AppColors.textSecondary.withOpacity(0.3),
-            width: isSelected ? 2 : 1,
           ),
         ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: isSelected ? AppColors.burgundy : AppColors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (isSelected)
-              const Icon(Icons.check_circle, color: AppColors.burgundy),
-          ],
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? AppColors.burgundy : AppColors.textPrimary,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildGameScreen() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Progress indicator
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Round $_roundNumber/$_totalRounds',
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+  Widget _buildGameView() {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Progress indicator
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Round $_roundNumber/$_totalRounds',
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: _currentPlayer == 1 
+                      ? AppColors.burgundy.withOpacity(0.2) 
+                      : AppColors.spicy.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  'Giocatore $_currentPlayer',
+                  style: TextStyle(
+                    color: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: _currentPlayer == 1 
-                        ? AppColors.burgundy.withOpacity(0.2) 
-                        : AppColors.spicy.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Prompt card
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.burgundy.withOpacity(0.2),
+                  AppColors.romantic.withOpacity(0.1),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.burgundy.withOpacity(0.3)),
+            ),
+            child: Column(
+              children: [
+                const Text('📝', style: TextStyle(fontSize: 32)),
+                const SizedBox(height: 12),
+                Text(
+                  _currentPrompt,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w500,
                   ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 24),
+          
+          // Note input
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.textSecondary.withOpacity(0.2)),
+              ),
+              child: TextField(
+                controller: _noteController,
+                maxLines: null,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                style: const TextStyle(color: AppColors.textPrimary),
+                decoration: InputDecoration(
+                  hintText: 'Scrivi il tuo messaggio qui...\n\n(L\'altro giocatore non deve vedere!)',
+                  hintStyle: TextStyle(color: AppColors.textSecondary.withOpacity(0.5)),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.all(16),
+                ),
+              ),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Privacy reminder
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.gold.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                const Text('👀', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 12),
+                Expanded(
                   child: Text(
-                    'Giocatore $_currentPlayer',
-                    style: TextStyle(
-                      color: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
-                      fontWeight: FontWeight.bold,
+                    _currentPlayer == 1 
+                        ? 'Giocatore 2, gira le spalle!' 
+                        : 'Giocatore 1, gira le spalle!',
+                    style: const TextStyle(
+                      color: AppColors.gold,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ],
             ),
-            
-            const SizedBox(height: 24),
-            
-            // Prompt card
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppColors.burgundy.withOpacity(0.2),
-                    AppColors.romantic.withOpacity(0.1),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.burgundy.withOpacity(0.3)),
-              ),
-              child: Column(
-                children: [
-                  const Text(
-                    '📝',
-                    style: TextStyle(fontSize: 32),
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    _currentPrompt,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Note input
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Submit button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _submitNote,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.textSecondary.withOpacity(0.2)),
                 ),
-                child: TextField(
-                  controller: _noteController,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  style: const TextStyle(color: AppColors.textPrimary),
-                  decoration: InputDecoration(
-                    hintText: 'Scrivi il tuo messaggio qui...\n\n(L\'altro giocatore non deve vedere!)',
-                    hintStyle: TextStyle(color: AppColors.textSecondary.withOpacity(0.5)),
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.all(16),
-                  ),
-                ),
+              ),
+              child: Text(
+                _currentPlayer == 1 ? 'Invia e passa a Giocatore 2' : 'Invia nota',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-            
-            const SizedBox(height: 16),
-            
-            // Privacy reminder
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.gold.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Text('👀', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      _currentPlayer == 1 
-                          ? 'Giocatore 2, gira le spalle!' 
-                          : 'Giocatore 1, gira le spalle!',
-                      style: const TextStyle(
-                        color: AppColors.gold,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Submit button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _submitNote,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                child: Text(
-                  _currentPlayer == 1 ? 'Invia e passa a Giocatore 2' : 'Invia nota',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -670,7 +825,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
             _buildRuleItem('1', 'Ogni round ha lo stesso tema per entrambi'),
             _buildRuleItem('2', 'Scrivete a turno senza farvi vedere'),
             _buildRuleItem('3', 'Alla fine, leggete insieme tutti i messaggi'),
-            _buildRuleItem('4', 'Scoprite cosa avete scritto l\'uno dell\'altra!'),
+            _buildRuleItem('4', 'Salvate le note preferite nel cloud!'),
             const SizedBox(height: 16),
             Text(
               'Siate sinceri e dolci! 💕',
