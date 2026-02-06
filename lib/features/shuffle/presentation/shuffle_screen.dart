@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme.dart';
 import '../../../app/router.dart';
 import '../../../data/models/position.dart';
-import '../../../data/providers/providers.dart';
 
 /// Shuffle mode configuration screen
 class ShuffleScreen extends ConsumerStatefulWidget {
@@ -206,7 +205,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 Text(
-                  '$_cardCount ${'shuffle.cards'.tr()}',
+                  '$_cardCount carte',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -221,13 +220,37 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                 return Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: ChoiceChip(
-                      label: Text('$count'),
-                      selected: isSelected,
-                      onSelected: (_) {
+                    child: GestureDetector(
+                      onTap: () {
                         HapticFeedback.selectionClick();
                         setState(() => _cardCount = count);
                       },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isSelected 
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.surface,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                            width: isSelected ? 2 : 1,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: isSelected 
+                                  ? Colors.white 
+                                  : Theme.of(context).colorScheme.onSurface,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );

@@ -138,7 +138,7 @@
     "title": "Shuffle",
     "subtitle": "Let yourself be surprised",
     "card_count": "Number of cards",
-    "cards": "{count} cards",
+    "cards": "cards",
     "start_session": "Start the evening",
     "filters_active": "Filters active",
     "no_filters": "No filters",
@@ -151,7 +151,7 @@
   "games": {
     "title": "Games",
     "subtitle": "Choose your adventure",
-    "players": "{count} players",
+    "players": "players",
     "duration": "{minutes} min",
     "start_game": "Start",
     "end_game": "End game",
