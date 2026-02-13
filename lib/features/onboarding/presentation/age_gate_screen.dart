@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../app/theme.dart';
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../data/services/user_data_sync_service.dart';
 
 /// Age verification gate screen
 class AgeGateScreen extends StatelessWidget {
@@ -116,10 +117,12 @@ class AgeGateScreen extends StatelessWidget {
     
     // Save age verification
     await PreferencesService.instance.setAgeVerified(true);
+    UserDataSyncService.instance.syncSettingsPatch({'age_verified': true});
     
     // Set first launch date if not set
     if (PreferencesService.instance.firstLaunchDate == null) {
       await PreferencesService.instance.setFirstLaunchDate(DateTime.now());
+      UserDataSyncService.instance.syncSettingsPatch({'first_launch_date': PreferencesService.instance.firstLaunchDate?.toIso8601String()});
     }
     
     if (context.mounted) {

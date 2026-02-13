@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../models/position.dart';
 import '../services/preferences_service.dart';
+import '../services/user_data_sync_service.dart';
 
 /// Repository for managing positions data
 class PositionRepository {
@@ -16,6 +17,9 @@ class PositionRepository {
 
   /// Load all positions from JSON assets
   Future<List<Position>> loadPositions(String locale) async {
+    // Attende un minimo il primo sync (se c'è) per applicare eventuali dati cloud.
+    await UserDataSyncService.instance.waitInitialSync();
+
     final jsonString = await rootBundle.loadString(
       'assets/positions/positions_$locale.json',
     );
@@ -98,6 +102,9 @@ class PositionRepository {
       positionId,
       isFavorite: newStatus,
     );
+
+    // Mirror-write su cloud (best-effort, non blocca la UI)
+    UserDataSyncService.instance.syncFavorite(positionId, newStatus);
     
     _userData[positionId] = PositionUserData(
       positionId: positionId,
@@ -120,6 +127,9 @@ class PositionRepository {
       timesViewed: newCount,
       lastViewed: now,
     );
+
+    // Mirror-write su cloud (best-effort, non blocca la UI)
+    UserDataSyncService.instance.syncView(positionId, viewedAt: now);
     
     _userData[positionId] = PositionUserData(
       positionId: positionId,

@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../data/services/user_data_sync_service.dart';
 import '../../../data/models/game.dart';
 
 /// Settings screen - all app preferences and configuration
@@ -143,9 +144,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               // Navigate to PIN creation
               // For now just toggle
               await PreferencesService.instance.setPinEnabled(true);
+              UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': true});
             } else {
               await PreferencesService.instance.setPinEnabled(false);
               await PreferencesService.instance.setPinHash(null);
+              UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': false});
             }
             setState(() => _isPinEnabled = value);
           },
@@ -159,6 +162,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             value: _isBiometricEnabled,
             onChanged: (value) async {
               await PreferencesService.instance.setBiometricEnabled(value);
+              UserDataSyncService.instance.syncSettingsPatch({'biometric_enabled': value});
               setState(() => _isBiometricEnabled = value);
             },
           ),
@@ -170,6 +174,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           value: _isDiscreteIconEnabled,
           onChanged: (value) async {
             await PreferencesService.instance.setDiscreteIconEnabled(value);
+            UserDataSyncService.instance.syncSettingsPatch({'discrete_icon_enabled': value});
             setState(() => _isDiscreteIconEnabled = value);
           },
         ),
@@ -181,6 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           value: _isPanicExitEnabled,
           onChanged: (value) async {
             await PreferencesService.instance.setPanicExitEnabled(value);
+            UserDataSyncService.instance.syncSettingsPatch({'panic_exit_enabled': value});
             setState(() => _isPanicExitEnabled = value);
           },
         ),
@@ -223,6 +229,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           value: _soundEffects,
           onChanged: (value) async {
             await PreferencesService.instance.setSoundEffectsEnabled(value);
+            UserDataSyncService.instance.syncSettingsPatch({'sound_effects': value});
             setState(() => _soundEffects = value);
           },
         ),
@@ -235,6 +242,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           value: _hapticFeedback,
           onChanged: (value) async {
             await PreferencesService.instance.setHapticFeedbackEnabled(value);
+            UserDataSyncService.instance.syncSettingsPatch({'haptic_feedback': value});
             setState(() => _hapticFeedback = value);
           },
         ),
@@ -529,6 +537,7 @@ Future<void> _performLogout() async {
           return SimpleDialogOption(
             onPressed: () async {
               await PreferencesService.instance.setDefaultIntensity(intensity.name);
+              UserDataSyncService.instance.syncSettingsPatch({'default_intensity': intensity.name});
               setState(() => _defaultIntensity = intensity);
               Navigator.pop(context);
             },
@@ -555,6 +564,7 @@ Future<void> _performLogout() async {
           return SimpleDialogOption(
             onPressed: () async {
               await PreferencesService.instance.setIllustrationStyle(style);
+              UserDataSyncService.instance.syncSettingsPatch({'illustration_style': style});
               setState(() => _illustrationStyle = style);
               Navigator.pop(context);
             },
@@ -581,6 +591,7 @@ Future<void> _performLogout() async {
           return SimpleDialogOption(
             onPressed: () async {
               await PreferencesService.instance.setConsentCheckInInterval(minutes);
+              UserDataSyncService.instance.syncSettingsPatch({'consent_check_in_interval': minutes});
               setState(() => _consentInterval = minutes);
               Navigator.pop(context);
             },
@@ -612,6 +623,8 @@ Future<void> _performLogout() async {
           ),
           TextButton(
             onPressed: () async {
+              // Best-effort: cancella anche dal cloud se l'utente è loggato
+              await UserDataSyncService.instance.clearCloudHistory();
               await PreferencesService.instance.clearHistory();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -646,6 +659,8 @@ Future<void> _performLogout() async {
           ),
           TextButton(
             onPressed: () async {
+              // Best-effort: cancella anche dal cloud se l'utente è loggato
+              await UserDataSyncService.instance.clearCloudUserData();
               await PreferencesService.instance.clearEverything();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 /// Service per gestire le preferenze utente usando SharedPreferences
 /// Sostituisce completamente il vecchio servizio Hive
@@ -24,6 +25,10 @@ class PreferencesService {
       debugPrint('❌ Errore PreferencesService: $e');
     }
   }
+
+  /// Restituisce tutte le chiavi presenti in SharedPreferences.
+  /// Utile per migrazioni e debug.
+  Set<String> get keys => _prefs?.getKeys() ?? <String>{};
 
   // ============ GENERIC GETTERS ============
 
@@ -137,6 +142,11 @@ class PreferencesService {
   // ============ FAVORITES ============
 
   List<String> get favoritePositionIds => getStringList('favorite_positions') ?? [];
+
+  /// Imposta l'intera lista dei preferiti (utile per sync cloud -> locale)
+  Future<void> setFavoritePositionIds(List<String> positionIds) async {
+    await setStringList('favorite_positions', positionIds);
+  }
   
   Future<void> addFavorite(String positionId) async {
     final favorites = List<String>.from(favoritePositionIds);
@@ -194,8 +204,15 @@ class PreferencesService {
 
   Future<void> addHistoryEntry(Map<String, dynamic> entry) async {
     final history = getStringList('history') ?? [];
-    final entryStr = '${entry['positionId']}|${entry['viewedAt']}|${entry['reaction'] ?? ''}';
-    history.add(entryStr);
+    // Salviamo in JSON per non perdere campi (es. notes).
+    // Manteniamo retro-compatibilità: se in history ci sono stringhe legacy, le lasciamo.
+    final safeEntry = <String, dynamic>{
+      'positionId': entry['positionId'],
+      'viewedAt': entry['viewedAt'],
+      'reaction': entry['reaction'] ?? '',
+      if (entry.containsKey('notes')) 'notes': entry['notes'],
+    };
+    history.add(jsonEncode(safeEntry));
     // Keep only last 500 entries
     if (history.length > 500) {
       history.removeRange(0, history.length - 500);
@@ -206,6 +223,22 @@ class PreferencesService {
   Future<List<Map<String, dynamic>>> getHistory({int limit = 100}) async {
     final history = getStringList('history') ?? [];
     return history.reversed.take(limit).map((str) {
+      // 1) Prova JSON
+      try {
+        final decoded = jsonDecode(str);
+        if (decoded is Map) {
+          return <String, dynamic>{
+            'positionId': decoded['positionId'] ?? '',
+            'viewedAt': decoded['viewedAt'] ?? '',
+            'reaction': decoded['reaction'] ?? '',
+            if (decoded.containsKey('notes')) 'notes': decoded['notes'],
+          };
+        }
+      } catch (_) {
+        // ignore
+      }
+
+      // 2) Fallback legacy: positionId|viewedAt|reaction
       final parts = str.split('|');
       return {
         'positionId': parts.isNotEmpty ? parts[0] : '',
@@ -215,11 +248,20 @@ class PreferencesService {
     }).toList();
   }
 
+  /// Sovrascrive la history con una lista di entry (salvata in JSON)
+  Future<void> setHistoryEntries(List<Map<String, dynamic>> entries) async {
+    final encoded = entries.map((e) => jsonEncode(e)).toList(growable: false);
+    // Keep only last 500 entries
+    final trimmed = encoded.length > 500 ? encoded.sublist(encoded.length - 500) : encoded;
+    await setStringList('history', trimmed);
+  }
+
   // ============ SESSIONS ============
 
   Future<void> saveSession(Map<String, dynamic> session) async {
     final sessionId = session['id'] as String;
-    await setString('session_$sessionId', session.toString());
+    // JSON per poterlo rileggere/portare su cloud.
+    await setString('session_$sessionId', jsonEncode(session));
   }
 
   // ============ STREAKS ============

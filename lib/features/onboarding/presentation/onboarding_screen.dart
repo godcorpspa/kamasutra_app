@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../../app/theme.dart';
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../data/services/user_data_sync_service.dart';
 
 /// 3-page onboarding flow
 class OnboardingScreen extends StatefulWidget {
@@ -63,6 +64,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Future<void> _completeOnboarding() async {
     await PreferencesService.instance.setOnboardingCompleted(true);
+    UserDataSyncService.instance.syncSettingsPatch({'onboarding_completed': true});
     if (mounted) {
       context.go(AppRoutes.catalog);
     }
