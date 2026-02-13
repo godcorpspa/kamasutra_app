@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../data/services/preferences_service.dart';
+import '../../../data/repositories/position_repository.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/game.dart';
@@ -325,20 +327,110 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
   }
 
   Widget _buildHistoryTab() {
-    // Mock history data
-    final history = [
-      _HistoryItem(date: DateTime.now(), positionName: 'Posizione romantica', reaction: '❤️'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 1)), positionName: 'Posizione avventurosa', reaction: '👍'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 2)), positionName: 'Posizione rilassante', reaction: '😐'),
-      _HistoryItem(date: DateTime.now().subtract(const Duration(days: 3)), positionName: 'Posizione atletica', reaction: '😅'),
-    ];
+    final locale = context.locale.languageCode;
+    final triedIds = PreferencesService.instance.triedPositionIds;
+    final repo = PositionRepository.instance;
+
+    if (triedIds.isEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.explore_outlined,
+                size: 64,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Text(
+                'Nessuna posizione provata ancora',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                'Esplora il catalogo o gioca allo shuffle per aggiungere posizioni!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.4),
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return ListView.builder(
       padding: const EdgeInsets.all(AppSpacing.lg),
-      itemCount: history.length,
+      itemCount: triedIds.length,
       itemBuilder: (context, index) {
-        final item = history[index];
-        return _buildHistoryItem(item);
+        final positionId = triedIds[triedIds.length - 1 - index]; // più recente prima
+        final position = repo.getById(positionId);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
+          child: Row(
+            children: [
+              const Text('✅', style: TextStyle(fontSize: 24)),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      position?.getName(locale) ?? positionId,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    if (position?.getAlias(locale) != null)
+                      Text(
+                        position!.getAlias(locale)!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6),
+                              fontStyle: FontStyle.italic,
+                            ),
+                      ),
+                  ],
+                ),
+              ),
+              // Difficoltà
+              if (position != null)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(5, (i) {
+                    return Icon(
+                      Icons.star,
+                      size: 12,
+                      color: i < position.difficulty
+                          ? AppColors.gold
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.2),
+                    );
+                  }),
+                ),
+            ],
+          ),
+        );
       },
     );
   }

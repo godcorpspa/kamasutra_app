@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,16 +69,25 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   Future<void> _loadPositions() async {
     final repository = ref.read(positionRepositoryProvider);
     final allPositions = repository.getFiltered(widget.filter);
-    
+
+    if (allPositions.isEmpty) {
+      // Nessuna posizione trovata con questi filtri
+      setState(() {
+        _positions = [];
+        _isLoading = false;
+      });
+      return;
+    }
+
     // Shuffle and take requested count
     final shuffled = List<Position>.from(allPositions)..shuffle();
     final selected = shuffled.take(widget.cardCount).toList();
-    
+
     setState(() {
       _positions = selected;
       _isLoading = false;
     });
-  }
+  } 
 
   void _onPanUpdate(DragUpdateDetails details) {
     setState(() {
@@ -100,20 +110,37 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     }
   }
 
-  void _dismissCard(String direction) {
+ void _dismissCard(String direction) {
     HapticFeedback.mediumImpact();
-    
+
     // Record reaction based on swipe direction
-    final reaction = direction == 'right' 
-        ? PositionReaction.liked 
+    final reaction = direction == 'right'
+        ? PositionReaction.liked
         : PositionReaction.skipped;
-    
+
     _recordReaction(reaction);
-    
+
+    // Se "Proviamo!" (destra), segna come posizione provata
+    if (direction == 'right' && _currentIndex < _positions.length) {
+      final position = _positions[_currentIndex];
+      PreferencesService.instance.addTriedPosition(position.id);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('✅ "${position.getName(Localizations.localeOf(context).languageCode)}" aggiunta alle provate!'),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 100, left: 16, right: 16),
+          ),
+        );
+      }
+    }
+
     setState(() {
       _dragOffset = Offset.zero;
       _currentIndex++;
-      
+
       if (_currentIndex >= _positions.length) {
         _sessionComplete = true;
         _confettiController.play();
@@ -149,8 +176,28 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     if (_currentIndex < _positions.length) {
       HapticFeedback.lightImpact();
       final position = _positions[_currentIndex];
-      await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
-      setState(() {});
+      final newStatus = await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
+
+      // Forza il refresh del provider posizioni in modo che il catalogo si aggiorni
+      final locale = Localizations.localeOf(context).languageCode;
+      ref.invalidate(positionsProvider(locale));
+
+      if (mounted) {
+        // Fix 2: Mostra messaggio di conferma
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              newStatus
+                  ? '❤️ Aggiunta ai preferiti!'
+                  : 'Rimossa dai preferiti',
+            ),
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+            margin: const EdgeInsets.only(bottom: 100, left: 16, right: 16),
+          ),
+        );
+        setState(() {});
+      }
     }
   }
 
@@ -199,6 +246,8 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           children: [
             if (_isLoading)
               _buildLoading()
+            else if (_positions.isEmpty)
+              _buildEmptyState()
             else if (_sessionComplete)
               _buildSessionComplete()
             else
@@ -225,6 +274,59 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
         ],
       ),
     ));
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                color: AppColors.burgundy.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.favorite_border,
+                size: 48,
+                color: AppColors.burgundy,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'Nessuna posizione trovata',
+              style: Theme.of(context).textTheme.headlineSmall,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              widget.filter.favoritesOnly == true
+                  ? 'Non hai ancora salvato posizioni tra i preferiti.\n'
+                    'Esplora il catalogo e tocca ❤️ per aggiungerne!'
+                  : 'Nessuna posizione corrisponde ai filtri selezionati.\n'
+                    'Prova a cambiare i filtri.',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.6),
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: AppSpacing.xl),
+            ElevatedButton.icon(
+              onPressed: () => context.pop(),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Torna indietro'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildLoading() {
@@ -380,15 +482,23 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Illustration placeholder
+                  // SVG Illustration
                   Expanded(
                     flex: 3,
                     child: Container(
                       color: AppColors.burgundy.withOpacity(0.1),
-                      child: Center(
-                        child: Icon(
-                          Icons.image,
-                          size: 80,
-                          color: AppColors.burgundy.withOpacity(0.3),
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.lg),
+                        child: SvgPicture.asset(
+                          'assets/images/positions/${position.illustrationRef}',
+                          fit: BoxFit.contain,
+                          placeholderBuilder: (_) => Center(
+                            child: Icon(
+                              Icons.image,
+                              size: 80,
+                              color: AppColors.burgundy.withOpacity(0.3),
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -403,15 +513,15 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            position.localizedName,
+                            position.getName(Localizations.localeOf(context).languageCode),
                             style: Theme.of(context).textTheme.headlineSmall,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (position.localizedAlias != null) ...[
+                          if (position.getAlias(Localizations.localeOf(context).languageCode) != null) ...[
                             const SizedBox(height: 4),
                             Text(
-                              position.localizedAlias!,
+                              position.getAlias(Localizations.localeOf(context).languageCode)!,
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                 fontStyle: FontStyle.italic,
                                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
@@ -516,23 +626,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             label: 'Salta',
           ),
           
-          // Try easy version
-          _ActionButton(
-            icon: Icons.accessibility_new,
-            color: AppColors.gold,
-            onPressed: () {
-              HapticFeedback.lightImpact();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('shuffle.try_easy'.tr()),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            },
-            label: 'Comoda',
-            small: true,
-          ),
-          
           // Favorite
           _ActionButton(
             icon: Icons.favorite,
@@ -559,20 +652,18 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
   final String label;
-  final bool small;
 
   const _ActionButton({
     required this.icon,
     required this.color,
     required this.onPressed,
-    required this.label,
-    this.small = false,
+    required this.label
   });
 
   @override
   Widget build(BuildContext context) {
-    final size = small ? 48.0 : 64.0;
-    final iconSize = small ? 24.0 : 32.0;
+    const size = 64.0;
+    const iconSize = 32.0;
     
     return Column(
       mainAxisSize: MainAxisSize.min,

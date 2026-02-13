@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
@@ -59,12 +60,22 @@ class PositionCard extends StatelessWidget {
                               .surface
                               .withOpacity(0.5),
                         ),
-                        child: Center(
-                          child: Icon(
-                            _getCategoryIcon(position.categories.first),
-                            size: 48,
-                            color: _getCategoryColor(position.categories.first)
-                                .withOpacity(0.7),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.sm),
+                            child: SvgPicture.asset(
+                              'assets/images/positions/${position.illustrationRef}',
+                              fit: BoxFit.contain,
+                              placeholderBuilder: (_) => Center(
+                                child: Icon(
+                                  _getCategoryIcon(position.categories.first),
+                                  size: 48,
+                                  color: _getCategoryColor(position.categories.first)
+                                      .withOpacity(0.7),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),

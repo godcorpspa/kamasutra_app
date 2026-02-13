@@ -307,4 +307,28 @@ class PreferencesService {
     await _prefs?.clear();
     _isSessionAuthenticated = false;
   }
+
+  List<String> get triedPositionIds => getStringList('tried_positions') ?? [];
+
+  Future<void> addTriedPosition(String positionId) async {
+    final tried = List<String>.from(triedPositionIds);
+    if (!tried.contains(positionId)) {
+      tried.add(positionId);
+      await setStringList('tried_positions', tried);
+    }
+  }
+
+  Future<void> removeTriedPosition(String positionId) async {
+    final tried = List<String>.from(triedPositionIds);
+    tried.remove(positionId);
+    await setStringList('tried_positions', tried);
+  }
+
+  bool isTriedPosition(String positionId) => triedPositionIds.contains(positionId);
+
+  Future<void> setTriedPositionIds(List<String> ids) async {
+    await setStringList('tried_positions', ids);
+  }
+
+  
 }

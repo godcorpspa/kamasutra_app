@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import '../../../data/services/preferences_service.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
@@ -117,12 +119,24 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                       ),
                     ),
                   ),
-                  // Illustration placeholder
-                  Center(
-                    child: Icon(
-                      _getCategoryIcon(position.categories.first),
-                      size: 120,
-                      color: Colors.white.withOpacity(0.3),
+                  // SVG Illustration
+                  Positioned.fill(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 30,
+                      ),
+                      child: SvgPicture.asset(
+                        'assets/images/positions/${position.illustrationRef}',
+                        fit: BoxFit.contain,
+                        placeholderBuilder: (_) => Center(
+                          child: Icon(
+                            _getCategoryIcon(position.categories.first),
+                            size: 120,
+                            color: Colors.white.withOpacity(0.3),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   // Bottom gradient for readability
@@ -454,13 +468,19 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
           child: ElevatedButton(
             onPressed: () {
               HapticFeedback.mediumImpact();
-              // Add to current session or start new one
+              // Segna come provata
+              PreferencesService.instance.addTriedPosition(widget.positionId);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('position.try_this'.tr()),
+                  content: Text(
+                    PreferencesService.instance.isTriedPosition(widget.positionId)
+                        ? '✅ Provata di nuovo!'
+                        : '✅ Aggiunta alle posizioni provate!',
+                  ),
                   behavior: SnackBarBehavior.floating,
                 ),
               );
+              setState(() {});
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.burgundy,
@@ -471,7 +491,9 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
               ),
             ),
             child: Text(
-              'position.try_this'.tr(),
+              PreferencesService.instance.isTriedPosition(widget.positionId)
+                  ? 'Prova di nuovo 🔄'
+                  : 'Prova questa 🔥',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -547,12 +569,19 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Center(
-                          child: Icon(
-                            _getCategoryIcon(p.categories.first),
-                            size: 40,
-                            color: _getCategoryColor(p.categories.first)
-                                .withOpacity(0.5),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: SvgPicture.asset(
+                            'assets/images/positions/${p.illustrationRef}.svg',
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (_) => Center(
+                              child: Icon(
+                                _getCategoryIcon(p.categories.first),
+                                size: 40,
+                                color: _getCategoryColor(p.categories.first)
+                                    .withOpacity(0.5),
+                              ),
+                            ),
                           ),
                         ),
                       ),
