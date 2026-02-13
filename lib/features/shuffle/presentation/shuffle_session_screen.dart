@@ -164,6 +164,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -193,14 +194,15 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             ),
         ],
       ),
-      body: Stack(
-        children: [
-          if (_isLoading)
-            _buildLoading()
-          else if (_sessionComplete)
-            _buildSessionComplete()
-          else
-            _buildCardStack(),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            if (_isLoading)
+              _buildLoading()
+            else if (_sessionComplete)
+              _buildSessionComplete()
+            else
+              _buildCardStack(),
             
           // Confetti
           Align(
@@ -222,7 +224,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           ),
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildLoading() {
@@ -425,7 +427,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                             children: [
                               _buildTag(_getDifficultyLabel(position.difficulty)),
                               _buildTag('energy.${position.energy.name}'.tr()),
-                              _buildTag('durations.${position.duration.name}'.tr()),
+                              _buildTag('duration.${position.duration.name}'.tr()),
                             ],
                           ),
                           
@@ -497,7 +499,12 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
 
   Widget _buildActionButtons() {
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.xl),
+      padding: const EdgeInsets.only(
+        left: AppSpacing.lg,
+        right: AppSpacing.lg,
+        top: AppSpacing.md,
+        bottom: AppSpacing.xxl + 16, // Più spazio dal basso per non coprire i tasti del telefono
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -539,7 +546,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             icon: Icons.check,
             color: AppColors.spicy,
             onPressed: () => _dismissCard('right'),
-            label: 'Proviamo!',
+            label: 'Provata',
           ),
         ],
       ),

@@ -86,7 +86,7 @@
 
   "nav": {
     "catalog": "Catalogo",
-    "shuffle": "Shuffle",
+    "shuffle": "Casuale",
     "games": "Giochi",
     "progress": "Progressi",
     "settings": "Altro"
@@ -135,7 +135,7 @@
   },
 
   "shuffle": {
-    "title": "Shuffle",
+    "title": "Posizioni casuali",
     "subtitle": "Lasciati sorprendere",
     "card_count": "Numero di carte",
     "cards": "carte",
