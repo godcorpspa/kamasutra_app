@@ -87,7 +87,9 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          'catalog.title'.tr(),
+                          _showFavoritesOnly
+                              ? 'Preferiti'
+                              : 'catalog.title'.tr(),
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                       ),
@@ -151,10 +153,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                         child: IconButton.filled(
                           onPressed: _showFilters,
                           style: IconButton.styleFrom(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withOpacity(0.5),
+                            backgroundColor: Colors.white,
+                            foregroundColor: AppColors.grey800,
                           ),
                           icon: const Icon(Icons.tune),
                         ),

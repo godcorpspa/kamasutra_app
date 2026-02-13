@@ -55,11 +55,45 @@ class PositionFilterNotifier extends StateNotifier<PositionFilter> {
   }
 
   void setSearchQuery(String? query) {
-    state = state.copyWith(searchQuery: query);
+    state = PositionFilter(
+      categories: state.categories,
+      minDifficulty: state.minDifficulty,
+      maxDifficulty: state.maxDifficulty,
+      energyLevels: state.energyLevels,
+      focus: state.focus,
+      durations: state.durations,
+      favoritesOnly: state.favoritesOnly,
+      excludeCautions: state.excludeCautions,
+      searchQuery: query,
+    );
   }
 
   void clear() {
     state = const PositionFilter();
+  }
+
+  void setAll({
+    List<PositionCategory>? categories,
+    int? minDifficulty,
+    int? maxDifficulty,
+    List<EnergyLevel>? energyLevels,
+    List<PositionFocus>? focus,
+    List<PositionDuration>? durations,
+    bool? favoritesOnly,
+    bool? excludeCautions,
+    String? searchQuery,
+  }) {
+    state = PositionFilter(
+      categories: categories,
+      minDifficulty: minDifficulty,
+      maxDifficulty: maxDifficulty,
+      energyLevels: energyLevels,
+      focus: focus,
+      durations: durations,
+      favoritesOnly: favoritesOnly,
+      excludeCautions: excludeCautions,
+      searchQuery: searchQuery,
+    );
   }
 }
 

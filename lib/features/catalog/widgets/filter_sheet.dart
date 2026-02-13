@@ -38,16 +38,16 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
   void _applyFilters() {
     final notifier = ref.read(positionFilterProvider.notifier);
     
-    notifier.setCategories(
-      _selectedCategories.isEmpty ? null : _selectedCategories,
+    // Usa setAll per costruire un filtro nuovo da zero,
+    // così i campi null vengono effettivamente resettati
+    notifier.setAll(
+      categories: _selectedCategories.isEmpty ? null : _selectedCategories,
+      minDifficulty: _difficultyRange.start.round() == 1 ? null : _difficultyRange.start.round(),
+      maxDifficulty: _difficultyRange.end.round() == 5 ? null : _difficultyRange.end.round(),
+      energyLevels: _selectedEnergy != null ? [_selectedEnergy!] : null,
+      focus: _selectedFocus.isEmpty ? null : _selectedFocus,
+      durations: _selectedDuration != null ? [_selectedDuration!] : null,
     );
-    notifier.setDifficultyRange(
-      _difficultyRange.start.round() == 1 ? null : _difficultyRange.start.round(),
-      _difficultyRange.end.round() == 5 ? null : _difficultyRange.end.round(),
-    );
-    notifier.setEnergy(_selectedEnergy);
-    notifier.setFocus(_selectedFocus.isEmpty ? null : _selectedFocus);
-    notifier.setDuration(_selectedDuration);
     
     Navigator.of(context).pop();
   }

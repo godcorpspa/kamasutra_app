@@ -32,7 +32,7 @@ class PositionRepository {
     // Load user data (favorites, view counts)
     await _loadUserData();
     
-    return _positions!;
+    return positions;
   }
 
   Future<void> _loadUserData() async {
