@@ -9,6 +9,7 @@ import 'package:crypto/crypto.dart';
 import '../../../app/theme.dart';
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../data/services/user_data_sync_service.dart';
 
 /// PIN entry/creation screen
 class PinScreen extends StatefulWidget {
@@ -100,6 +101,7 @@ class _PinScreenState extends State<PinScreen> {
           final hash = _hashPin(_enteredPin);
           await PreferencesService.instance.setPinHash(hash);
           await PreferencesService.instance.setPinEnabled(true);
+          UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': true});
           _onAuthenticationSuccess();
         } else {
           setState(() {

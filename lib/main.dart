@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'app/app.dart';
 import 'data/services/preferences_service.dart';
+import 'data/services/user_data_sync_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,9 @@ void main() async {
   try {
     await Firebase.initializeApp();
     debugPrint('✅ Firebase inizializzato');
+
+    // Start cloud sync (best-effort)
+    UserDataSyncService.instance.start();
   } catch (e) {
     debugPrint('⚠️ Firebase non disponibile: $e');
   }

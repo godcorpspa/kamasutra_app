@@ -5,6 +5,7 @@ import '../models/game.dart';
 import '../models/goose_game.dart';
 import '../repositories/position_repository.dart';
 import '../services/preferences_service.dart';
+import '../services/user_data_sync_service.dart';
 
 // ============================================================
 // Position Providers
@@ -149,14 +150,18 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
     final sessionId = DateTime.now().millisecondsSinceEpoch.toString();
     
     // Save session to preferences
-    await PreferencesService.instance.saveSession({
+    final session = {
       'id': sessionId,
       'type': 'shuffle',
       'startedAt': DateTime.now().toIso8601String(),
       'positionIds': positions.map((p) => p.id).toList(),
       'currentIndex': 0,
       'completed': false,
-    });
+    };
+    await PreferencesService.instance.saveSession(session);
+
+    // Mirror-write su cloud (best-effort)
+    UserDataSyncService.instance.syncSession(session);
     
     state = ShuffleSession(
       positions: positions,
@@ -191,12 +196,22 @@ class ShuffleSessionNotifier extends StateNotifier<ShuffleSession?> {
     final repo = _ref.read(positionRepositoryProvider);
     await repo.recordView(state!.currentPosition!.id);
     
+    final now = DateTime.now();
+
     await PreferencesService.instance.addHistoryEntry({
       'positionId': state!.currentPosition!.id,
-      'viewedAt': DateTime.now().toIso8601String(),
+      'viewedAt': now.toIso8601String(),
       'reaction': reaction.name,
       'notes': notes,
     });
+
+    // Mirror-write su cloud (best-effort)
+    UserDataSyncService.instance.syncHistoryEntry(
+      positionId: state!.currentPosition!.id,
+      viewedAt: now,
+      reaction: reaction.name,
+      notes: notes,
+    );
   }
 
   /// Complete the session
@@ -664,61 +679,73 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
 
   Future<void> setLocale(String locale) async {
     await PreferencesService.instance.setLocale(locale);
+    UserDataSyncService.instance.syncSettingsPatch({'locale': locale});
     state = state.copyWith(locale: locale);
   }
 
   Future<void> setDefaultIntensity(GameIntensity intensity) async {
     await PreferencesService.instance.setDefaultIntensity(intensity.name);
+    UserDataSyncService.instance.syncSettingsPatch({'default_intensity': intensity.name});
     state = state.copyWith(defaultIntensity: intensity);
   }
 
   Future<void> setDarkMode(bool enabled) async {
     await PreferencesService.instance.setDarkMode(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'dark_mode': enabled});
     state = state.copyWith(isDarkMode: enabled);
   }
 
   Future<void> setSoundEffects(bool enabled) async {
     await PreferencesService.instance.setSoundEffectsEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'sound_effects': enabled});
     state = state.copyWith(soundEffectsEnabled: enabled);
   }
 
   Future<void> setHapticFeedback(bool enabled) async {
     await PreferencesService.instance.setHapticFeedbackEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'haptic_feedback': enabled});
     state = state.copyWith(hapticFeedbackEnabled: enabled);
   }
 
   Future<void> setShuffleCardCount(int count) async {
     await PreferencesService.instance.setShuffleCardCount(count);
+    UserDataSyncService.instance.syncSettingsPatch({'shuffle_card_count': count});
     state = state.copyWith(shuffleCardCount: count);
   }
 
   Future<void> setConsentCheckIn(int minutes) async {
     await PreferencesService.instance.setConsentCheckInInterval(minutes);
+    UserDataSyncService.instance.syncSettingsPatch({'consent_check_in_interval': minutes});
     state = state.copyWith(consentCheckInMinutes: minutes);
   }
 
   Future<void> setPinEnabled(bool enabled) async {
     await PreferencesService.instance.setPinEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': enabled});
     state = state.copyWith(isPinEnabled: enabled);
   }
 
   Future<void> setBiometricEnabled(bool enabled) async {
     await PreferencesService.instance.setBiometricEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'biometric_enabled': enabled});
     state = state.copyWith(isBiometricEnabled: enabled);
   }
 
   Future<void> setDiscreteIcon(bool enabled) async {
     await PreferencesService.instance.setDiscreteIconEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'discrete_icon_enabled': enabled});
     state = state.copyWith(isDiscreteIconEnabled: enabled);
   }
 
   Future<void> setPanicExit(bool enabled) async {
     await PreferencesService.instance.setPanicExitEnabled(enabled);
+    UserDataSyncService.instance.syncSettingsPatch({'panic_exit_enabled': enabled});
     state = state.copyWith(isPanicExitEnabled: enabled);
   }
 
   Future<void> setIllustrationStyle(String style) async {
     await PreferencesService.instance.setIllustrationStyle(style);
+    UserDataSyncService.instance.syncSettingsPatch({'illustration_style': style});
     state = state.copyWith(illustrationStyle: style);
   }
 }
