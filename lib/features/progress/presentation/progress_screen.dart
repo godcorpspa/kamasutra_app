@@ -4,9 +4,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/repositories/position_repository.dart';
-
+import '../../../data/providers/providers.dart';
 import '../../../app/theme.dart';
-import '../../../data/models/game.dart';
 
 /// Progress screen showing badges, streaks, and statistics
 class ProgressScreen extends ConsumerStatefulWidget {
@@ -25,6 +24,8 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    // Registra l'uso di oggi per la streak
+    PreferencesService.instance.recordUsageToday();
   }
 
   @override
@@ -61,7 +62,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
               tabs: [
                 Tab(text: 'progress.badges'.tr()),
                 Tab(text: 'progress.statistics'.tr()),
-                Tab(text: 'Cronologia'),
+                const Tab(text: 'Provate'),
               ],
             ),
             
@@ -82,11 +83,31 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     );
   }
 
+  // ============================================================
+  // STREAK CARD — dati reali, layout pulito
+  // ============================================================
+
   Widget _buildStreakCard() {
-    // Mock streak data - in real app, would come from provider
-    const currentStreak = 5;
-    const longestStreak = 12;
-    const graceDaysRemaining = 2;
+    final prefs = PreferencesService.instance;
+    final streak = prefs.currentStreak;
+    final longest = prefs.longestStreak;
+
+    // Messaggio motivazionale in base alla streak
+    String motivationalMessage;
+    if (streak == 0) {
+      motivationalMessage = 'Inizia oggi la vostra avventura!';
+    } else if (streak == 1) {
+      motivationalMessage = 'Ottimo inizio! Tornate domani 💪';
+    } else if (streak < 7) {
+      motivationalMessage = 'State andando alla grande!';
+    } else if (streak < 30) {
+      motivationalMessage = 'Che coppia affiatata! 🔥';
+    } else {
+      motivationalMessage = 'Siete inarrestabili! 🏆';
+    }
+
+    // Singolare / plurale
+    String giorni(int n) => n == 1 ? '1 giorno' : '$n giorni';
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -94,98 +115,192 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         gradient: LinearGradient(
           colors: [
             AppColors.burgundy,
-            AppColors.burgundy.withOpacity(0.8),
+            AppColors.burgundy.withOpacity(0.7),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
-      child: Row(
+      child: Column(
         children: [
-          // Flame icon
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-              child: Text(
-                '🔥',
-                style: TextStyle(fontSize: 32),
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.lg),
-          
-          // Streak info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'progress.current_streak'.tr(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white.withOpacity(0.8),
+          Row(
+            children: [
+              // Icona fuoco
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    streak == 0 ? '💤' : '🔥',
+                    style: const TextStyle(fontSize: 28),
                   ),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+              ),
+              const SizedBox(width: AppSpacing.md),
+
+              // Serie attuale
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$currentStreak',
-                      style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      'Serie attuale',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
                     ),
-                    const SizedBox(width: 4),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Text(
-                        'progress.days'.tr(),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withOpacity(0.8),
-                        ),
-                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      giorni(streak),
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          
-          // Best streak
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'progress.longest_streak'.tr(),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.white.withOpacity(0.8),
-                ),
               ),
-              Text(
-                '$longestStreak ${'progress.days'.tr()}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
+
+              // Serie più lunga
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '$graceDaysRemaining ${'progress.grace_days'.tr()}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.gold,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      '🏅 Record',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      giorni(longest),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ],
                 ),
               ),
             ],
+          ),
+
+          // Messaggio motivazionale
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            motivationalMessage,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppColors.gold.withOpacity(0.9),
+                ),
           ),
         ],
       ),
     );
   }
 
+  // ============================================================
+  // BADGES TAB — criteri reali, tutti bloccati all'inizio
+  // ============================================================
+
   Widget _buildBadgesTab() {
+    final prefs = PreferencesService.instance;
+    final repo = ref.read(positionRepositoryProvider);
+    final triedCount = prefs.triedPositionIds.length;
+    final gamesPlayed = prefs.gamesPlayed;
+    final streak = prefs.longestStreak;
+    final favoritesCount = repo.positions.where((p) => p.isFavorite).length;
+
+    // Categorie uniche provate
+    final triedIds = prefs.triedPositionIds;
+    final Set<String> uniqueCategories = {};
+    for (final id in triedIds) {
+      final position = repo.getById(id);
+      if (position != null) {
+        for (final cat in position.categories) {
+          uniqueCategories.add(cat.name);
+        }
+      }
+    }
+
+    final badges = [
+      _BadgeData(
+        emoji: '🧭',
+        name: 'Esploratore',
+        description: 'Prova 5 posizioni diverse',
+        isUnlocked: triedCount >= 5,
+        progress: '${triedCount.clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '⛰️',
+        name: 'Avventuriero',
+        description: 'Prova 20 posizioni diverse',
+        isUnlocked: triedCount >= 20,
+        progress: '${triedCount.clamp(0, 20)}/20',
+      ),
+      _BadgeData(
+        emoji: '💕',
+        name: 'Romantico',
+        description: 'Salva 5 posizioni nei preferiti',
+        isUnlocked: favoritesCount >= 5,
+        progress: '${favoritesCount.clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '📚',
+        name: 'Collezionista',
+        description: 'Prova 50 posizioni diverse',
+        isUnlocked: triedCount >= 50,
+        progress: '${triedCount.clamp(0, 50)}/50',
+      ),
+      _BadgeData(
+        emoji: '🔥',
+        name: 'Dedicato',
+        description: 'Raggiungi una serie di 7 giorni',
+        isUnlocked: streak >= 7,
+        progress: '${streak.clamp(0, 7)}/7',
+      ),
+      _BadgeData(
+        emoji: '💞',
+        name: 'Esploratori dell\'Anima',
+        description: 'Gioca 10 sessioni shuffle',
+        isUnlocked: gamesPlayed >= 10,
+        progress: '${gamesPlayed.clamp(0, 10)}/10',
+      ),
+      _BadgeData(
+        emoji: '🌈',
+        name: 'Versatile',
+        description: 'Prova posizioni di 5 categorie diverse',
+        isUnlocked: uniqueCategories.length >= 5,
+        progress: '${uniqueCategories.length.clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🏆',
+        name: 'Campione',
+        description: 'Raggiungi una serie di 30 giorni',
+        isUnlocked: streak >= 30,
+        progress: '${streak.clamp(0, 30)}/30',
+      ),
+      _BadgeData(
+        emoji: '💎',
+        name: 'Maestro',
+        description: 'Prova 100 posizioni diverse',
+        isUnlocked: triedCount >= 100,
+        progress: '${triedCount.clamp(0, 100)}/100',
+      ),
+    ];
+
     return GridView.builder(
       padding: const EdgeInsets.all(AppSpacing.lg),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -194,58 +309,203 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         crossAxisSpacing: AppSpacing.md,
         childAspectRatio: 0.8,
       ),
-      itemCount: _badges.length,
+      itemCount: badges.length,
       itemBuilder: (context, index) {
-        final badge = _badges[index];
-        return _BadgeCard(badge: badge);
+        final badge = badges[index];
+        return _buildBadgeCard(badge);
       },
     );
   }
 
+  Widget _buildBadgeCard(_BadgeData badge) {
+    return GestureDetector(
+      onTap: () {
+        HapticFeedback.lightImpact();
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Row(
+              children: [
+                Text(
+                  badge.isUnlocked ? badge.emoji : '🔒',
+                  style: const TextStyle(fontSize: 28),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    badge.name,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(badge.description),
+                const SizedBox(height: 8),
+                Text(
+                  'Progresso: ${badge.progress}',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.gold,
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                if (!badge.isUnlocked) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    'Continua a esplorare per sbloccare!',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontStyle: FontStyle.italic,
+                        ),
+                  ),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: badge.isUnlocked
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.surface.withOpacity(0.4),
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          border: Border.all(
+            color: badge.isUnlocked
+                ? AppColors.gold.withOpacity(0.5)
+                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              badge.isUnlocked ? badge.emoji : '🔒',
+              style: const TextStyle(fontSize: 36),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              badge.name,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: badge.isUnlocked
+                        ? null
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.4),
+                  ),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // STATISTICS TAB — dati reali da zero
+  // ============================================================
+
   Widget _buildStatisticsTab() {
+    final prefs = PreferencesService.instance;
+    final repo = ref.read(positionRepositoryProvider);
+
+    // Dati reali
+    final triedCount = prefs.triedPositionIds.length;
+    final gamesPlayed = prefs.gamesPlayed;
+    final timeTogether = prefs.formattedTimeTogether;
+    final favoritesCount = repo.positions.where((p) => p.isFavorite).length;
+
+    // Categorie esplorate
+    final triedIds = prefs.triedPositionIds;
+    final Map<String, int> categoryCount = {};
+    int totalTried = 0;
+
+    for (final id in triedIds) {
+      final position = repo.getById(id);
+      if (position != null) {
+        for (final cat in position.categories) {
+          categoryCount[cat.name] = (categoryCount[cat.name] ?? 0) + 1;
+        }
+        totalTried++;
+      }
+    }
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
         children: [
           _buildStatRow(
             icon: Icons.explore,
-            label: 'progress.positions_explored'.tr(),
-            value: '42',
+            label: 'Posizioni esplorate',
+            value: '$triedCount',
             color: AppColors.burgundy,
           ),
           _buildStatRow(
             icon: Icons.casino,
-            label: 'progress.games_played'.tr(),
-            value: '18',
+            label: 'Partite giocate',
+            value: '$gamesPlayed',
             color: AppColors.gold,
           ),
           _buildStatRow(
             icon: Icons.timer,
-            label: 'progress.total_time'.tr(),
-            value: '12h 30m',
+            label: 'Tempo insieme',
+            value: timeTogether,
             color: AppColors.navy,
           ),
           _buildStatRow(
             icon: Icons.favorite,
-            label: 'progress.favorites_count'.tr(),
-            value: '15',
+            label: 'Preferiti salvati',
+            value: '$favoritesCount',
             color: AppColors.blush,
           ),
           
           const SizedBox(height: AppSpacing.xl),
           
-          // Category breakdown
+          // Categorie esplorate
           Text(
             'Categorie esplorate',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: AppSpacing.md),
-          
-          _buildCategoryProgress('Romantiche', 0.8, AppColors.burgundy),
-          _buildCategoryProgress('Per iniziare', 0.6, AppColors.soft),
-          _buildCategoryProgress('Atletiche', 0.3, AppColors.spicy),
-          _buildCategoryProgress('Avventurose', 0.2, AppColors.extraSpicy),
-          _buildCategoryProgress('Low Impact', 0.5, AppColors.navy),
+
+          if (categoryCount.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Text(
+                'Inizia a esplorare per vedere le tue statistiche!',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.5),
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            )
+          else
+            ...categoryCount.entries.map((entry) {
+              final percentage = totalTried > 0
+                  ? (entry.value / totalTried)
+                  : 0.0;
+              return _buildCategoryProgress(
+                'categories.${entry.key}'.tr(),
+                percentage,
+                AppColors.burgundy,
+              );
+            }),
         ],
       ),
     );
@@ -316,15 +576,23 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
             ],
           ),
           const SizedBox(height: 4),
-          LinearProgressIndicator(
-            value: progress,
-            backgroundColor: color.withOpacity(0.1),
-            valueColor: AlwaysStoppedAnimation(color),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: color.withOpacity(0.1),
+              valueColor: AlwaysStoppedAnimation(color),
+              minHeight: 6,
+            ),
           ),
         ],
       ),
     );
   }
+
+  // ============================================================
+  // HISTORY TAB (Provate) — già funzionante con dati reali
+  // ============================================================
 
   Widget _buildHistoryTab() {
     final locale = context.locale.languageCode;
@@ -375,7 +643,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
       padding: const EdgeInsets.all(AppSpacing.lg),
       itemCount: triedIds.length,
       itemBuilder: (context, index) {
-        final positionId = triedIds[triedIds.length - 1 - index]; // più recente prima
+        final positionId = triedIds[triedIds.length - 1 - index];
         final position = repo.getById(positionId);
 
         return Container(
@@ -411,7 +679,6 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                   ],
                 ),
               ),
-              // Difficoltà
               if (position != null)
                 Row(
                   mainAxisSize: MainAxisSize.min,
@@ -434,243 +701,24 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
       },
     );
   }
-
-  Widget _buildHistoryItem(_HistoryItem item) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      child: Row(
-        children: [
-          Text(
-            item.reaction,
-            style: const TextStyle(fontSize: 24),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.positionName,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                Text(
-                  DateFormat('d MMMM, HH:mm', 'it').format(item.date),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-class _HistoryItem {
-  final DateTime date;
-  final String positionName;
-  final String reaction;
-
-  _HistoryItem({
-    required this.date,
-    required this.positionName,
-    required this.reaction,
-  });
-}
-
-// Badge data
-final List<_BadgeData> _badges = [
-  _BadgeData(
-    id: 'explorer',
-    emoji: '🧭',
-    nameKey: 'badges.explorer.name',
-    descriptionKey: 'badges.explorer.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 10)),
-  ),
-  _BadgeData(
-    id: 'adventurer',
-    emoji: '🏔️',
-    nameKey: 'badges.adventurer.name',
-    descriptionKey: 'badges.adventurer.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 5)),
-  ),
-  _BadgeData(
-    id: 'romantic',
-    emoji: '💕',
-    nameKey: 'badges.romantic.name',
-    descriptionKey: 'badges.romantic.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'collector',
-    emoji: '📚',
-    nameKey: 'badges.collector.name',
-    descriptionKey: 'badges.collector.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'dedicated',
-    emoji: '🔥',
-    nameKey: 'badges.dedicated.name',
-    descriptionKey: 'badges.dedicated.description',
-    isUnlocked: true,
-    unlockedAt: DateTime.now().subtract(const Duration(days: 2)),
-  ),
-  _BadgeData(
-    id: 'soul_explorers',
-    emoji: '✨',
-    nameKey: 'badges.soul_explorers.name',
-    descriptionKey: 'badges.soul_explorers.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'intimacy_cartographers',
-    emoji: '🗺️',
-    nameKey: 'badges.intimacy_cartographers.name',
-    descriptionKey: 'badges.intimacy_cartographers.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'poet',
-    emoji: '📝',
-    nameKey: 'badges.poet.name',
-    descriptionKey: 'badges.poet.description',
-    isUnlocked: false,
-  ),
-  _BadgeData(
-    id: 'supreme_flatterer',
-    emoji: '👑',
-    nameKey: 'badges.supreme_flatterer.name',
-    descriptionKey: 'badges.supreme_flatterer.description',
-    isUnlocked: false,
-  ),
-];
+// ============================================================
+// Helper class per i badge
+// ============================================================
 
 class _BadgeData {
-  final String id;
   final String emoji;
-  final String nameKey;
-  final String descriptionKey;
+  final String name;
+  final String description;
   final bool isUnlocked;
-  final DateTime? unlockedAt;
+  final String progress;
 
-  _BadgeData({
-    required this.id,
+  const _BadgeData({
     required this.emoji,
-    required this.nameKey,
-    required this.descriptionKey,
+    required this.name,
+    required this.description,
     required this.isUnlocked,
-    this.unlockedAt,
+    required this.progress,
   });
-}
-
-class _BadgeCard extends StatelessWidget {
-  final _BadgeData badge;
-
-  const _BadgeCard({required this.badge});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _showBadgeDetail(context),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: badge.isUnlocked
-              ? Theme.of(context).colorScheme.surface
-              : Theme.of(context).colorScheme.surface.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: badge.isUnlocked
-              ? Border.all(color: AppColors.gold.withOpacity(0.5))
-              : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              badge.isUnlocked ? badge.emoji : '🔒',
-              style: TextStyle(
-                fontSize: 36,
-                color: badge.isUnlocked ? null : Colors.grey,
-              ),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              badge.nameKey.tr(),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: badge.isUnlocked 
-                    ? null 
-                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showBadgeDetail(BuildContext context) {
-    HapticFeedback.lightImpact();
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Text(badge.emoji, style: const TextStyle(fontSize: 32)),
-            const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: Text(
-                badge.nameKey.tr(),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(badge.descriptionKey.tr()),
-            if (badge.isUnlocked && badge.unlockedAt != null) ...[
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                'Sbloccato il ${DateFormat('d MMMM yyyy', 'it').format(badge.unlockedAt!)}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.gold,
-                ),
-              ),
-            ],
-            if (!badge.isUnlocked) ...[
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                'Continua a esplorare per sbloccare!',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('common.close'.tr()),
-          ),
-        ],
-      ),
-    );
-  }
 }

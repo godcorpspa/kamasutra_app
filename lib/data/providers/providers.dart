@@ -792,14 +792,13 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
 final userStatsProvider = FutureProvider<UserStats>((ref) async {
   final prefs = PreferencesService.instance;
   final history = await prefs.getHistory(limit: 1000);
-  final streak = await prefs.getStreak();
   final badges = await prefs.getUnlockedBadgeIds();
   
   return UserStats(
-    positionsExplored: history.map((h) => h['positionId'] as String?).whereType<String>().toSet().length,
+    positionsExplored: prefs.triedPositionIds.length,
     totalViews: history.length,
-    currentStreak: streak?['current_streak'] as int? ?? 0,
-    longestStreak: streak?['longest_streak'] as int? ?? 0,
+    currentStreak: prefs.currentStreak,
+    longestStreak: prefs.longestStreak,
     badgesUnlocked: badges.length,
     favoriteReactions: history.where((h) => h['reaction'] == 'loved').length,
   );

@@ -27,7 +27,6 @@ class PreferencesService {
   }
 
   /// Restituisce tutte le chiavi presenti in SharedPreferences.
-  /// Utile per migrazioni e debug.
   Set<String> get keys => _prefs?.getKeys() ?? <String>{};
 
   // ============ GENERIC GETTERS ============
@@ -143,7 +142,6 @@ class PreferencesService {
 
   List<String> get favoritePositionIds => getStringList('favorite_positions') ?? [];
 
-  /// Imposta l'intera lista dei preferiti (utile per sync cloud -> locale)
   Future<void> setFavoritePositionIds(List<String> positionIds) async {
     await setStringList('favorite_positions', positionIds);
   }
@@ -204,8 +202,6 @@ class PreferencesService {
 
   Future<void> addHistoryEntry(Map<String, dynamic> entry) async {
     final history = getStringList('history') ?? [];
-    // Salviamo in JSON per non perdere campi (es. notes).
-    // Manteniamo retro-compatibilità: se in history ci sono stringhe legacy, le lasciamo.
     final safeEntry = <String, dynamic>{
       'positionId': entry['positionId'],
       'viewedAt': entry['viewedAt'],
@@ -213,7 +209,6 @@ class PreferencesService {
       if (entry.containsKey('notes')) 'notes': entry['notes'],
     };
     history.add(jsonEncode(safeEntry));
-    // Keep only last 500 entries
     if (history.length > 500) {
       history.removeRange(0, history.length - 500);
     }
@@ -223,7 +218,6 @@ class PreferencesService {
   Future<List<Map<String, dynamic>>> getHistory({int limit = 100}) async {
     final history = getStringList('history') ?? [];
     return history.reversed.take(limit).map((str) {
-      // 1) Prova JSON
       try {
         final decoded = jsonDecode(str);
         if (decoded is Map) {
@@ -234,11 +228,8 @@ class PreferencesService {
             if (decoded.containsKey('notes')) 'notes': decoded['notes'],
           };
         }
-      } catch (_) {
-        // ignore
-      }
+      } catch (_) {}
 
-      // 2) Fallback legacy: positionId|viewedAt|reaction
       final parts = str.split('|');
       return {
         'positionId': parts.isNotEmpty ? parts[0] : '',
@@ -248,10 +239,8 @@ class PreferencesService {
     }).toList();
   }
 
-  /// Sovrascrive la history con una lista di entry (salvata in JSON)
   Future<void> setHistoryEntries(List<Map<String, dynamic>> entries) async {
     final encoded = entries.map((e) => jsonEncode(e)).toList(growable: false);
-    // Keep only last 500 entries
     final trimmed = encoded.length > 500 ? encoded.sublist(encoded.length - 500) : encoded;
     await setStringList('history', trimmed);
   }
@@ -260,27 +249,7 @@ class PreferencesService {
 
   Future<void> saveSession(Map<String, dynamic> session) async {
     final sessionId = session['id'] as String;
-    // JSON per poterlo rileggere/portare su cloud.
     await setString('session_$sessionId', jsonEncode(session));
-  }
-
-  // ============ STREAKS ============
-
-  int get currentStreak => getInt('current_streak') ?? 0;
-  int get longestStreak => getInt('longest_streak') ?? 0;
-  
-  Future<void> updateStreak(int current, int longest) async {
-    await setInt('current_streak', current);
-    await setInt('longest_streak', longest);
-    await setString('last_streak_date', DateTime.now().toIso8601String());
-  }
-
-  Future<Map<String, dynamic>?> getStreak() async {
-    return {
-      'current_streak': currentStreak,
-      'longest_streak': longestStreak,
-      'last_date': getString('last_streak_date'),
-    };
   }
 
   // ============ BADGES ============
@@ -308,6 +277,8 @@ class PreferencesService {
     _isSessionAuthenticated = false;
   }
 
+  // ============ POSIZIONI PROVATE ============
+
   List<String> get triedPositionIds => getStringList('tried_positions') ?? [];
 
   Future<void> addTriedPosition(String positionId) async {
@@ -330,5 +301,99 @@ class PreferencesService {
     await setStringList('tried_positions', ids);
   }
 
-  
+  // ============ STATISTICHE PROGRESSI ============
+
+  // Partite giocate (sessioni shuffle completate)
+  int get gamesPlayed => getInt('games_played') ?? 0;
+
+  Future<void> incrementGamesPlayed() async {
+    await setInt('games_played', gamesPlayed + 1);
+  }
+
+  // Tempo insieme (in minuti)
+  int get timeTogetherMinutes => getInt('time_together_minutes') ?? 0;
+
+  Future<void> addTimeTogetherMinutes(int minutes) async {
+    await setInt('time_together_minutes', timeTogetherMinutes + minutes);
+  }
+
+  String get formattedTimeTogether {
+    final total = timeTogetherMinutes;
+    if (total == 0) return '0m';
+    final hours = total ~/ 60;
+    final mins = total % 60;
+    if (hours == 0) return '${mins}m';
+    if (mins == 0) return '${hours}h';
+    return '${hours}h ${mins}m';
+  }
+
+  // ============ STREAK — giorni di utilizzo ============
+
+  List<String> get usageDates => getStringList('usage_dates') ?? [];
+
+  Future<void> recordUsageToday() async {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final dates = List<String>.from(usageDates);
+    if (!dates.contains(today)) {
+      dates.add(today);
+      if (dates.length > 365) dates.removeRange(0, dates.length - 365);
+      await setStringList('usage_dates', dates);
+    }
+  }
+
+  int get currentStreak {
+    final dates = usageDates;
+    if (dates.isEmpty) return 0;
+    final sorted = List<String>.from(dates)..sort();
+    final today = DateTime.now().toIso8601String().substring(0, 10);
+    final yesterday = DateTime.now()
+        .subtract(const Duration(days: 1))
+        .toIso8601String()
+        .substring(0, 10);
+    if (!sorted.contains(today) && !sorted.contains(yesterday)) return 0;
+    int streak = 0;
+    DateTime checkDate = sorted.contains(today)
+        ? DateTime.now()
+        : DateTime.now().subtract(const Duration(days: 1));
+    while (true) {
+      final dateStr = checkDate.toIso8601String().substring(0, 10);
+      if (sorted.contains(dateStr)) {
+        streak++;
+        checkDate = checkDate.subtract(const Duration(days: 1));
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  int get longestStreak {
+    final dates = usageDates;
+    if (dates.isEmpty) return 0;
+    final sorted = List<String>.from(dates)..sort();
+    int maxStreak = 1;
+    int current = 1;
+    for (int i = 1; i < sorted.length; i++) {
+      final prev = DateTime.parse(sorted[i - 1]);
+      final curr = DateTime.parse(sorted[i]);
+      final diff = curr.difference(prev).inDays;
+      if (diff == 1) {
+        current++;
+        if (current > maxStreak) maxStreak = current;
+      } else if (diff > 1) {
+        current = 1;
+      }
+    }
+    return maxStreak;
+  }
+
+  int get graceDaysRemaining {
+    final dates = usageDates;
+    if (dates.isEmpty) return 2;
+    final sorted = List<String>.from(dates)..sort();
+    final lastDate = DateTime.parse(sorted.last);
+    final today = DateTime.now();
+    final daysSinceLast = today.difference(lastDate).inDays;
+    return (2 - daysSinceLast).clamp(0, 2);
+  }
 }
