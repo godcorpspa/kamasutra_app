@@ -44,9 +44,13 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   
   late ConfettiController _confettiController;
 
+  // Timer per tracciare il tempo della sessione
+  late DateTime _sessionStartTime;
+
   @override
   void initState() {
     super.initState();
+    _sessionStartTime = DateTime.now();
     _loadPositions();
     _setupAnimations();
     _confettiController = ConfettiController(duration: const Duration(seconds: 2));
@@ -71,7 +75,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     final allPositions = repository.getFiltered(widget.filter);
 
     if (allPositions.isEmpty) {
-      // Nessuna posizione trovata con questi filtri
       setState(() {
         _positions = [];
         _isLoading = false;
@@ -99,18 +102,16 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     final velocity = details.velocity.pixelsPerSecond;
     final dx = _dragOffset.dx;
     
-    // Swipe threshold
     if (dx.abs() > 100 || velocity.dx.abs() > 500) {
       _dismissCard(dx > 0 ? 'right' : 'left');
     } else {
-      // Snap back
       setState(() {
         _dragOffset = Offset.zero;
       });
     }
   }
 
- void _dismissCard(String direction) {
+  void _dismissCard(String direction) {
     HapticFeedback.mediumImpact();
 
     // Record reaction based on swipe direction
@@ -144,6 +145,14 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
       if (_currentIndex >= _positions.length) {
         _sessionComplete = true;
         _confettiController.play();
+
+        // Traccia partita completata
+        PreferencesService.instance.incrementGamesPlayed();
+        // Registra uso per la streak
+        PreferencesService.instance.recordUsageToday();
+        // Traccia tempo insieme
+        final durationMinutes = DateTime.now().difference(_sessionStartTime).inMinutes;
+        PreferencesService.instance.addTimeTogetherMinutes(durationMinutes.clamp(1, 120));
       }
     });
   }
@@ -151,7 +160,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   void _recordReaction(PositionReaction reaction) {
     if (_currentIndex < _positions.length) {
       final position = _positions[_currentIndex];
-      // Save to PreferencesService instead of DatabaseService
       PreferencesService.instance.addHistoryEntry({
         'positionId': position.id,
         'viewedAt': DateTime.now().toIso8601String(),
@@ -178,12 +186,10 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
       final position = _positions[_currentIndex];
       final newStatus = await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
 
-      // Forza il refresh del provider posizioni in modo che il catalogo si aggiorni
       final locale = Localizations.localeOf(context).languageCode;
       ref.invalidate(positionsProvider(locale));
 
       if (mounted) {
-        // Fix 2: Mostra messaggio di conferma
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -235,6 +241,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                   _isLoading = true;
                   _currentIndex = 0;
                   _sessionComplete = false;
+                  _sessionStartTime = DateTime.now();
                 });
                 _loadPositions();
               },
@@ -384,6 +391,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                       _isLoading = true;
                       _currentIndex = 0;
                       _sessionComplete = false;
+                      _sessionStartTime = DateTime.now();
                     });
                     _loadPositions();
                   },
@@ -481,7 +489,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Illustration placeholder
                   // SVG Illustration
                   Expanded(
                     flex: 3,
@@ -613,7 +620,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
         left: AppSpacing.lg,
         right: AppSpacing.lg,
         top: AppSpacing.md,
-        bottom: AppSpacing.xxl + 16, // Più spazio dal basso per non coprire i tasti del telefono
+        bottom: AppSpacing.xxl + 16,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
