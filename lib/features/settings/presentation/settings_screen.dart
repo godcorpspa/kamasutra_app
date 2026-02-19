@@ -5,11 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/services/user_data_sync_service.dart';
-import '../../../data/models/game.dart';
+import '../../../data/services/audio_service.dart';
 
 /// Settings screen - all app preferences and configuration
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -24,15 +25,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   // Privacy settings
   bool _isPinEnabled = false;
   bool _isBiometricEnabled = false;
-  bool _isDiscreteIconEnabled = false;
-  bool _isPanicExitEnabled = true;
-  
+
   // Preferences
-  GameIntensity _defaultIntensity = GameIntensity.soft;
-  String _illustrationStyle = 'line_art';
   bool _soundEffects = true;
   bool _hapticFeedback = true;
-  int _consentInterval = 15;
 
   @override
   void initState() {
@@ -45,16 +41,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     setState(() {
       _isPinEnabled = prefs.isPinEnabled;
       _isBiometricEnabled = prefs.isBiometricEnabled;
-      _isDiscreteIconEnabled = prefs.isDiscreteIconEnabled;
-      _isPanicExitEnabled = prefs.isPanicExitEnabled;
-      _defaultIntensity = GameIntensity.values.firstWhere(
-        (i) => i.name == prefs.defaultIntensity,
-        orElse: () => GameIntensity.soft,
-      );
-      _illustrationStyle = prefs.illustrationStyle;
       _soundEffects = prefs.areSoundEffectsEnabled;
       _hapticFeedback = prefs.isHapticFeedbackEnabled;
-      _consentInterval = prefs.consentCheckInInterval;
     });
   }
 
@@ -167,29 +155,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
           ),
         
-        _buildSwitchTile(
-          icon: Icons.visibility_off,
-          title: 'settings.discrete_icon'.tr(),
-          subtitle: 'Icona generica nella home',
-          value: _isDiscreteIconEnabled,
-          onChanged: (value) async {
-            await PreferencesService.instance.setDiscreteIconEnabled(value);
-            UserDataSyncService.instance.syncSettingsPatch({'discrete_icon_enabled': value});
-            setState(() => _isDiscreteIconEnabled = value);
-          },
-        ),
-        
-        _buildSwitchTile(
-          icon: Icons.emergency,
-          title: 'settings.panic_exit'.tr(),
-          subtitle: 'Doppio tap per uscita rapida',
-          value: _isPanicExitEnabled,
-          onChanged: (value) async {
-            await PreferencesService.instance.setPanicExitEnabled(value);
-            UserDataSyncService.instance.syncSettingsPatch({'panic_exit_enabled': value});
-            setState(() => _isPanicExitEnabled = value);
-          },
-        ),
       ],
     );
   }
@@ -205,22 +170,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onTap: () => _showLanguageDialog(),
         ),
         
-        // Default intensity
-        _buildListTile(
-          icon: Icons.local_fire_department,
-          title: 'settings.default_intensity'.tr(),
-          subtitle: _getIntensityLabel(_defaultIntensity),
-          onTap: () => _showIntensityDialog(),
-        ),
-        
-        // Illustration style
-        _buildListTile(
-          icon: Icons.brush,
-          title: 'settings.illustration_style'.tr(),
-          subtitle: _getStyleLabel(_illustrationStyle),
-          onTap: () => _showStyleDialog(),
-        ),
-        
         // Sound effects
         _buildSwitchTile(
           icon: Icons.volume_up,
@@ -230,6 +179,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onChanged: (value) async {
             await PreferencesService.instance.setSoundEffectsEnabled(value);
             UserDataSyncService.instance.syncSettingsPatch({'sound_effects': value});
+            AudioService.instance.setEnabled(value);
+            if (value) {
+              AudioService.instance.playToggleOn();
+            }
             setState(() => _soundEffects = value);
           },
         ),
@@ -247,13 +200,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           },
         ),
         
-        // Consent interval
-        _buildListTile(
-          icon: Icons.timer,
-          title: 'settings.consent_interval'.tr(),
-          subtitle: 'Ogni $_consentInterval minuti',
-          onTap: () => _showConsentIntervalDialog(),
-        ),
       ],
     );
   }
@@ -280,107 +226,95 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildAboutSection() {
-  return Column(
-    children: [
-      // AGGIUNGI LOGOUT ALL'INIZIO
-      _buildListTile(
-        icon: Icons.logout,
-        title: 'Esci dall\'account',
-        subtitle: 'Disconnetti e torna al login',
-        onTap: () => _showLogoutDialog(),
-        isDestructive: true,
-      ),
-      
-      const Divider(indent: 72),
-      
-      _buildListTile(
-        icon: Icons.info_outline,
-        title: 'settings.version'.tr(),
-        subtitle: 'v1.0.0',
-      ),
-      _buildListTile(
-        icon: Icons.description_outlined,
-        title: 'settings.privacy_policy'.tr(),
-        onTap: () {
-          // Open privacy policy
-        },
-      ),
-      _buildListTile(
-        icon: Icons.gavel_outlined,
-        title: 'settings.terms'.tr(),
-        onTap: () {
-          // Open terms
-        },
-      ),
-      _buildListTile(
-        icon: Icons.email_outlined,
-        title: 'settings.contact'.tr(),
-        subtitle: 'Feedback e suggerimenti',
-        onTap: () {
-          // Open email
-        },
-      ),
-    ],
-  );
-}
-
-// AGGIUNGI QUESTO NUOVO METODO
-void _showLogoutDialog() {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text('Esci dall\'account'),
-      content: const Text(
-        'Sei sicuro di voler uscire? Dovrai effettuare nuovamente l\'accesso.',
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text('common.cancel'.tr()),
+    return Column(
+      children: [
+        _buildListTile(
+          icon: Icons.logout,
+          title: 'Esci dall\'account',
+          subtitle: 'Disconnetti e torna al login',
+          onTap: () => _showLogoutDialog(),
+          isDestructive: true,
         ),
-        TextButton(
-          onPressed: () async {
-            Navigator.pop(context);
-            await _performLogout();
-          },
-          style: TextButton.styleFrom(foregroundColor: AppColors.error),
-          child: const Text('Esci'),
+
+        const Divider(indent: 72),
+
+        _buildListTile(
+          icon: Icons.info_outline,
+          title: 'settings.version'.tr(),
+          subtitle: 'v1.0.0',
+        ),
+        _buildListTile(
+          icon: Icons.description_outlined,
+          title: 'settings.privacy_policy'.tr(),
+          onTap: () => _showPrivacyPolicy(),
+        ),
+        _buildListTile(
+          icon: Icons.gavel_outlined,
+          title: 'settings.terms'.tr(),
+          onTap: () => _showTermsOfService(),
+        ),
+        _buildListTile(
+          icon: Icons.email_outlined,
+          title: 'settings.contact'.tr(),
+          subtitle: 'Feedback e suggerimenti',
+          onTap: () => _openContactEmail(),
         ),
       ],
-    ),
-  );
-}
+    );
+  }
 
-Future<void> _performLogout() async {
-  try {
-    // Logout da Firebase
-    await FirebaseAuth.instance.signOut();
-    
-    // Logout da Google se era connesso
-    final googleSignIn = GoogleSignIn();
-    if (await googleSignIn.isSignedIn()) {
-      await googleSignIn.signOut();
-    }
-    
-    // Reset sessione locale
-    PreferencesService.instance.setSessionAuthenticated(false);
-    
-    // Naviga al login
-    if (mounted) {
-      context.go(AppRoutes.login);
-    }
-  } catch (e) {
-    debugPrint('Errore logout: $e');
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Errore durante il logout'),
-          backgroundColor: Colors.red,
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Esci dall\'account'),
+        content: const Text(
+          'Sei sicuro di voler uscire? Dovrai effettuare nuovamente l\'accesso.',
         ),
-      );
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('common.cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              await _performLogout();
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Esci'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _performLogout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+
+      PreferencesService.instance.setSessionAuthenticated(false);
+
+      if (mounted) {
+        context.go(AppRoutes.login);
+      }
+    } catch (e) {
+      debugPrint('Errore logout: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Errore durante il logout'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
-}
 
   Widget _buildSwitchTile({
     required IconData icon,
@@ -465,30 +399,6 @@ Future<void> _performLogout() async {
     );
   }
 
-  String _getIntensityLabel(GameIntensity intensity) {
-    switch (intensity) {
-      case GameIntensity.soft:
-        return '🌸 Soft';
-      case GameIntensity.spicy:
-        return '🌶️ Spicy';
-      case GameIntensity.extraSpicy:
-        return '🔥 Extra Spicy';
-    }
-  }
-
-  String _getStyleLabel(String style) {
-    switch (style) {
-      case 'line_art':
-        return 'Line Art (elegante)';
-      case 'silhouette':
-        return 'Silhouette (minimalista)';
-      case 'geometric':
-        return 'Geometrico (astratto)';
-      default:
-        return style;
-    }
-  }
-
   void _showLanguageDialog() {
     showDialog(
       context: context,
@@ -528,89 +438,11 @@ Future<void> _performLogout() async {
     );
   }
 
-  void _showIntensityDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text('settings.default_intensity'.tr()),
-        children: GameIntensity.values.map((intensity) {
-          return SimpleDialogOption(
-            onPressed: () async {
-              await PreferencesService.instance.setDefaultIntensity(intensity.name);
-              UserDataSyncService.instance.syncSettingsPatch({'default_intensity': intensity.name});
-              setState(() => _defaultIntensity = intensity);
-              Navigator.pop(context);
-            },
-            child: ListTile(
-              title: Text(_getIntensityLabel(intensity)),
-              trailing: _defaultIntensity == intensity
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
-                  : null,
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  void _showStyleDialog() {
-    final styles = ['line_art', 'silhouette', 'geometric'];
-    
-    showDialog(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text('settings.illustration_style'.tr()),
-        children: styles.map((style) {
-          return SimpleDialogOption(
-            onPressed: () async {
-              await PreferencesService.instance.setIllustrationStyle(style);
-              UserDataSyncService.instance.syncSettingsPatch({'illustration_style': style});
-              setState(() => _illustrationStyle = style);
-              Navigator.pop(context);
-            },
-            child: ListTile(
-              title: Text(_getStyleLabel(style)),
-              trailing: _illustrationStyle == style
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
-                  : null,
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  void _showConsentIntervalDialog() {
-    final intervals = [10, 15, 20, 30, 45, 60];
-    
-    showDialog(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: Text('settings.consent_interval'.tr()),
-        children: intervals.map((minutes) {
-          return SimpleDialogOption(
-            onPressed: () async {
-              await PreferencesService.instance.setConsentCheckInInterval(minutes);
-              UserDataSyncService.instance.syncSettingsPatch({'consent_check_in_interval': minutes});
-              setState(() => _consentInterval = minutes);
-              Navigator.pop(context);
-            },
-            child: ListTile(
-              title: Text('Ogni $minutes minuti'),
-              trailing: _consentInterval == minutes
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
-                  : null,
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
   void _showClearHistoryDialog() {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text('settings.clear_history'.tr()),
         content: const Text(
           'Sei sicuro di voler eliminare tutta la cronologia? '
@@ -618,21 +450,30 @@ Future<void> _performLogout() async {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text('common.cancel'.tr()),
           ),
           TextButton(
             onPressed: () async {
-              // Best-effort: cancella anche dal cloud se l'utente è loggato
-              await UserDataSyncService.instance.clearCloudHistory();
-              await PreferencesService.instance.clearHistory();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Cronologia eliminata'),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              Navigator.pop(dialogContext);
+              try {
+                await PreferencesService.instance.clearHistory();
+                await UserDataSyncService.instance.clearCloudHistory();
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Cronologia eliminata'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              } catch (e) {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Errore durante l\'eliminazione'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
             child: Text('common.delete'.tr()),
@@ -642,10 +483,224 @@ Future<void> _performLogout() async {
     );
   }
 
+  void _showPrivacyPolicy() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'settings.privacy_policy'.tr(),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  _privacyPolicyText(),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.6,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTermsOfService() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.85,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        expand: false,
+        builder: (context, scrollController) => Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'settings.terms'.tr(),
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  _termsOfServiceText(),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.6,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openContactEmail() async {
+    final uri = Uri(
+      scheme: 'mailto',
+      path: 'support@kamasutraapp.com',
+      queryParameters: {
+        'subject': 'Feedback - Kamasutra & Couple Games v1.0.0',
+      },
+    );
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Nessuna app email trovata. Scrivici a support@kamasutraapp.com'),
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 4),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Nessuna app email trovata. Scrivici a support@kamasutraapp.com'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+          ),
+        );
+      }
+    }
+  }
+
+  String _privacyPolicyText() {
+    return '''Privacy Policy - Kamasutra & Couple Games
+
+Ultimo aggiornamento: 19 febbraio 2026
+
+1. Introduzione
+La tua privacy è importante per noi. Questa Privacy Policy spiega come raccogliamo, utilizziamo e proteggiamo i tuoi dati personali.
+
+2. Dati raccolti
+- Dati di autenticazione: email e nome (se forniti tramite login Google o email).
+- Dati di utilizzo: preferenze, cronologia esplorazioni, progressi e badge.
+- Dati locali: PIN (hash), impostazioni dell'app.
+
+3. Come utilizziamo i dati
+- Per fornire e migliorare il servizio.
+- Per sincronizzare i tuoi dati tra dispositivi (opzionale).
+- Non vendiamo né condividiamo i tuoi dati con terze parti.
+
+4. Archiviazione e sicurezza
+- I dati sensibili (PIN) sono archiviati esclusivamente in locale sul tuo dispositivo.
+- I dati cloud sono protetti tramite Firebase con crittografia in transito e a riposo.
+- Puoi eliminare tutti i tuoi dati in qualsiasi momento dalle impostazioni.
+
+5. Servizi di terze parti
+- Firebase (Google): autenticazione e archiviazione cloud.
+- Google Sign-In: accesso opzionale.
+
+6. I tuoi diritti
+- Accesso ai tuoi dati personali.
+- Cancellazione completa dei dati.
+- Portabilità dei dati.
+- Revoca del consenso in qualsiasi momento.
+
+7. Contatti
+Per domande sulla privacy, contattaci a: support@kamasutraapp.com
+
+8. Modifiche
+Ci riserviamo il diritto di aggiornare questa policy. Le modifiche saranno comunicate tramite l'app.''';
+  }
+
+  String _termsOfServiceText() {
+    return '''Termini di Servizio - Kamasutra & Couple Games
+
+Ultimo aggiornamento: 19 febbraio 2026
+
+1. Accettazione dei termini
+Utilizzando l'app, accetti i presenti termini di servizio.
+
+2. Requisiti di età
+L'app è destinata esclusivamente a utenti maggiorenni (18+ anni). L'accesso è subordinato alla verifica dell'età.
+
+3. Uso dell'app
+- L'app è progettata per coppie adulte consenzienti.
+- È vietato qualsiasi uso illegale o non autorizzato.
+- Il contenuto è fornito a scopo educativo e di intrattenimento.
+
+4. Account e dati
+- Sei responsabile della sicurezza del tuo account.
+- Puoi eliminare i tuoi dati in qualsiasi momento.
+- La sincronizzazione cloud è opzionale.
+
+5. Proprietà intellettuale
+Tutti i contenuti, illustrazioni, testi e design sono protetti da copyright.
+
+6. Limitazione di responsabilità
+L'app è fornita "così com'è". Non garantiamo che il servizio sia privo di errori o interruzioni.
+
+7. Consenso e sicurezza
+- L'app promuove il consenso reciproco in ogni interazione.
+- Le funzionalità di pausa e check-in sono integrate per garantire il comfort di entrambi i partner.
+
+8. Modifiche ai termini
+Ci riserviamo il diritto di modificare questi termini. Le modifiche saranno comunicate tramite l'app.
+
+9. Contatti
+Per domande sui termini, contattaci a: support@kamasutraapp.com''';
+  }
+
   void _showClearAllDataDialog() {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: Text('settings.clear_all_data'.tr()),
         content: const Text(
           'Sei sicuro di voler eliminare tutti i dati? '
@@ -654,21 +709,31 @@ Future<void> _performLogout() async {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text('common.cancel'.tr()),
           ),
           TextButton(
             onPressed: () async {
-              // Best-effort: cancella anche dal cloud se l'utente è loggato
-              await UserDataSyncService.instance.clearCloudUserData();
-              await PreferencesService.instance.clearEverything();
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Tutti i dati eliminati'),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
+              Navigator.pop(dialogContext);
+              try {
+                await PreferencesService.instance.clearEverything();
+                await UserDataSyncService.instance.clearCloudUserData();
+                _loadSettings();
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Tutti i dati eliminati'),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              } catch (e) {
+                scaffoldMessenger.showSnackBar(
+                  const SnackBar(
+                    content: Text('Errore durante l\'eliminazione'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
             child: Text('common.delete'.tr()),

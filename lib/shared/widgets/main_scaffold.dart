@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../app/theme.dart';
 import '../../app/router.dart';
-import '../../data/services/preferences_service.dart';
 
 /// Main scaffold with bottom navigation
 class MainScaffold extends StatefulWidget {
@@ -19,7 +18,6 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _currentIndex = 0;
-  DateTime? _lastDoubleTap;
 
   final List<String> _routes = [
     AppRoutes.catalog,
@@ -36,27 +34,10 @@ class _MainScaffoldState extends State<MainScaffold> {
     _currentIndex = _routes.indexWhere((r) => location.startsWith(r));
     if (_currentIndex < 0) _currentIndex = 0;
 
-    return GestureDetector(
-      // Panic exit: double-tap anywhere
-      onDoubleTap: _handlePanicExit,
-      child: Scaffold(
-        body: widget.child,
-        bottomNavigationBar: _buildBottomNav(context),
-      ),
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: _buildBottomNav(context),
     );
-  }
-
-  void _handlePanicExit() {
-    if (!PreferencesService.instance.isPanicExitEnabled) return;
-    
-    final now = DateTime.now();
-    if (_lastDoubleTap != null &&
-        now.difference(_lastDoubleTap!).inMilliseconds < 500) {
-      // Double-tap detected within 500ms
-      HapticFeedback.heavyImpact();
-      context.go(AppRoutes.panicExit);
-    }
-    _lastDoubleTap = now;
   }
 
   Widget _buildBottomNav(BuildContext context) {

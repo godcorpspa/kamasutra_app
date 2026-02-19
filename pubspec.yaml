@@ -47,6 +47,9 @@ dependencies:
   # Security
   local_auth: ^2.1.7
 
+  # URL launching (email, links)
+  url_launcher: ^6.2.2
+
   json_annotation: ^4.9.0
 
 dev_dependencies:

@@ -69,8 +69,6 @@ class AppRoutes {
   static const String soundtrack = '/games/soundtrack';
   static const String mirrorChallenge = '/games/mirror-challenge';
   
-  // Panic exit
-  static const String panicExit = '/panic';
 }
 
 /// Shell navigation key for bottom nav
@@ -168,12 +166,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingScreen(),
-      ),
-      
-      // Panic exit (neutral screen)
-      GoRoute(
-        path: AppRoutes.panicExit,
-        builder: (context, state) => const PanicExitScreen(),
       ),
       
       // Main app with bottom navigation
@@ -296,43 +288,3 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// Panic exit screen - appears as innocent app
-class PanicExitScreen extends StatelessWidget {
-  const PanicExitScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.calculate_outlined,
-              size: 80,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Calculator',
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[400],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
