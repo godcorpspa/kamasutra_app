@@ -302,6 +302,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
               return FilterChip(
                 label: Text('categories.${category.name}'.tr()),
                 selected: isSelected,
+                showCheckmark: false,
                 onSelected: (_) {
                   HapticFeedback.selectionClick();
                   setState(() {
@@ -386,6 +387,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   child: ChoiceChip(
                     label: Text('energy.${energy.name}'.tr()),
                     selected: isSelected,
+                    showCheckmark: false,
                     onSelected: (_) {
                       HapticFeedback.selectionClick();
                       setState(() {
@@ -422,6 +424,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   child: ChoiceChip(
                     label: Text('duration.${duration.name}'.tr()),
                     selected: isSelected,
+                    showCheckmark: false,
                     onSelected: (_) {
                       HapticFeedback.selectionClick();
                       setState(() {
@@ -457,6 +460,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
               return FilterChip(
                 label: Text('focus.${focus.name}'.tr()),
                 selected: isSelected,
+                showCheckmark: false,
                 onSelected: (_) {
                   HapticFeedback.selectionClick();
                   setState(() {

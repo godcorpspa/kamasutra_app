@@ -416,6 +416,7 @@ class _GooseSetupScreenState extends ConsumerState<GooseSetupScreen> {
                 return FilterChip(
                   label: Text('games.goose_game.square_${type.name}'.tr()),
                   selected: isExcluded,
+                  showCheckmark: false,
                   onSelected: (_) {
                     setState(() {
                       if (isExcluded) {
