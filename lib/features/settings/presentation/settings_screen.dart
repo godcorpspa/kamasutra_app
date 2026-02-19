@@ -24,7 +24,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   
   // Privacy settings
   bool _isPinEnabled = false;
-  bool _isBiometricEnabled = false;
 
   // Preferences
   bool _soundEffects = true;
@@ -40,7 +39,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final prefs = PreferencesService.instance;
     setState(() {
       _isPinEnabled = prefs.isPinEnabled;
-      _isBiometricEnabled = prefs.isBiometricEnabled;
       _soundEffects = prefs.areSoundEffectsEnabled;
       _hapticFeedback = prefs.isHapticFeedbackEnabled;
     });
@@ -61,6 +59,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
               ),
+            ),
+
+            // Account section
+            _buildSectionHeader('Dettagli Account'),
+            SliverToBoxAdapter(
+              child: _buildAccountSection(),
             ),
 
             // Privacy section
@@ -139,19 +143,90 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             setState(() => _isPinEnabled = value);
           },
         ),
-
-        _buildSwitchTile(
-          icon: Icons.fingerprint,
-          title: 'settings.biometric'.tr(),
-          subtitle: 'Face ID / Touch ID',
-          value: _isBiometricEnabled,
-          onChanged: (value) async {
-            await PreferencesService.instance.setBiometricEnabled(value);
-            UserDataSyncService.instance.syncSettingsPatch({'biometric_enabled': value});
-            setState(() => _isBiometricEnabled = value);
-          },
-        ),
       ],
+    );
+  }
+
+  Widget _buildAccountSection() {
+    final user = FirebaseAuth.instance.currentUser;
+    final email = user?.email ?? '—';
+    final displayName = user?.displayName;
+
+    return Column(
+      children: [
+        // Email
+        _buildListTile(
+          icon: Icons.email_outlined,
+          title: 'Email',
+          subtitle: email,
+        ),
+
+        // Display name (if present)
+        if (displayName != null && displayName.isNotEmpty)
+          _buildListTile(
+            icon: Icons.person_outline,
+            title: 'Nome',
+            subtitle: displayName,
+          ),
+
+        // Change password (only for email/password users)
+        if (user?.providerData.any((p) => p.providerId == 'password') == true)
+          _buildListTile(
+            icon: Icons.key_outlined,
+            title: 'Cambia password',
+            subtitle: 'Invia email per reimpostare la password',
+            onTap: () => _showChangePasswordDialog(),
+          ),
+      ],
+    );
+  }
+
+  void _showChangePasswordDialog() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user?.email == null) return;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Cambia password'),
+        content: Text(
+          'Invieremo un\'email a ${user!.email} con le istruzioni per reimpostare la password.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('common.cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              try {
+                await FirebaseAuth.instance
+                    .sendPasswordResetEmail(email: user!.email!);
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Email inviata a ${user.email}'),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Errore nell\'invio dell\'email'),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Invia email'),
+          ),
+        ],
+      ),
     );
   }
 

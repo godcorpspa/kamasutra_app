@@ -126,6 +126,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                           return FilterChip(
                             label: Text('categories.${category.name}'.tr()),
                             selected: isSelected,
+                            showCheckmark: false,
                             onSelected: (selected) {
                               setState(() {
                                 if (selected) {
@@ -136,7 +137,6 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                               });
                             },
                             selectedColor: AppColors.burgundy.withOpacity(0.3),
-                            checkmarkColor: AppColors.burgundy,
                           );
                         }).toList(),
                       ),
@@ -186,6 +186,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                           return ChoiceChip(
                             label: Text('energy.${energy.name}'.tr()),
                             selected: isSelected,
+                            showCheckmark: false,
                             onSelected: (selected) {
                               setState(() {
                                 _selectedEnergy = selected ? energy : null;
@@ -210,6 +211,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                           return ChoiceChip(
                             label: Text('duration.${duration.name}'.tr()),
                             selected: isSelected,
+                            showCheckmark: false,
                             onSelected: (selected) {
                               setState(() {
                                 _selectedDuration = selected ? duration : null;
@@ -234,6 +236,7 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                           return FilterChip(
                             label: Text('focus.${focus.name}'.tr()),
                             selected: isSelected,
+                            showCheckmark: false,
                             onSelected: (selected) {
                               setState(() {
                                 if (selected) {
@@ -244,7 +247,6 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                               });
                             },
                             selectedColor: AppColors.navy.withOpacity(0.3),
-                            checkmarkColor: AppColors.navy,
                           );
                         }).toList(),
                       ),

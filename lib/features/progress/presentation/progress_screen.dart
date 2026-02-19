@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/repositories/position_repository.dart';
 import '../../../data/providers/providers.dart';
+import '../../../data/models/position.dart';
 import '../../../app/theme.dart';
 
 /// Progress screen showing badges, streaks, and statistics
@@ -239,6 +240,30 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
       }
     }
     final totalCategories = 8; // romantic, beginner, athletic, supported, lowImpact, adventurous, reconnect, quickie
+
+    // Per-category tried counts
+    final Map<String, int> categoryTriedCount = {};
+    int lowEnergyCount = 0;
+    int highEnergyCount = 0;
+    int longDurationCount = 0;
+    int veryHighDiffCount = 0;
+    final Set<String> triedFocusTypes = {};
+    for (final id in triedIds) {
+      final position = repo.getById(id);
+      if (position != null) {
+        for (final cat in position.categories) {
+          categoryTriedCount[cat.name] = (categoryTriedCount[cat.name] ?? 0) + 1;
+        }
+        if (position.energy == EnergyLevel.low) lowEnergyCount++;
+        if (position.energy == EnergyLevel.high) highEnergyCount++;
+        if (position.duration == PositionDuration.long) longDurationCount++;
+        if (position.difficulty == 5) veryHighDiffCount++;
+        for (final f in position.focus) {
+          triedFocusTypes.add(f.name);
+        }
+      }
+    }
+    final totalFocusTypes = 7; // intimacy, variety, connection, relax, playfulness, passion, trust
 
     final badges = [
       // ── ESPLORAZIONE ──
@@ -484,6 +509,232 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         description: 'Trascorri 24 ore insieme nell\'app',
         isUnlocked: timeMins >= 1440,
         progress: '${timeMins.clamp(0, 1440)}/1440 min',
+      ),
+
+      // ── ESPLORAZIONE AVANZATA ──
+      _BadgeData(
+        emoji: '🌠',
+        name: 'Sommità',
+        description: 'Prova 250 posizioni diverse',
+        isUnlocked: triedCount >= 250,
+        progress: '${triedCount.clamp(0, 250)}/250',
+      ),
+      _BadgeData(
+        emoji: '🎆',
+        name: 'Olimpionico',
+        description: 'Prova 300 posizioni diverse',
+        isUnlocked: triedCount >= 300,
+        progress: '${triedCount.clamp(0, 300)}/300',
+      ),
+
+      // ── PREFERITI AVANZATI ──
+      _BadgeData(
+        emoji: '💟',
+        name: 'Grande Collezione',
+        description: 'Salva 30 posizioni nei preferiti',
+        isUnlocked: favoritesCount >= 30,
+        progress: '${favoritesCount.clamp(0, 30)}/30',
+      ),
+      _BadgeData(
+        emoji: '🏰',
+        name: 'Castello d\'Amore',
+        description: 'Salva 50 posizioni nei preferiti',
+        isUnlocked: favoritesCount >= 50,
+        progress: '${favoritesCount.clamp(0, 50)}/50',
+      ),
+
+      // ── SERIE AVANZATE ──
+      _BadgeData(
+        emoji: '🌞',
+        name: 'Invincibile',
+        description: 'Raggiungi una serie di 150 giorni',
+        isUnlocked: streak >= 150,
+        progress: '${streak.clamp(0, 150)}/150',
+      ),
+      _BadgeData(
+        emoji: '🌌',
+        name: 'Infinito',
+        description: 'Raggiungi una serie di 200 giorni',
+        isUnlocked: streak >= 200,
+        progress: '${streak.clamp(0, 200)}/200',
+      ),
+      _BadgeData(
+        emoji: '📆',
+        name: 'Anno Insieme',
+        description: 'Raggiungi una serie di 365 giorni',
+        isUnlocked: streak >= 365,
+        progress: '${streak.clamp(0, 365)}/365',
+      ),
+
+      // ── GIOCHI AVANZATI ──
+      _BadgeData(
+        emoji: '🎲',
+        name: 'Gran Giocatore',
+        description: 'Completa 75 sessioni shuffle',
+        isUnlocked: gamesPlayed >= 75,
+        progress: '${gamesPlayed.clamp(0, 75)}/75',
+      ),
+      _BadgeData(
+        emoji: '🥇',
+        name: 'Campione dei Giochi',
+        description: 'Completa 100 sessioni shuffle',
+        isUnlocked: gamesPlayed >= 100,
+        progress: '${gamesPlayed.clamp(0, 100)}/100',
+      ),
+      _BadgeData(
+        emoji: '🎪',
+        name: 'Maestro dei Giochi',
+        description: 'Completa 150 sessioni shuffle',
+        isUnlocked: gamesPlayed >= 150,
+        progress: '${gamesPlayed.clamp(0, 150)}/150',
+      ),
+      _BadgeData(
+        emoji: '🎉',
+        name: 'Leggenda dei Giochi',
+        description: 'Completa 200 sessioni shuffle',
+        isUnlocked: gamesPlayed >= 200,
+        progress: '${gamesPlayed.clamp(0, 200)}/200',
+      ),
+
+      // ── SFIDA AVANZATA ──
+      _BadgeData(
+        emoji: '⚔️',
+        name: 'Guerriero',
+        description: 'Prova 25 posizioni di difficoltà alta (4-5⭐)',
+        isUnlocked: highDiffCount >= 25,
+        progress: '${highDiffCount.clamp(0, 25)}/25',
+      ),
+      _BadgeData(
+        emoji: '🦅',
+        name: 'Aquila',
+        description: 'Prova 30 posizioni di difficoltà alta (4-5⭐)',
+        isUnlocked: highDiffCount >= 30,
+        progress: '${highDiffCount.clamp(0, 30)}/30',
+      ),
+      _BadgeData(
+        emoji: '🎭',
+        name: 'Estremo',
+        description: 'Prova 3 posizioni di difficoltà massima (5⭐)',
+        isUnlocked: veryHighDiffCount >= 3,
+        progress: '${veryHighDiffCount.clamp(0, 3)}/3',
+      ),
+      _BadgeData(
+        emoji: '🦁',
+        name: 'Ultras',
+        description: 'Prova 10 posizioni di difficoltà massima (5⭐)',
+        isUnlocked: veryHighDiffCount >= 10,
+        progress: '${veryHighDiffCount.clamp(0, 10)}/10',
+      ),
+
+      // ── TEMPO INSIEME AVANZATO ──
+      _BadgeData(
+        emoji: '🌊',
+        name: 'Oceano di Tempo',
+        description: 'Trascorri 10 ore insieme nell\'app',
+        isUnlocked: timeMins >= 600,
+        progress: '${timeMins.clamp(0, 600)}/600 min',
+      ),
+      _BadgeData(
+        emoji: '🌃',
+        name: 'Notte Senza Fine',
+        description: 'Trascorri 48 ore insieme nell\'app',
+        isUnlocked: timeMins >= 2880,
+        progress: '${timeMins.clamp(0, 2880)}/2880 min',
+      ),
+      _BadgeData(
+        emoji: '☄️',
+        name: 'Un Viaggio',
+        description: 'Trascorri 100 ore insieme nell\'app',
+        isUnlocked: timeMins >= 6000,
+        progress: '${timeMins.clamp(0, 6000)}/6000 min',
+      ),
+
+      // ── CATEGORIE SPECIFICHE ──
+      _BadgeData(
+        emoji: '🌹',
+        name: 'Cuore Romantico',
+        description: 'Prova 5 posizioni dalla categoria Romantica',
+        isUnlocked: (categoryTriedCount['romantic'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['romantic'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🌿',
+        name: 'Esperto Principiante',
+        description: 'Prova 5 posizioni dalla categoria Principiante',
+        isUnlocked: (categoryTriedCount['beginner'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['beginner'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🏋️',
+        name: 'Atleta Passionale',
+        description: 'Prova 5 posizioni dalla categoria Atletica',
+        isUnlocked: (categoryTriedCount['athletic'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['athletic'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🤝',
+        name: 'Coppia Sostenuta',
+        description: 'Prova 5 posizioni dalla categoria Sorretta',
+        isUnlocked: (categoryTriedCount['supported'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['supported'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🦋',
+        name: 'Tocco Leggero',
+        description: 'Prova 5 posizioni dalla categoria Delicata',
+        isUnlocked: (categoryTriedCount['lowImpact'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['lowImpact'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🗺️',
+        name: 'Spirito Avventuroso',
+        description: 'Prova 5 posizioni dalla categoria Avventurosa',
+        isUnlocked: (categoryTriedCount['adventurous'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['adventurous'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🔗',
+        name: 'Legami Ritrovati',
+        description: 'Prova 5 posizioni dalla categoria Riconnessione',
+        isUnlocked: (categoryTriedCount['reconnect'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['reconnect'] ?? 0).clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '⚡',
+        name: 'Velocità Estrema',
+        description: 'Prova 5 posizioni dalla categoria Quickie',
+        isUnlocked: (categoryTriedCount['quickie'] ?? 0) >= 5,
+        progress: '${(categoryTriedCount['quickie'] ?? 0).clamp(0, 5)}/5',
+      ),
+
+      // ── DIVERSITÀ ──
+      _BadgeData(
+        emoji: '🌬️',
+        name: 'Calma e Relax',
+        description: 'Prova 5 posizioni a bassa energia',
+        isUnlocked: lowEnergyCount >= 5,
+        progress: '${lowEnergyCount.clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '💥',
+        name: 'Alta Energia',
+        description: 'Prova 5 posizioni ad alta energia',
+        isUnlocked: highEnergyCount >= 5,
+        progress: '${highEnergyCount.clamp(0, 5)}/5',
+      ),
+      _BadgeData(
+        emoji: '🐢',
+        name: 'Prenditi il Tempo',
+        description: 'Prova 3 posizioni a lunga durata',
+        isUnlocked: longDurationCount >= 3,
+        progress: '${longDurationCount.clamp(0, 3)}/3',
+      ),
+      _BadgeData(
+        emoji: '🔭',
+        name: 'Focus Completo',
+        description: 'Prova posizioni che coprono tutti i 7 tipi di focus',
+        isUnlocked: triedFocusTypes.length >= totalFocusTypes,
+        progress: '${triedFocusTypes.length.clamp(0, totalFocusTypes)}/$totalFocusTypes',
       ),
     ];
 

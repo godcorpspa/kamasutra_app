@@ -174,13 +174,20 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
 
     HapticFeedback.lightImpact();
     final position = _positions[_currentIndex];
+    final repo = ref.read(positionRepositoryProvider);
 
     // Toggle favorite (add or remove)
-    await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
+    await repo.toggleFavorite(position.id);
     final locale = Localizations.localeOf(context).languageCode;
     if (mounted) {
       ref.invalidate(positionsProvider(locale));
-      setState(() {});
+      // Update the local list so the heart icon reflects the new state immediately
+      final updated = repo.getById(position.id);
+      setState(() {
+        if (updated != null) {
+          _positions[_currentIndex] = updated;
+        }
+      });
     }
   }
 

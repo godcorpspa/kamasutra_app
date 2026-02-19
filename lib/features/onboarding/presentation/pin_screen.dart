@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
@@ -22,70 +21,29 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-  final LocalAuthentication _localAuth = LocalAuthentication();
-
   String _enteredPin = '';
   String? _firstPin; // For confirmation during creation
   bool _isCreating = false;
   bool _isConfirming = false;
   String? _error;
-  bool _canUseBiometric = false;
-  // True when only biometric is enabled (no PIN required)
-  bool _isBiometricOnlyMode = false;
 
   @override
   void initState() {
     super.initState();
     final prefs = PreferencesService.instance;
     final isPinEnabled = prefs.isPinEnabled;
-    final isBiometricEnabled = prefs.isBiometricEnabled;
-    _isBiometricOnlyMode = isBiometricEnabled && !isPinEnabled;
     _isCreating = isPinEnabled && prefs.pinHash == null;
-    _checkBiometric();
-  }
-
-  Future<void> _checkBiometric() async {
-    if (PreferencesService.instance.isBiometricEnabled) {
-      final canCheck = await _localAuth.canCheckBiometrics;
-      final isSupported = await _localAuth.isDeviceSupported();
-      setState(() {
-        _canUseBiometric = canCheck && isSupported;
-      });
-
-      // Auto-trigger biometric if not creating a PIN
-      if (_canUseBiometric && (!_isCreating || _isBiometricOnlyMode)) {
-        _authenticateWithBiometric();
-      }
-    }
-  }
-
-  Future<void> _authenticateWithBiometric() async {
-    try {
-      final didAuthenticate = await _localAuth.authenticate(
-        localizedReason: 'pin.use_biometric'.tr(),
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
-      );
-      
-      if (didAuthenticate && mounted) {
-        _onAuthenticationSuccess();
-      }
-    } catch (e) {
-      // Biometric failed, user will need to enter PIN
-    }
   }
 
   void _onNumberPressed(int number) {
     if (_enteredPin.length >= 4) return;
-    
+
     HapticFeedback.lightImpact();
     setState(() {
       _enteredPin += number.toString();
       _error = null;
     });
-    
+
     if (_enteredPin.length == 4) {
       _verifyPin();
     }
@@ -93,7 +51,7 @@ class _PinScreenState extends State<PinScreen> {
 
   void _onBackspace() {
     if (_enteredPin.isEmpty) return;
-    
+
     HapticFeedback.selectionClick();
     setState(() {
       _enteredPin = _enteredPin.substring(0, _enteredPin.length - 1);
@@ -133,7 +91,7 @@ class _PinScreenState extends State<PinScreen> {
       // Verify existing PIN
       final storedHash = PreferencesService.instance.pinHash;
       final enteredHash = _hashPin(_enteredPin);
-      
+
       if (storedHash == enteredHash) {
         _onAuthenticationSuccess();
       } else {
@@ -154,7 +112,7 @@ class _PinScreenState extends State<PinScreen> {
   void _onAuthenticationSuccess() {
     HapticFeedback.mediumImpact();
     PreferencesService.instance.setSessionAuthenticated(true);
-    
+
     if (!PreferencesService.instance.hasCompletedOnboarding) {
       context.go(AppRoutes.onboarding);
     } else {
@@ -178,57 +136,6 @@ class _PinScreenState extends State<PinScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Biometric-only mode: show only biometric prompt
-    if (_isBiometricOnlyMode) {
-      return Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.fingerprint,
-                  size: 80,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Accesso biometrico',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Usa Face ID o Touch ID per entrare',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 40),
-                if (_canUseBiometric)
-                  ElevatedButton.icon(
-                    onPressed: _authenticateWithBiometric,
-                    icon: const Icon(Icons.fingerprint),
-                    label: const Text('Usa Face ID / Touch ID'),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(240, 52),
-                    ),
-                  ),
-                const SizedBox(height: 48),
-                TextButton(
-                  onPressed: _logout,
-                  child: const Text('Esci dall\'account'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
     final title = _isCreating
         ? (_isConfirming ? 'pin.confirm_pin'.tr() : 'pin.create_pin'.tr())
         : 'pin.enter_pin'.tr();
@@ -281,8 +188,8 @@ class _PinScreenState extends State<PinScreen> {
                 Text(
                   _error!,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.error,
-                  ),
+                        color: AppColors.error,
+                      ),
                 ),
               ],
 
@@ -292,14 +199,6 @@ class _PinScreenState extends State<PinScreen> {
               _buildNumberPad(),
 
               const SizedBox(height: 24),
-
-              // Biometric button
-              if (_canUseBiometric && !_isCreating)
-                TextButton.icon(
-                  onPressed: _authenticateWithBiometric,
-                  icon: const Icon(Icons.fingerprint),
-                  label: Text('pin.use_biometric'.tr()),
-                ),
 
               const Spacer(),
 

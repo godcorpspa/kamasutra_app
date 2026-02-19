@@ -92,10 +92,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAgeVerified = prefs.isAgeVerified;
       final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
       final isPinEnabled = prefs.isPinEnabled;
-      final isBiometricEnabled = prefs.isBiometricEnabled;
       final isAuthenticated = prefs.isSessionAuthenticated;
-      // Authentication is required if PIN or biometric is enabled
-      final requiresAuth = isPinEnabled || isBiometricEnabled;
+      // Authentication is required if PIN is enabled
+      final requiresAuth = isPinEnabled;
 
       final isOnLogin = state.matchedLocation == AppRoutes.login;
       final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;

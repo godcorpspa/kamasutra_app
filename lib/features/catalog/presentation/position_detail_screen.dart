@@ -470,8 +470,8 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
             ),
             child: Text(
               PreferencesService.instance.isTriedPosition(widget.positionId)
-                  ? 'Prova di nuovo 🔄'
-                  : 'Prova questa 🔥',
+                  ? 'Posizione già provata ✅'
+                  : 'Prova posizione 🔥',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

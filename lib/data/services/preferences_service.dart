@@ -80,15 +80,26 @@ class PreferencesService {
 
   // ============ PIN & SECURITY ============
 
-  bool get isPinEnabled => getBool('pin_enabled') ?? false;
-  Future<void> setPinEnabled(bool value) => setBool('pin_enabled', value);
+  // PIN keys are scoped per Firebase user to avoid leaking across accounts
+  String get _pinEnabledKey {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null ? 'pin_enabled_$uid' : 'pin_enabled_anonymous';
+  }
 
-  String? get pinHash => getString('pin_hash');
+  String get _pinHashKey {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null ? 'pin_hash_$uid' : 'pin_hash_anonymous';
+  }
+
+  bool get isPinEnabled => getBool(_pinEnabledKey) ?? false;
+  Future<void> setPinEnabled(bool value) => setBool(_pinEnabledKey, value);
+
+  String? get pinHash => getString(_pinHashKey);
   Future<void> setPinHash(String? value) async {
     if (value == null) {
-      await remove('pin_hash');
+      await remove(_pinHashKey);
     } else {
-      await setString('pin_hash', value);
+      await setString(_pinHashKey, value);
     }
   }
 
