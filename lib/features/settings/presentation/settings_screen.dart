@@ -252,8 +252,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildListTile(
           icon: Icons.email_outlined,
           title: 'settings.contact'.tr(),
-          subtitle: 'Feedback e suggerimenti',
-          onTap: () => _openContactEmail(),
+          subtitle: 'Segnala un bug o invia un suggerimento',
+          onTap: () => _showContactOptions(),
         ),
       ],
     );
@@ -580,33 +580,103 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
-  Future<void> _openContactEmail() async {
+  void _showContactOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.md),
+                child: Text(
+                  'Contattaci',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.bug_report_outlined, color: AppColors.spicy),
+                title: const Text('Segnala un bug'),
+                subtitle: const Text('Hai trovato un problema? Faccelo sapere'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _sendEmail(
+                    subject: '[BUG] - Kamasutra & Couple Games v1.0.0',
+                    body: 'Descrivi il problema:\n\nDispositivo:\nVersione OS:\nPassaggi per riprodurlo:\n',
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.lightbulb_outline, color: AppColors.gold),
+                title: const Text('Invia un suggerimento'),
+                subtitle: const Text('Hai un\'idea per migliorare l\'app?'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _sendEmail(
+                    subject: '[SUGGERIMENTO] - Kamasutra & Couple Games',
+                    body: 'Il mio suggerimento:\n\n',
+                  );
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.star_outline, color: AppColors.burgundy),
+                title: const Text('Valuta l\'app'),
+                subtitle: const Text('Ti piace l\'app? Lascia una recensione'),
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  _sendEmail(
+                    subject: '[FEEDBACK] - Kamasutra & Couple Games',
+                    body: 'La mia opinione sull\'app:\n\n',
+                  );
+                },
+              ),
+              const Divider(height: 1),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  'support@kamasutraapp.com',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendEmail({required String subject, String body = ''}) async {
     final uri = Uri(
       scheme: 'mailto',
       path: 'support@kamasutraapp.com',
-      queryParameters: {
-        'subject': 'Feedback - Kamasutra & Couple Games v1.0.0',
-      },
+      queryParameters: {'subject': subject, 'body': body},
     );
     try {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
-      } else {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Nessuna app email trovata. Scrivici a support@kamasutraapp.com'),
-              behavior: SnackBarBehavior.floating,
-              duration: Duration(seconds: 4),
-            ),
-          );
-        }
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Scrivici a support@kamasutraapp.com'),
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+          ),
+        );
       }
-    } catch (e) {
+    } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Nessuna app email trovata. Scrivici a support@kamasutraapp.com'),
+            content: Text('Scrivici a support@kamasutraapp.com'),
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 4),
           ),

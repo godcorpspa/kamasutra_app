@@ -183,10 +183,11 @@ class _PinScreenState extends State<PinScreen> {
       return Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Spacer(flex: 2),
                 Icon(
                   Icons.fingerprint,
                   size: 80,
@@ -194,26 +195,33 @@ class _PinScreenState extends State<PinScreen> {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'pin.use_biometric'.tr(),
+                  'Accesso biometrico',
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 8),
+                Text(
+                  'Usa Face ID o Touch ID per entrare',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
                 if (_canUseBiometric)
                   ElevatedButton.icon(
                     onPressed: _authenticateWithBiometric,
                     icon: const Icon(Icons.fingerprint),
-                    label: Text('pin.use_biometric'.tr()),
+                    label: const Text('Usa Face ID / Touch ID'),
                     style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(220, 52),
+                      minimumSize: const Size(240, 52),
                     ),
                   ),
-                const Spacer(),
+                const SizedBox(height: 48),
                 TextButton(
                   onPressed: _logout,
                   child: const Text('Esci dall\'account'),
                 ),
-                const SizedBox(height: 16),
               ],
             ),
           ),

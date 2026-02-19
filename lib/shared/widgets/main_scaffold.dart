@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme.dart';
 import '../../app/router.dart';
+import '../../data/providers/providers.dart';
 
 /// Main scaffold with bottom navigation
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _currentIndex = 0;
 
   final List<String> _routes = [
@@ -105,6 +107,10 @@ class _MainScaffoldState extends State<MainScaffold> {
   void _onItemTapped(int index) {
     if (index == _currentIndex) return;
     HapticFeedback.selectionClick();
+    // Reset catalog favorites filter when leaving the catalog tab
+    if (_currentIndex == 0 && index != 0) {
+      ref.read(positionFilterProvider.notifier).setFavoritesOnly(false);
+    }
     context.go(_routes[index]);
   }
 }

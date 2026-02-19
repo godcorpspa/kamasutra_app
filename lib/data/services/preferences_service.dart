@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 
 /// Service per gestire le preferenze utente usando SharedPreferences
@@ -91,8 +92,14 @@ class PreferencesService {
     }
   }
 
-  bool get isBiometricEnabled => getBool('biometric_enabled') ?? false;
-  Future<void> setBiometricEnabled(bool value) => setBool('biometric_enabled', value);
+  // Biometric is scoped per Firebase user to avoid leaking across accounts
+  String get _biometricKey {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null ? 'biometric_enabled_$uid' : 'biometric_enabled_anonymous';
+  }
+
+  bool get isBiometricEnabled => getBool(_biometricKey) ?? false;
+  Future<void> setBiometricEnabled(bool value) => setBool(_biometricKey, value);
 
   bool get isDiscreteIconEnabled => getBool('discrete_icon_enabled') ?? false;
   Future<void> setDiscreteIconEnabled(bool value) => setBool('discrete_icon_enabled', value);

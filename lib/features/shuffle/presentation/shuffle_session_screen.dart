@@ -175,13 +175,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     HapticFeedback.lightImpact();
     final position = _positions[_currentIndex];
 
-    // If already a favorite, just show haptic feedback - don't remove
-    if (position.isFavorite) {
-      HapticFeedback.selectionClick();
-      return;
-    }
-
-    // Add to favorites
+    // Toggle favorite (add or remove)
     await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
     final locale = Localizations.localeOf(context).languageCode;
     if (mounted) {

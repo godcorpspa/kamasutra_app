@@ -20,7 +20,6 @@ class CatalogScreen extends ConsumerStatefulWidget {
 
 class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   final TextEditingController _searchController = TextEditingController();
-  bool _showFavoritesOnly = false;
 
   @override
   void dispose() {
@@ -35,10 +34,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   }
 
   void _toggleFavorites() {
-    setState(() {
-      _showFavoritesOnly = !_showFavoritesOnly;
-    });
-    ref.read(positionFilterProvider.notifier).setFavoritesOnly(_showFavoritesOnly);
+    final current = ref.read(positionFilterProvider).favoritesOnly ?? false;
+    ref.read(positionFilterProvider.notifier).setFavoritesOnly(!current);
   }
 
   void _showFilters() {
@@ -60,6 +57,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
     final locale = context.locale.languageCode;
     final positionsAsync = ref.watch(positionsProvider(locale));
     final filter = ref.watch(positionFilterProvider);
+    // Derive from provider so external resets (e.g. tab switch) are reflected
+    final showFavoritesOnly = filter.favoritesOnly ?? false;
     final hasActiveFilters = filter.categories != null ||
         filter.minDifficulty != null ||
         filter.maxDifficulty != null ||
@@ -87,7 +86,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                     children: [
                       Expanded(
                         child: Text(
-                          _showFavoritesOnly
+                          showFavoritesOnly
                               ? 'Preferiti'
                               : 'catalog.title'.tr(),
                           style: Theme.of(context).textTheme.headlineMedium,
@@ -97,10 +96,10 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                       IconButton(
                         onPressed: _toggleFavorites,
                         icon: Icon(
-                          _showFavoritesOnly
+                          showFavoritesOnly
                               ? Icons.favorite
                               : Icons.favorite_border,
-                          color: _showFavoritesOnly
+                          color: showFavoritesOnly
                               ? AppColors.burgundy
                               : null,
                         ),
@@ -215,13 +214,13 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              _showFavoritesOnly ? Icons.favorite_border : Icons.search_off,
+              showFavoritesOnly ? Icons.favorite_border : Icons.search_off,
               size: 64,
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              _showFavoritesOnly
+              showFavoritesOnly
                   ? 'catalog.no_favorites'.tr()
                   : hasFilters
                       ? 'errors.no_positions'.tr()
@@ -236,7 +235,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
               TextButton(
                 onPressed: () {
                   ref.read(positionFilterProvider.notifier).clear();
-                  setState(() => _showFavoritesOnly = false);
+                  setState(() => showFavoritesOnly = false);
                 },
                 child: Text('common.clear_filters'.tr()),
               ),
