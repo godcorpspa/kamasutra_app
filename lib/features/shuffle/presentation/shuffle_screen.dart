@@ -283,199 +283,322 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     );
   }
 
-  Widget _buildCategorySection() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'catalog.category'.tr(),
-            style: Theme.of(context).textTheme.titleSmall,
+  // ─── emoji helpers ──────────────────────────────────────────────────────────
+
+  String _categoryEmoji(PositionCategory c) {
+    switch (c) {
+      case PositionCategory.romantic:    return '🌹';
+      case PositionCategory.beginner:    return '🌿';
+      case PositionCategory.athletic:    return '🏋️';
+      case PositionCategory.supported:   return '🤝';
+      case PositionCategory.lowImpact:   return '🦋';
+      case PositionCategory.adventurous: return '🗺️';
+      case PositionCategory.reconnect:   return '🔗';
+      case PositionCategory.quickie:     return '⚡';
+    }
+  }
+
+  String _energyEmoji(EnergyLevel e) {
+    switch (e) {
+      case EnergyLevel.low:    return '🍃';
+      case EnergyLevel.medium: return '🔥';
+      case EnergyLevel.high:   return '💥';
+    }
+  }
+
+  String _durationEmoji(PositionDuration d) {
+    switch (d) {
+      case PositionDuration.brief:  return '⏱️';
+      case PositionDuration.medium: return '🕐';
+      case PositionDuration.long:   return '🌙';
+    }
+  }
+
+  String _focusEmoji(PositionFocus f) {
+    switch (f) {
+      case PositionFocus.intimacy:    return '💕';
+      case PositionFocus.variety:     return '🎨';
+      case PositionFocus.connection:  return '🔮';
+      case PositionFocus.relax:       return '🧘';
+      case PositionFocus.playfulness: return '🎉';
+      case PositionFocus.passion:     return '❤️‍🔥';
+      case PositionFocus.trust:       return '🤲';
+    }
+  }
+
+  Color _energyColor(EnergyLevel e) {
+    switch (e) {
+      case EnergyLevel.low:    return AppColors.soft;
+      case EnergyLevel.medium: return AppColors.spicy;
+      case EnergyLevel.high:   return AppColors.extraSpicy;
+    }
+  }
+
+  // ─── chip builders ──────────────────────────────────────────────────────────
+
+  Widget _filterChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color accentColor,
+  }) {
+    final theme = Theme.of(context);
+    return FilterChip(
+      label: Text(
+        label,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          color: isSelected ? accentColor : theme.colorScheme.onSurface.withOpacity(0.85),
+        ),
+      ),
+      selected: isSelected,
+      showCheckmark: false,
+      onSelected: (_) { HapticFeedback.selectionClick(); onTap(); },
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      backgroundColor: theme.colorScheme.surface,
+      selectedColor: accentColor.withOpacity(0.12),
+      side: isSelected
+          ? BorderSide(color: accentColor, width: 1.5)
+          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+    );
+  }
+
+  Widget _choiceChip({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required Color accentColor,
+  }) {
+    final theme = Theme.of(context);
+    return ChoiceChip(
+      label: Center(
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            color: isSelected ? accentColor : theme.colorScheme.onSurface.withOpacity(0.85),
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: PositionCategory.values.map((category) {
-              final isSelected = _selectedCategories.contains(category);
-              return FilterChip(
-                label: Text('categories.${category.name}'.tr()),
-                selected: isSelected,
-                showCheckmark: false,
-                onSelected: (_) {
-                  HapticFeedback.selectionClick();
-                  setState(() {
-                    if (isSelected) {
-                      _selectedCategories.remove(category);
-                    } else {
-                      _selectedCategories.add(category);
-                    }
-                  });
-                },
-              );
-            }).toList(),
+        ),
+      ),
+      selected: isSelected,
+      showCheckmark: false,
+      onSelected: (_) { HapticFeedback.selectionClick(); onTap(); },
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      backgroundColor: theme.colorScheme.surface,
+      selectedColor: accentColor.withOpacity(0.12),
+      side: isSelected
+          ? BorderSide(color: accentColor, width: 1.5)
+          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+    );
+  }
+
+  Widget _sectionHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: AppSpacing.sm),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
         ],
       ),
+    );
+  }
+
+  // ─── filter sections ────────────────────────────────────────────────────────
+
+  Widget _buildCategorySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader('catalog.category'.tr(), Icons.grid_view_rounded),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: LayoutBuilder(
+            builder: (_, constraints) {
+              final w = (constraints.maxWidth - AppSpacing.sm) / 2;
+              return Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
+                children: PositionCategory.values.map((category) {
+                  final isSelected = _selectedCategories.contains(category);
+                  return SizedBox(
+                    width: w,
+                    child: _filterChip(
+                      label: '${_categoryEmoji(category)}  ${'categories.${category.name}'.tr()}',
+                      isSelected: isSelected,
+                      accentColor: AppColors.burgundy,
+                      onTap: () => setState(() {
+                        isSelected ? _selectedCategories.remove(category) : _selectedCategories.add(category);
+                      }),
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
   Widget _buildDifficultySlider() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader('catalog.difficulty'.tr(), Icons.star_outline_rounded),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'catalog.difficulty'.tr(),
-                style: Theme.of(context).textTheme.titleSmall,
+                '⭐ ${_difficultyRange.start.round()}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.gold,
+                ),
               ),
               Text(
-                '${_difficultyRange.start.round()} - ${_difficultyRange.end.round()}',
+                '${_difficultyRange.end.round()} ⭐',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.gold,
                 ),
               ),
             ],
           ),
-          RangeSlider(
-            values: _difficultyRange,
-            min: 1,
-            max: 5,
-            divisions: 4,
-            labels: RangeLabels(
-              _difficultyRange.start.round().toString(),
-              _difficultyRange.end.round().toString(),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: AppColors.gold,
+              thumbColor: AppColors.gold,
+              inactiveTrackColor: AppColors.gold.withOpacity(0.2),
+              overlayColor: AppColors.gold.withOpacity(0.1),
             ),
-            onChanged: (values) {
-              setState(() => _difficultyRange = values);
-            },
+            child: RangeSlider(
+              values: _difficultyRange,
+              min: 1,
+              max: 5,
+              divisions: 4,
+              labels: RangeLabels(
+                _difficultyRange.start.round().toString(),
+                _difficultyRange.end.round().toString(),
+              ),
+              onChanged: (values) => setState(() => _difficultyRange = values),
+            ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Facile', style: Theme.of(context).textTheme.bodySmall),
-              Text('Impegnativo', style: Theme.of(context).textTheme.bodySmall),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildEnergySection() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'catalog.energy'.tr(),
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: EnergyLevel.values.map((energy) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader('catalog.energy'.tr(), Icons.bolt_rounded),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Row(
+            children: EnergyLevel.values.asMap().entries.map((entry) {
+              final i = entry.key;
+              final energy = entry.value;
               final isSelected = _selectedEnergy == energy;
               return Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ChoiceChip(
-                    label: Text('energy.${energy.name}'.tr()),
-                    selected: isSelected,
-                    showCheckmark: false,
-                    onSelected: (_) {
-                      HapticFeedback.selectionClick();
-                      setState(() {
-                        _selectedEnergy = isSelected ? null : energy;
-                      });
-                    },
+                  padding: EdgeInsets.only(right: i < EnergyLevel.values.length - 1 ? AppSpacing.sm : 0),
+                  child: _choiceChip(
+                    label: '${_energyEmoji(energy)}\n${'energy.${energy.name}'.tr()}',
+                    isSelected: isSelected,
+                    accentColor: _energyColor(energy),
+                    onTap: () => setState(() {
+                      _selectedEnergy = isSelected ? null : energy;
+                    }),
                   ),
                 ),
               );
             }).toList(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildDurationSection() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'catalog.duration'.tr(),
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Row(
-            children: PositionDuration.values.map((duration) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader('catalog.duration'.tr(), Icons.timer_outlined),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Row(
+            children: PositionDuration.values.asMap().entries.map((entry) {
+              final i = entry.key;
+              final duration = entry.value;
               final isSelected = _selectedDuration == duration;
               return Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ChoiceChip(
-                    label: Text('duration.${duration.name}'.tr()),
-                    selected: isSelected,
-                    showCheckmark: false,
-                    onSelected: (_) {
-                      HapticFeedback.selectionClick();
-                      setState(() {
-                        _selectedDuration = isSelected ? null : duration;
-                      });
-                    },
+                  padding: EdgeInsets.only(right: i < PositionDuration.values.length - 1 ? AppSpacing.sm : 0),
+                  child: _choiceChip(
+                    label: '${_durationEmoji(duration)}\n${'duration.${duration.name}'.tr()}',
+                    isSelected: isSelected,
+                    accentColor: AppColors.gold,
+                    onTap: () => setState(() {
+                      _selectedDuration = isSelected ? null : duration;
+                    }),
                   ),
                 ),
               );
             }).toList(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
   Widget _buildFocusSection() {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'catalog.focus'.tr(),
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            runSpacing: AppSpacing.sm,
-            children: PositionFocus.values.map((focus) {
-              final isSelected = _selectedFocus.contains(focus);
-              return FilterChip(
-                label: Text('focus.${focus.name}'.tr()),
-                selected: isSelected,
-                showCheckmark: false,
-                onSelected: (_) {
-                  HapticFeedback.selectionClick();
-                  setState(() {
-                    if (isSelected) {
-                      _selectedFocus.remove(focus);
-                    } else {
-                      _selectedFocus.add(focus);
-                    }
-                  });
-                },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionHeader('catalog.focus'.tr(), Icons.psychology_outlined),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: LayoutBuilder(
+            builder: (_, constraints) {
+              final w = (constraints.maxWidth - AppSpacing.sm) / 2;
+              return Wrap(
+                spacing: AppSpacing.sm,
+                runSpacing: AppSpacing.sm,
+                children: PositionFocus.values.map((focus) {
+                  final isSelected = _selectedFocus.contains(focus);
+                  return SizedBox(
+                    width: w,
+                    child: _filterChip(
+                      label: '${_focusEmoji(focus)}  ${'focus.${focus.name}'.tr()}',
+                      isSelected: isSelected,
+                      accentColor: AppColors.navy,
+                      onTap: () => setState(() {
+                        isSelected ? _selectedFocus.remove(focus) : _selectedFocus.add(focus);
+                      }),
+                    ),
+                  );
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
