@@ -193,7 +193,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                   final positions = ref.watch(filteredPositionsProvider(locale));
 
                   if (positions.isEmpty) {
-                    return _buildEmptyState(context, allPositions.isNotEmpty);
+                    return _buildEmptyState(context, allPositions.isNotEmpty, showFavoritesOnly);
                   }
 
                   return _buildGrid(positions);
@@ -206,7 +206,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
     );
   }
 
-  Widget _buildEmptyState(BuildContext context, bool hasFilters) {
+  Widget _buildEmptyState(BuildContext context, bool hasFilters, bool showFavoritesOnly) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -235,7 +235,6 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
               TextButton(
                 onPressed: () {
                   ref.read(positionFilterProvider.notifier).clear();
-                  setState(() => showFavoritesOnly = false);
                 },
                 child: Text('common.clear_filters'.tr()),
               ),
