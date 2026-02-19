@@ -265,20 +265,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
           onFavoriteTap: () async {
             HapticFeedback.lightImpact();
             final repo = ref.read(positionRepositoryProvider);
-            final newStatus = await repo.toggleFavorite(position.id);
+            await repo.toggleFavorite(position.id);
             if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    newStatus
-                        ? 'catalog.added_to_favorites'.tr()
-                        : 'Rimosso dai preferiti',
-                  ),
-                  duration: const Duration(seconds: 2),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-              // Force rebuild
               ref.invalidate(positionsProvider(context.locale.languageCode));
             }
           },

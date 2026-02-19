@@ -125,17 +125,6 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     if (direction == 'right' && _currentIndex < _positions.length) {
       final position = _positions[_currentIndex];
       PreferencesService.instance.addTriedPosition(position.id);
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('✅ "${position.getName(Localizations.localeOf(context).languageCode)}" aggiunta alle provate!'),
-            duration: const Duration(seconds: 2),
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 100, left: 16, right: 16),
-          ),
-        );
-      }
     }
 
     setState(() {
@@ -181,29 +170,23 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   }
 
   void _toggleFavorite() async {
-    if (_currentIndex < _positions.length) {
-      HapticFeedback.lightImpact();
-      final position = _positions[_currentIndex];
-      final newStatus = await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
+    if (_currentIndex >= _positions.length) return;
 
-      final locale = Localizations.localeOf(context).languageCode;
+    HapticFeedback.lightImpact();
+    final position = _positions[_currentIndex];
+
+    // If already a favorite, just show haptic feedback - don't remove
+    if (position.isFavorite) {
+      HapticFeedback.selectionClick();
+      return;
+    }
+
+    // Add to favorites
+    await ref.read(positionRepositoryProvider).toggleFavorite(position.id);
+    final locale = Localizations.localeOf(context).languageCode;
+    if (mounted) {
       ref.invalidate(positionsProvider(locale));
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              newStatus
-                  ? '❤️ Aggiunta ai preferiti!'
-                  : 'Rimossa dai preferiti',
-            ),
-            duration: const Duration(seconds: 2),
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(bottom: 100, left: 16, right: 16),
-          ),
-        );
-        setState(() {});
-      }
+      setState(() {});
     }
   }
 
@@ -543,8 +526,16 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                             runSpacing: AppSpacing.xs,
                             children: [
                               _buildTag(_getDifficultyLabel(position.difficulty)),
-                              _buildTag('energy.${position.energy.name}'.tr()),
-                              _buildTag('duration.${position.duration.name}'.tr()),
+                              _buildIconTag(
+                                _getEnergyIcon(position.energy),
+                                'energy.${position.energy.name}'.tr(),
+                                _getEnergyColor(position.energy),
+                              ),
+                              _buildIconTag(
+                                Icons.timer_outlined,
+                                'duration.${position.duration.name}'.tr(),
+                                AppColors.gold,
+                              ),
                             ],
                           ),
                           
@@ -586,6 +577,55 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
         ),
       ),
     );
+  }
+
+  Widget _buildIconTag(IconData icon, String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: color),
+          const SizedBox(width: 3),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  IconData _getEnergyIcon(EnergyLevel energy) {
+    switch (energy) {
+      case EnergyLevel.low:
+        return Icons.battery_3_bar;
+      case EnergyLevel.medium:
+        return Icons.battery_5_bar;
+      case EnergyLevel.high:
+        return Icons.battery_full;
+    }
+  }
+
+  Color _getEnergyColor(EnergyLevel energy) {
+    switch (energy) {
+      case EnergyLevel.low:
+        return AppColors.soft;
+      case EnergyLevel.medium:
+        return AppColors.spicy;
+      case EnergyLevel.high:
+        return AppColors.extraSpicy;
+    }
   }
 
   String _getDifficultyLabel(int difficulty) {
@@ -635,7 +675,9 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           
           // Favorite
           _ActionButton(
-            icon: Icons.favorite,
+            icon: (_currentIndex < _positions.length && _positions[_currentIndex].isFavorite)
+                ? Icons.favorite
+                : Icons.favorite_border,
             color: AppColors.burgundy,
             onPressed: _toggleFavorite,
             label: 'Salva',

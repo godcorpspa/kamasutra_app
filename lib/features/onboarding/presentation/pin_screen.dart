@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -21,19 +23,25 @@ class PinScreen extends StatefulWidget {
 
 class _PinScreenState extends State<PinScreen> {
   final LocalAuthentication _localAuth = LocalAuthentication();
-  
+
   String _enteredPin = '';
   String? _firstPin; // For confirmation during creation
   bool _isCreating = false;
   bool _isConfirming = false;
   String? _error;
   bool _canUseBiometric = false;
+  // True when only biometric is enabled (no PIN required)
+  bool _isBiometricOnlyMode = false;
 
   @override
   void initState() {
     super.initState();
+    final prefs = PreferencesService.instance;
+    final isPinEnabled = prefs.isPinEnabled;
+    final isBiometricEnabled = prefs.isBiometricEnabled;
+    _isBiometricOnlyMode = isBiometricEnabled && !isPinEnabled;
+    _isCreating = isPinEnabled && prefs.pinHash == null;
     _checkBiometric();
-    _isCreating = PreferencesService.instance.pinHash == null;
   }
 
   Future<void> _checkBiometric() async {
@@ -43,8 +51,9 @@ class _PinScreenState extends State<PinScreen> {
       setState(() {
         _canUseBiometric = canCheck && isSupported;
       });
-      
-      if (_canUseBiometric && !_isCreating) {
+
+      // Auto-trigger biometric if not creating a PIN
+      if (_canUseBiometric && (!_isCreating || _isBiometricOnlyMode)) {
         _authenticateWithBiometric();
       }
     }
@@ -153,8 +162,65 @@ class _PinScreenState extends State<PinScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+      PreferencesService.instance.setSessionAuthenticated(false);
+      if (mounted) context.go(AppRoutes.login);
+    } catch (e) {
+      debugPrint('Errore logout: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Biometric-only mode: show only biometric prompt
+    if (_isBiometricOnlyMode) {
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              children: [
+                const Spacer(flex: 2),
+                Icon(
+                  Icons.fingerprint,
+                  size: 80,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'pin.use_biometric'.tr(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 48),
+                if (_canUseBiometric)
+                  ElevatedButton.icon(
+                    onPressed: _authenticateWithBiometric,
+                    icon: const Icon(Icons.fingerprint),
+                    label: Text('pin.use_biometric'.tr()),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(220, 52),
+                    ),
+                  ),
+                const Spacer(),
+                TextButton(
+                  onPressed: _logout,
+                  child: const Text('Esci dall\'account'),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     final title = _isCreating
         ? (_isConfirming ? 'pin.confirm_pin'.tr() : 'pin.create_pin'.tr())
         : 'pin.enter_pin'.tr();
@@ -166,16 +232,16 @@ class _PinScreenState extends State<PinScreen> {
           child: Column(
             children: [
               const Spacer(flex: 2),
-              
+
               // Title
               Text(
                 title,
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 48),
-              
+
               // PIN dots
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -200,7 +266,7 @@ class _PinScreenState extends State<PinScreen> {
                   );
                 }),
               ),
-              
+
               // Error message
               if (_error != null) ...[
                 const SizedBox(height: 16),
@@ -211,14 +277,14 @@ class _PinScreenState extends State<PinScreen> {
                   ),
                 ),
               ],
-              
+
               const Spacer(),
-              
+
               // Number pad
               _buildNumberPad(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Biometric button
               if (_canUseBiometric && !_isCreating)
                 TextButton.icon(
@@ -226,8 +292,15 @@ class _PinScreenState extends State<PinScreen> {
                   icon: const Icon(Icons.fingerprint),
                   label: Text('pin.use_biometric'.tr()),
                 ),
-              
+
               const Spacer(),
+
+              // Logout
+              TextButton(
+                onPressed: _logout,
+                child: const Text('Esci dall\'account'),
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),

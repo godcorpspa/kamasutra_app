@@ -123,14 +123,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildSwitchTile(
           icon: Icons.lock,
           title: 'settings.pin_lock'.tr(),
-          subtitle: _isPinEnabled 
-              ? 'PIN attivo' 
+          subtitle: _isPinEnabled
+              ? 'PIN attivo'
               : 'Proteggi l\'accesso con PIN',
           value: _isPinEnabled,
           onChanged: (value) async {
             if (value) {
-              // Navigate to PIN creation
-              // For now just toggle
               await PreferencesService.instance.setPinEnabled(true);
               UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': true});
             } else {
@@ -141,20 +139,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             setState(() => _isPinEnabled = value);
           },
         ),
-        
-        if (_isPinEnabled)
-          _buildSwitchTile(
-            icon: Icons.fingerprint,
-            title: 'settings.biometric'.tr(),
-            subtitle: 'Face ID / Touch ID',
-            value: _isBiometricEnabled,
-            onChanged: (value) async {
-              await PreferencesService.instance.setBiometricEnabled(value);
-              UserDataSyncService.instance.syncSettingsPatch({'biometric_enabled': value});
-              setState(() => _isBiometricEnabled = value);
-            },
-          ),
-        
+
+        _buildSwitchTile(
+          icon: Icons.fingerprint,
+          title: 'settings.biometric'.tr(),
+          subtitle: 'Face ID / Touch ID',
+          value: _isBiometricEnabled,
+          onChanged: (value) async {
+            await PreferencesService.instance.setBiometricEnabled(value);
+            UserDataSyncService.instance.syncSettingsPatch({'biometric_enabled': value});
+            setState(() => _isBiometricEnabled = value);
+          },
+        ),
       ],
     );
   }
@@ -458,6 +454,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Navigator.pop(dialogContext);
               try {
                 await PreferencesService.instance.clearHistory();
+                await PreferencesService.instance.setTriedPositionIds([]);
                 await UserDataSyncService.instance.clearCloudHistory();
                 scaffoldMessenger.showSnackBar(
                   const SnackBar(

@@ -72,19 +72,8 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
               IconButton(
                 onPressed: () async {
                   HapticFeedback.lightImpact();
-                  final newStatus = await repo.toggleFavorite(position.id);
+                  await repo.toggleFavorite(position.id);
                   if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          newStatus
-                              ? 'catalog.added_to_favorites'.tr()
-                              : 'Rimosso dai preferiti',
-                        ),
-                        duration: const Duration(seconds: 2),
-                        behavior: SnackBarBehavior.floating,
-                      ),
-                    );
                     ref.invalidate(positionsProvider(locale));
                     setState(() {});
                   }
@@ -468,18 +457,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
           child: ElevatedButton(
             onPressed: () {
               HapticFeedback.mediumImpact();
-              // Segna come provata
               PreferencesService.instance.addTriedPosition(widget.positionId);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    PreferencesService.instance.isTriedPosition(widget.positionId)
-                        ? '✅ Provata di nuovo!'
-                        : '✅ Aggiunta alle posizioni provate!',
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
               setState(() {});
             },
             style: ElevatedButton.styleFrom(

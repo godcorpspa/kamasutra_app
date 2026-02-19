@@ -92,24 +92,27 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isAgeVerified = prefs.isAgeVerified;
       final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
       final isPinEnabled = prefs.isPinEnabled;
+      final isBiometricEnabled = prefs.isBiometricEnabled;
       final isAuthenticated = prefs.isSessionAuthenticated;
-      
+      // Authentication is required if PIN or biometric is enabled
+      final requiresAuth = isPinEnabled || isBiometricEnabled;
+
       final isOnLogin = state.matchedLocation == AppRoutes.login;
       final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;
       final isOnOnboarding = state.matchedLocation == AppRoutes.onboarding;
       final isOnPin = state.matchedLocation == AppRoutes.pin;
-      
+
       // Non loggato -> vai al login
       if (!isLoggedIn && !isOnLogin) {
         return AppRoutes.login;
       }
-      
+
       // Loggato ma sulla pagina login -> procedi
       if (isLoggedIn && isOnLogin) {
         if (!isAgeVerified) {
           return AppRoutes.ageGate;
         }
-        if (isPinEnabled && !isAuthenticated) {
+        if (requiresAuth && !isAuthenticated) {
           return AppRoutes.pin;
         }
         if (!hasCompletedOnboarding) {
@@ -117,15 +120,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         return AppRoutes.catalog;
       }
-      
+
       // Non age verified -> age gate (solo se loggato)
       if (isLoggedIn && !isAgeVerified && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.ageGate;
       }
-      
+
       // Age verified but on age gate -> move on
       if (isAgeVerified && isOnAgeGate) {
-        if (isPinEnabled && !isAuthenticated) {
+        if (requiresAuth && !isAuthenticated) {
           return AppRoutes.pin;
         }
         if (!hasCompletedOnboarding) {
@@ -133,12 +136,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         return AppRoutes.catalog;
       }
-      
-      // PIN required but not authenticated
-      if (isPinEnabled && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
+
+      // PIN/biometric required but not authenticated
+      if (requiresAuth && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.pin;
       }
-      
+
       // Onboarding not completed
       if (!hasCompletedOnboarding && !isOnOnboarding && !isOnAgeGate && !isOnPin && !isOnLogin) {
         return AppRoutes.onboarding;
