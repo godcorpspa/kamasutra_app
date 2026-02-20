@@ -236,6 +236,21 @@ class UserDataSyncService {
     }
   }
 
+  /// Deletes ALL cloud data including the user profile document.
+  /// Used before deleting the Firebase Auth account.
+  Future<void> deleteCloudUserCompletely() async {
+    final uid = _uid;
+    if (uid == null) return;
+
+    try {
+      await clearCloudUserData();
+      // Also delete the root user profile doc
+      await _userDoc(uid).delete();
+    } catch (e) {
+      debugPrint('⚠️ deleteCloudUserCompletely failed: $e');
+    }
+  }
+
   // =============================
   // Auth flow & initial sync
   // =============================

@@ -167,6 +167,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           subtitle: 'Invia email per reimpostare la password',
           onTap: () => _showChangePasswordDialog(),
         ),
+
+        // Delete account
+        _buildListTile(
+          icon: Icons.person_remove_outlined,
+          title: 'Elimina account',
+          subtitle: 'Cancella definitivamente il tuo account',
+          onTap: () => _showDeleteAccountDialog(),
+          isDestructive: true,
+        ),
       ],
     );
   }
@@ -218,6 +227,224 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Elimina account'),
+        content: const Text(
+          'Sei sicuro di voler eliminare il tuo account?\n\n'
+          'Tutti i tuoi dati (preferenze, cronologia, badge, progressi) '
+          'verranno cancellati definitivamente.\n\n'
+          'Questa azione non può essere annullata.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text('common.cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              _performDeleteAccount();
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Elimina account'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _performDeleteAccount() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      // 1) Delete cloud data
+      await UserDataSyncService.instance.deleteCloudUserCompletely();
+
+      // 2) Delete Firebase Auth account
+      await user.delete();
+
+      // 3) Clear local data
+      await PreferencesService.instance.clearEverything();
+      PreferencesService.instance.setSessionAuthenticated(false);
+
+      // 4) Sign out Google if needed
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+
+      // 5) Go to login
+      if (mounted) {
+        context.go(AppRoutes.login);
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        // Need reauthentication
+        _showReauthDialog();
+      } else {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('Errore: ${e.message ?? 'impossibile eliminare l\'account'}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Errore durante l\'eliminazione dell\'account'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  void _showReauthDialog() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final isGoogleUser = user.providerData.any((p) => p.providerId == 'google.com');
+
+    if (isGoogleUser) {
+      // Google reauthentication
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Conferma identità'),
+          content: const Text(
+            'Per motivi di sicurezza, devi accedere nuovamente con Google prima di eliminare l\'account.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text('common.cancel'.tr()),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext);
+                await _reauthWithGoogleAndDelete();
+              },
+              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              child: const Text('Accedi con Google'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Email/password reauthentication
+      final passwordController = TextEditingController();
+      showDialog(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Conferma identità'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Per motivi di sicurezza, inserisci la tua password per confermare l\'eliminazione.',
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                passwordController.dispose();
+                Navigator.pop(dialogContext);
+              },
+              child: Text('common.cancel'.tr()),
+            ),
+            TextButton(
+              onPressed: () async {
+                final password = passwordController.text;
+                passwordController.dispose();
+                Navigator.pop(dialogContext);
+                await _reauthWithPasswordAndDelete(password);
+              },
+              style: TextButton.styleFrom(foregroundColor: AppColors.error),
+              child: const Text('Conferma ed elimina'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> _reauthWithGoogleAndDelete() async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      final googleSignIn = GoogleSignIn();
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return; // cancelled
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final user = FirebaseAuth.instance.currentUser!;
+      await user.reauthenticateWithCredential(credential);
+      await _performDeleteAccount();
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Errore durante la riautenticazione'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  Future<void> _reauthWithPasswordAndDelete(String password) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      final user = FirebaseAuth.instance.currentUser!;
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+      await _performDeleteAccount();
+    } on FirebaseAuthException catch (e) {
+      final message = e.code == 'wrong-password'
+          ? 'Password errata'
+          : 'Errore: ${e.message ?? 'riautenticazione fallita'}';
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(
+          content: Text('Errore durante la riautenticazione'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Widget _buildPreferencesSection() {
