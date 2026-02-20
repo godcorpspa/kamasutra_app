@@ -111,14 +111,17 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
   }) {
     final theme = Theme.of(context);
     return FilterChip(
-      label: Text(
-        label,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          color: isSelected
-              ? accentColor
-              : theme.colorScheme.onSurface.withOpacity(0.85),
+      label: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            color: isSelected
+                ? accentColor
+                : theme.colorScheme.onSurface.withOpacity(0.85),
+          ),
         ),
       ),
       selected: isSelected,
@@ -144,10 +147,10 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
   }) {
     final theme = Theme.of(context);
     return ChoiceChip(
-      label: Center(
+      label: Align(
+        alignment: Alignment.centerLeft,
         child: Text(
           label,
-          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 13,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
