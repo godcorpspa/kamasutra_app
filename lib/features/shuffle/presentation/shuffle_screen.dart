@@ -522,7 +522,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(right: i < EnergyLevel.values.length - 1 ? AppSpacing.sm : 0),
                   child: _choiceChip(
-                    label: '${_energyEmoji(energy)}\n${'energy.${energy.name}'.tr()}',
+                    label: '${_energyEmoji(energy)}  ${'energy.${energy.name}'.tr()}',
                     isSelected: isSelected,
                     accentColor: _energyColor(energy),
                     onTap: () => setState(() {
@@ -554,7 +554,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(right: i < PositionDuration.values.length - 1 ? AppSpacing.sm : 0),
                   child: _choiceChip(
-                    label: '${_durationEmoji(duration)}\n${'duration.${duration.name}'.tr()}',
+                    label: '${_durationEmoji(duration)}  ${'duration.${duration.name}'.tr()}',
                     isSelected: isSelected,
                     accentColor: AppColors.gold,
                     onTap: () => setState(() {
