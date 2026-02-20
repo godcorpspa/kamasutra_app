@@ -71,8 +71,8 @@ class AppRoutes {
   
 }
 
-/// Shell navigation key for bottom nav
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+/// Shell navigation key for bottom nav (public so MainScaffold can pop modals)
+final shellNavigatorKey = GlobalKey<NavigatorState>();
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Router provider
@@ -172,7 +172,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       
       // Main app with bottom navigation
       ShellRoute(
-        navigatorKey: _shellNavigatorKey,
+        navigatorKey: shellNavigatorKey,
         builder: (context, state, child) => MainScaffold(child: child),
         routes: [
           GoRoute(

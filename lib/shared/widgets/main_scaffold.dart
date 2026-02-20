@@ -107,9 +107,10 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   void _onItemTapped(int index) {
     if (index == _currentIndex) return;
     HapticFeedback.selectionClick();
-    // Close any open bottom sheet or dialog before navigating
-    if (Navigator.of(context).canPop()) {
-      Navigator.of(context).pop();
+    // Close any open bottom sheet or dialog on the shell navigator
+    final shellNav = shellNavigatorKey.currentState;
+    if (shellNav != null && shellNav.canPop()) {
+      shellNav.pop();
     }
     // Reset catalog favorites filter when leaving the catalog tab
     if (_currentIndex == 0 && index != 0) {
