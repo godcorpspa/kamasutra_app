@@ -150,7 +150,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildAccountSection() {
     final user = FirebaseAuth.instance.currentUser;
     final email = user?.email ?? '—';
-    final displayName = user?.displayName;
 
     return Column(
       children: [
@@ -161,22 +160,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           subtitle: email,
         ),
 
-        // Display name (if present)
-        if (displayName != null && displayName.isNotEmpty)
-          _buildListTile(
-            icon: Icons.person_outline,
-            title: 'Nome',
-            subtitle: displayName,
-          ),
-
-        // Change password (only for email/password users)
-        if (user?.providerData.any((p) => p.providerId == 'password') == true)
-          _buildListTile(
-            icon: Icons.key_outlined,
-            title: 'Cambia password',
-            subtitle: 'Invia email per reimpostare la password',
-            onTap: () => _showChangePasswordDialog(),
-          ),
+        // Change password (always visible)
+        _buildListTile(
+          icon: Icons.key_outlined,
+          title: 'Cambia password',
+          subtitle: 'Invia email per reimpostare la password',
+          onTap: () => _showChangePasswordDialog(),
+        ),
       ],
     );
   }
