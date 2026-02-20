@@ -5,10 +5,16 @@
     "nameEn": "Missionary",
     "aliasIt": "La Classica",
     "aliasEn": "The Classic",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "connection"],
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
@@ -19,7 +25,12 @@
     "setupEn": "Partner lying on back, other on top",
     "checkinIt": "Come ti senti? Vuoi che mi muova diversamente?",
     "checkinEn": "How do you feel? Want me to move differently?",
-    "tags": ["romantico", "intimo", "facile", "classico"],
+    "tags": [
+      "romantico",
+      "intimo",
+      "facile",
+      "classico"
+    ],
     "illustrationRef": "missionary.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -31,10 +42,16 @@
     "nameEn": "Cowgirl",
     "aliasIt": "Amazzone",
     "aliasEn": "Woman on Top",
-    "categories": ["beginner", "athletic"],
+    "categories": [
+      "beginner",
+      "athletic"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["passion", "playfulness"],
+    "focus": [
+      "passion",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
@@ -45,7 +62,11 @@
     "setupEn": "One partner lying down, other sitting on top",
     "checkinIt": "Ti piace questo ritmo?",
     "checkinEn": "Do you like this rhythm?",
-    "tags": ["controllo", "visuale", "ritmo"],
+    "tags": [
+      "controllo",
+      "visuale",
+      "ritmo"
+    ],
     "illustrationRef": "cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -57,10 +78,18 @@
     "nameEn": "Spooning",
     "aliasIt": "Abbraccio Laterale",
     "aliasEn": "Side Cuddle",
-    "categories": ["romantic", "beginner", "lowImpact"],
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "connection", "relax"],
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
@@ -71,7 +100,12 @@
     "setupEn": "Both lying on the same side, one behind the other",
     "checkinIt": "Ti senti comodo/a così?",
     "checkinEn": "Are you comfortable like this?",
-    "tags": ["intimo", "rilassante", "mattutino", "pigro"],
+    "tags": [
+      "intimo",
+      "rilassante",
+      "mattutino",
+      "pigro"
+    ],
     "illustrationRef": "spooning.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -83,10 +117,16 @@
     "nameEn": "Doggy Style",
     "aliasIt": "A Quattro Zampe",
     "aliasEn": "From Behind",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 2,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Attenzione alla profondità della penetrazione",
@@ -97,7 +137,11 @@
     "setupEn": "One partner on all fours, other kneeling behind",
     "checkinIt": "La profondità va bene?",
     "checkinEn": "Is the depth okay?",
-    "tags": ["passionale", "profondo", "intenso"],
+    "tags": [
+      "passionale",
+      "profondo",
+      "intenso"
+    ],
     "illustrationRef": "doggy.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -109,10 +153,17 @@
     "nameEn": "Lotus",
     "aliasIt": "Yab-Yum",
     "aliasEn": "Tantric Embrace",
-    "categories": ["romantic", "reconnect"],
+    "categories": [
+      "romantic",
+      "reconnect"
+    ],
     "difficulty": 3,
     "energy": "medium",
-    "focus": ["intimacy", "connection", "trust"],
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": "Richiede flessibilità nelle gambe",
@@ -123,7 +174,12 @@
     "setupEn": "One partner sitting cross-legged, other sitting on top facing them",
     "checkinIt": "Riesci a mantenere questa posizione?",
     "checkinEn": "Can you maintain this position?",
-    "tags": ["tantrico", "spirituale", "intimo", "connessione"],
+    "tags": [
+      "tantrico",
+      "spirituale",
+      "intimo",
+      "connessione"
+    ],
     "illustrationRef": "lotus.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -135,10 +191,16 @@
     "nameEn": "69",
     "aliasIt": "Simultaneo",
     "aliasEn": "Mutual",
-    "categories": ["adventurous", "athletic"],
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Coordinazione necessaria",
@@ -149,7 +211,11 @@
     "setupEn": "Partners in opposite directions, head to feet",
     "checkinIt": "Riesci a concentrarti su entrambe le cose?",
     "checkinEn": "Can you focus on both giving and receiving?",
-    "tags": ["orale", "simultaneo", "divertente"],
+    "tags": [
+      "orale",
+      "simultaneo",
+      "divertente"
+    ],
     "illustrationRef": "sixtynine.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -161,12 +227,20 @@
     "nameEn": "Reverse Cowgirl",
     "aliasIt": "Amazzone Inversa",
     "aliasEn": "Reverse Woman on Top",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 3,
     "energy": "high",
-    "focus": ["variety", "passion"],
+    "focus": [
+      "variety",
+      "passion"
+    ],
     "duration": "medium",
-    "prerequisites": ["pos_002"],
+    "prerequisites": [
+      "pos_002"
+    ],
     "cautionsIt": "Attenzione agli angoli - rischio di piegature",
     "cautionsEn": "Be careful with angles - risk of bending",
     "easyVariantIt": "Inclinarsi leggermente in avanti",
@@ -175,7 +249,11 @@
     "setupEn": "One lying down, other sitting facing their feet",
     "checkinIt": "L'angolo va bene per te?",
     "checkinEn": "Is the angle okay for you?",
-    "tags": ["visuale", "controllo", "intenso"],
+    "tags": [
+      "visuale",
+      "controllo",
+      "intenso"
+    ],
     "illustrationRef": "reverse_cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -187,10 +265,16 @@
     "nameEn": "Scissors",
     "aliasIt": "Incastro",
     "aliasEn": "Interlocking",
-    "categories": ["lowImpact", "romantic"],
+    "categories": [
+      "lowImpact",
+      "romantic"
+    ],
     "difficulty": 2,
     "energy": "low",
-    "focus": ["intimacy", "relax"],
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
@@ -201,7 +285,11 @@
     "setupEn": "Partners lying on opposite sides, legs intertwined",
     "checkinIt": "Ti senti connesso/a?",
     "checkinEn": "Do you feel connected?",
-    "tags": ["rilassante", "intimo", "lento"],
+    "tags": [
+      "rilassante",
+      "intimo",
+      "lento"
+    ],
     "illustrationRef": "scissors.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -213,10 +301,16 @@
     "nameEn": "Bridge",
     "aliasIt": "Arco",
     "aliasEn": "Arch",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["variety", "passion"],
+    "focus": [
+      "variety",
+      "passion"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede forza nelle braccia e nella schiena",
@@ -227,7 +321,11 @@
     "setupEn": "One partner in yoga bridge position, other kneeling",
     "checkinIt": "Riesci a mantenere la posizione?",
     "checkinEn": "Can you hold the position?",
-    "tags": ["atletico", "sfidante", "breve"],
+    "tags": [
+      "atletico",
+      "sfidante",
+      "breve"
+    ],
     "illustrationRef": "bridge.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -239,12 +337,20 @@
     "nameEn": "Missionary with Legs Up",
     "aliasIt": "Profondo",
     "aliasEn": "Deep",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["intimacy", "passion"],
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
     "duration": "medium",
-    "prerequisites": ["pos_001"],
+    "prerequisites": [
+      "pos_001"
+    ],
     "cautionsIt": "La penetrazione è più profonda in questa variante",
     "cautionsEn": "Penetration is deeper in this variation",
     "easyVariantIt": "Gambe appoggiate sulle spalle del partner",
@@ -253,7 +359,11 @@
     "setupEn": "Like missionary but with receiving partner's legs raised or on shoulders",
     "checkinIt": "La profondità è comoda?",
     "checkinEn": "Is the depth comfortable?",
-    "tags": ["profondo", "intenso", "variante"],
+    "tags": [
+      "profondo",
+      "intenso",
+      "variante"
+    ],
     "illustrationRef": "missionary_legs.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -265,10 +375,16 @@
     "nameEn": "Chair",
     "aliasIt": "Seduta",
     "aliasEn": "Seated",
-    "categories": ["adventurous", "quickie"],
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Assicurarsi che la sedia sia stabile",
@@ -279,7 +395,11 @@
     "setupEn": "One partner seated on chair, other on top facing or away",
     "checkinIt": "La sedia è comoda?",
     "checkinEn": "Is the chair comfortable?",
-    "tags": ["mobili", "creativo", "spontaneo"],
+    "tags": [
+      "mobili",
+      "creativo",
+      "spontaneo"
+    ],
     "illustrationRef": "chair.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -291,10 +411,17 @@
     "nameEn": "Standing",
     "aliasIt": "Verticale",
     "aliasEn": "Upright",
-    "categories": ["athletic", "quickie", "adventurous"],
+    "categories": [
+      "athletic",
+      "quickie",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede forza e differenza di altezza gestibile",
@@ -305,7 +432,11 @@
     "setupEn": "Both standing, facing or from behind",
     "checkinIt": "Riesci a stare comodo/a in piedi?",
     "checkinEn": "Can you stay comfortable standing?",
-    "tags": ["spontaneo", "passionale", "sfidante"],
+    "tags": [
+      "spontaneo",
+      "passionale",
+      "sfidante"
+    ],
     "illustrationRef": "standing.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -317,10 +448,16 @@
     "nameEn": "Prone Bone",
     "aliasIt": "Sdraiata Prona",
     "aliasEn": "Flat on Stomach",
-    "categories": ["lowImpact", "romantic"],
+    "categories": [
+      "lowImpact",
+      "romantic"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "relax"],
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
@@ -331,7 +468,11 @@
     "setupEn": "One partner lying face down, other on top",
     "checkinIt": "Riesci a respirare bene?",
     "checkinEn": "Can you breathe well?",
-    "tags": ["rilassante", "profondo", "intimo"],
+    "tags": [
+      "rilassante",
+      "profondo",
+      "intimo"
+    ],
     "illustrationRef": "prone.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -343,10 +484,16 @@
     "nameEn": "Spread Eagle",
     "aliasIt": "X",
     "aliasEn": "X Position",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["trust", "intimacy"],
+    "focus": [
+      "trust",
+      "intimacy"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
@@ -357,7 +504,11 @@
     "setupEn": "One partner lying with arms and legs open, other on top",
     "checkinIt": "Ti senti vulnerabile ma sicuro/a?",
     "checkinEn": "Do you feel vulnerable but safe?",
-    "tags": ["fiducia", "apertura", "intimo"],
+    "tags": [
+      "fiducia",
+      "apertura",
+      "intimo"
+    ],
     "illustrationRef": "spread_eagle.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -369,10 +520,16 @@
     "nameEn": "Wheelbarrow",
     "aliasIt": "Acrobatica",
     "aliasEn": "Acrobatic",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 5,
     "energy": "high",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede molta forza nelle braccia",
@@ -383,7 +540,11 @@
     "setupEn": "One partner on hands, other holds their legs while standing",
     "checkinIt": "Le braccia reggono?",
     "checkinEn": "Are your arms holding up?",
-    "tags": ["acrobatico", "sfidante", "divertente"],
+    "tags": [
+      "acrobatico",
+      "sfidante",
+      "divertente"
+    ],
     "illustrationRef": "wheelbarrow.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -395,10 +556,16 @@
     "nameEn": "Butterfly",
     "aliasIt": "Sul Bordo",
     "aliasEn": "Edge of Bed",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["intimacy", "passion"],
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
@@ -409,7 +576,11 @@
     "setupEn": "One partner lying on edge of bed, other standing",
     "checkinIt": "L'altezza del letto funziona?",
     "checkinEn": "Does the bed height work?",
-    "tags": ["bordo", "angolo", "profondo"],
+    "tags": [
+      "bordo",
+      "angolo",
+      "profondo"
+    ],
     "illustrationRef": "butterfly.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -421,10 +592,16 @@
     "nameEn": "Reverse Missionary",
     "aliasIt": "Uomo Sotto",
     "aliasEn": "Man Below",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["connection", "intimacy"],
+    "focus": [
+      "connection",
+      "intimacy"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
@@ -435,7 +612,11 @@
     "setupEn": "Like missionary but with reversed roles",
     "checkinIt": "Ti piace avere il controllo?",
     "checkinEn": "Do you enjoy having control?",
-    "tags": ["controllo", "intimo", "facile"],
+    "tags": [
+      "controllo",
+      "intimo",
+      "facile"
+    ],
     "illustrationRef": "reverse_missionary.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -447,12 +628,20 @@
     "nameEn": "Squatting Cowgirl",
     "aliasIt": "Rana",
     "aliasEn": "Frog",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "brief",
-    "prerequisites": ["pos_002"],
+    "prerequisites": [
+      "pos_002"
+    ],
     "cautionsIt": "Richiede forza nelle gambe",
     "cautionsEn": "Requires leg strength",
     "easyVariantIt": "Alternarsi tra accovacciata e in ginocchio",
@@ -461,7 +650,11 @@
     "setupEn": "Like cowgirl but squatting instead of kneeling",
     "checkinIt": "Le gambe reggono?",
     "checkinEn": "Are your legs holding up?",
-    "tags": ["atletico", "intenso", "controllo"],
+    "tags": [
+      "atletico",
+      "intenso",
+      "controllo"
+    ],
     "illustrationRef": "squat_cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -473,10 +666,16 @@
     "nameEn": "Shower",
     "aliasIt": "Bagno",
     "aliasEn": "Bathroom",
-    "categories": ["quickie", "adventurous"],
+    "categories": [
+      "quickie",
+      "adventurous"
+    ],
     "difficulty": 3,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Superficie scivolosa - usare tappetino antiscivolo",
@@ -487,7 +686,11 @@
     "setupEn": "Standing in shower, leaning against wall",
     "checkinIt": "Hai un appoggio stabile?",
     "checkinEn": "Do you have stable footing?",
-    "tags": ["acqua", "spontaneo", "avventura"],
+    "tags": [
+      "acqua",
+      "spontaneo",
+      "avventura"
+    ],
     "illustrationRef": "shower.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -499,12 +702,20 @@
     "nameEn": "Koala Hug",
     "aliasIt": "Aggrappata",
     "aliasEn": "Clinging",
-    "categories": ["athletic", "romantic"],
+    "categories": [
+      "athletic",
+      "romantic"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["trust", "passion"],
+    "focus": [
+      "trust",
+      "passion"
+    ],
     "duration": "brief",
-    "prerequisites": ["pos_012"],
+    "prerequisites": [
+      "pos_012"
+    ],
     "cautionsIt": "Richiede forza per sostenere il partner",
     "cautionsEn": "Requires strength to support partner",
     "easyVariantIt": "Appoggiarsi a un muro per aiuto",
@@ -513,8 +724,3106 @@
     "setupEn": "One partner lifts other who clings with arms and legs",
     "checkinIt": "Ti sento sicuro/a tra le mie braccia?",
     "checkinEn": "Do you feel secure in my arms?",
-    "tags": ["sollevata", "fiducia", "passione"],
+    "tags": [
+      "sollevata",
+      "fiducia",
+      "passione"
+    ],
     "illustrationRef": "koala.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_021",
+    "nameIt": "Seduta di Fronte",
+    "nameEn": "Seated Face-to-Face",
+    "aliasIt": "Sultana",
+    "aliasEn": "The Sultan",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Appoggiarsi alla testiera del letto per stabilità",
+    "easyVariantEn": "Lean on headboard for stability",
+    "setupIt": "Entrambi seduti di fronte, gambe intrecciate, uno in grembo all'altro",
+    "setupEn": "Both sitting face-to-face, legs intertwined, one in the other's lap",
+    "checkinIt": "Sei comodo/a in questa posizione?",
+    "checkinEn": "Are you comfortable in this position?",
+    "tags": [
+      "romantico",
+      "intimo",
+      "occhi-negli-occhi",
+      "seduto"
+    ],
+    "illustrationRef": "seated_face_to_face.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_022",
+    "nameIt": "Forbici",
+    "nameEn": "Scissors",
+    "aliasIt": "Intreccio",
+    "aliasEn": "The Interlock",
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cuscino sotto il bacino per migliore allineamento",
+    "easyVariantEn": "Pillow under pelvis for better alignment",
+    "setupIt": "Entrambi sdraiati sui fianchi, gambe intrecciate a forbice",
+    "setupEn": "Both lying on sides, legs interlocked in scissors position",
+    "checkinIt": "L'angolo è confortevole per te?",
+    "checkinEn": "Is the angle comfortable for you?",
+    "tags": [
+      "laterale",
+      "intrecciato",
+      "rilassante",
+      "tenero"
+    ],
+    "illustrationRef": "scissors.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_023",
+    "nameIt": "Arco",
+    "nameEn": "The Bridge",
+    "aliasIt": "Ponte del Piacere",
+    "aliasEn": "Pleasure Bridge",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": "Richiede flessibilità nella schiena",
+    "cautionsEn": "Requires back flexibility",
+    "easyVariantIt": "Posizionare un cuscino sotto la schiena per supporto",
+    "easyVariantEn": "Place a pillow under the back for support",
+    "setupIt": "Un partner in ponte (schiena arcuata), l'altro in ginocchio davanti",
+    "setupEn": "One partner in bridge pose (arched back), other kneeling in front",
+    "checkinIt": "Riesci a mantenere la posizione? Dimmelo subito se senti tensione",
+    "checkinEn": "Can you hold the position? Tell me right away if you feel strain",
+    "tags": [
+      "acrobatico",
+      "flessibile",
+      "intenso",
+      "atletico"
+    ],
+    "illustrationRef": "bridge.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_024",
+    "nameIt": "Luna Crescente",
+    "nameEn": "Crescent Moon",
+    "aliasIt": "Mezza Luna",
+    "aliasEn": "Half Moon",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Variante del cucchiaio con la gamba superiore alzata a formare una luna",
+    "setupEn": "Spooning variant with upper leg raised to form a crescent shape",
+    "checkinIt": "Ti senti bene in questo angolo?",
+    "checkinEn": "Does this angle feel good for you?",
+    "tags": [
+      "laterale",
+      "romantico",
+      "delicato",
+      "mattutino"
+    ],
+    "illustrationRef": "crescent_moon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_025",
+    "nameIt": "Cowgirl Inversa",
+    "nameEn": "Reverse Cowgirl",
+    "aliasIt": "Di Spalle",
+    "aliasEn": "Facing Away",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": "Attenzione alla direzione di piegatura - comunicare sempre",
+    "cautionsEn": "Be careful with bending direction - always communicate",
+    "easyVariantIt": "Appoggiarsi alle caviglie del partner per stabilità",
+    "easyVariantEn": "Lean on partner's ankles for stability",
+    "setupIt": "Come cowgirl ma il partner sopra è rivolto verso i piedi",
+    "setupEn": "Like cowgirl but the partner on top faces the feet",
+    "checkinIt": "Questo angolo ti piace? Dimmi se devo cambiare posizione",
+    "checkinEn": "Do you like this angle? Tell me if I should adjust",
+    "tags": [
+      "controllo",
+      "visuale",
+      "sensuale",
+      "atletico"
+    ],
+    "illustrationRef": "reverse_cowgirl.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_026",
+    "nameIt": "Pecorina in Piedi",
+    "nameEn": "Standing Doggy",
+    "aliasIt": "Dall'Alto",
+    "aliasEn": "From Above",
+    "categories": [
+      "athletic",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Attenzione all'angolazione — comunicare continuamente",
+    "cautionsEn": "Pay attention to the angle — keep communicating",
+    "easyVariantIt": "Appoggiarsi a un tavolo o piano per supporto",
+    "easyVariantEn": "Lean on a table or surface for support",
+    "setupIt": "Un partner chino in avanti, l'altro in piedi dietro",
+    "setupEn": "One partner bent forward, other standing behind",
+    "checkinIt": "L'angolo ti è comodo? Hai un appoggio stabile?",
+    "checkinEn": "Is the angle comfortable? Do you have stable support?",
+    "tags": [
+      "piedi",
+      "profondo",
+      "veloce",
+      "passionale"
+    ],
+    "illustrationRef": "standing_doggy.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_027",
+    "nameIt": "Loto",
+    "nameEn": "Lotus",
+    "aliasIt": "Tantrico",
+    "aliasEn": "Tantric",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": "Utile avere cuscino sotto le ginocchia",
+    "cautionsEn": "Helpful to have a pillow under knees",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner a gambe incrociate, l'altro in grembo con le gambe attorno ai fianchi",
+    "setupEn": "One partner cross-legged, other in lap with legs around hips",
+    "checkinIt": "Senti la connessione? Respiriamo insieme",
+    "checkinEn": "Do you feel the connection? Let's breathe together",
+    "tags": [
+      "tantrico",
+      "meditativo",
+      "intimo",
+      "occhi-negli-occhi"
+    ],
+    "illustrationRef": "lotus.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_028",
+    "nameIt": "Piano del Tavolo",
+    "nameEn": "Table Top",
+    "aliasIt": "Sul Piano",
+    "aliasEn": "On the Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Assicurarsi che il piano sia stabile e all'altezza giusta",
+    "cautionsEn": "Make sure the surface is stable and at the right height",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner seduto sul bordo del tavolo/piano, l'altro in piedi di fronte",
+    "setupEn": "One partner sitting on edge of table/surface, other standing in front",
+    "checkinIt": "L'altezza è giusta per te?",
+    "checkinEn": "Is the height right for you?",
+    "tags": [
+      "verticale",
+      "superfici",
+      "spontaneo",
+      "avventura"
+    ],
+    "illustrationRef": "table_top.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_029",
+    "nameIt": "Bretzel",
+    "nameEn": "Pretzel",
+    "aliasIt": "L'Intreccio",
+    "aliasEn": "The Twist",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_022"
+    ],
+    "cautionsIt": "Richede flessibilità — riscaldarsi prima",
+    "cautionsEn": "Requires flexibility — warm up first",
+    "easyVariantIt": "Mantenere la gamba inferiore più dritta",
+    "easyVariantEn": "Keep the lower leg straighter",
+    "setupIt": "Partner di lato, gamba superiore sollevata e tenuta dall'altro partner",
+    "setupEn": "Partner on side, upper leg raised and held by other partner",
+    "checkinIt": "La gamba ti sta bene? Senti tensione da qualche parte?",
+    "checkinEn": "Is your leg okay? Do you feel tension anywhere?",
+    "tags": [
+      "flessibile",
+      "laterale",
+      "intrecciato",
+      "atletico"
+    ],
+    "illustrationRef": "pretzel.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_030",
+    "nameIt": "Aquila",
+    "nameEn": "Eagle",
+    "aliasIt": "Ali Aperte",
+    "aliasEn": "Open Wings",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come missionario con le gambe del partner inferiore aperte e piegate verso il petto",
+    "setupEn": "Like missionary with lower partner's legs open and bent toward chest",
+    "checkinIt": "Riesci ad aprire le gambe comodamente così?",
+    "checkinEn": "Can you open your legs comfortably like this?",
+    "tags": [
+      "aperto",
+      "profondo",
+      "romantico",
+      "accessibile"
+    ],
+    "illustrationRef": "eagle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_031",
+    "nameIt": "Gatto",
+    "nameEn": "The Cat",
+    "aliasIt": "Presa Elevata",
+    "aliasEn": "Coital Alignment",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come missionario ma il partner sopra è spostato più in alto per allineamento pelvico",
+    "setupEn": "Like missionary but top partner shifted higher for pelvic alignment",
+    "checkinIt": "Senti la differenza nell'angolo? Ti piace così?",
+    "checkinEn": "Do you feel the difference in angle? Do you like it this way?",
+    "tags": [
+      "allineato",
+      "romantico",
+      "stimolazione",
+      "intimo"
+    ],
+    "illustrationRef": "cat.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_032",
+    "nameIt": "Sirena",
+    "nameEn": "Mermaid",
+    "aliasIt": "Piedi Uniti",
+    "aliasEn": "Legs Together",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come pecorina ma con le gambe del partner inferiore unite e dritte",
+    "setupEn": "Like doggy style but lower partner's legs together and straight",
+    "checkinIt": "Ti senti comodo/a con le gambe unite?",
+    "checkinEn": "Do you feel comfortable with legs together?",
+    "tags": [
+      "stretto",
+      "sensazione",
+      "intimo",
+      "variante"
+    ],
+    "illustrationRef": "mermaid.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_033",
+    "nameIt": "Sfinge",
+    "nameEn": "Sphinx",
+    "aliasIt": "Piana Bassa",
+    "aliasEn": "Flat Low",
+    "categories": [
+      "beginner",
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner prono (pancia in giù) appoggiato sui gomiti, l'altro sopra",
+    "setupEn": "One partner prone (face down) resting on elbows, other on top",
+    "checkinIt": "Riesci a respirare liberamente?",
+    "checkinEn": "Can you breathe freely?",
+    "tags": [
+      "basso",
+      "prono",
+      "rilassante",
+      "facile"
+    ],
+    "illustrationRef": "sphinx.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_034",
+    "nameIt": "Stella",
+    "nameEn": "Starfish",
+    "aliasIt": "Distesa",
+    "aliasEn": "Spread Out",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "relax",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Partner sdraiato sulla schiena con braccia e gambe allargate, l'altro sopra",
+    "setupEn": "Partner lying on back with arms and legs spread, other on top",
+    "checkinIt": "Sei a tuo agio con le braccia così?",
+    "checkinEn": "Are you comfortable with your arms like this?",
+    "tags": [
+      "disteso",
+      "passivo",
+      "rilassante",
+      "dominante"
+    ],
+    "illustrationRef": "starfish.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_035",
+    "nameIt": "Granchio",
+    "nameEn": "Crab",
+    "aliasIt": "Puntello Inverso",
+    "aliasEn": "Reverse Prop",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [],
+    "cautionsIt": "Richiede forza nelle braccia e gambe",
+    "cautionsEn": "Requires arm and leg strength",
+    "easyVariantIt": "Appoggiarsi a un cuscino o al bordo del letto",
+    "easyVariantEn": "Lean on a pillow or bed edge",
+    "setupIt": "Entrambi in posizione di granchio (mani e piedi a terra, pancia verso l'alto), che si incontrano",
+    "setupEn": "Both in crab position (hands and feet on ground, belly up) meeting each other",
+    "checkinIt": "Le braccia ti reggono? Dimmelo se è troppo sforzo",
+    "checkinEn": "Are your arms holding? Tell me if it's too much effort",
+    "tags": [
+      "atletico",
+      "divertente",
+      "sfidante",
+      "playful"
+    ],
+    "illustrationRef": "crab.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_036",
+    "nameIt": "Ancora",
+    "nameEn": "The Anchor",
+    "aliasIt": "Aggancio",
+    "aliasEn": "The Hook",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con una gamba del partner inferiore sopra la spalla di chi sta sopra",
+    "setupEn": "Missionary with one leg of lower partner over the shoulder of top partner",
+    "checkinIt": "La gamba in alto ti è comoda? Senti tensione?",
+    "checkinEn": "Is the raised leg comfortable? Do you feel tension?",
+    "tags": [
+      "profondo",
+      "missionario",
+      "variante",
+      "flessibile"
+    ],
+    "illustrationRef": "anchor.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_037",
+    "nameIt": "Candela",
+    "nameEn": "Candle",
+    "aliasIt": "Verticale Inverso",
+    "aliasEn": "Inverted Stand",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [],
+    "cautionsIt": "Solo se entrambi sono fisicamente preparati — rischio di cadute",
+    "cautionsEn": "Only if both are physically prepared — risk of falling",
+    "easyVariantIt": "Appoggiarsi a un muro per la versione verticale",
+    "easyVariantEn": "Lean on a wall for the vertical version",
+    "setupIt": "Un partner sulle spalle (posizione candela), l'altro in ginocchio davanti",
+    "setupEn": "One partner on shoulders (candle position), other kneeling in front",
+    "checkinIt": "Sei in equilibrio? Devo tenerti?",
+    "checkinEn": "Are you balanced? Should I hold you?",
+    "tags": [
+      "acrobatico",
+      "invertito",
+      "sfidante",
+      "forza"
+    ],
+    "illustrationRef": "candle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_038",
+    "nameIt": "Amaca",
+    "nameEn": "Hammock",
+    "aliasIt": "Dondolo",
+    "aliasEn": "The Swing",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio con il partner inferiore che si appoggia dolcemente all'indietro come in un'amaca",
+    "setupEn": "Spooning with lower partner gently leaning back like in a hammock",
+    "checkinIt": "Ti senti avvolto/a? È comodo così?",
+    "checkinEn": "Do you feel enveloped? Is it comfortable?",
+    "tags": [
+      "rilassante",
+      "caldo",
+      "laterale",
+      "abbraccio"
+    ],
+    "illustrationRef": "hammock.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_039",
+    "nameIt": "Panca",
+    "nameEn": "The Bench",
+    "aliasIt": "Bordo Laterale",
+    "aliasEn": "Side Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Superficie stabile obbligatoria",
+    "cautionsEn": "Stable surface required",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner in piedi, l'altro seduto di fianco su un piano elevato (panca, tavolo)",
+    "setupEn": "One partner standing, other sitting sideways on an elevated surface",
+    "checkinIt": "Sei stabile? Ti senti al sicuro?",
+    "checkinEn": "Are you stable? Do you feel safe?",
+    "tags": [
+      "superfici",
+      "verticale",
+      "spontaneo",
+      "variato"
+    ],
+    "illustrationRef": "bench.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_040",
+    "nameIt": "Cigno",
+    "nameEn": "Swan",
+    "aliasIt": "Collo Lungo",
+    "aliasEn": "Long Neck",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi seduti di fianco, un partner con la testa appoggiata sul petto dell'altro",
+    "setupEn": "Both lying face up side by side, one partner's head resting on other's chest",
+    "checkinIt": "Ti senti comodo/a con questa posizione delle teste?",
+    "checkinEn": "Do you feel comfortable with this head position?",
+    "tags": [
+      "romantico",
+      "intimo",
+      "dolce",
+      "connessione"
+    ],
+    "illustrationRef": "swan.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_041",
+    "nameIt": "Delfino",
+    "nameEn": "Dolphin",
+    "aliasIt": "Spinta Profonda",
+    "aliasEn": "Deep Thrust",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": "Evitare se si hanno problemi alla schiena o al collo",
+    "cautionsEn": "Avoid if you have back or neck issues",
+    "easyVariantIt": "Cuscino sotto i fianchi invece di sollevarli completamente",
+    "easyVariantEn": "Pillow under hips instead of fully raising them",
+    "setupIt": "Come missionario ma il partner inferiore solleva i fianchi e le gambe verso l'alto",
+    "setupEn": "Like missionary but lower partner raises hips and legs upward",
+    "checkinIt": "Riesci a tenere i fianchi così? Senti pressione da qualche parte?",
+    "checkinEn": "Can you hold your hips like this? Do you feel pressure anywhere?",
+    "tags": [
+      "profondo",
+      "atletico",
+      "intenso",
+      "avanzato"
+    ],
+    "illustrationRef": "dolphin.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_042",
+    "nameIt": "Farfalla Avanzata",
+    "nameEn": "Advanced Butterfly",
+    "aliasIt": "Farfalla Alzata",
+    "aliasEn": "Elevated Butterfly",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_016"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Versione base senza cuscino",
+    "easyVariantEn": "Basic version without pillow",
+    "setupIt": "Come farfalla ma con cuscini sotto i fianchi per elevazione aggiuntiva",
+    "setupEn": "Like butterfly but with pillows under hips for added elevation",
+    "checkinIt": "L'angolazione è migliore così?",
+    "checkinEn": "Is the angle better like this?",
+    "tags": [
+      "elevato",
+      "profondo",
+      "variante",
+      "borderline"
+    ],
+    "illustrationRef": "advanced_butterfly.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_043",
+    "nameIt": "Scimmia",
+    "nameEn": "The Monkey",
+    "aliasIt": "Aggrappato Alto",
+    "aliasEn": "High Clinging",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "trust",
+      "passion"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Richiede forza per sostenere il partner sollevato",
+    "cautionsEn": "Requires strength to support lifted partner",
+    "easyVariantIt": "Appoggiarsi a un muro o una porta",
+    "easyVariantEn": "Lean against a wall or door",
+    "setupIt": "Come abbraccio del koala ma più in alto, aggrappati a una struttura",
+    "setupEn": "Like koala hug but higher, clinging to a structure",
+    "checkinIt": "Ti sento sicuro/a? Quanto riesci a reggere?",
+    "checkinEn": "Do you feel secure? How long can you hold?",
+    "tags": [
+      "sollevato",
+      "forza",
+      "fiducia",
+      "aggrappato"
+    ],
+    "illustrationRef": "monkey.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_044",
+    "nameIt": "Serpente",
+    "nameEn": "Snake",
+    "aliasIt": "Strisciante",
+    "aliasEn": "The Crawler",
+    "categories": [
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi stesi proni (pancia in giù), uno sopra l'altro, allineati",
+    "setupEn": "Both lying prone (face down), one on top of the other, aligned",
+    "checkinIt": "Riesci a respirare comodamente sotto di me?",
+    "checkinEn": "Can you breathe comfortably under me?",
+    "tags": [
+      "prono",
+      "piatto",
+      "lento",
+      "sensuale"
+    ],
+    "illustrationRef": "snake.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_045",
+    "nameIt": "Compasso",
+    "nameEn": "The Compass",
+    "aliasIt": "Ruota",
+    "aliasEn": "The Wheel",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Muoversi lentamente e con attenzione",
+    "easyVariantEn": "Move slowly and carefully",
+    "setupIt": "Partendo dalla cowgirl, il partner sopra ruota di 90° mantenendo la posizione",
+    "setupEn": "Starting from cowgirl, top partner rotates 90° while maintaining position",
+    "checkinIt": "Come ti trovi in questo angolo?",
+    "checkinEn": "How do you feel at this angle?",
+    "tags": [
+      "rotazione",
+      "cowgirl",
+      "variante",
+      "creativo"
+    ],
+    "illustrationRef": "compass.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_046",
+    "nameIt": "Arcobaleno",
+    "nameEn": "Rainbow",
+    "aliasIt": "Arco Curvo",
+    "aliasEn": "Curved Arc",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio con il partner inferiore che curva leggermente la schiena all'indietro",
+    "setupEn": "Spooning with lower partner gently arching back toward other partner",
+    "checkinIt": "L'arco della schiena è confortevole per te?",
+    "checkinEn": "Is the back arch comfortable for you?",
+    "tags": [
+      "laterale",
+      "romantico",
+      "curvo",
+      "sensuale"
+    ],
+    "illustrationRef": "rainbow.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_047",
+    "nameIt": "Vento",
+    "nameEn": "The Wind",
+    "aliasIt": "Soffiato Via",
+    "aliasEn": "Swept Away",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "In piedi abbracciati, un partner appoggiato alla parete, l'altro di fronte",
+    "setupEn": "Standing embraced, one partner against wall, other facing them",
+    "checkinIt": "Sei comodo/a contro il muro?",
+    "checkinEn": "Are you comfortable against the wall?",
+    "tags": [
+      "piedi",
+      "parete",
+      "abbraccio",
+      "romantico"
+    ],
+    "illustrationRef": "wind.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_048",
+    "nameIt": "Conchiglia",
+    "nameEn": "The Shell",
+    "aliasIt": "Raccolta",
+    "aliasEn": "Gathered",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio intimo con il partner inferiore con le ginocchia leggermente al petto",
+    "setupEn": "Intimate spooning with lower partner's knees slightly drawn to chest",
+    "checkinIt": "Ti senti protetto/a e al sicuro?",
+    "checkinEn": "Do you feel protected and safe?",
+    "tags": [
+      "protettivo",
+      "caldo",
+      "dolce",
+      "coccole"
+    ],
+    "illustrationRef": "shell.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_049",
+    "nameIt": "Scorpione",
+    "nameEn": "Scorpion",
+    "aliasIt": "Coda Alzata",
+    "aliasEn": "Raised Tail",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Alta flessibilità richiesta — non forzare mai",
+    "cautionsEn": "High flexibility required — never force it",
+    "easyVariantIt": "Mantenere la gamba a un'altezza confortevole",
+    "easyVariantEn": "Keep leg at a comfortable height",
+    "setupIt": "Come pecorina ma con una gamba del partner inferiore alzata verso l'alto",
+    "setupEn": "Like doggy style but one leg of lower partner raised upward",
+    "checkinIt": "Riesci a tenere la gamba così? Dimmi se senti tensione",
+    "checkinEn": "Can you hold your leg like this? Tell me if you feel tension",
+    "tags": [
+      "acrobatico",
+      "flessibile",
+      "intenso",
+      "avanzato"
+    ],
+    "illustrationRef": "scorpion.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_050",
+    "nameIt": "Velo",
+    "nameEn": "The Veil",
+    "aliasIt": "Nascosta",
+    "aliasEn": "Hidden",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Partner sdraiati di fianco avvolti insieme sotto le coperte, fronte a fronte",
+    "setupEn": "Partners lying sideways wrapped together under blankets, face to face",
+    "checkinIt": "Ti senti al caldo e al sicuro?",
+    "checkinEn": "Do you feel warm and safe?",
+    "tags": [
+      "coperte",
+      "caldo",
+      "romantico",
+      "intimo"
+    ],
+    "illustrationRef": "veil.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_051",
+    "nameIt": "Fenice",
+    "nameEn": "Phoenix",
+    "aliasIt": "Rinascita",
+    "aliasEn": "Rebirth",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_025"
+    ],
+    "cautionsIt": "Comunicare continuamente sull'angolazione",
+    "cautionsEn": "Communicate continuously about the angle",
+    "easyVariantIt": "Versione cowgirl semplice come alternativa",
+    "easyVariantEn": "Simple cowgirl version as alternative",
+    "setupIt": "Cowgirl inversa con il partner superiore che si inclina in avanti, mani a terra",
+    "setupEn": "Reverse cowgirl with top partner leaning forward, hands on ground",
+    "checkinIt": "Come si sente l'angolo da questa posizione?",
+    "checkinEn": "How does the angle feel from this position?",
+    "tags": [
+      "atletico",
+      "cowgirl",
+      "variante",
+      "avanzato"
+    ],
+    "illustrationRef": "phoenix.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_052",
+    "nameIt": "Tartaruga",
+    "nameEn": "Turtle",
+    "aliasIt": "Guscio",
+    "aliasEn": "Shell Back",
+    "categories": [
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner a quattro zampe basso (come una tartaruga), l'altro sopra abbracciato",
+    "setupEn": "One partner low on all fours (like a turtle shell), other draped on top",
+    "checkinIt": "Riesci a stare comodo/a sotto di me?",
+    "checkinEn": "Can you stay comfortable under me?",
+    "tags": [
+      "coperta",
+      "protettivo",
+      "rilassante",
+      "abbraccio"
+    ],
+    "illustrationRef": "turtle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_053",
+    "nameIt": "Orso",
+    "nameEn": "Bear Hug",
+    "aliasIt": "Abbraccio Forte",
+    "aliasEn": "Strong Embrace",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "trust",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "In piedi, uno dietro l'altro, entrambi in piedi, abbracciati strettamente da dietro",
+    "setupEn": "Standing, one behind the other, both standing, tightly embraced from behind",
+    "checkinIt": "L'abbraccio è comodo? Non troppo stretto?",
+    "checkinEn": "Is the embrace comfortable? Not too tight?",
+    "tags": [
+      "abbraccio",
+      "caldo",
+      "sicuro",
+      "in-piedi"
+    ],
+    "illustrationRef": "bear_hug.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_054",
+    "nameIt": "Bandiera",
+    "nameEn": "The Flag",
+    "aliasIt": "Orizzontale",
+    "aliasEn": "Horizontal",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Estrema forza richiesta — solo per esperti",
+    "cautionsEn": "Extreme strength required — for experienced only",
+    "easyVariantIt": "Appoggiarsi su un letto o superficie",
+    "easyVariantEn": "Rest on a bed or surface",
+    "setupIt": "Un partner sorretto orizzontalmente dall'altro come una bandiera",
+    "setupEn": "One partner held horizontally by the other like a flag",
+    "checkinIt": "Sei in equilibrio? Devo tenere diversamente?",
+    "checkinEn": "Are you balanced? Should I hold differently?",
+    "tags": [
+      "acrobatico",
+      "forza",
+      "sfidante",
+      "estremo"
+    ],
+    "illustrationRef": "flag.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_055",
+    "nameIt": "Drago",
+    "nameEn": "Dragon",
+    "aliasIt": "Fuoco",
+    "aliasEn": "Fire",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_044"
+    ],
+    "cautionsIt": "Richiede flessibilità nella schiena",
+    "cautionsEn": "Requires back flexibility",
+    "easyVariantIt": "Versione serpente come base",
+    "easyVariantEn": "Snake version as base",
+    "setupIt": "Entrambi proni ma con spinte decise — partner superiore si raddrizza sui palmi",
+    "setupEn": "Both prone but with decisive thrusting — top partner pushes up on palms",
+    "checkinIt": "Come stai? Il ritmo è giusto?",
+    "checkinEn": "How are you? Is the rhythm right?",
+    "tags": [
+      "intenso",
+      "prono",
+      "fuoco",
+      "passionale"
+    ],
+    "illustrationRef": "dragon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_056",
+    "nameIt": "Pavone",
+    "nameEn": "Peacock",
+    "aliasIt": "Piume Aperte",
+    "aliasEn": "Open Feathers",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_030"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come aquila ma con le gambe aperte ancora di più, sorrette dal partner",
+    "setupEn": "Like eagle but with legs spread even wider, supported by partner",
+    "checkinIt": "Riesci ad aprire le gambe così senza tensione?",
+    "checkinEn": "Can you open your legs this wide without tension?",
+    "tags": [
+      "aperto",
+      "visuale",
+      "elegante",
+      "romantico"
+    ],
+    "illustrationRef": "peacock.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_057",
+    "nameIt": "Rana",
+    "nameEn": "Frog Leap",
+    "aliasIt": "Salto",
+    "aliasEn": "The Leap",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Riscaldare le anche prima",
+    "cautionsEn": "Warm up hips before",
+    "easyVariantIt": "Ginocchia più vicine al petto",
+    "easyVariantEn": "Knees closer to chest",
+    "setupIt": "Come pecorina ma il partner inferiore è in posizione di rana accovacciata",
+    "setupEn": "Like doggy style but lower partner is in frog squat position",
+    "checkinIt": "Le anche ti stanno bene in questa posizione?",
+    "checkinEn": "Are your hips okay in this position?",
+    "tags": [
+      "accovacciato",
+      "intenso",
+      "atletico",
+      "divertente"
+    ],
+    "illustrationRef": "frog_leap.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_058",
+    "nameIt": "Nido",
+    "nameEn": "The Nest",
+    "aliasIt": "Rannicchiati",
+    "aliasEn": "Curled Together",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi rannicchiati insieme, forma a C opposta, fronte a fronte",
+    "setupEn": "Both curled together, opposite C-shape, face to face",
+    "checkinIt": "Ti senti al caldo e protetto/a?",
+    "checkinEn": "Do you feel warm and protected?",
+    "tags": [
+      "nido",
+      "romantico",
+      "dolce",
+      "protezione"
+    ],
+    "illustrationRef": "nest.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_059",
+    "nameIt": "Elicottero",
+    "nameEn": "Helicopter",
+    "aliasIt": "Rotazione",
+    "aliasEn": "Rotation",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_045"
+    ],
+    "cautionsIt": "Muoversi molto lentamente — rischio di lesioni se affrettato",
+    "cautionsEn": "Move very slowly — risk of injury if rushed",
+    "easyVariantIt": "Completare solo 90° alla volta",
+    "easyVariantEn": "Complete only 90° at a time",
+    "setupIt": "Partendo dalla cowgirl, il partner superiore ruota di 360° mantenendo la posizione",
+    "setupEn": "Starting from cowgirl, top partner rotates 360° while maintaining position",
+    "checkinIt": "Fermati se senti qualcosa di strano — procediamo lentamente",
+    "checkinEn": "Stop if you feel anything off — let's go slowly",
+    "tags": [
+      "rotazione",
+      "estremo",
+      "sfidante",
+      "esperto"
+    ],
+    "illustrationRef": "helicopter.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_060",
+    "nameIt": "Tigre",
+    "nameEn": "Tiger",
+    "aliasIt": "Artiglio",
+    "aliasEn": "The Claw",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Rimanere fermi invece di muoversi aggressivamente",
+    "easyVariantEn": "Stay still instead of moving aggressively",
+    "setupIt": "Pecorina con il partner superiore che afferra i fianchi per maggiore controllo",
+    "setupEn": "Doggy style with top partner gripping hips for more control",
+    "checkinIt": "La presa è comoda? Troppo forte?",
+    "checkinEn": "Is the grip comfortable? Too strong?",
+    "tags": [
+      "passionale",
+      "controllo",
+      "intenso",
+      "presa"
+    ],
+    "illustrationRef": "tiger.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_061",
+    "nameIt": "Leone",
+    "nameEn": "Lion",
+    "aliasIt": "Re della Giungla",
+    "aliasEn": "King of the Jungle",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con il partner superiore appoggiato sulle mani, testa alta come un leone",
+    "setupEn": "Missionary with top partner propped on hands, head held high like a lion",
+    "checkinIt": "Vuoi che mi avvicini di più?",
+    "checkinEn": "Do you want me to come closer?",
+    "tags": [
+      "missionario",
+      "aperto",
+      "orgoglioso",
+      "visivo"
+    ],
+    "illustrationRef": "lion.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_062",
+    "nameIt": "Gabbiano",
+    "nameEn": "Seagull",
+    "aliasIt": "In Volo",
+    "aliasEn": "In Flight",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Richiede forza — appoggiarsi sempre a una parete",
+    "cautionsEn": "Requires strength — always lean on a wall",
+    "easyVariantIt": "Partner che porta con il muro come supporto",
+    "easyVariantEn": "Carrying partner with wall as support",
+    "setupIt": "Un partner sorregge l'altro che apre le braccia come ali di gabbiano",
+    "setupEn": "One partner supports the other who spreads arms like seagull wings",
+    "checkinIt": "Sei stabile? Come stai in questa posizione?",
+    "checkinEn": "Are you stable? How are you in this position?",
+    "tags": [
+      "sollevato",
+      "forza",
+      "volo",
+      "fiducia"
+    ],
+    "illustrationRef": "seagull.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_063",
+    "nameIt": "Libellula",
+    "nameEn": "Dragonfly",
+    "aliasIt": "Ali di Pizzo",
+    "aliasEn": "Lace Wings",
+    "categories": [
+      "romantic",
+      "athletic"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_022"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Forbici con entrambi i partner che si tengono per le mani sopra la testa",
+    "setupEn": "Scissors with both partners holding hands above their heads",
+    "checkinIt": "Le braccia ti danno una sensazione di connessione?",
+    "checkinEn": "Do your arms give you a feeling of connection?",
+    "tags": [
+      "intreccio",
+      "romantico",
+      "mani",
+      "forbici"
+    ],
+    "illustrationRef": "dragonfly.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_064",
+    "nameIt": "Polpo",
+    "nameEn": "Octopus",
+    "aliasIt": "Tentacoli",
+    "aliasEn": "Tentacles",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_005"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Meno arti coinvolti nella versione semplice",
+    "easyVariantEn": "Fewer limbs involved in simple version",
+    "setupIt": "69 con intrecci di gambe e braccia che si avvolgono intorno all'altro",
+    "setupEn": "69 with legs and arms entwined wrapping around each other",
+    "checkinIt": "Riesci a respirare liberamente con questa posizione delle gambe?",
+    "checkinEn": "Can you breathe freely with this leg position?",
+    "tags": [
+      "intreccio",
+      "69",
+      "complesso",
+      "avanzato"
+    ],
+    "illustrationRef": "octopus.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_065",
+    "nameIt": "Danza",
+    "nameEn": "The Dance",
+    "aliasIt": "Tango",
+    "aliasEn": "Tango",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_047"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "In piedi di fronte, in movimento come un ballo lento, intimo",
+    "setupEn": "Standing face to face, moving like a slow, intimate dance",
+    "checkinIt": "Ti piace questo ritmo lento?",
+    "checkinEn": "Do you like this slow rhythm?",
+    "tags": [
+      "danza",
+      "romantico",
+      "in-piedi",
+      "ritmo"
+    ],
+    "illustrationRef": "dance.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_066",
+    "nameIt": "Altalena",
+    "nameEn": "The Swing",
+    "aliasIt": "Su e Giù",
+    "aliasEn": "Up and Down",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": "Usare strutture certificate se si usa un'altalena vera",
+    "cautionsEn": "Use certified structures if using an actual swing",
+    "easyVariantIt": "Simulare il movimento su un letto o sedia",
+    "easyVariantEn": "Simulate the movement on a bed or chair",
+    "setupIt": "Un partner seduto su un'altalena o struttura oscillante, l'altro in piedi",
+    "setupEn": "One partner seated on a swing or oscillating structure, other standing",
+    "checkinIt": "Il movimento dell'altalena è confortevole?",
+    "checkinEn": "Is the swing movement comfortable?",
+    "tags": [
+      "oscillante",
+      "dinamico",
+      "divertente",
+      "audace"
+    ],
+    "illustrationRef": "swing.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_067",
+    "nameIt": "Specchio",
+    "nameEn": "The Mirror",
+    "aliasIt": "Riflesso",
+    "aliasEn": "Reflection",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte, movimenti sincronizzati come un riflesso nello specchio",
+    "setupEn": "Seated facing each other, movements synchronized like a mirror reflection",
+    "checkinIt": "Riesci a sentire il mio ritmo? Vuoi guidare tu?",
+    "checkinEn": "Can you feel my rhythm? Do you want to lead?",
+    "tags": [
+      "sincronia",
+      "romantico",
+      "occhi-negli-occhi",
+      "seduto"
+    ],
+    "illustrationRef": "mirror.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_068",
+    "nameIt": "Fiamma",
+    "nameEn": "Flame",
+    "aliasIt": "Ardore",
+    "aliasEn": "Ardor",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": "Assicurarsi che il partner che sorregge abbia stabilità",
+    "cautionsEn": "Make sure the supporting partner has stability",
+    "easyVariantIt": "Appoggiarsi a un muro",
+    "easyVariantEn": "Lean against a wall",
+    "setupIt": "Partner in piedi che sorregge l'altro con le gambe avvolte intorno ai fianchi, con movimento passionale",
+    "setupEn": "Standing partner holding other with legs wrapped around hips, with passionate movement",
+    "checkinIt": "Come ti senti? Vuoi che rallenti?",
+    "checkinEn": "How do you feel? Do you want me to slow down?",
+    "tags": [
+      "passionale",
+      "sollevato",
+      "fuoco",
+      "in-piedi"
+    ],
+    "illustrationRef": "flame.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_069",
+    "nameIt": "Ghiaccio",
+    "nameEn": "Ice",
+    "aliasIt": "Lento e Delicato",
+    "aliasEn": "Slow and Gentle",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione eseguita con movimenti lentissimi e consapevoli",
+    "setupEn": "Any position performed with very slow and mindful movements",
+    "checkinIt": "Ti piace questo ritmo lentissimo?",
+    "checkinEn": "Do you like this very slow rhythm?",
+    "tags": [
+      "lento",
+      "consapevole",
+      "meditativo",
+      "delicato"
+    ],
+    "illustrationRef": "ice.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_070",
+    "nameIt": "Vulcano",
+    "nameEn": "Volcano",
+    "aliasIt": "Eruzione",
+    "aliasEn": "Eruption",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_041"
+    ],
+    "cautionsIt": "Non forzare mai la schiena oltre i propri limiti",
+    "cautionsEn": "Never push the back beyond its limits",
+    "easyVariantIt": "Cuscino sotto i fianchi per ridurre lo sforzo",
+    "easyVariantEn": "Pillow under hips to reduce effort",
+    "setupIt": "Come delfino ma con il partner superiore che si inclina ulteriormente indietro",
+    "setupEn": "Like dolphin but with top partner leaning further back",
+    "checkinIt": "Come stai con questa inclinazione?",
+    "checkinEn": "How are you with this angle?",
+    "tags": [
+      "intenso",
+      "profondo",
+      "atletico",
+      "esperto"
+    ],
+    "illustrationRef": "volcano.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_071",
+    "nameIt": "Piuma",
+    "nameEn": "Feather",
+    "aliasIt": "Leggerezza",
+    "aliasEn": "Lightness",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_069"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come ghiaccio ma con massaggi e carezze integrate nel movimento",
+    "setupEn": "Like ice but with massages and caresses integrated into movement",
+    "checkinIt": "Ti piace come ti tocco qui?",
+    "checkinEn": "Do you like how I touch you here?",
+    "tags": [
+      "sensuale",
+      "lento",
+      "tatto",
+      "delicato"
+    ],
+    "illustrationRef": "feather.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_072",
+    "nameIt": "Diamante",
+    "nameEn": "Diamond",
+    "aliasIt": "Angolo Perfetto",
+    "aliasEn": "Perfect Angle",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con le gambe del partner inferiore a diamante (piedi uniti, ginocchia aperte)",
+    "setupEn": "Missionary with lower partner's legs in diamond shape (feet together, knees open)",
+    "checkinIt": "Questa posizione delle gambe è comoda?",
+    "checkinEn": "Is this leg position comfortable?",
+    "tags": [
+      "missionario",
+      "fianchi",
+      "apertura",
+      "variante"
+    ],
+    "illustrationRef": "diamond.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_073",
+    "nameIt": "Cristallo",
+    "nameEn": "Crystal",
+    "aliasIt": "Trasparente",
+    "aliasEn": "Transparent",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte, mani intrecciate, occhi negli occhi, movimenti minimi",
+    "setupEn": "Seated face to face, hands intertwined, eyes locked, minimal movements",
+    "checkinIt": "Cosa provi guardandomi negli occhi?",
+    "checkinEn": "What do you feel looking into my eyes?",
+    "tags": [
+      "occhi-negli-occhi",
+      "connessione', 'tantrico",
+      "romantico"
+    ],
+    "illustrationRef": "crystal.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_074",
+    "nameIt": "Brace",
+    "nameEn": "Embers",
+    "aliasIt": "Fuoco Lento",
+    "aliasEn": "Slow Fire",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Appoggiarsi al muro per più stabilità",
+    "easyVariantEn": "Lean on wall for more stability",
+    "setupIt": "In piedi con le gambe del partner avvolte ai fianchi, movimenti lenti e profondi",
+    "setupEn": "Standing with partner's legs wrapped around hips, slow and deep movements",
+    "checkinIt": "Vuoi più velocità o restiamo così?",
+    "checkinEn": "Do you want more speed or should we stay like this?",
+    "tags": [
+      "lento",
+      "profondo",
+      "in-piedi",
+      "passionale"
+    ],
+    "illustrationRef": "embers.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_075",
+    "nameIt": "Fenicottero",
+    "nameEn": "Flamingo",
+    "aliasIt": "Equilibrio",
+    "aliasEn": "Balance",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Equilibrio necessario — vicino a un muro come sicurezza",
+    "cautionsEn": "Balance needed — near a wall for safety",
+    "easyVariantIt": "Appoggiarsi a una sedia o parete",
+    "easyVariantEn": "Lean on a chair or wall",
+    "setupIt": "In piedi su una gamba, l'altra sollevata, bilanciarsi insieme come un fenicottero",
+    "setupEn": "Standing on one leg, other raised, balancing together like a flamingo",
+    "checkinIt": "Riesci a mantenerti in equilibrio? Mi avvicino di più?",
+    "checkinEn": "Can you keep your balance? Should I come closer?",
+    "tags": [
+      "equilibrio",
+      "in-piedi",
+      "gamba-alzata",
+      "atletico"
+    ],
+    "illustrationRef": "flamingo.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_076",
+    "nameIt": "Tramonto",
+    "nameEn": "Sunset",
+    "aliasIt": "Crepuscolo",
+    "aliasEn": "Twilight",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi sdraiati sulla schiena uno accanto all'altro, testa di uno sulle spalle dell'altro",
+    "setupEn": "Both lying on backs side by side, one's head on the other's shoulder",
+    "checkinIt": "Sei comodo/a qui accanto a me?",
+    "checkinEn": "Are you comfortable here beside me?",
+    "tags": [
+      "coccole",
+      "romantico",
+      "sereno",
+      "vicini"
+    ],
+    "illustrationRef": "sunset.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_077",
+    "nameIt": "Alba",
+    "nameEn": "Dawn",
+    "aliasIt": "Risveglio",
+    "aliasEn": "Awakening",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio mattutino, movimenti dolci e sonnolenti",
+    "setupEn": "Morning spooning, gentle and drowsy movements",
+    "checkinIt": "Ti sei svegliato/a bene? Come stai?",
+    "checkinEn": "Did you wake up well? How are you?",
+    "tags": [
+      "mattutino', 'dolce",
+      "risveglio",
+      "pigro"
+    ],
+    "illustrationRef": "dawn.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_078",
+    "nameIt": "Pioggia",
+    "nameEn": "Rain",
+    "aliasIt": "Gocce",
+    "aliasEn": "Drops",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_019"
+    ],
+    "cautionsIt": "Attenzione alle superfici bagnate",
+    "cautionsEn": "Be careful with wet surfaces",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come doccia ma con ritmo regolare come la pioggia, movimenti cadenzati",
+    "setupEn": "Like shower but with regular rhythm like rain, cadenced movements",
+    "checkinIt": "Ti piace questo ritmo cadenzato?",
+    "checkinEn": "Do you like this rhythmic pace?",
+    "tags": [
+      "ritmo",
+      "acqua",
+      "doccia",
+      "cadenzato"
+    ],
+    "illustrationRef": "rain.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_079",
+    "nameIt": "Nebbia",
+    "nameEn": "Fog",
+    "aliasIt": "Mistero",
+    "aliasEn": "Mystery",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_071"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Piuma nella penombra o oscurità completa, affidarsi solo al tatto",
+    "setupEn": "Feather in dim light or complete darkness, relying only on touch",
+    "checkinIt": "Riesci a sentirmi senza vedermi?",
+    "checkinEn": "Can you feel me without seeing me?",
+    "tags": [
+      "buio",
+      "tatto",
+      "mistero",
+      "sensuale"
+    ],
+    "illustrationRef": "fog.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_080",
+    "nameIt": "Sole",
+    "nameEn": "Sun",
+    "aliasIt": "Calore",
+    "aliasEn": "Warmth",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte all'aperto o vicino a una finestra soleggiata",
+    "setupEn": "Seated face to face outdoors or near a sunny window",
+    "checkinIt": "Il calore del sole ti fa sentire bene?",
+    "checkinEn": "Does the warmth of the sun make you feel good?",
+    "tags": [
+      "natura",
+      "sole', 'romantico",
+      "caldo"
+    ],
+    "illustrationRef": "sun.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_081",
+    "nameIt": "Luna Piena",
+    "nameEn": "Full Moon",
+    "aliasIt": "Notte Magica",
+    "aliasEn": "Magic Night",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_024"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Luna crescente di notte, alla luce della luna, movimenti lenti e misteriosi",
+    "setupEn": "Crescent moon at night, by moonlight, slow and mysterious movements",
+    "checkinIt": "Ti piace questa atmosfera notturna?",
+    "checkinEn": "Do you like this nighttime atmosphere?",
+    "tags": [
+      "notturno",
+      "romantico",
+      "luna",
+      "misterioso"
+    ],
+    "illustrationRef": "full_moon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_082",
+    "nameIt": "Cascata",
+    "nameEn": "Waterfall",
+    "aliasIt": "Torrente",
+    "aliasEn": "Torrent",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_007"
+    ],
+    "cautionsIt": "Evitare se si hanno problemi alle ginocchia",
+    "cautionsEn": "Avoid if you have knee issues",
+    "easyVariantIt": "Versione seduti invece di in piedi",
+    "easyVariantEn": "Seated version instead of standing",
+    "setupIt": "Inversione con il partner in piedi che sorregge l'altro a testa in giù brevemente",
+    "setupEn": "Inversion with standing partner briefly supporting other upside down",
+    "checkinIt": "Sei ok? Non senti vertigini?",
+    "checkinEn": "Are you okay? No dizziness?",
+    "tags": [
+      "invertito",
+      "atletico",
+      "sfidante",
+      "breve"
+    ],
+    "illustrationRef": "waterfall.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_083",
+    "nameIt": "Fiume",
+    "nameEn": "River",
+    "aliasIt": "Corrente Dolce",
+    "aliasEn": "Gentle Current",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio con movimenti fluidi e continui come una corrente di fiume",
+    "setupEn": "Spooning with fluid and continuous movements like a river current",
+    "checkinIt": "Il ritmo fluisce bene per te?",
+    "checkinEn": "Does the rhythm flow well for you?",
+    "tags": [
+      "fluido",
+      "laterale",
+      "continuo",
+      "dolce"
+    ],
+    "illustrationRef": "river.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_084",
+    "nameIt": "Oceano",
+    "nameEn": "Ocean",
+    "aliasIt": "Profondo Blu",
+    "aliasEn": "Deep Blue",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con movimenti ondulatori profondi e cadenzati come le onde del mare",
+    "setupEn": "Missionary with deep, rhythmic wave-like movements like ocean waves",
+    "checkinIt": "Ti piace questa profondità di movimento?",
+    "checkinEn": "Do you like this depth of movement?",
+    "tags": [
+      "profondo",
+      "ondulatorio",
+      "romantico",
+      "ritmico"
+    ],
+    "illustrationRef": "ocean.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_085",
+    "nameIt": "Onda",
+    "nameEn": "Wave",
+    "aliasIt": "Surf",
+    "aliasEn": "Surfing",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cowgirl semplice come base",
+    "easyVariantEn": "Simple cowgirl as base",
+    "setupIt": "Cowgirl con movimenti ondulatori dinamici, come cavalcare un'onda",
+    "setupEn": "Cowgirl with dynamic wave-like movements, like riding a wave",
+    "checkinIt": "Ti piace questo movimento ondulatorio?",
+    "checkinEn": "Do you like this wave-like movement?",
+    "tags": [
+      "dinamico",
+      "cowgirl', 'ondulatorio",
+      "atletico"
+    ],
+    "illustrationRef": "wave.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_086",
+    "nameIt": "Scogliera",
+    "nameEn": "Cliff",
+    "aliasIt": "Bordo Audace",
+    "aliasEn": "Bold Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_016"
+    ],
+    "cautionsIt": "Assicurarsi di essere sul bordo di una superficie stabile",
+    "cautionsEn": "Make sure you are on the edge of a stable surface",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Farfalla sul bordo estremo del letto, sensazione di pericolo controllato",
+    "setupEn": "Butterfly on the extreme edge of the bed, sensation of controlled danger",
+    "checkinIt": "Ti senti al sicuro sul bordo?",
+    "checkinEn": "Do you feel safe on the edge?",
+    "tags": [
+      "bordo",
+      "brivido",
+      "farfalla",
+      "audace"
+    ],
+    "illustrationRef": "cliff.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_087",
+    "nameIt": "Laguna",
+    "nameEn": "Lagoon",
+    "aliasIt": "Calma Piatta",
+    "aliasEn": "Flat Calm",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi in acqua tiepida (vasca da bagno) abbracciati, movimenti minimi",
+    "setupEn": "Both in warm water (bathtub) embraced, minimal movements",
+    "checkinIt": "L'acqua ha la temperatura giusta? Stai bene?",
+    "checkinEn": "Is the water the right temperature? Are you okay?",
+    "tags": [
+      "acqua",
+      "vasca",
+      "calmo",
+      "romantico"
+    ],
+    "illustrationRef": "lagoon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_088",
+    "nameIt": "Aurora",
+    "nameEn": "Aurora",
+    "aliasIt": "Luce del Nord",
+    "aliasEn": "Northern Light",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_012"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Versione senza sollevamento",
+    "easyVariantEn": "Version without lifting",
+    "setupIt": "In piedi abbracciati con luci colorate nell'ambiente, movimenti circolari lenti",
+    "setupEn": "Standing embraced with colored lights in the environment, slow circular movements",
+    "checkinIt": "L'atmosfera ti piace? Vuoi più luce o meno?",
+    "checkinEn": "Do you like the atmosphere? More light or less?",
+    "tags": [
+      "luci",
+      "romantico",
+      "circolare",
+      "atmosfera"
+    ],
+    "illustrationRef": "aurora.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_089",
+    "nameIt": "Meteora",
+    "nameEn": "Meteor",
+    "aliasIt": "Caduta",
+    "aliasEn": "The Fall",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_009"
+    ],
+    "cautionsIt": "Estrema attenzione — eseguire solo con grande forza e coordinazione",
+    "cautionsEn": "Extreme care — only attempt with great strength and coordination",
+    "easyVariantIt": "Versione sul letto invece che in piedi",
+    "easyVariantEn": "Version on bed instead of standing",
+    "setupIt": "Variante spinta al muro estrema con il partner completamente sorretto",
+    "setupEn": "Extreme wall thrust variant with partner completely supported",
+    "checkinIt": "Sei al sicuro? Devo tenerti diversamente?",
+    "checkinEn": "Are you safe? Should I hold you differently?",
+    "tags": [
+      "estremo",
+      "forza",
+      "muro",
+      "avanzato"
+    ],
+    "illustrationRef": "meteor.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_090",
+    "nameIt": "Cometa",
+    "nameEn": "Comet",
+    "aliasIt": "Scia Luminosa",
+    "aliasEn": "Bright Trail",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_015"
+    ],
+    "cautionsIt": "Forza nelle braccia indispensabile",
+    "cautionsEn": "Arm strength is essential",
+    "easyVariantIt": "Sul letto con appoggio",
+    "easyVariantEn": "On bed with support",
+    "setupIt": "Carriola con movimento dinamico, spostandosi nell'ambiente",
+    "setupEn": "Wheelbarrow with dynamic movement, moving around the space",
+    "checkinIt": "Riesci a seguire il movimento? Le braccia reggono?",
+    "checkinEn": "Can you follow the movement? Are your arms holding?",
+    "tags": [
+      "acrobatico",
+      "mobile",
+      "dinamico",
+      "sfidante"
+    ],
+    "illustrationRef": "comet.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_091",
+    "nameIt": "Galassia",
+    "nameEn": "Galaxy",
+    "aliasIt": "Universo",
+    "aliasEn": "Universe",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_073"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cristallo con luci stellari (luci piccole) intorno, immaginare di essere nello spazio",
+    "setupEn": "Crystal with starry lights (small lights) around, imagining being in space",
+    "checkinIt": "Ti senti perso/a in questo momento con me?",
+    "checkinEn": "Do you feel lost in this moment with me?",
+    "tags": [
+      "spazio",
+      "romantico",
+      "immaginativo",
+      "luci"
+    ],
+    "illustrationRef": "galaxy.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_092",
+    "nameIt": "Bacio Profondo",
+    "nameEn": "Deep Kiss",
+    "aliasIt": "Tutto in Un Bacio",
+    "aliasEn": "All in One Kiss",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione con focus totale sul bacio prolungato e profondo",
+    "setupEn": "Any position with total focus on prolonged and deep kissing",
+    "checkinIt": "Posso baciarti più a lungo?",
+    "checkinEn": "Can I kiss you longer?",
+    "tags": [
+      "bacio",
+      "romantico",
+      "bocca",
+      "connessione"
+    ],
+    "illustrationRef": "deep_kiss.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_093",
+    "nameIt": "Respiro",
+    "nameEn": "Breath",
+    "aliasIt": "Sincronia",
+    "aliasEn": "Synchrony",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_069"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione con respiro sincronizzato — inspirare ed espirare insieme",
+    "setupEn": "Any position with synchronized breathing — inhale and exhale together",
+    "checkinIt": "Senti il mio respiro? Proviamo a sincronizzarci",
+    "checkinEn": "Do you feel my breath? Let's try to synchronize",
+    "tags": [
+      "respiro",
+      "meditativo",
+      "tantrico",
+      "sincronia"
+    ],
+    "illustrationRef": "breath.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_094",
+    "nameIt": "Radici",
+    "nameEn": "Roots",
+    "aliasIt": "Terra",
+    "aliasEn": "Earth",
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_027"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Loto con le mani di entrambi appoggiate a terra, radicati",
+    "setupEn": "Lotus with both partners' hands on the ground, rooted",
+    "checkinIt": "Ti senti radicato/a e al sicuro?",
+    "checkinEn": "Do you feel rooted and safe?",
+    "tags": [
+      "loto",
+      "terra",
+      "radicato",
+      "stabile"
+    ],
+    "illustrationRef": "roots.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_095",
+    "nameIt": "Cielo",
+    "nameEn": "Sky",
+    "aliasIt": "Apertura",
+    "aliasEn": "Opening",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_030"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Aquila con le braccia del partner inferiore aperte come ad abbracciare il cielo",
+    "setupEn": "Eagle with lower partner's arms spread open as if embracing the sky",
+    "checkinIt": "Ti senti libero/a in questa posizione aperta?",
+    "checkinEn": "Do you feel free in this open position?",
+    "tags": [
+      "aperto",
+      "libero",
+      "aquila",
+      "romantico"
+    ],
+    "illustrationRef": "sky.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_096",
+    "nameIt": "Bosco",
+    "nameEn": "Forest",
+    "aliasIt": "Natura Selvaggia",
+    "aliasEn": "Wild Nature",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_026"
+    ],
+    "cautionsIt": "Superficie naturale può essere irregolare",
+    "cautionsEn": "Natural surface may be uneven",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Pecorina in piedi all'aperto o vicino a un albero per appoggio",
+    "setupEn": "Standing doggy outdoors or near a tree for support",
+    "checkinIt": "Sei stabile? L'ambiente ti va bene?",
+    "checkinEn": "Are you stable? Is the environment okay?",
+    "tags": [
+      "aperto",
+      "natura",
+      "avventura",
+      "spontaneo"
+    ],
+    "illustrationRef": "forest.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_097",
+    "nameIt": "Monte",
+    "nameEn": "Mountain",
+    "aliasIt": "Vetta",
+    "aliasEn": "Summit",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cowgirl normale come base",
+    "easyVariantEn": "Regular cowgirl as base",
+    "setupIt": "Cowgirl con il partner superiore completamente raddrizzato, a ginocchia dritte come una vetta",
+    "setupEn": "Cowgirl with top partner completely upright, knees straight like a mountain summit",
+    "checkinIt": "Riesci a mantenerti stabile così in alto?",
+    "checkinEn": "Can you stay stable this high up?",
+    "tags": [
+      "cowgirl",
+      "alto",
+      "atletico",
+      "visuale"
+    ],
+    "illustrationRef": "mountain.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_098",
+    "nameIt": "Valle",
+    "nameEn": "Valley",
+    "aliasIt": "Accoglienza",
+    "aliasEn": "Welcome",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_072"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Diamante con le braccia del partner inferiore che avvolgono accogliendo l'altro come una valle",
+    "setupEn": "Diamond with lower partner's arms wrapping and welcoming the other like a valley",
+    "checkinIt": "Ti senti accolto/a?",
+    "checkinEn": "Do you feel welcomed?",
+    "tags": [
+      "accogliente",
+      "missionario",
+      "romantico",
+      "aperto"
+    ],
+    "illustrationRef": "valley.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_099",
+    "nameIt": "Abisso",
+    "nameEn": "Abyss",
+    "aliasIt": "Profondità",
+    "aliasEn": "Depths",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_041",
+      "pos_037"
+    ],
+    "cautionsIt": "Solo per coppie molto esperte con piena fiducia reciproca",
+    "cautionsEn": "Only for very experienced couples with full mutual trust",
+    "easyVariantIt": "Versione delfino semplice",
+    "easyVariantEn": "Simple dolphin version",
+    "setupIt": "Combinazione di invertiti parziali con profondità massima — massima comunicazione",
+    "setupEn": "Combination of partial inversions with maximum depth — maximum communication",
+    "checkinIt": "Dimmi immediatamente se qualcosa non va — mi fido di te",
+    "checkinEn": "Tell me immediately if anything is wrong — I trust you",
+    "tags": [
+      "profondo",
+      "estremo",
+      "fiducia",
+      "avanzato"
+    ],
+    "illustrationRef": "abyss.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_100",
+    "nameIt": "Orizzonte",
+    "nameEn": "Horizon",
+    "aliasIt": "Infinito",
+    "aliasEn": "Infinite",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione preferita, scelta insieme, vissuta con piena presenza e consapevolezza",
+    "setupEn": "Any preferred position, chosen together, lived with full presence and mindfulness",
+    "checkinIt": "Cosa desideri in questo momento? Siamo qui insieme",
+    "checkinEn": "What do you desire right now? We are here together",
+    "tags": [
+      "libero",
+      "insieme",
+      "consapevole",
+      "romantico"
+    ],
+    "illustrationRef": "horizon.svg",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
