@@ -550,7 +550,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: SvgPicture.asset(
-                            'assets/images/positions/${p.illustrationRef}.svg',
+                            'assets/images/positions/${p.illustrationRef}',
                             fit: BoxFit.contain,
                             placeholderBuilder: (_) => Center(
                               child: Icon(
