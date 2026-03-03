@@ -1,435 +1,536 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../app/router.dart';
 import '../../../../data/models/goose_game.dart';
-import '../../../../data/models/game.dart';
 
-/// Goose Game setup screen - configure board, mode, and intensity
-class GooseSetupScreen extends ConsumerStatefulWidget {
+/// Setup screen: enter player names, view tutorial, start game
+class GooseSetupScreen extends StatefulWidget {
   const GooseSetupScreen({super.key});
 
   @override
-  ConsumerState<GooseSetupScreen> createState() => _GooseSetupScreenState();
+  State<GooseSetupScreen> createState() => _GooseSetupScreenState();
 }
 
-class _GooseSetupScreenState extends ConsumerState<GooseSetupScreen> {
-  GooseBoardSize _boardSize = GooseBoardSize.medium;
-  GoosePlayMode _playMode = GoosePlayMode.cooperative;
-  GameIntensity _intensity = GameIntensity.soft;
-  bool _useRiggedDice = false;
-  Set<GooseSquareType> _excludedTypes = {};
+class _GooseSetupScreenState extends State<GooseSetupScreen> {
+  final _player1Controller = TextEditingController(text: 'Giocatore 1');
+  final _player2Controller = TextEditingController(text: 'Giocatore 2');
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial());
+  }
+
+  @override
+  void dispose() {
+    _player1Controller.dispose();
+    _player2Controller.dispose();
+    super.dispose();
+  }
+
+  void _showTutorial() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const _TutorialDialog(),
+    );
+  }
 
   void _startGame() {
+    if (!_formKey.currentState!.validate()) return;
     HapticFeedback.mediumImpact();
-    
+
     final config = GooseGameConfig(
-      boardSize: _boardSize,
-      playMode: _playMode,
-      intensity: _intensity,
-      useRiggedDice: _useRiggedDice,
-      excludedSquareTypes: _excludedTypes.toList(),
+      player1Name: _player1Controller.text.trim().isEmpty
+          ? 'Giocatore 1'
+          : _player1Controller.text.trim(),
+      player2Name: _player2Controller.text.trim().isEmpty
+          ? 'Giocatore 2'
+          : _player2Controller.text.trim(),
     );
 
-    context.push(
-      AppRoutes.gooseGame,
-      extra: config,
-    );
+    context.push(AppRoutes.gooseGame, extra: config);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('games.goose_game.title'.tr()),
+        title: const Text('🎲 Gioco dell\'Oca Piccante'),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          TextButton.icon(
+            onPressed: _showTutorial,
+            icon: const Icon(Icons.help_outline),
+            label: const Text('Regole'),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Description
-            Text(
-              'games.goose_game.description'.tr(),
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
-            ),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Board size
-            _buildSectionTitle('games.goose_game.board_size'.tr()),
-            const SizedBox(height: AppSpacing.sm),
-            _buildBoardSizeSelector(),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Play mode
-            _buildSectionTitle('games.goose_game.play_mode'.tr()),
-            const SizedBox(height: AppSpacing.sm),
-            _buildPlayModeSelector(),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Intensity
-            _buildSectionTitle('games.goose_game.intensity'.tr()),
-            const SizedBox(height: AppSpacing.sm),
-            _buildIntensitySelector(),
-            
-            const SizedBox(height: AppSpacing.xl),
-            
-            // Advanced options
-            _buildSectionTitle('Opzioni avanzate'),
-            const SizedBox(height: AppSpacing.sm),
-            _buildAdvancedOptions(),
-            
-            const SizedBox(height: AppSpacing.xxl),
-            
-            // Start button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _startGame,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                  backgroundColor: AppColors.burgundy,
-                  foregroundColor: Colors.white,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.burgundy.withOpacity(0.15),
+                      AppColors.gold.withOpacity(0.1),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  border: Border.all(
+                    color: AppColors.burgundy.withOpacity(0.3),
+                  ),
                 ),
-                child: Text(
-                  'games.start_game'.tr(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+                child: Column(
+                  children: [
+                    const Text('🎲', style: TextStyle(fontSize: 48)),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      'Gioco dell\'Oca Piccante',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.burgundy,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      '100 caselle • 4 capi a testa • Scale, Buchi e Penitenze 🔥',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: AppSpacing.xxl),
+
+              // Player names
+              Text(
+                'Nomi dei Giocatori',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: AppSpacing.md),
+
+              // Player 1
+              _PlayerNameField(
+                controller: _player1Controller,
+                playerNumber: 1,
+                color: AppColors.burgundy,
+                emoji: '🔴',
+              ),
+
+              const SizedBox(height: AppSpacing.md),
+
+              // Player 2
+              _PlayerNameField(
+                controller: _player2Controller,
+                playerNumber: 2,
+                color: AppColors.gold,
+                emoji: '🟡',
+              ),
+
+              const SizedBox(height: AppSpacing.xxl),
+
+              // Quick rules reminder
+              _buildQuickRules(context),
+
+              const SizedBox(height: AppSpacing.xxl),
+
+              // Start button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: _startGame,
+                  icon: const Text('🎲', style: TextStyle(fontSize: 20)),
+                  label: const Text(
+                    'INIZIA IL GIOCO',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: AppColors.burgundy,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                    ),
                   ),
                 ),
               ),
-            ),
-            
-            const SizedBox(height: AppSpacing.xl),
-          ],
+
+              const SizedBox(height: AppSpacing.lg),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
+  Widget _buildQuickRules(BuildContext context) {
+    final rules = [
+      ('🚀', 'Per uscire dalla partenza: tira 4, 5 o 6'),
+      ('👕', 'Iniziate con 4 capi ciascuno'),
+      ('👗', 'Ogni 20 caselle superate: l\'avversario toglie un capo'),
+      ('🪜', 'Scala: avanza + ricompensa dal partner'),
+      ('🕳️', 'Buco: torna indietro + penitenza'),
+      ('🔥', 'Casella Penitenza: azione piccante'),
+      ('🎲', '6 sul dado: tira ancora (max 2 volte)'),
+    ];
 
-  Widget _buildBoardSizeSelector() {
-    return Column(
-      children: GooseBoardSize.values.map((size) {
-        final isSelected = _boardSize == size;
-        return Padding(
-          padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-          child: InkWell(
-            onTap: () {
-              HapticFeedback.selectionClick();
-              setState(() => _boardSize = size);
-            },
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            child: Container(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? AppColors.burgundy.withOpacity(0.1)
-                    : Theme.of(context).colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(
-                  color: isSelected 
-                      ? AppColors.burgundy 
-                      : Theme.of(context).colorScheme.outline.withOpacity(0.3),
-                  width: isSelected ? 2 : 1,
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Regole Veloci',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ),
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          ...rules.map(
+            (r) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(
                 children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: isSelected 
-                          ? AppColors.burgundy 
-                          : Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${size.totalSquares}',
-                        style: TextStyle(
-                          color: isSelected ? Colors.white : null,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.md),
+                  Text(r.$1, style: const TextStyle(fontSize: 16)),
+                  const SizedBox(width: AppSpacing.sm),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'games.goose_game.${size.name}'.tr(),
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          _getBoardDescription(size),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      r.$2,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
-                  if (isSelected)
-                    Icon(
-                      Icons.check_circle,
-                      color: AppColors.burgundy,
-                    ),
                 ],
               ),
             ),
           ),
-        );
-      }).toList(),
+        ],
+      ),
     );
   }
+}
 
-  String _getBoardDescription(GooseBoardSize size) {
-    switch (size) {
-      case GooseBoardSize.quick:
-        return '15-20 minuti • Perfetto per iniziare';
-      case GooseBoardSize.medium:
-        return '25-35 minuti • L\'esperienza classica';
-      case GooseBoardSize.long:
-        return '45-60 minuti • Per una serata speciale';
-    }
-  }
+// ==================== PLAYER NAME FIELD ====================
 
-  Widget _buildPlayModeSelector() {
-    return Row(
-      children: GoosePlayMode.values.map((mode) {
-        final isSelected = _playMode == mode;
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(
-              right: mode == GoosePlayMode.cooperative ? AppSpacing.sm : 0,
-              left: mode == GoosePlayMode.sweetChallenge ? AppSpacing.sm : 0,
-            ),
-            child: InkWell(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                setState(() => _playMode = mode);
-              },
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              child: Container(
-                padding: const EdgeInsets.all(AppSpacing.md),
-                decoration: BoxDecoration(
-                  color: isSelected 
-                      ? AppColors.burgundy.withOpacity(0.1)
-                      : Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                  border: Border.all(
-                    color: isSelected 
-                        ? AppColors.burgundy 
-                        : Theme.of(context).colorScheme.outline.withOpacity(0.3),
-                    width: isSelected ? 2 : 1,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      mode == GoosePlayMode.cooperative 
-                          ? Icons.favorite 
-                          : Icons.emoji_events,
-                      color: isSelected ? AppColors.burgundy : null,
-                      size: 32,
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      'games.goose_game.${mode.name}'.tr(),
-                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _getModeDescription(mode),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+class _PlayerNameField extends StatelessWidget {
+  final TextEditingController controller;
+  final int playerNumber;
+  final Color color;
+  final String emoji;
+
+  const _PlayerNameField({
+    required this.controller,
+    required this.playerNumber,
+    required this.color,
+    required this.emoji,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      maxLength: 20,
+      decoration: InputDecoration(
+        labelText: '$emoji Giocatore $playerNumber',
+        prefixIcon: Container(
+          margin: const EdgeInsets.all(8),
+          width: 36,
+          height: 36,
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(
+              '$playerNumber',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ),
-        );
-      }).toList(),
-    );
-  }
-
-  String _getModeDescription(GoosePlayMode mode) {
-    switch (mode) {
-      case GoosePlayMode.cooperative:
-        return 'Insieme verso il traguardo';
-      case GoosePlayMode.sweetChallenge:
-        return 'Chi vince sceglie il finale';
-    }
-  }
-
-  Widget _buildIntensitySelector() {
-    return Row(
-      children: GameIntensity.values.map((intensity) {
-        final isSelected = _intensity == intensity;
-        final color = _getIntensityColor(intensity);
-        
-        return Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: InkWell(
-              onTap: () {
-                HapticFeedback.selectionClick();
-                setState(() => _intensity = intensity);
-              },
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: AppSpacing.md,
-                  horizontal: AppSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected 
-                      ? color.withOpacity(0.2)
-                      : Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                  border: Border.all(
-                    color: isSelected 
-                        ? color 
-                        : Theme.of(context).colorScheme.outline.withOpacity(0.3),
-                    width: isSelected ? 2 : 1,
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      _getIntensityEmoji(intensity),
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'intensity.${intensity.name}'.tr(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: isSelected ? FontWeight.bold : null,
-                        color: isSelected ? color : null,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Color _getIntensityColor(GameIntensity intensity) {
-    switch (intensity) {
-      case GameIntensity.soft:
-        return AppColors.soft;
-      case GameIntensity.spicy:
-        return AppColors.spicy;
-      case GameIntensity.extraSpicy:
-        return AppColors.extraSpicy;
-    }
-  }
-
-  String _getIntensityEmoji(GameIntensity intensity) {
-    switch (intensity) {
-      case GameIntensity.soft:
-        return '🌸';
-      case GameIntensity.spicy:
-        return '🌶️';
-      case GameIntensity.extraSpicy:
-        return '🔥';
-    }
-  }
-
-  Widget _buildAdvancedOptions() {
-    return Column(
-      children: [
-        // Rigged dice option
-        SwitchListTile(
-          title: Text('games.goose_game.rigged_dice'.tr()),
-          subtitle: Text(
-            _useRiggedDice 
-                ? 'Dado 3-5: partita più veloce'
-                : 'Dado classico 1-6',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          value: _useRiggedDice,
-          onChanged: (value) {
-            HapticFeedback.selectionClick();
-            setState(() => _useRiggedDice = value);
-          },
-          contentPadding: EdgeInsets.zero,
         ),
-        
-        // Excluded square types
-        ExpansionTile(
-          title: const Text('Caselle escluse'),
-          subtitle: Text(
-            _excludedTypes.isEmpty 
-                ? 'Tutte le caselle attive'
-                : '${_excludedTypes.length} tipi esclusi',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          tilePadding: EdgeInsets.zero,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: BorderSide(color: color, width: 2),
+        ),
+        counterText: '',
+      ),
+      validator: (v) {
+        if (v == null || v.trim().isEmpty) return 'Inserisci un nome';
+        return null;
+      },
+    );
+  }
+}
+
+// ==================== TUTORIAL DIALOG ====================
+
+class _TutorialDialog extends StatefulWidget {
+  const _TutorialDialog();
+
+  @override
+  State<_TutorialDialog> createState() => _TutorialDialogState();
+}
+
+class _TutorialDialogState extends State<_TutorialDialog> {
+  int _page = 0;
+  final PageController _pageController = PageController();
+
+  static const _pages = [
+    _TutorialPage(
+      emoji: '🎲',
+      title: 'Benvenuti!',
+      body:
+          'Il Gioco dell\'Oca Piccante è un gioco di coppia su 100 caselle, '
+          'pieno di ricompense bollenti, penitenze hot e colpi di scena! '
+          'Vince chi arriva alla casella 100 e ottiene una ricompensa speciale dal partner 😈',
+    ),
+    _TutorialPage(
+      emoji: '👕',
+      title: '4 Capi a Testa',
+      body:
+          'Ogni giocatore inizia con 4 capi di abbigliamento. '
+          'Man mano che il gioco avanza, li perderete... '
+          'Se non avete più capi da togliere, scatta una penitenza piccante! 🔥',
+    ),
+    _TutorialPage(
+      emoji: '🚀',
+      title: 'Uscire dalla Partenza',
+      body:
+          'Per lasciare la casella 0 devi tirare 4, 5 o 6. '
+          'Se non ci riesci per DUE turni consecutivi, il partner toglie un tuo capo!\n\n'
+          'Quando esci, tira di nuovo il dado per muoverti.',
+    ),
+    _TutorialPage(
+      emoji: '👗',
+      title: 'Regola dei 20',
+      body:
+          'Ogni volta che superi un multiplo di 20 (caselle 20, 40, 60, 80), '
+          'il tuo avversario deve togliere un capo di abbigliamento!\n\n'
+          'Avanza veloce per spogliare il partner 😏',
+    ),
+    _TutorialPage(
+      emoji: '🪜',
+      title: 'Scale e Buchi',
+      body:
+          '🪜 SCALA: salti in avanti a una casella più alta '
+          'e ricevi una ricompensa dal partner!\n\n'
+          '🕳️ BUCO: torni indietro a una casella più bassa '
+          'e devi fare una penitenza al partner!',
+    ),
+    _TutorialPage(
+      emoji: '🔥',
+      title: 'Caselle Penitenza',
+      body:
+          'Sparse per la plancia ci sono le caselle Penitenza 🔥\n\n'
+          'Se ci atterri, pesca una penitenza piccante e... eseguila! '
+          'Nessuna scusa! 😈',
+    ),
+    _TutorialPage(
+      emoji: '🎲',
+      title: 'Il 6 Fortunato',
+      body:
+          'Se tiri un 6, tira di nuovo il dado!\n\n'
+          'Puoi farlo al massimo 2 volte consecutive '
+          '(quindi 3 lanci in totale per un turno). '
+          'Approfittane per fare il salto più grande! 🚀',
+    ),
+    _TutorialPage(
+      emoji: '⏱️',
+      title: 'Ricompense a Tempo',
+      body:
+          'Alcune ricompense e penitenze hanno un timer!\n\n'
+          'Quando appare il conto alla rovescia, '
+          'dovete eseguire l\'azione per tutto il tempo indicato. '
+          'Il timer parte automaticamente. Pronti? 😉',
+    ),
+    _TutorialPage(
+      emoji: '🏆',
+      title: 'La Vittoria!',
+      body:
+          'Chi arriva esattamente alla casella 100 vince!\n\n'
+          'Se il tiro ti porta oltre il 100, rimbalzi indietro. '
+          'Il vincitore riceve una ricompensa speciale dal partner!\n\n'
+          'Buon gioco! 🎉',
+    ),
+  ];
+
+  void _next() {
+    if (_page < _pages.length - 1) {
+      setState(() => _page++);
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _skipAll() => Navigator.of(context).pop();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLast = _page == _pages.length - 1;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Wrap(
-              spacing: AppSpacing.sm,
-              runSpacing: AppSpacing.sm,
+            // Page indicators
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _pages.length,
+                (i) => Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 3),
+                  width: i == _page ? 16 : 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: i == _page
+                        ? AppColors.burgundy
+                        : AppColors.burgundy.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.lg),
+
+            // Content
+            SizedBox(
+              height: 240,
+              child: PageView.builder(
+                controller: _pageController,
+                onPageChanged: (i) => setState(() => _page = i),
+                itemCount: _pages.length,
+                itemBuilder: (context, i) => _pages[i].build(context),
+              ),
+            ),
+
+            const SizedBox(height: AppSpacing.xl),
+
+            // Buttons
+            Row(
               children: [
-                GooseSquareType.well,
-                GooseSquareType.labyrinth,
-                GooseSquareType.inn,
-              ].map((type) {
-                final isExcluded = _excludedTypes.contains(type);
-                return FilterChip(
-                  label: Text('games.goose_game.square_${type.name}'.tr()),
-                  selected: isExcluded,
-                  showCheckmark: false,
-                  onSelected: (_) {
-                    setState(() {
-                      if (isExcluded) {
-                        _excludedTypes.remove(type);
-                      } else {
-                        _excludedTypes.add(type);
-                      }
-                    });
-                  },
-                );
-              }).toList(),
+                // Skip All
+                TextButton(
+                  onPressed: _skipAll,
+                  child: Text(
+                    'Salta tutto',
+                    style: TextStyle(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.5),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                // Next / Done
+                ElevatedButton(
+                  onPressed: _next,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.burgundy,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.xl,
+                      vertical: AppSpacing.sm,
+                    ),
+                  ),
+                  child: Text(isLast ? 'Iniziamo! 🎲' : 'Avanti →'),
+                ),
+              ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TutorialPage {
+  final String emoji;
+  final String title;
+  final String body;
+
+  const _TutorialPage({
+    required this.emoji,
+    required this.title,
+    required this.body,
+  });
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(emoji, style: const TextStyle(fontSize: 52)),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppColors.burgundy,
+              ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        Text(
+          body,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                height: 1.5,
+              ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
