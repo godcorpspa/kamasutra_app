@@ -21,6 +21,10 @@ const _kBlue     = Color(0xFF448AFF);
 const _kP1       = Color(0xFFEF5350);   // player 1 – red
 const _kP2       = Color(0xFFFFD600);   // player 2 – gold
 
+// ── Clothing slot icons per player ──
+const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
+const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
+
 // ==================== PLAY SCREEN ====================
 
 class GoosePlayScreen extends StatefulWidget {
@@ -433,186 +437,120 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     );
   }
 
-  // ── Player status bar ──
+  // ── Player clothing panel (status bar) ──
   Widget _buildStatusBar() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(8, 4, 8, 0),
+      margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: _kSurface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _kBorder),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2A1060), Color(0xFF1A0840)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.purple.withOpacity(0.45)),
+        boxShadow: [BoxShadow(color: Colors.purple.withOpacity(0.25), blurRadius: 12)],
       ),
-      child: Row(
-        children: [
-          Expanded(child: _buildPlayerCard(1)),
-          Container(width: 1, height: 52, color: _kBorder),
-          Expanded(child: _buildPlayerCard(2)),
-        ],
-      ),
+      child: Row(children: [
+        Expanded(child: _buildClothingPanel(1)),
+        Container(
+          width: 1, height: 54,
+          color: Colors.white.withOpacity(0.12),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+        ),
+        Expanded(child: _buildClothingPanel(2)),
+      ]),
     );
   }
 
-  Widget _buildPlayerCard(int p) {
-    final isActive = _currentPlayer == p && !_gameOver;
+  Widget _buildClothingPanel(int p) {
     final name     = _playerName(p);
-    final pos      = p == 1 ? _p1Pos : _p2Pos;
     final clothes  = p == 1 ? _p1Clothing : _p2Clothing;
-    final onBoard  = p == 1 ? _p1OnBoard : _p2OnBoard;
     final color    = _playerColor(p);
+    final isActive = _currentPlayer == p && !_gameOver;
+    final icons    = p == 1 ? _kIconsP1 : _kIconsP2;
+    final onBoard  = p == 1 ? _p1OnBoard : _p2OnBoard;
+    final pos      = p == 1 ? _p1Pos : _p2Pos;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        gradient: isActive
-            ? LinearGradient(colors: [color.withOpacity(0.18), Colors.transparent],
-                begin: Alignment.centerLeft, end: Alignment.centerRight)
-            : null,
-        borderRadius: BorderRadius.circular(12),
-        border: isActive ? Border.all(color: color.withOpacity(0.6), width: 1.5) : null,
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Name row
         Row(children: [
-          // Glowing dot
-          Container(
-            width: 10, height: 10,
-            decoration: BoxDecoration(
-              color: color, shape: BoxShape.circle,
-              boxShadow: isActive ? [BoxShadow(color: color, blurRadius: 6, spreadRadius: 1)] : null,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Expanded(child: Text(name,
-            style: TextStyle(
-              color: isActive ? color : Colors.white54,
-              fontSize: 12, fontWeight: FontWeight.bold,
-            ), overflow: TextOverflow.ellipsis)),
-          if (isActive)
-            Text('✦ turno', style: TextStyle(fontSize: 9, color: color)),
-        ]),
-        const SizedBox(height: 3),
-        Row(children: [
-          Text(
-            onBoard ? '📍 $pos/100' : '🚀 partenza',
-            style: const TextStyle(color: Colors.white70, fontSize: 10),
-          ),
-          const Spacer(),
-          // Clothing dots
-          ...List.generate(4, (i) => Padding(
-            padding: const EdgeInsets.only(left: 2),
-            child: Icon(
-              i < clothes ? Icons.checkroom : Icons.close,
-              size: 11,
-              color: i < clothes ? color : Colors.white20,
-            ),
-          )),
-        ]),
-      ]),
-    );
-  }
-
-  // ── Board grid ──
-  Widget _buildBoard() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(6, 6, 6, 4),
-      child: GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 10,
-          mainAxisSpacing: 2, crossAxisSpacing: 2,
-        ),
-        itemCount: _board.length,
-        itemBuilder: (_, i) {
-          final sq = _board[i];
-          return _buildSquare(sq, _p1Pos == i, _p2Pos == i);
-        },
-      ),
-    );
-  }
-
-  Widget _buildSquare(GooseSquare sq, bool hasP1, bool hasP2) {
-    final base = _squareBase(sq.type);
-    final glow = _squareGlow(sq.type);
-
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft, end: Alignment.bottomRight,
-          colors: [base.withOpacity(0.9), base.withOpacity(0.55)],
-        ),
-        borderRadius: BorderRadius.circular(3),
-        border: Border.all(color: Colors.white.withOpacity(0.07), width: 0.5),
-        boxShadow: glow != null
-            ? [BoxShadow(color: glow.withOpacity(0.4), blurRadius: 3)]
-            : null,
-      ),
-      child: Stack(children: [
-        // Number
-        Positioned(
-          top: 1, left: 2,
-          child: Text('${sq.position}',
-              style: const TextStyle(fontSize: 5, color: Colors.white54)),
-        ),
-        // Type icon
-        if (sq.type != GooseSquareType.normal)
-          Center(child: Text(sq.type.emoji, style: const TextStyle(fontSize: 9))),
-        // Jump indicator
-        if (sq.destination != null)
-          Positioned(
-            bottom: 1, right: 1,
-            child: Text(
-              sq.type == GooseSquareType.ladder
-                  ? '↑${sq.destination}' : '↓${sq.destination}',
+          Icon(p == 1 ? Icons.male : Icons.female, color: color, size: 13),
+          const SizedBox(width: 3),
+          Expanded(
+            child: Text(name,
               style: TextStyle(
-                fontSize: 4.5,
-                color: sq.type == GooseSquareType.ladder ? _kGreen : _kRed,
+                color: color, fontWeight: FontWeight.bold, fontSize: 12,
+                shadows: [Shadow(color: color.withOpacity(0.55), blurRadius: 5)],
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-        // Player tokens
-        if (hasP1 || hasP2)
-          Positioned(
-            bottom: 1, left: 0, right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (hasP1) _token(_kP1),
-                if (hasP1 && hasP2) const SizedBox(width: 1),
-                if (hasP2) _token(_kP2),
-              ],
-            ),
+          Text(
+            onBoard ? '📍$pos' : '🚀',
+            style: const TextStyle(color: Colors.white54, fontSize: 9),
           ),
-      ]),
+          if (isActive) ...[
+            const SizedBox(width: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.22),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: color.withOpacity(0.5)),
+              ),
+              child: Text('▶', style: TextStyle(color: color, fontSize: 7)),
+            ),
+          ],
+        ]),
+        const SizedBox(height: 5),
+        // Clothing icon slots
+        Row(
+          children: List.generate(4, (i) {
+            final has = i < clothes;
+            return Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: 24, height: 24,
+                decoration: BoxDecoration(
+                  color: has ? color.withOpacity(0.18) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: has ? color.withOpacity(0.55) : Colors.white12,
+                  ),
+                ),
+                child: Center(
+                  child: Opacity(
+                    opacity: has ? 1.0 : 0.18,
+                    child: Text(icons[i], style: const TextStyle(fontSize: 13)),
+                  ),
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
     );
   }
 
-  Widget _token(Color c) => Container(
-        width: 9, height: 9,
-        decoration: BoxDecoration(
-          color: c, shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 1),
-          boxShadow: [BoxShadow(color: c, blurRadius: 4, spreadRadius: 0.5)],
+  // ── Isometric 3D board ──
+  Widget _buildBoard() {
+    return ClipRect(
+      child: CustomPaint(
+        size: Size.infinite,
+        painter: _IsoBoardPainter(
+          board: _board,
+          p1Pos: _p1Pos,        p2Pos: _p2Pos,
+          p1OnBoard: _p1OnBoard, p2OnBoard: _p2OnBoard,
+          p1Color: _kP1,         p2Color: _kP2,
+          p1Name: widget.config.player1Name,
+          p2Name: widget.config.player2Name,
         ),
-      );
-
-  Color  _squareBase(GooseSquareType t) {
-    switch (t) {
-      case GooseSquareType.normal:  return const Color(0xFF1C2340);
-      case GooseSquareType.ladder:  return const Color(0xFF0D3320);
-      case GooseSquareType.hole:    return const Color(0xFF3D0A14);
-      case GooseSquareType.penance: return const Color(0xFF3D1500);
-      case GooseSquareType.finish:  return const Color(0xFF3D3000);
-    }
-  }
-
-  Color? _squareGlow(GooseSquareType t) {
-    switch (t) {
-      case GooseSquareType.ladder:  return _kGreen;
-      case GooseSquareType.hole:    return _kRed;
-      case GooseSquareType.penance: return _kOrange;
-      case GooseSquareType.finish:  return _kGold;
-      default: return null;
-    }
+      ),
+    );
   }
 
   // ── Control panel ──
@@ -810,6 +748,232 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       ),
     );
   }
+}
+
+// ==================== ISOMETRIC BOARD PAINTER ====================
+
+class _IsoBoardPainter extends CustomPainter {
+  final List<GooseSquare> board;
+  final int   p1Pos, p2Pos;
+  final bool  p1OnBoard, p2OnBoard;
+  final Color p1Color, p2Color;
+  final String p1Name, p2Name;
+
+  const _IsoBoardPainter({
+    required this.board,
+    required this.p1Pos,     required this.p2Pos,
+    required this.p1OnBoard, required this.p2OnBoard,
+    required this.p1Color,   required this.p2Color,
+    required this.p1Name,    required this.p2Name,
+  });
+
+  // ── Grid position for each board position ──
+  // visRow 0 = top (tiles 91-100), visRow 9 = bottom (tiles 1-10)
+  // Snake path: even rows L→R, odd rows R→L
+  Offset _gridOf(int pos) {
+    if (pos == 0) return const Offset(0.0, 9.7); // START: just below tile 1
+    final idx = pos - 1;
+    final r   = idx ~/ 10;
+    final c   = r.isOdd ? (9 - idx % 10) : (idx % 10);
+    return Offset(c.toDouble(), (9 - r).toDouble());
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Dynamic tile size: fit 9 column-spans in available width
+    final tileW  = (size.width * 0.88) / 9.0;
+    final tileH  = tileW * 0.50;
+    final blockH = tileH * 0.62;
+    final halfW  = tileW / 2;
+    final halfH  = tileH / 2;
+
+    // Board origin: centered horizontally, with vertical room for tokens on top row
+    final cx = size.width / 2;
+    final ty = tileW * 0.85; // top padding for player tokens on top tiles
+
+    // Painter's algorithm: draw tiles with smaller iso-depth first (farther away)
+    final order = List.generate(board.length, (i) => i)
+      ..sort((a, b) {
+        final ga = _gridOf(a), gb = _gridOf(b);
+        return (ga.dx + ga.dy).compareTo(gb.dx + gb.dy);
+      });
+
+    for (final pos in order) {
+      if (pos >= board.length) continue;
+      final g  = _gridOf(pos);
+      final sx = cx + (g.dx - g.dy) * halfW;
+      final sy = ty + (g.dx + g.dy) * halfH;
+      _drawTile(canvas, Offset(sx, sy), board[pos],
+          tileW, tileH, blockH, pos == p1Pos, pos == p2Pos);
+    }
+  }
+
+  void _drawTile(Canvas canvas, Offset c, GooseSquare sq,
+      double tw, double th, double bh, bool hasP1, bool hasP2) {
+    final hw = tw / 2, hh = th / 2;
+
+    // Diamond vertices of top face
+    final vT = Offset(c.dx,      c.dy - hh);
+    final vR = Offset(c.dx + hw, c.dy     );
+    final vB = Offset(c.dx,      c.dy + hh);
+    final vL = Offset(c.dx - hw, c.dy     );
+
+    final topCol   = _topColor(sq.type);
+    final leftCol  = _dim(topCol, 0.30);
+    final rightCol = _dim(topCol, 0.48);
+
+    // ── Top face ──
+    final topFace = Path()
+      ..moveTo(vT.dx, vT.dy)..lineTo(vR.dx, vR.dy)
+      ..lineTo(vB.dx, vB.dy)..lineTo(vL.dx, vL.dy)..close();
+    canvas.drawPath(topFace, Paint()..color = topCol);
+    canvas.drawPath(topFace, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white.withOpacity(0.14)
+      ..strokeWidth = 0.5);
+
+    // ── Left side face ──
+    canvas.drawPath(
+      Path()
+        ..moveTo(vL.dx, vL.dy)    ..lineTo(vB.dx, vB.dy)
+        ..lineTo(vB.dx, vB.dy + bh)..lineTo(vL.dx, vL.dy + bh)..close(),
+      Paint()..color = leftCol,
+    );
+
+    // ── Right side face ──
+    canvas.drawPath(
+      Path()
+        ..moveTo(vB.dx, vB.dy)    ..lineTo(vR.dx, vR.dy)
+        ..lineTo(vR.dx, vR.dy + bh)..lineTo(vB.dx, vB.dy + bh)..close(),
+      Paint()..color = rightCol,
+    );
+
+    // ── Glow border for special tiles ──
+    final glowCol = _glowColor(sq.type);
+    if (glowCol != null) {
+      canvas.drawPath(topFace, Paint()
+        ..style = PaintingStyle.stroke
+        ..color = glowCol.withOpacity(0.6)
+        ..strokeWidth = 1.0);
+    }
+
+    // ── Position number ──
+    if (sq.position > 0) {
+      _txt(canvas, '${sq.position}', c,
+          sz: tw * 0.115, col: Colors.white.withOpacity(0.60));
+    } else {
+      _txt(canvas, 'START', c, sz: tw * 0.11, col: Colors.white70, bold: true);
+    }
+
+    // ── Type icon (floating above centre) ──
+    final iconY = c.dy - hh * 0.42;
+    switch (sq.type) {
+      case GooseSquareType.ladder:
+        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: tw * 0.27);
+        break;
+      case GooseSquareType.hole:
+        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: tw * 0.27);
+        break;
+      case GooseSquareType.penance:
+        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: tw * 0.24);
+        break;
+      case GooseSquareType.finish:
+        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.55), sz: tw * 0.33);
+        break;
+      default:
+        break;
+    }
+
+    // ── Jump destination label ──
+    if (sq.destination != null) {
+      final arrow = sq.type == GooseSquareType.ladder
+          ? '↑${sq.destination}' : '↓${sq.destination}';
+      final arrowCol = sq.type == GooseSquareType.ladder ? _kGreen : _kRed;
+      _txt(canvas, arrow,
+          Offset(c.dx + hw * 0.52, c.dy + hh * 0.55),
+          sz: tw * 0.095, col: arrowCol);
+    }
+
+    // ── Player tokens ──
+    if (!hasP1 && !hasP2) return;
+    final r    = tw * 0.20;
+    final tokY = c.dy - hh - r - 1.5;
+    if (hasP1 && hasP2) {
+      _drawToken(canvas, Offset(c.dx - r * 0.85, tokY), p1Color, p1Name, r * 0.82);
+      _drawToken(canvas, Offset(c.dx + r * 0.85, tokY), p2Color, p2Name, r * 0.82);
+    } else if (hasP1) {
+      _drawToken(canvas, Offset(c.dx, tokY), p1Color, p1Name, r);
+    } else {
+      _drawToken(canvas, Offset(c.dx, tokY), p2Color, p2Name, r);
+    }
+  }
+
+  void _drawToken(Canvas canvas, Offset c, Color color, String name, double r) {
+    // Outer glow
+    canvas.drawCircle(c, r + 3.5, Paint()
+      ..color = color.withOpacity(0.28)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+    // Body
+    canvas.drawCircle(c, r, Paint()..color = color);
+    // White border
+    canvas.drawCircle(c, r, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white
+      ..strokeWidth = 1.4);
+    // Name initial
+    if (name.isNotEmpty) {
+      _txt(canvas, name[0].toUpperCase(), c,
+          sz: r * 0.98, col: Colors.white, bold: true);
+    }
+  }
+
+  Color _topColor(GooseSquareType t) {
+    switch (t) {
+      case GooseSquareType.normal:  return const Color(0xFF243555);
+      case GooseSquareType.ladder:  return const Color(0xFF1A4A2A);
+      case GooseSquareType.hole:    return const Color(0xFF4A1018);
+      case GooseSquareType.penance: return const Color(0xFF4A2800);
+      case GooseSquareType.finish:  return const Color(0xFF4A3A00);
+    }
+  }
+
+  Color? _glowColor(GooseSquareType t) {
+    switch (t) {
+      case GooseSquareType.ladder:  return _kGreen;
+      case GooseSquareType.hole:    return _kRed;
+      case GooseSquareType.penance: return _kOrange;
+      case GooseSquareType.finish:  return _kGold;
+      default: return null;
+    }
+  }
+
+  Color _dim(Color c, double f) => Color.fromARGB(
+    c.alpha,
+    (c.red   * (1 - f)).round(),
+    (c.green * (1 - f)).round(),
+    (c.blue  * (1 - f)).round(),
+  );
+
+  void _txt(Canvas canvas, String text, Offset center,
+      {double sz = 10, Color col = Colors.white, bool bold = false}) {
+    final tp = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          fontSize: sz, color: col, height: 1,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas,
+        Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
+  }
+
+  @override
+  bool shouldRepaint(covariant _IsoBoardPainter old) =>
+      old.p1Pos != p1Pos || old.p2Pos != p2Pos ||
+      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard;
 }
 
 // ==================== DIALOGS ====================
