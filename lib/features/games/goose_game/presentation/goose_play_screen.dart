@@ -25,6 +25,15 @@ const _kP2       = Color(0xFFFFD600);   // player 2 – gold
 const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
 const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
 
+// ── Board canvas / tile constants ──
+const double _kTileW   = 64.0;   // isometric tile width
+const double _kTileH   = 32.0;   // isometric tile height
+const double _kBlockH  = 18.0;   // 3-D block depth
+const double _kBoardCX = 450.0;  // board centre-X in the large canvas
+const double _kBoardTY = 72.0;   // board top-Y in the large canvas
+const double _kCanvasW = 900.0;
+const double _kCanvasH = 600.0;
+
 // ==================== PLAY SCREEN ====================
 
 class GoosePlayScreen extends StatefulWidget {
@@ -536,21 +545,59 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     );
   }
 
-  // ── Isometric 3D board ──
+  // ── Isometric 3D board with camera follow ──
   Widget _buildBoard() {
-    return ClipRect(
-      child: CustomPaint(
-        size: Size.infinite,
-        painter: _IsoBoardPainter(
-          board: _board,
-          p1Pos: _p1Pos,        p2Pos: _p2Pos,
-          p1OnBoard: _p1OnBoard, p2OnBoard: _p2OnBoard,
-          p1Color: _kP1,         p2Color: _kP2,
-          p1Name: widget.config.player1Name,
-          p2Name: widget.config.player2Name,
+    return LayoutBuilder(builder: (ctx, constraints) {
+      final vw = constraints.maxWidth;
+      final vh = constraints.maxHeight;
+
+      // Compute iso grid position for the active player
+      final activePos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
+      final Offset g;
+      if (activePos == 0) {
+        g = const Offset(0.0, 9.7);
+      } else {
+        final idx = activePos - 1;
+        final r   = idx ~/ 10;
+        final col = r.isOdd ? (9 - idx % 10) : (idx % 10);
+        g = Offset(col.toDouble(), (9 - r).toDouble());
+      }
+
+      // Convert grid → canvas coordinates
+      const hw = _kTileW / 2, hh = _kTileH / 2;
+      final playerCX = _kBoardCX + (g.dx - g.dy) * hw;
+      final playerCY = _kBoardTY + (g.dx + g.dy) * hh;
+
+      // Camera offset: shift canvas so active player is viewport-centred
+      final camEnd = Offset(vw / 2 - playerCX, vh / 2 - playerCY);
+
+      final painter = _IsoBoardPainter(
+        board: _board,
+        p1Pos: _p1Pos,        p2Pos: _p2Pos,
+        p1OnBoard: _p1OnBoard, p2OnBoard: _p2OnBoard,
+        p1Color: _kP1,         p2Color: _kP2,
+        p1Name: widget.config.player1Name,
+        p2Name: widget.config.player2Name,
+      );
+
+      return ClipRect(
+        child: TweenAnimationBuilder<Offset>(
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOutCubic,
+          tween: Tween<Offset>(end: camEnd),
+          builder: (_, cam, child) =>
+              Transform.translate(offset: cam, child: child!),
+          child: SizedBox(
+            width:  _kCanvasW,
+            height: _kCanvasH,
+            child: CustomPaint(
+              size: const Size(_kCanvasW, _kCanvasH),
+              painter: painter,
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   // ── Control panel ──
@@ -754,9 +801,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
 class _IsoBoardPainter extends CustomPainter {
   final List<GooseSquare> board;
-  final int   p1Pos, p2Pos;
-  final bool  p1OnBoard, p2OnBoard;
-  final Color p1Color, p2Color;
+  final int    p1Pos, p2Pos;
+  final bool   p1OnBoard, p2OnBoard;
+  final Color  p1Color, p2Color;
   final String p1Name, p2Name;
 
   const _IsoBoardPainter({
@@ -767,11 +814,9 @@ class _IsoBoardPainter extends CustomPainter {
     required this.p1Name,    required this.p2Name,
   });
 
-  // ── Grid position for each board position ──
-  // visRow 0 = top (tiles 91-100), visRow 9 = bottom (tiles 1-10)
-  // Snake path: even rows L→R, odd rows R→L
+  // visRow 0 = top row (tiles 91-100), visRow 9 = bottom row (tiles 1-10)
   Offset _gridOf(int pos) {
-    if (pos == 0) return const Offset(0.0, 9.7); // START: just below tile 1
+    if (pos == 0) return const Offset(0.0, 9.7); // START
     final idx = pos - 1;
     final r   = idx ~/ 10;
     final c   = r.isOdd ? (9 - idx % 10) : (idx % 10);
@@ -780,153 +825,203 @@ class _IsoBoardPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Dynamic tile size: fit 9 column-spans in available width
-    final tileW  = (size.width * 0.88) / 9.0;
-    final tileH  = tileW * 0.50;
-    final blockH = tileH * 0.62;
-    final halfW  = tileW / 2;
-    final halfH  = tileH / 2;
+    const hw = _kTileW / 2, hh = _kTileH / 2;
 
-    // Board origin: centered horizontally, with vertical room for tokens on top row
-    final cx = size.width / 2;
-    final ty = tileW * 0.85; // top padding for player tokens on top tiles
-
-    // Painter's algorithm: draw tiles with smaller iso-depth first (farther away)
+    // Painter's algorithm: smaller (dx+dy) = farther from viewer → draw first
     final order = List.generate(board.length, (i) => i)
-      ..sort((a, b) {
-        final ga = _gridOf(a), gb = _gridOf(b);
-        return (ga.dx + ga.dy).compareTo(gb.dx + gb.dy);
-      });
+      ..sort((a, b) => (_gridOf(a).dx + _gridOf(a).dy)
+          .compareTo(_gridOf(b).dx + _gridOf(b).dy));
 
     for (final pos in order) {
       if (pos >= board.length) continue;
       final g  = _gridOf(pos);
-      final sx = cx + (g.dx - g.dy) * halfW;
-      final sy = ty + (g.dx + g.dy) * halfH;
-      _drawTile(canvas, Offset(sx, sy), board[pos],
-          tileW, tileH, blockH, pos == p1Pos, pos == p2Pos);
+      final sx = _kBoardCX + (g.dx - g.dy) * hw;
+      final sy = _kBoardTY + (g.dx + g.dy) * hh;
+      _drawTile(canvas, Offset(sx, sy), board[pos], pos == p1Pos, pos == p2Pos);
     }
   }
 
-  void _drawTile(Canvas canvas, Offset c, GooseSquare sq,
-      double tw, double th, double bh, bool hasP1, bool hasP2) {
-    final hw = tw / 2, hh = th / 2;
-
-    // Diamond vertices of top face
+  void _drawTile(Canvas canvas, Offset c, GooseSquare sq, bool hasP1, bool hasP2) {
+    const hw = _kTileW / 2, hh = _kTileH / 2, bh = _kBlockH;
     final vT = Offset(c.dx,      c.dy - hh);
     final vR = Offset(c.dx + hw, c.dy     );
     final vB = Offset(c.dx,      c.dy + hh);
     final vL = Offset(c.dx - hw, c.dy     );
 
-    final topCol   = _topColor(sq.type);
-    final leftCol  = _dim(topCol, 0.30);
-    final rightCol = _dim(topCol, 0.48);
+    final col   = _topColor(sq.type);
+    final colL  = _dim(col, 0.30);
+    final colR  = _dim(col, 0.48);
 
-    // ── Top face ──
+    // Top face
     final topFace = Path()
       ..moveTo(vT.dx, vT.dy)..lineTo(vR.dx, vR.dy)
       ..lineTo(vB.dx, vB.dy)..lineTo(vL.dx, vL.dy)..close();
-    canvas.drawPath(topFace, Paint()..color = topCol);
+    canvas.drawPath(topFace, Paint()..color = col);
     canvas.drawPath(topFace, Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.white.withOpacity(0.14)
-      ..strokeWidth = 0.5);
+      ..color = Colors.white.withOpacity(0.15)
+      ..strokeWidth = 0.7);
 
-    // ── Left side face ──
+    // Left face
     canvas.drawPath(
-      Path()
-        ..moveTo(vL.dx, vL.dy)    ..lineTo(vB.dx, vB.dy)
-        ..lineTo(vB.dx, vB.dy + bh)..lineTo(vL.dx, vL.dy + bh)..close(),
-      Paint()..color = leftCol,
+      Path()..moveTo(vL.dx, vL.dy)..lineTo(vB.dx, vB.dy)
+            ..lineTo(vB.dx, vB.dy + bh)..lineTo(vL.dx, vL.dy + bh)..close(),
+      Paint()..color = colL,
+    );
+    // Right face
+    canvas.drawPath(
+      Path()..moveTo(vB.dx, vB.dy)..lineTo(vR.dx, vR.dy)
+            ..lineTo(vR.dx, vR.dy + bh)..lineTo(vB.dx, vB.dy + bh)..close(),
+      Paint()..color = colR,
     );
 
-    // ── Right side face ──
-    canvas.drawPath(
-      Path()
-        ..moveTo(vB.dx, vB.dy)    ..lineTo(vR.dx, vR.dy)
-        ..lineTo(vR.dx, vR.dy + bh)..lineTo(vB.dx, vB.dy + bh)..close(),
-      Paint()..color = rightCol,
-    );
-
-    // ── Glow border for special tiles ──
-    final glowCol = _glowColor(sq.type);
-    if (glowCol != null) {
+    // Glow border
+    final gc = _glowColor(sq.type);
+    if (gc != null) {
       canvas.drawPath(topFace, Paint()
         ..style = PaintingStyle.stroke
-        ..color = glowCol.withOpacity(0.6)
-        ..strokeWidth = 1.0);
+        ..color = gc.withOpacity(0.7)
+        ..strokeWidth = 1.4);
     }
 
-    // ── Position number ──
+    // Position number
     if (sq.position > 0) {
       _txt(canvas, '${sq.position}', c,
-          sz: tw * 0.115, col: Colors.white.withOpacity(0.60));
+          sz: _kTileW * 0.15, col: Colors.white.withOpacity(0.65));
     } else {
-      _txt(canvas, 'START', c, sz: tw * 0.11, col: Colors.white70, bold: true);
+      _txt(canvas, 'START', c, sz: _kTileW * 0.13, col: Colors.white70, bold: true);
     }
 
-    // ── Type icon (floating above centre) ──
-    final iconY = c.dy - hh * 0.42;
+    // Type icon
+    final iconY = c.dy - hh * 0.38;
     switch (sq.type) {
       case GooseSquareType.ladder:
-        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: tw * 0.27);
-        break;
+        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: _kTileW * 0.32); break;
       case GooseSquareType.hole:
-        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: tw * 0.27);
-        break;
+        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: _kTileW * 0.32); break;
       case GooseSquareType.penance:
-        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: tw * 0.24);
-        break;
+        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: _kTileW * 0.28); break;
       case GooseSquareType.finish:
-        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.55), sz: tw * 0.33);
-        break;
-      default:
-        break;
+        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.55), sz: _kTileW * 0.38); break;
+      default: break;
     }
 
-    // ── Jump destination label ──
+    // Jump destination
     if (sq.destination != null) {
       final arrow = sq.type == GooseSquareType.ladder
           ? '↑${sq.destination}' : '↓${sq.destination}';
-      final arrowCol = sq.type == GooseSquareType.ladder ? _kGreen : _kRed;
       _txt(canvas, arrow,
-          Offset(c.dx + hw * 0.52, c.dy + hh * 0.55),
-          sz: tw * 0.095, col: arrowCol);
+          Offset(c.dx + hw * 0.5, c.dy + hh * 0.5),
+          sz: _kTileW * 0.12,
+          col: sq.type == GooseSquareType.ladder ? _kGreen : _kRed);
     }
 
-    // ── Player tokens ──
+    // Player pawns
     if (!hasP1 && !hasP2) return;
-    final r    = tw * 0.20;
-    final tokY = c.dy - hh - r - 1.5;
+    // Pawn base sits just above the top face's top vertex
+    final baseY = c.dy - hh - 2;
     if (hasP1 && hasP2) {
-      _drawToken(canvas, Offset(c.dx - r * 0.85, tokY), p1Color, p1Name, r * 0.82);
-      _drawToken(canvas, Offset(c.dx + r * 0.85, tokY), p2Color, p2Name, r * 0.82);
+      _drawMalePawn(canvas,   Offset(c.dx - 11, baseY), p1Color);
+      _drawFemalePawn(canvas, Offset(c.dx + 11, baseY), p2Color);
     } else if (hasP1) {
-      _drawToken(canvas, Offset(c.dx, tokY), p1Color, p1Name, r);
+      _drawMalePawn(canvas,   Offset(c.dx, baseY), p1Color);
     } else {
-      _drawToken(canvas, Offset(c.dx, tokY), p2Color, p2Name, r);
+      _drawFemalePawn(canvas, Offset(c.dx, baseY), p2Color);
     }
   }
 
-  void _drawToken(Canvas canvas, Offset c, Color color, String name, double r) {
-    // Outer glow
-    canvas.drawCircle(c, r + 3.5, Paint()
-      ..color = color.withOpacity(0.28)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
-    // Body
-    canvas.drawCircle(c, r, Paint()..color = color);
-    // White border
-    canvas.drawCircle(c, r, Paint()
+  // ── Male meeple pawn ──────────────────────────────────────────────
+  void _drawMalePawn(Canvas canvas, Offset base, Color color) {
+    const s = 11.0;
+    final fill    = Paint()..color = color;
+    final outline = Paint()
+      ..color = Colors.white.withOpacity(0.88)
       ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 1.4);
-    // Name initial
-    if (name.isNotEmpty) {
-      _txt(canvas, name[0].toUpperCase(), c,
-          sz: r * 0.98, col: Colors.white, bold: true);
-    }
+      ..strokeWidth = 1.3;
+
+    // Glow
+    canvas.drawCircle(
+      Offset(base.dx, base.dy - s * 1.5), s * 2.0,
+      Paint()
+        ..color = color.withOpacity(0.22)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+
+    // Body (meeple shape: shoulder–waist–legs)
+    final body = Path()
+      ..moveTo(base.dx - s * 0.65, base.dy - s * 2.2)   // L shoulder
+      ..lineTo(base.dx + s * 0.65, base.dy - s * 2.2)   // R shoulder
+      ..lineTo(base.dx + s * 0.50, base.dy - s * 1.35)  // R armpit
+      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.45)  // R hip
+      ..lineTo(base.dx + s * 0.80, base.dy + s * 0.1)   // R foot-out
+      ..lineTo(base.dx + s * 0.45, base.dy + s * 0.1)   // R foot-in
+      ..lineTo(base.dx + s * 0.16, base.dy - s * 0.28)  // crotch R
+      ..lineTo(base.dx - s * 0.16, base.dy - s * 0.28)  // crotch L
+      ..lineTo(base.dx - s * 0.45, base.dy + s * 0.1)   // L foot-in
+      ..lineTo(base.dx - s * 0.80, base.dy + s * 0.1)   // L foot-out
+      ..lineTo(base.dx - s * 0.45, base.dy - s * 0.45)  // L hip
+      ..lineTo(base.dx - s * 0.50, base.dy - s * 1.35)  // L armpit
+      ..close();
+    canvas.drawPath(body, fill);
+    canvas.drawPath(body, outline);
+
+    // Head
+    final headC = Offset(base.dx, base.dy - s * 2.82);
+    canvas.drawCircle(headC, s * 0.56, fill);
+    canvas.drawCircle(headC, s * 0.56, outline);
   }
 
+  // ── Female meeple pawn ────────────────────────────────────────────
+  void _drawFemalePawn(Canvas canvas, Offset base, Color color) {
+    const s = 11.0;
+    final fill    = Paint()..color = color;
+    final hairCol = _brighten(color, 0.25);
+    final hairFill = Paint()..color = hairCol;
+    final outline = Paint()
+      ..color = Colors.white.withOpacity(0.88)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.3;
+
+    // Glow
+    canvas.drawCircle(
+      Offset(base.dx, base.dy - s * 1.5), s * 2.0,
+      Paint()
+        ..color = color.withOpacity(0.22)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+    );
+
+    // Hair bumps (drawn before head so head is on top)
+    final hair = Path()
+      ..addOval(Rect.fromCenter(
+          center: Offset(base.dx - s * 0.30, base.dy - s * 3.40),
+          width: s * 0.62, height: s * 0.72))
+      ..addOval(Rect.fromCenter(
+          center: Offset(base.dx + s * 0.30, base.dy - s * 3.40),
+          width: s * 0.62, height: s * 0.72));
+    canvas.drawPath(hair, hairFill);
+
+    // Dress (trapezoidal: narrow at waist, wide at hem)
+    final dress = Path()
+      ..moveTo(base.dx - s * 0.38, base.dy - s * 2.2)   // L shoulder
+      ..lineTo(base.dx + s * 0.38, base.dy - s * 2.2)   // R shoulder
+      ..lineTo(base.dx + s * 0.26, base.dy - s * 1.42)  // R waist
+      ..lineTo(base.dx + s * 0.92, base.dy + s * 0.1)   // R hem
+      ..lineTo(base.dx - s * 0.92, base.dy + s * 0.1)   // L hem
+      ..lineTo(base.dx - s * 0.26, base.dy - s * 1.42)  // L waist
+      ..close();
+    canvas.drawPath(dress, fill);
+    canvas.drawPath(dress, outline);
+
+    // Head
+    final headC = Offset(base.dx, base.dy - s * 2.88);
+    canvas.drawCircle(headC, s * 0.53, fill);
+    canvas.drawCircle(headC, s * 0.53, outline);
+
+    // Hair outline on top
+    canvas.drawPath(hair, outline);
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────
   Color _topColor(GooseSquareType t) {
     switch (t) {
       case GooseSquareType.normal:  return const Color(0xFF243555);
@@ -949,9 +1044,16 @@ class _IsoBoardPainter extends CustomPainter {
 
   Color _dim(Color c, double f) => Color.fromARGB(
     c.alpha,
-    (c.red   * (1 - f)).round(),
-    (c.green * (1 - f)).round(),
-    (c.blue  * (1 - f)).round(),
+    (c.red   * (1 - f)).clamp(0, 255).round(),
+    (c.green * (1 - f)).clamp(0, 255).round(),
+    (c.blue  * (1 - f)).clamp(0, 255).round(),
+  );
+
+  Color _brighten(Color c, double f) => Color.fromARGB(
+    c.alpha,
+    (c.red   + (255 - c.red)   * f).clamp(0, 255).round(),
+    (c.green + (255 - c.green) * f).clamp(0, 255).round(),
+    (c.blue  + (255 - c.blue)  * f).clamp(0, 255).round(),
   );
 
   void _txt(Canvas canvas, String text, Offset center,
