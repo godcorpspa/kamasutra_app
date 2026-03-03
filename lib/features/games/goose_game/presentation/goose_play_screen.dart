@@ -499,7 +499,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
             child: Icon(
               i < clothes ? Icons.checkroom : Icons.close,
               size: 11,
-              color: i < clothes ? color : Colors.white20,
+              color: i < clothes ? color : Colors.white10,
             ),
           )),
         ]),
