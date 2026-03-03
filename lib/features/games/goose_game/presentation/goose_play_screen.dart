@@ -171,7 +171,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       final failures = _currentPlayer == 1 ? _p1FailedExits : _p2FailedExits;
       if (failures >= 2) {
         if (_currentPlayer == 1) _p1FailedExits = 0; else _p2FailedExits = 0;
-        await _removeClothingFromOpponent(
+        await _removeClothingFrom(_currentPlayer,
             reason: '$name non riesce ad uscire per 2 turni!');
         _switchPlayer();
       } else {
@@ -258,20 +258,24 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     }
   }
 
-  Future<void> _removeClothingFromOpponent({required String reason}) async {
-    final opp = _currentPlayer == 1 ? 2 : 1;
-    final count = opp == 1 ? _p1Clothing : _p2Clothing;
+  Future<void> _removeClothingFrom(int player, {required String reason}) async {
+    final count = player == 1 ? _p1Clothing : _p2Clothing;
     if (count > 0) {
-      setState(() { if (opp == 1) _p1Clothing--; else _p2Clothing--; });
-      await _showClothingModal(opp, reason: reason);
+      setState(() { if (player == 1) _p1Clothing--; else _p2Clothing--; });
+      await _showClothingModal(player, reason: reason);
     } else {
       await _showContentDialog(_ContentDialogArgs(
         emoji: '🔥', title: 'NUDO/A!',
-        subtitle: '${_playerName(opp)} non ha più capi!',
+        subtitle: '${_playerName(player)} non ha più capi!',
         description: 'Penitenza invece di spogliarsi 😈',
         content: _rand(kPenances), color: _kRed,
       ));
     }
+  }
+
+  Future<void> _removeClothingFromOpponent({required String reason}) async {
+    final opp = _currentPlayer == 1 ? 2 : 1;
+    await _removeClothingFrom(opp, reason: reason);
   }
 
   void _switchPlayer() {

@@ -82,28 +82,29 @@ class GooseGameConfig extends Equatable {
 
 // ==================== BOARD CONSTANTS ====================
 
-/// Ladders: key = from, value = to (always advances forward)
+/// Ladders: key = from, value = to (jump always +8..+12)
 const Map<int, int> kLadderMap = {
-  4:  14,
-  9:  31,
-  20: 38,
-  28: 84,
-  40: 59,
-  51: 67,
-  63: 81,
-  71: 91,
+   6: 16,   // +10
+  13: 21,   // +8
+  26: 36,   // +10
+  40: 50,   // +10
+  53: 63,   // +10
+  66: 76,   // +10
+  78: 88,   // +10
+  85: 95,   // +10
 };
 
-/// Holes: key = from, value = to (always goes back)
+/// Holes: key = from, value = to (jump always -8..-10)
+/// Extra holes added in the 10-49 range.
 const Map<int, int> kHoleMap = {
-  17: 7,
-  54: 34,
-  62: 19,
-  64: 60,
-  87: 24,
-  93: 73,
-  95: 75,
-  99: 78,
+  18: 9,    // -9  [10-49 zone]
+  29: 19,   // -10 [10-49 zone]
+  37: 27,   // -10 [10-49 zone]
+  44: 34,   // -10 [10-49 zone]
+  57: 48,   // -9
+  71: 61,   // -10
+  83: 73,   // -10
+  96: 86,   // -10
 };
 
 /// Penance squares (scattered)
