@@ -65,7 +65,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   @override
   void initState() {
     super.initState();
-    _board = _buildBoard();
+    _board = _generateBoard();
     _diceAnim = AnimationController(
       duration: const Duration(milliseconds: 700),
       vsync: this,
@@ -82,7 +82,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
   // ==================== BOARD GENERATION ====================
 
-  List<GooseSquare> _buildBoard() {
+  List<GooseSquare> _generateBoard() {
     const total = 100;
     return List.generate(total + 1, (i) {
       if (i == 0) return const GooseSquare(position: 0, type: GooseSquareType.normal);
