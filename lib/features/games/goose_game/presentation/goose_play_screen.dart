@@ -26,13 +26,66 @@ const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
 const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
 
 // ── Board canvas / tile constants ──
-const double _kTileW   = 64.0;   // isometric tile width
-const double _kTileH   = 32.0;   // isometric tile height
-const double _kBlockH  = 18.0;   // 3-D block depth
-const double _kBoardCX = 450.0;  // board centre-X in the large canvas
-const double _kBoardTY = 72.0;   // board top-Y in the large canvas
-const double _kCanvasW = 900.0;
-const double _kCanvasH = 600.0;
+const double _kTileW   = 64.0;    // isometric tile width
+const double _kTileH   = 32.0;    // isometric tile height
+const double _kBlockH  = 18.0;    // 3-D block depth
+const double _kTileStep = 1.35;   // grid-to-screen spacing multiplier (>1 = gaps between tiles)
+const double _kBoardCX = 520.0;   // board centre-X in the large canvas
+const double _kBoardTY = 85.0;    // board top-Y in the large canvas
+const double _kCanvasW = 1050.0;
+const double _kCanvasH = 680.0;
+const _kSkin = Color(0xFFFFCCBC); // skin tone for pawn heads
+const _kHair = Color(0xFF4A2C2A); // dark hair colour
+
+// ── Serpentine spiral path: (col, row) grid position for each board square ──
+// pos 0 = START (just left of pos 1), pos 100 = FINISH (board centre)
+// Layout: spiral from outer ring inward, starting at bottom-left.
+const List<Offset> _kGridPath = [
+  Offset(-1, 9),  // 0  START
+  // Ring 0 – bottom L→R (1-10)
+  Offset(0, 9), Offset(1, 9), Offset(2, 9), Offset(3, 9), Offset(4, 9),
+  Offset(5, 9), Offset(6, 9), Offset(7, 9), Offset(8, 9), Offset(9, 9),
+  // Ring 0 – right col up (11-19)
+  Offset(9, 8), Offset(9, 7), Offset(9, 6), Offset(9, 5), Offset(9, 4),
+  Offset(9, 3), Offset(9, 2), Offset(9, 1), Offset(9, 0),
+  // Ring 0 – top R→L (20-28)
+  Offset(8, 0), Offset(7, 0), Offset(6, 0), Offset(5, 0), Offset(4, 0),
+  Offset(3, 0), Offset(2, 0), Offset(1, 0), Offset(0, 0),
+  // Ring 0 – left col down (29-36)
+  Offset(0, 1), Offset(0, 2), Offset(0, 3), Offset(0, 4),
+  Offset(0, 5), Offset(0, 6), Offset(0, 7), Offset(0, 8),
+  // Ring 1 – bottom L→R (37-44)
+  Offset(1, 8), Offset(2, 8), Offset(3, 8), Offset(4, 8),
+  Offset(5, 8), Offset(6, 8), Offset(7, 8), Offset(8, 8),
+  // Ring 1 – right col up (45-51)
+  Offset(8, 7), Offset(8, 6), Offset(8, 5), Offset(8, 4),
+  Offset(8, 3), Offset(8, 2), Offset(8, 1),
+  // Ring 1 – top R→L (52-58)
+  Offset(7, 1), Offset(6, 1), Offset(5, 1), Offset(4, 1),
+  Offset(3, 1), Offset(2, 1), Offset(1, 1),
+  // Ring 1 – left col down (59-64)
+  Offset(1, 2), Offset(1, 3), Offset(1, 4), Offset(1, 5), Offset(1, 6), Offset(1, 7),
+  // Ring 2 – bottom L→R (65-70)
+  Offset(2, 7), Offset(3, 7), Offset(4, 7), Offset(5, 7), Offset(6, 7), Offset(7, 7),
+  // Ring 2 – right col up (71-75)
+  Offset(7, 6), Offset(7, 5), Offset(7, 4), Offset(7, 3), Offset(7, 2),
+  // Ring 2 – top R→L (76-80)
+  Offset(6, 2), Offset(5, 2), Offset(4, 2), Offset(3, 2), Offset(2, 2),
+  // Ring 2 – left col down (81-84)
+  Offset(2, 3), Offset(2, 4), Offset(2, 5), Offset(2, 6),
+  // Ring 3 – bottom L→R (85-88)
+  Offset(3, 6), Offset(4, 6), Offset(5, 6), Offset(6, 6),
+  // Ring 3 – right col up (89-91)
+  Offset(6, 5), Offset(6, 4), Offset(6, 3),
+  // Ring 3 – top R→L (92-94)
+  Offset(5, 3), Offset(4, 3), Offset(3, 3),
+  // Ring 3 – left col down (95-96)
+  Offset(3, 4), Offset(3, 5),
+  // Ring 4 – bottom L→R (97-98)
+  Offset(4, 5), Offset(5, 5),
+  // Ring 4 – centre (99-100)
+  Offset(5, 4), Offset(4, 4),  // 100 = FINISH
+];
 
 // ==================== PLAY SCREEN ====================
 
@@ -553,20 +606,12 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
       // Compute iso grid position for the active player
       final activePos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
-      final Offset g;
-      if (activePos == 0) {
-        g = const Offset(0.0, 9.7);
-      } else {
-        final idx = activePos - 1;
-        final r   = idx ~/ 10;
-        final col = r.isOdd ? (9 - idx % 10) : (idx % 10);
-        g = Offset(col.toDouble(), (9 - r).toDouble());
-      }
+      final g = _kGridPath[activePos.clamp(0, _kGridPath.length - 1)];
 
-      // Convert grid → canvas coordinates
+      // Convert grid → canvas coordinates (with spacing multiplier)
       const hw = _kTileW / 2, hh = _kTileH / 2;
-      final playerCX = _kBoardCX + (g.dx - g.dy) * hw;
-      final playerCY = _kBoardTY + (g.dx + g.dy) * hh;
+      final playerCX = _kBoardCX + (g.dx - g.dy) * hw * _kTileStep;
+      final playerCY = _kBoardTY + (g.dx + g.dy) * hh * _kTileStep;
 
       // Camera offset: shift canvas so active player is viewport-centred
       final camEnd = Offset(vw / 2 - playerCX, vh / 2 - playerCY);
@@ -814,14 +859,9 @@ class _IsoBoardPainter extends CustomPainter {
     required this.p1Name,    required this.p2Name,
   });
 
-  // visRow 0 = top row (tiles 91-100), visRow 9 = bottom row (tiles 1-10)
-  Offset _gridOf(int pos) {
-    if (pos == 0) return const Offset(0.0, 9.7); // START
-    final idx = pos - 1;
-    final r   = idx ~/ 10;
-    final c   = r.isOdd ? (9 - idx % 10) : (idx % 10);
-    return Offset(c.toDouble(), (9 - r).toDouble());
-  }
+  // Map board position → isometric grid (col, row) using the spiral path.
+  Offset _gridOf(int pos) =>
+      _kGridPath[pos.clamp(0, _kGridPath.length - 1)];
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -835,8 +875,8 @@ class _IsoBoardPainter extends CustomPainter {
     for (final pos in order) {
       if (pos >= board.length) continue;
       final g  = _gridOf(pos);
-      final sx = _kBoardCX + (g.dx - g.dy) * hw;
-      final sy = _kBoardTY + (g.dx + g.dy) * hh;
+      final sx = _kBoardCX + (g.dx - g.dy) * hw * _kTileStep;
+      final sy = _kBoardTY + (g.dx + g.dy) * hh * _kTileStep;
       _drawTile(canvas, Offset(sx, sy), board[pos], pos == p1Pos, pos == p2Pos);
     }
   }
@@ -930,95 +970,148 @@ class _IsoBoardPainter extends CustomPainter {
     }
   }
 
-  // ── Male meeple pawn ──────────────────────────────────────────────
+  // ── Male pawn (shirt + legs + skin head + hair + eyes) ───────────
   void _drawMalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 11.0;
-    final fill    = Paint()..color = color;
-    final outline = Paint()
-      ..color = Colors.white.withOpacity(0.88)
+    const s = 12.0;
+    final bodyP = Paint()..color = color;
+    final legsP = Paint()..color = _dim(color, 0.28);
+    final skinP = Paint()..color = _kSkin;
+    final hairP = Paint()..color = _kHair;
+    final outP  = Paint()
+      ..color = Colors.white.withOpacity(0.80)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.3;
+      ..strokeWidth = 1.1;
 
     // Glow
     canvas.drawCircle(
-      Offset(base.dx, base.dy - s * 1.5), s * 2.0,
+      Offset(base.dx, base.dy - s), s * 2.2,
       Paint()
         ..color = color.withOpacity(0.22)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
     );
 
-    // Body (meeple shape: shoulder–waist–legs)
-    final body = Path()
-      ..moveTo(base.dx - s * 0.65, base.dy - s * 2.2)   // L shoulder
-      ..lineTo(base.dx + s * 0.65, base.dy - s * 2.2)   // R shoulder
-      ..lineTo(base.dx + s * 0.50, base.dy - s * 1.35)  // R armpit
-      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.45)  // R hip
-      ..lineTo(base.dx + s * 0.80, base.dy + s * 0.1)   // R foot-out
-      ..lineTo(base.dx + s * 0.45, base.dy + s * 0.1)   // R foot-in
-      ..lineTo(base.dx + s * 0.16, base.dy - s * 0.28)  // crotch R
-      ..lineTo(base.dx - s * 0.16, base.dy - s * 0.28)  // crotch L
-      ..lineTo(base.dx - s * 0.45, base.dy + s * 0.1)   // L foot-in
-      ..lineTo(base.dx - s * 0.80, base.dy + s * 0.1)   // L foot-out
-      ..lineTo(base.dx - s * 0.45, base.dy - s * 0.45)  // L hip
-      ..lineTo(base.dx - s * 0.50, base.dy - s * 1.35)  // L armpit
+    // Legs (darker trousers)
+    final legs = Path()
+      ..moveTo(base.dx - s * 0.45, base.dy - s * 0.50)
+      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.50)
+      ..lineTo(base.dx + s * 0.80, base.dy + s * 0.12)
+      ..lineTo(base.dx + s * 0.42, base.dy + s * 0.12)
+      ..lineTo(base.dx + s * 0.17, base.dy - s * 0.28)
+      ..lineTo(base.dx - s * 0.17, base.dy - s * 0.28)
+      ..lineTo(base.dx - s * 0.42, base.dy + s * 0.12)
+      ..lineTo(base.dx - s * 0.80, base.dy + s * 0.12)
       ..close();
-    canvas.drawPath(body, fill);
-    canvas.drawPath(body, outline);
+    canvas.drawPath(legs, legsP);
 
-    // Head
+    // Shirt / torso
+    final shirt = Path()
+      ..moveTo(base.dx - s * 0.65, base.dy - s * 2.2)
+      ..lineTo(base.dx + s * 0.65, base.dy - s * 2.2)
+      ..lineTo(base.dx + s * 0.50, base.dy - s * 1.30)
+      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.50)
+      ..lineTo(base.dx - s * 0.45, base.dy - s * 0.50)
+      ..lineTo(base.dx - s * 0.50, base.dy - s * 1.30)
+      ..close();
+    canvas.drawPath(shirt, bodyP);
+    canvas.drawPath(shirt, outP);
+    canvas.drawPath(legs,  outP);
+
+    // Neck
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(base.dx, base.dy - s * 2.32),
+        width: s * 0.32, height: s * 0.30,
+      ),
+      skinP,
+    );
+
     final headC = Offset(base.dx, base.dy - s * 2.82);
-    canvas.drawCircle(headC, s * 0.56, fill);
-    canvas.drawCircle(headC, s * 0.56, outline);
+
+    // Hair cap (top semicircle behind head)
+    final hairPath = Path();
+    hairPath.addArc(
+      Rect.fromCenter(center: headC, width: s * 1.18, height: s * 1.18),
+      pi, pi,
+    );
+    hairPath.close();
+    canvas.drawPath(hairPath, hairP);
+
+    // Skin head
+    canvas.drawCircle(headC, s * 0.56, skinP);
+    canvas.drawCircle(headC, s * 0.56, outP);
+
+    // Eyes
+    final eyeP = Paint()..color = const Color(0xFF3E2723);
+    canvas.drawCircle(Offset(headC.dx - s * 0.17, headC.dy), 1.1, eyeP);
+    canvas.drawCircle(Offset(headC.dx + s * 0.17, headC.dy), 1.1, eyeP);
   }
 
-  // ── Female meeple pawn ────────────────────────────────────────────
+  // ── Female pawn (dress + skin head + coloured hair + eyes) ───────
   void _drawFemalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 11.0;
-    final fill    = Paint()..color = color;
-    final hairCol = _brighten(color, 0.25);
-    final hairFill = Paint()..color = hairCol;
-    final outline = Paint()
-      ..color = Colors.white.withOpacity(0.88)
+    const s = 12.0;
+    final dressP  = Paint()..color = color;
+    final skinP   = Paint()..color = _kSkin;
+    final hairCol = _brighten(color, 0.35);
+    final hairP   = Paint()..color = hairCol;
+    final outP    = Paint()
+      ..color = Colors.white.withOpacity(0.80)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.3;
+      ..strokeWidth = 1.1;
 
     // Glow
     canvas.drawCircle(
-      Offset(base.dx, base.dy - s * 1.5), s * 2.0,
+      Offset(base.dx, base.dy - s), s * 2.2,
       Paint()
         ..color = color.withOpacity(0.22)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
     );
 
-    // Hair bumps (drawn before head so head is on top)
-    final hair = Path()
-      ..addOval(Rect.fromCenter(
-          center: Offset(base.dx - s * 0.30, base.dy - s * 3.40),
-          width: s * 0.62, height: s * 0.72))
-      ..addOval(Rect.fromCenter(
-          center: Offset(base.dx + s * 0.30, base.dy - s * 3.40),
-          width: s * 0.62, height: s * 0.72));
-    canvas.drawPath(hair, hairFill);
-
-    // Dress (trapezoidal: narrow at waist, wide at hem)
+    // Dress (trapezoidal: narrow at shoulders, wide at hem)
     final dress = Path()
       ..moveTo(base.dx - s * 0.38, base.dy - s * 2.2)   // L shoulder
       ..lineTo(base.dx + s * 0.38, base.dy - s * 2.2)   // R shoulder
       ..lineTo(base.dx + s * 0.26, base.dy - s * 1.42)  // R waist
-      ..lineTo(base.dx + s * 0.92, base.dy + s * 0.1)   // R hem
-      ..lineTo(base.dx - s * 0.92, base.dy + s * 0.1)   // L hem
+      ..lineTo(base.dx + s * 0.95, base.dy + s * 0.12)  // R hem
+      ..lineTo(base.dx - s * 0.95, base.dy + s * 0.12)  // L hem
       ..lineTo(base.dx - s * 0.26, base.dy - s * 1.42)  // L waist
       ..close();
-    canvas.drawPath(dress, fill);
-    canvas.drawPath(dress, outline);
+    canvas.drawPath(dress, dressP);
+    canvas.drawPath(dress, outP);
 
-    // Head
+    // Neck
+    canvas.drawRect(
+      Rect.fromCenter(
+        center: Offset(base.dx, base.dy - s * 2.32),
+        width: s * 0.28, height: s * 0.28,
+      ),
+      skinP,
+    );
+
     final headC = Offset(base.dx, base.dy - s * 2.88);
-    canvas.drawCircle(headC, s * 0.53, fill);
-    canvas.drawCircle(headC, s * 0.53, outline);
 
-    // Hair outline on top
-    canvas.drawPath(hair, outline);
+    // Hair bumps behind head (long wavy hair sides)
+    final hair = Path()
+      ..addOval(Rect.fromCenter(
+          center: Offset(base.dx - s * 0.36, base.dy - s * 3.10),
+          width: s * 0.70, height: s * 0.88))
+      ..addOval(Rect.fromCenter(
+          center: Offset(base.dx + s * 0.36, base.dy - s * 3.10),
+          width: s * 0.70, height: s * 0.88))
+      // hair top arch
+      ..addOval(Rect.fromCenter(
+          center: Offset(base.dx, base.dy - s * 3.28),
+          width: s * 0.82, height: s * 0.55));
+    canvas.drawPath(hair, hairP);
+    canvas.drawPath(hair, outP);
+
+    // Skin head (drawn on top of hair)
+    canvas.drawCircle(headC, s * 0.54, skinP);
+    canvas.drawCircle(headC, s * 0.54, outP);
+
+    // Eyes
+    final eyeP = Paint()..color = const Color(0xFF3E2723);
+    canvas.drawCircle(Offset(headC.dx - s * 0.16, headC.dy), 1.1, eyeP);
+    canvas.drawCircle(Offset(headC.dx + s * 0.16, headC.dy), 1.1, eyeP);
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────
