@@ -31,60 +31,78 @@ const double _kTileH   = 32.0;    // isometric tile height
 const double _kBlockH  = 18.0;    // 3-D block depth
 const double _kTileStep = 1.35;   // grid-to-screen spacing multiplier (>1 = gaps between tiles)
 const double _kBoardCX = 520.0;   // board centre-X in the large canvas
-const double _kBoardTY = 85.0;    // board top-Y in the large canvas
+const double _kBoardTY = 110.0;   // board top-Y in the large canvas
 const double _kCanvasW = 1050.0;
 const double _kCanvasH = 680.0;
 const _kSkin = Color(0xFFFFCCBC); // skin tone for pawn heads
 const _kHair = Color(0xFF4A2C2A); // dark hair colour
 
-// ── Serpentine spiral path: (col, row) grid position for each board square ──
-// pos 0 = START (just left of pos 1), pos 100 = FINISH (board centre)
-// Layout: spiral from outer ring inward, starting at bottom-left.
+// ── Diamond serpentine path: iso-horizontal strips that expand then contract ──
+// In isometric view each strip appears as a HORIZONTAL row (not diagonal).
+// The path forms a diamond/rhombus: narrow at top (pos 1), widest at the
+// equator (pos 46-55), narrow at bottom (pos 100 = FINISH).
+// Total: 1+2+3+…+10+…+3+2+1 = 100 board tiles (pos 1-100).
+// pos 0 = START, directly above pos 1 in screen space (col+row decreases = up).
 const List<Offset> _kGridPath = [
-  Offset(-1, 9),  // 0  START
-  // Ring 0 – bottom L→R (1-10)
-  Offset(0, 9), Offset(1, 9), Offset(2, 9), Offset(3, 9), Offset(4, 9),
-  Offset(5, 9), Offset(6, 9), Offset(7, 9), Offset(8, 9), Offset(9, 9),
-  // Ring 0 – right col up (11-19)
-  Offset(9, 8), Offset(9, 7), Offset(9, 6), Offset(9, 5), Offset(9, 4),
-  Offset(9, 3), Offset(9, 2), Offset(9, 1), Offset(9, 0),
-  // Ring 0 – top R→L (20-28)
-  Offset(8, 0), Offset(7, 0), Offset(6, 0), Offset(5, 0), Offset(4, 0),
-  Offset(3, 0), Offset(2, 0), Offset(1, 0), Offset(0, 0),
-  // Ring 0 – left col down (29-36)
-  Offset(0, 1), Offset(0, 2), Offset(0, 3), Offset(0, 4),
-  Offset(0, 5), Offset(0, 6), Offset(0, 7), Offset(0, 8),
-  // Ring 1 – bottom L→R (37-44)
-  Offset(1, 8), Offset(2, 8), Offset(3, 8), Offset(4, 8),
-  Offset(5, 8), Offset(6, 8), Offset(7, 8), Offset(8, 8),
-  // Ring 1 – right col up (45-51)
-  Offset(8, 7), Offset(8, 6), Offset(8, 5), Offset(8, 4),
-  Offset(8, 3), Offset(8, 2), Offset(8, 1),
-  // Ring 1 – top R→L (52-58)
-  Offset(7, 1), Offset(6, 1), Offset(5, 1), Offset(4, 1),
-  Offset(3, 1), Offset(2, 1), Offset(1, 1),
-  // Ring 1 – left col down (59-64)
-  Offset(1, 2), Offset(1, 3), Offset(1, 4), Offset(1, 5), Offset(1, 6), Offset(1, 7),
-  // Ring 2 – bottom L→R (65-70)
-  Offset(2, 7), Offset(3, 7), Offset(4, 7), Offset(5, 7), Offset(6, 7), Offset(7, 7),
-  // Ring 2 – right col up (71-75)
-  Offset(7, 6), Offset(7, 5), Offset(7, 4), Offset(7, 3), Offset(7, 2),
-  // Ring 2 – top R→L (76-80)
-  Offset(6, 2), Offset(5, 2), Offset(4, 2), Offset(3, 2), Offset(2, 2),
-  // Ring 2 – left col down (81-84)
-  Offset(2, 3), Offset(2, 4), Offset(2, 5), Offset(2, 6),
-  // Ring 3 – bottom L→R (85-88)
-  Offset(3, 6), Offset(4, 6), Offset(5, 6), Offset(6, 6),
-  // Ring 3 – right col up (89-91)
-  Offset(6, 5), Offset(6, 4), Offset(6, 3),
-  // Ring 3 – top R→L (92-94)
-  Offset(5, 3), Offset(4, 3), Offset(3, 3),
-  // Ring 3 – left col down (95-96)
-  Offset(3, 4), Offset(3, 5),
-  // Ring 4 – bottom L→R (97-98)
-  Offset(4, 5), Offset(5, 5),
-  // Ring 4 – centre (99-100)
-  Offset(5, 4), Offset(4, 4),  // 100 = FINISH
+  Offset(-1, -1), // 0  START – directly above pos 1 in screen
+
+  // Strip k=0 (1 tile, top vertex) ── going right
+  Offset(0, 0),   // 1
+
+  // Strip k=1 (2 tiles) ── going LEFT (col–, row+)
+  Offset(1, 0), Offset(0, 1),   // 2-3
+
+  // Strip k=2 (3 tiles) ── going RIGHT
+  Offset(0, 2), Offset(1, 1), Offset(2, 0),   // 4-6
+
+  // Strip k=3 (4 tiles) ── going LEFT
+  Offset(3, 0), Offset(2, 1), Offset(1, 2), Offset(0, 3),   // 7-10
+
+  // Strip k=4 (5 tiles) ── going RIGHT
+  Offset(0, 4), Offset(1, 3), Offset(2, 2), Offset(3, 1), Offset(4, 0),   // 11-15
+
+  // Strip k=5 (6 tiles) ── going LEFT
+  Offset(5, 0), Offset(4, 1), Offset(3, 2), Offset(2, 3), Offset(1, 4), Offset(0, 5),   // 16-21
+
+  // Strip k=6 (7 tiles) ── going RIGHT
+  Offset(0, 6), Offset(1, 5), Offset(2, 4), Offset(3, 3), Offset(4, 2), Offset(5, 1), Offset(6, 0),   // 22-28
+
+  // Strip k=7 (8 tiles) ── going LEFT
+  Offset(7, 0), Offset(6, 1), Offset(5, 2), Offset(4, 3), Offset(3, 4), Offset(2, 5), Offset(1, 6), Offset(0, 7),   // 29-36
+
+  // Strip k=8 (9 tiles) ── going RIGHT
+  Offset(0, 8), Offset(1, 7), Offset(2, 6), Offset(3, 5), Offset(4, 4), Offset(5, 3), Offset(6, 2), Offset(7, 1), Offset(8, 0),   // 37-45
+
+  // Strip k=9 (10 tiles, widest) ── going LEFT
+  Offset(9, 0), Offset(8, 1), Offset(7, 2), Offset(6, 3), Offset(5, 4),
+  Offset(4, 5), Offset(3, 6), Offset(2, 7), Offset(1, 8), Offset(0, 9),   // 46-55
+
+  // Strip k=10 (9 tiles) ── going RIGHT
+  Offset(1, 9), Offset(2, 8), Offset(3, 7), Offset(4, 6), Offset(5, 5), Offset(6, 4), Offset(7, 3), Offset(8, 2), Offset(9, 1),   // 56-64
+
+  // Strip k=11 (8 tiles) ── going LEFT
+  Offset(9, 2), Offset(8, 3), Offset(7, 4), Offset(6, 5), Offset(5, 6), Offset(4, 7), Offset(3, 8), Offset(2, 9),   // 65-72
+
+  // Strip k=12 (7 tiles) ── going RIGHT
+  Offset(3, 9), Offset(4, 8), Offset(5, 7), Offset(6, 6), Offset(7, 5), Offset(8, 4), Offset(9, 3),   // 73-79
+
+  // Strip k=13 (6 tiles) ── going LEFT
+  Offset(9, 4), Offset(8, 5), Offset(7, 6), Offset(6, 7), Offset(5, 8), Offset(4, 9),   // 80-85
+
+  // Strip k=14 (5 tiles) ── going RIGHT
+  Offset(5, 9), Offset(6, 8), Offset(7, 7), Offset(8, 6), Offset(9, 5),   // 86-90
+
+  // Strip k=15 (4 tiles) ── going LEFT
+  Offset(9, 6), Offset(8, 7), Offset(7, 8), Offset(6, 9),   // 91-94
+
+  // Strip k=16 (3 tiles) ── going RIGHT
+  Offset(7, 9), Offset(8, 8), Offset(9, 7),   // 95-97
+
+  // Strip k=17 (2 tiles) ── going LEFT
+  Offset(9, 8), Offset(8, 9),   // 98-99
+
+  // Strip k=18 (1 tile, bottom vertex) ── FINISH
+  Offset(9, 9),   // 100  FINISH
 ];
 
 // ==================== PLAY SCREEN ====================
