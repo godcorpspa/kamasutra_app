@@ -467,8 +467,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     await _showContentDialog(_ContentDialogArgs(
       emoji: '🏆', title: '${_playerName(_currentPlayer)} VINCE!',
       subtitle: 'Hai raggiunto la casella 100! 🎉',
-      description: 'Ricompensa finale dal partner:',
-      content: _rand(kRewards), color: _kGold,
+      description: '🔥 PREMIO FINALE — Il partner del perdente esegue:',
+      content: _rand(kFinalRewards), color: _kGold,
       onDismiss: () { Navigator.of(context).pop(); context.pop(); },
     ));
   }
