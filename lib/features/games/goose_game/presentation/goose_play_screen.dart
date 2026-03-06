@@ -26,63 +26,170 @@ const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
 const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
 
 // ── Board canvas / tile constants ──
-const double _kTileW   = 64.0;    // isometric tile width
-const double _kTileH   = 32.0;    // isometric tile height
-const double _kBlockH  = 18.0;    // 3-D block depth
-const double _kTileStep = 1.35;   // grid-to-screen spacing multiplier (>1 = gaps between tiles)
-const double _kBoardCX = 520.0;   // board centre-X in the large canvas
-const double _kBoardTY = 85.0;    // board top-Y in the large canvas
-const double _kCanvasW = 1050.0;
-const double _kCanvasH = 680.0;
-const _kSkin = Color(0xFFFFCCBC); // skin tone for pawn heads
-const _kHair = Color(0xFF4A2C2A); // dark hair colour
+const double _kTileW    = 56.0;    // isometric tile width
+const double _kTileH    = 28.0;    // isometric tile height
+const double _kBlockH   = 15.0;    // 3-D block depth
+const double _kTileStep = 1.22;    // grid-to-screen spacing multiplier
+const double _kBoardCX  = 820.0;   // board centre-X in the large canvas
+const double _kBoardTY  = 60.0;    // board top-Y in the large canvas
+const double _kCanvasW  = 1500.0;
+const double _kCanvasH  = 750.0;
+const _kSkin = Color(0xFFFFCCBC);  // skin tone for pawn heads
+const _kHair = Color(0xFF4A2C2A);  // dark hair colour
 
-// ── Boustrophedon (classic snake) path: rows alternate LEFT↔RIGHT ──
-// In isometric view each row is a diagonal stripe; the path winds from the
-// bottom-left corner to the top-left corner like a classic snake/ladder board.
-// Grid: 10 cols × 10 rows.  pos 0 = START (left of pos 1), pos 100 = FINISH.
+// ── Serpentine path: irregular winding snake ──
+// The path winds with varying-width horizontal runs, vertical drops,
+// narrowing passages and a zigzag section – never a plain square grid.
+// Grid spans cols 0-11, rows 0-24.  pos 0 = START, pos 100 = FINISH.
 const List<Offset> _kGridPath = [
-  Offset(-1, 9),  // 0  START – one step to the left of pos 1
+  // ── Segment A: wide right run (pos 0-6) ──
+  Offset(0, 0),   // 0  START
+  Offset(1, 0),   // 1
+  Offset(2, 0),   // 2
+  Offset(3, 0),   // 3
+  Offset(4, 0),   // 4
+  Offset(5, 0),   // 5
+  Offset(6, 0),   // 6
 
-  // Row 9 (bottom) → going RIGHT   pos 1-10
-  Offset(0, 9), Offset(1, 9), Offset(2, 9), Offset(3, 9), Offset(4, 9),
-  Offset(5, 9), Offset(6, 9), Offset(7, 9), Offset(8, 9), Offset(9, 9),
+  // ── Drop down 3 (pos 7-9) ──
+  Offset(6, 1),   // 7
+  Offset(6, 2),   // 8
+  Offset(6, 3),   // 9
 
-  // Row 8 → going LEFT   pos 11-20
-  Offset(9, 8), Offset(8, 8), Offset(7, 8), Offset(6, 8), Offset(5, 8),
-  Offset(4, 8), Offset(3, 8), Offset(2, 8), Offset(1, 8), Offset(0, 8),
+  // ── Right run (pos 10-14) ──
+  Offset(7, 3),   // 10
+  Offset(8, 3),   // 11
+  Offset(9, 3),   // 12
+  Offset(10, 3),  // 13
+  Offset(11, 3),  // 14
 
-  // Row 7 → going RIGHT   pos 21-30
-  Offset(0, 7), Offset(1, 7), Offset(2, 7), Offset(3, 7), Offset(4, 7),
-  Offset(5, 7), Offset(6, 7), Offset(7, 7), Offset(8, 7), Offset(9, 7),
+  // ── Drop down 2 (pos 15-16) ──
+  Offset(11, 4),  // 15
+  Offset(11, 5),  // 16
 
-  // Row 6 → going LEFT   pos 31-40
-  Offset(9, 6), Offset(8, 6), Offset(7, 6), Offset(6, 6), Offset(5, 6),
-  Offset(4, 6), Offset(3, 6), Offset(2, 6), Offset(1, 6), Offset(0, 6),
+  // ── Left run 7 (pos 17-23) ──
+  Offset(11, 6),  // 17
+  Offset(10, 6),  // 18
+  Offset(9, 6),   // 19
+  Offset(8, 6),   // 20
+  Offset(7, 6),   // 21
+  Offset(6, 6),   // 22
+  Offset(5, 6),   // 23
 
-  // Row 5 → going RIGHT   pos 41-50
-  Offset(0, 5), Offset(1, 5), Offset(2, 5), Offset(3, 5), Offset(4, 5),
-  Offset(5, 5), Offset(6, 5), Offset(7, 5), Offset(8, 5), Offset(9, 5),
+  // ── Drop 1 (pos 24) ──
+  Offset(5, 7),   // 24
 
-  // Row 4 → going LEFT   pos 51-60
-  Offset(9, 4), Offset(8, 4), Offset(7, 4), Offset(6, 4), Offset(5, 4),
-  Offset(4, 4), Offset(3, 4), Offset(2, 4), Offset(1, 4), Offset(0, 4),
+  // ── Narrowing: left 2 (pos 25-26) ──
+  Offset(5, 8),   // 25
+  Offset(4, 8),   // 26
 
-  // Row 3 → going RIGHT   pos 61-70
-  Offset(0, 3), Offset(1, 3), Offset(2, 3), Offset(3, 3), Offset(4, 3),
-  Offset(5, 3), Offset(6, 3), Offset(7, 3), Offset(8, 3), Offset(9, 3),
+  // ── Narrowing: left 3 (pos 27-29) ──
+  Offset(4, 9),   // 27
+  Offset(3, 9),   // 28
+  Offset(2, 9),   // 29
 
-  // Row 2 → going LEFT   pos 71-80
-  Offset(9, 2), Offset(8, 2), Offset(7, 2), Offset(6, 2), Offset(5, 2),
-  Offset(4, 2), Offset(3, 2), Offset(2, 2), Offset(1, 2), Offset(0, 2),
+  // ── Narrowing: left 3 (pos 30-32) ──
+  Offset(2, 10),  // 30
+  Offset(1, 10),  // 31
+  Offset(0, 10),  // 32
 
-  // Row 1 → going RIGHT   pos 81-90
-  Offset(0, 1), Offset(1, 1), Offset(2, 1), Offset(3, 1), Offset(4, 1),
-  Offset(5, 1), Offset(6, 1), Offset(7, 1), Offset(8, 1), Offset(9, 1),
+  // ── Drop 1 (pos 33) ──
+  Offset(0, 11),  // 33
 
-  // Row 0 (top) → going LEFT   pos 91-100  FINISH at (0,0)
-  Offset(9, 0), Offset(8, 0), Offset(7, 0), Offset(6, 0), Offset(5, 0),
-  Offset(4, 0), Offset(3, 0), Offset(2, 0), Offset(1, 0), Offset(0, 0),
+  // ── Short right 3 (pos 34-36) ──
+  Offset(0, 12),  // 34
+  Offset(1, 12),  // 35
+  Offset(2, 12),  // 36
+
+  // ── Drop 1 (pos 37) ──
+  Offset(2, 13),  // 37
+
+  // ── Drop + zigzag section (pos 38-46) ──
+  Offset(2, 14),  // 38
+  Offset(3, 13),  // 39  ↑ zigzag up-right
+  Offset(3, 14),  // 40  ↓
+  Offset(4, 13),  // 41  ↑ zigzag up-right
+  Offset(4, 14),  // 42  ↓
+  Offset(5, 13),  // 43  ↑ zigzag up-right
+  Offset(5, 14),  // 44  ↓
+  Offset(6, 13),  // 45  ↑ zigzag up-right
+  Offset(6, 14),  // 46  ↓
+
+  // ── Right run 3 (pos 47-49) ──
+  Offset(7, 14),  // 47
+  Offset(8, 14),  // 48
+  Offset(9, 14),  // 49
+
+  // ── Drop 2 (pos 50-51) ──
+  Offset(9, 15),  // 50
+  Offset(9, 16),  // 51
+
+  // ── Left run 5 (pos 52-56) ──
+  Offset(8, 16),  // 52
+  Offset(7, 16),  // 53
+  Offset(6, 16),  // 54
+  Offset(5, 16),  // 55
+  Offset(4, 16),  // 56
+
+  // ── Drop 1 + right run 4 (pos 57-61) ──
+  Offset(4, 17),  // 57
+  Offset(5, 17),  // 58
+  Offset(6, 17),  // 59
+  Offset(7, 17),  // 60
+  Offset(8, 17),  // 61
+
+  // ── Drop 1 + left run 5 (pos 62-67) ──
+  Offset(8, 18),  // 62
+  Offset(7, 18),  // 63
+  Offset(6, 18),  // 64
+  Offset(5, 18),  // 65
+  Offset(4, 18),  // 66
+  Offset(3, 18),  // 67
+
+  // ── Drop 1 + right run 6 (pos 68-74) ──
+  Offset(3, 19),  // 68
+  Offset(4, 19),  // 69
+  Offset(5, 19),  // 70
+  Offset(6, 19),  // 71
+  Offset(7, 19),  // 72
+  Offset(8, 19),  // 73
+  Offset(9, 19),  // 74
+
+  // ── Drop 1 + left run 5 (pos 75-80) ──
+  Offset(9, 20),  // 75
+  Offset(8, 20),  // 76
+  Offset(7, 20),  // 77
+  Offset(6, 20),  // 78
+  Offset(5, 20),  // 79
+  Offset(4, 20),  // 80
+
+  // ── Drop 1 + right run 3 (pos 81-84) ──
+  Offset(4, 21),  // 81
+  Offset(5, 21),  // 82
+  Offset(6, 21),  // 83
+  Offset(7, 21),  // 84
+
+  // ── Drop 1 + left run 3 (pos 85-88) ──
+  Offset(7, 22),  // 85
+  Offset(6, 22),  // 86
+  Offset(5, 22),  // 87
+  Offset(4, 22),  // 88
+
+  // ── Drop 1 + right run 6 (pos 89-95) ──
+  Offset(4, 23),  // 89
+  Offset(5, 23),  // 90
+  Offset(6, 23),  // 91
+  Offset(7, 23),  // 92
+  Offset(8, 23),  // 93
+  Offset(9, 23),  // 94
+  Offset(10, 23), // 95
+
+  // ── Drop 1 + left run 4 (pos 96-100 FINISH) ──
+  Offset(10, 24), // 96
+  Offset(9, 24),  // 97
+  Offset(8, 24),  // 98
+  Offset(7, 24),  // 99
+  Offset(6, 24),  // 100  FINISH 🏆
 ];
 
 // ==================== PLAY SCREEN ====================
@@ -861,21 +968,63 @@ class _IsoBoardPainter extends CustomPainter {
   Offset _gridOf(int pos) =>
       _kGridPath[pos.clamp(0, _kGridPath.length - 1)];
 
+  // Convert grid coordinate → screen coordinate (isometric projection).
+  Offset _toScreen(Offset g) {
+    const hw = _kTileW / 2, hh = _kTileH / 2;
+    return Offset(
+      _kBoardCX + (g.dx - g.dy) * hw * _kTileStep,
+      _kBoardTY + (g.dx + g.dy) * hh * _kTileStep,
+    );
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
-    const hw = _kTileW / 2, hh = _kTileH / 2;
+    // ── 1. Draw path-connecting trail between consecutive cells ──
+    final trailPaint = Paint()
+      ..color = Colors.white.withOpacity(0.10)
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
-    // Painter's algorithm: smaller (dx+dy) = farther from viewer → draw first
+    for (int i = 0; i < board.length - 1; i++) {
+      final from = _toScreen(_gridOf(i));
+      final to   = _toScreen(_gridOf(i + 1));
+      canvas.drawLine(from, to, trailPaint);
+    }
+
+    // Draw small direction arrows along the trail every 4 cells
+    final arrowPaint = Paint()
+      ..color = Colors.white.withOpacity(0.18)
+      ..strokeWidth = 1.8
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    for (int i = 0; i < board.length - 1; i += 4) {
+      final from = _toScreen(_gridOf(i));
+      final to   = _toScreen(_gridOf(i + 1));
+      final mid  = Offset((from.dx + to.dx) / 2, (from.dy + to.dy) / 2);
+      final dir  = Offset(to.dx - from.dx, to.dy - from.dy);
+      final len  = dir.distance;
+      if (len < 1) continue;
+      final u = Offset(dir.dx / len, dir.dy / len);
+      final perp = Offset(-u.dy, u.dx);
+      const aLen = 5.0;
+      final tip = Offset(mid.dx + u.dx * aLen, mid.dy + u.dy * aLen);
+      canvas.drawLine(tip, Offset(mid.dx - u.dx * aLen + perp.dx * aLen,
+          mid.dy - u.dy * aLen + perp.dy * aLen), arrowPaint);
+      canvas.drawLine(tip, Offset(mid.dx - u.dx * aLen - perp.dx * aLen,
+          mid.dy - u.dy * aLen - perp.dy * aLen), arrowPaint);
+    }
+
+    // ── 2. Draw tiles (painter's algorithm: far → near) ──
     final order = List.generate(board.length, (i) => i)
       ..sort((a, b) => (_gridOf(a).dx + _gridOf(a).dy)
           .compareTo(_gridOf(b).dx + _gridOf(b).dy));
 
     for (final pos in order) {
       if (pos >= board.length) continue;
-      final g  = _gridOf(pos);
-      final sx = _kBoardCX + (g.dx - g.dy) * hw * _kTileStep;
-      final sy = _kBoardTY + (g.dx + g.dy) * hh * _kTileStep;
-      _drawTile(canvas, Offset(sx, sy), board[pos], pos == p1Pos, pos == p2Pos);
+      final sc = _toScreen(_gridOf(pos));
+      _drawTile(canvas, sc, board[pos], pos == p1Pos, pos == p2Pos);
     }
   }
 
