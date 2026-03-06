@@ -30,166 +30,172 @@ const double _kTileW    = 56.0;    // isometric tile width
 const double _kTileH    = 28.0;    // isometric tile height
 const double _kBlockH   = 15.0;    // 3-D block depth
 const double _kTileStep = 1.22;    // grid-to-screen spacing multiplier
-const double _kBoardCX  = 820.0;   // board centre-X in the large canvas
+const double _kBoardCX  = 1350.0;  // board centre-X in the large canvas
 const double _kBoardTY  = 60.0;    // board top-Y in the large canvas
-const double _kCanvasW  = 1500.0;
-const double _kCanvasH  = 750.0;
+const double _kCanvasW  = 2100.0;
+const double _kCanvasH  = 1100.0;
 const _kSkin = Color(0xFFFFCCBC);  // skin tone for pawn heads
 const _kHair = Color(0xFF4A2C2A);  // dark hair colour
 
 // ── Serpentine path: irregular winding snake ──
 // The path winds with varying-width horizontal runs, vertical drops,
-// narrowing passages and a zigzag section – never a plain square grid.
-// Grid spans cols 0-11, rows 0-24.  pos 0 = START, pos 100 = FINISH.
+// narrowing passages, upward zigzags and repeating spiral modules.
+// Grid spans cols 0-18, rows 0-37.  pos 0 = START, pos 100 = FINISH.
 const List<Offset> _kGridPath = [
-  // ── Segment A: wide right run (pos 0-6) ──
-  Offset(0, 0),   // 0  START
-  Offset(1, 0),   // 1
-  Offset(2, 0),   // 2
-  Offset(3, 0),   // 3
-  Offset(4, 0),   // 4
-  Offset(5, 0),   // 5
-  Offset(6, 0),   // 6
+  // ── Right run (pos 0-6): Start→1→2→3→4→5→6 ──
+  Offset(0, 0),    // 0  START
+  Offset(1, 0),    // 1
+  Offset(2, 0),    // 2
+  Offset(3, 0),    // 3
+  Offset(4, 0),    // 4
+  Offset(5, 0),    // 5
+  Offset(6, 0),    // 6
 
-  // ── Drop down 3 (pos 7-9) ──
-  Offset(6, 1),   // 7
-  Offset(6, 2),   // 8
-  Offset(6, 3),   // 9
+  // ── Drop 3 (pos 7-9): 6↓7↓8↓9 ──
+  Offset(6, 1),    // 7
+  Offset(6, 2),    // 8
+  Offset(6, 3),    // 9
 
-  // ── Right run (pos 10-14) ──
-  Offset(7, 3),   // 10
-  Offset(8, 3),   // 11
-  Offset(9, 3),   // 12
-  Offset(10, 3),  // 13
-  Offset(11, 3),  // 14
+  // ── Right run (pos 10-14): 9→10→11→12→13→14 ──
+  Offset(7, 3),    // 10
+  Offset(8, 3),    // 11
+  Offset(9, 3),    // 12
+  Offset(10, 3),   // 13
+  Offset(11, 3),   // 14
 
-  // ── Drop down 2 (pos 15-16) ──
-  Offset(11, 4),  // 15
-  Offset(11, 5),  // 16
+  // ── Drop 2 (pos 15-16): 14↓15↓16 ──
+  Offset(11, 4),   // 15
+  Offset(11, 5),   // 16
 
-  // ── Left run 7 (pos 17-23) ──
-  Offset(11, 6),  // 17
-  Offset(10, 6),  // 18
-  Offset(9, 6),   // 19
-  Offset(8, 6),   // 20
-  Offset(7, 6),   // 21
-  Offset(6, 6),   // 22
-  Offset(5, 6),   // 23
+  // ── Drop + right run 7 (pos 17-23): 16↓17→18→…→23 ──
+  Offset(11, 6),   // 17
+  Offset(12, 6),   // 18
+  Offset(13, 6),   // 19
+  Offset(14, 6),   // 20
+  Offset(15, 6),   // 21
+  Offset(16, 6),   // 22
+  Offset(17, 6),   // 23
 
-  // ── Drop 1 (pos 24) ──
-  Offset(5, 7),   // 24
+  // ── Drop 2 (pos 24-25): 23↓24↓25 ──
+  Offset(17, 7),   // 24
+  Offset(17, 8),   // 25
 
-  // ── Narrowing: left 2 (pos 25-26) ──
-  Offset(5, 8),   // 25
-  Offset(4, 8),   // 26
+  // ── Left 1 + drop (pos 26-27): 25←26↓27 ──
+  Offset(16, 8),   // 26
+  Offset(16, 9),   // 27
 
-  // ── Narrowing: left 3 (pos 27-29) ──
-  Offset(4, 9),   // 27
-  Offset(3, 9),   // 28
-  Offset(2, 9),   // 29
+  // ── Left 2 + drop (pos 28-30): 27←28←29↓30 ──
+  Offset(15, 9),   // 28
+  Offset(14, 9),   // 29
+  Offset(14, 10),  // 30
 
-  // ── Narrowing: left 3 (pos 30-32) ──
-  Offset(2, 10),  // 30
-  Offset(1, 10),  // 31
-  Offset(0, 10),  // 32
+  // ── Left 2 + drop (pos 31-33): 30←31←32↓33 ──
+  Offset(13, 10),  // 31
+  Offset(12, 10),  // 32
+  Offset(12, 11),  // 33
 
-  // ── Drop 1 (pos 33) ──
-  Offset(0, 11),  // 33
+  // ── Drop + right 3 (pos 34-36): 33↓34→35→36 ──
+  Offset(12, 12),  // 34
+  Offset(13, 12),  // 35
+  Offset(14, 12),  // 36
 
-  // ── Short right 3 (pos 34-36) ──
-  Offset(0, 12),  // 34
-  Offset(1, 12),  // 35
-  Offset(2, 12),  // 36
+  // ── Drop 5 (pos 37-41): 36↓37↓38↓39↓40↓41 ──
+  Offset(14, 13),  // 37
+  Offset(14, 14),  // 38
+  Offset(14, 15),  // 39
+  Offset(14, 16),  // 40
+  Offset(14, 17),  // 41
 
-  // ── Drop 1 (pos 37) ──
-  Offset(2, 13),  // 37
+  // ── Right 2 + up 2 (pos 42-45): 41→42→43↑44↑45 ──
+  Offset(15, 17),  // 42
+  Offset(16, 17),  // 43
+  Offset(16, 16),  // 44
+  Offset(16, 15),  // 45
 
-  // ── Drop + zigzag section (pos 38-46) ──
-  Offset(2, 14),  // 38
-  Offset(3, 13),  // 39  ↑ zigzag up-right
-  Offset(3, 14),  // 40  ↓
-  Offset(4, 13),  // 41  ↑ zigzag up-right
-  Offset(4, 14),  // 42  ↓
-  Offset(5, 13),  // 43  ↑ zigzag up-right
-  Offset(5, 14),  // 44  ↓
-  Offset(6, 13),  // 45  ↑ zigzag up-right
-  Offset(6, 14),  // 46  ↓
+  // ── Right 2 (pos 46-47): 45→46→47 ──
+  Offset(17, 15),  // 46
+  Offset(18, 15),  // 47
 
-  // ── Right run 3 (pos 47-49) ──
-  Offset(7, 14),  // 47
-  Offset(8, 14),  // 48
-  Offset(9, 14),  // 49
+  // ── Drop 5 (pos 48-52): 47↓48↓49↓50↓51↓52 ──
+  Offset(18, 16),  // 48
+  Offset(18, 17),  // 49
+  Offset(18, 18),  // 50
+  Offset(18, 19),  // 51
+  Offset(18, 20),  // 52
 
-  // ── Drop 2 (pos 50-51) ──
-  Offset(9, 15),  // 50
-  Offset(9, 16),  // 51
+  // ── Left 2 + drop (pos 53-55): 52←53←54↓55 ──
+  Offset(17, 20),  // 53
+  Offset(16, 20),  // 54
+  Offset(16, 21),  // 55
 
-  // ── Left run 5 (pos 52-56) ──
-  Offset(8, 16),  // 52
-  Offset(7, 16),  // 53
-  Offset(6, 16),  // 54
-  Offset(5, 16),  // 55
-  Offset(4, 16),  // 56
+  // ── Left 3 + drop (pos 56-59): 55←56←57←58↓59 ──
+  Offset(15, 21),  // 56
+  Offset(14, 21),  // 57
+  Offset(13, 21),  // 58
+  Offset(13, 22),  // 59
 
-  // ── Drop 1 + right run 4 (pos 57-61) ──
-  Offset(4, 17),  // 57
-  Offset(5, 17),  // 58
-  Offset(6, 17),  // 59
-  Offset(7, 17),  // 60
-  Offset(8, 17),  // 61
+  // ── Drop + right 4 (pos 60-63): 59↓60→61→62→63 ──
+  Offset(13, 23),  // 60
+  Offset(14, 23),  // 61
+  Offset(15, 23),  // 62
+  Offset(16, 23),  // 63
 
-  // ── Drop 1 + left run 5 (pos 62-67) ──
-  Offset(8, 18),  // 62
-  Offset(7, 18),  // 63
-  Offset(6, 18),  // 64
-  Offset(5, 18),  // 65
-  Offset(4, 18),  // 66
-  Offset(3, 18),  // 67
+  // ── Drop + right 2 (pos 64-66): 63↓64→65→66 ──
+  Offset(16, 24),  // 64
+  Offset(17, 24),  // 65
+  Offset(18, 24),  // 66
 
-  // ── Drop 1 + right run 6 (pos 68-74) ──
-  Offset(3, 19),  // 68
-  Offset(4, 19),  // 69
-  Offset(5, 19),  // 70
-  Offset(6, 19),  // 71
-  Offset(7, 19),  // 72
-  Offset(8, 19),  // 73
-  Offset(9, 19),  // 74
+  // ── Drop 3 (pos 67-69): 66↓67↓68↓69 ──
+  Offset(18, 25),  // 67
+  Offset(18, 26),  // 68
+  Offset(18, 27),  // 69
 
-  // ── Drop 1 + left run 5 (pos 75-80) ──
-  Offset(9, 20),  // 75
-  Offset(8, 20),  // 76
-  Offset(7, 20),  // 77
-  Offset(6, 20),  // 78
-  Offset(5, 20),  // 79
-  Offset(4, 20),  // 80
+  // ── Left 2 + up + left 4 (pos 70-75): 69←70←71↑72←73←74←75 ──
+  Offset(17, 27),  // 70
+  Offset(16, 27),  // 71
+  Offset(16, 26),  // 72
+  Offset(15, 26),  // 73
+  Offset(14, 26),  // 74
+  Offset(13, 26),  // 75
 
-  // ── Drop 1 + right run 3 (pos 81-84) ──
-  Offset(4, 21),  // 81
-  Offset(5, 21),  // 82
-  Offset(6, 21),  // 83
-  Offset(7, 21),  // 84
+  // ── Drop 4 (pos 76-79): 75↓76↓77↓78↓79 ──
+  Offset(13, 27),  // 76
+  Offset(13, 28),  // 77
+  Offset(13, 29),  // 78
+  Offset(13, 30),  // 79
 
-  // ── Drop 1 + left run 3 (pos 85-88) ──
-  Offset(7, 22),  // 85
-  Offset(6, 22),  // 86
-  Offset(5, 22),  // 87
-  Offset(4, 22),  // 88
+  // ── Right 3 + drop (pos 80-83): 79→80→81→82↓83 ──
+  Offset(14, 30),  // 80
+  Offset(15, 30),  // 81
+  Offset(16, 30),  // 82
+  Offset(16, 31),  // 83
 
-  // ── Drop 1 + right run 6 (pos 89-95) ──
-  Offset(4, 23),  // 89
-  Offset(5, 23),  // 90
-  Offset(6, 23),  // 91
-  Offset(7, 23),  // 92
-  Offset(8, 23),  // 93
-  Offset(9, 23),  // 94
-  Offset(10, 23), // 95
+  // ── Right 2 (pos 84-85): 83→84→85 ──
+  Offset(17, 31),  // 84
+  Offset(18, 31),  // 85
 
-  // ── Drop 1 + left run 4 (pos 96-100 FINISH) ──
-  Offset(10, 24), // 96
-  Offset(9, 24),  // 97
-  Offset(8, 24),  // 98
-  Offset(7, 24),  // 99
-  Offset(6, 24),  // 100  FINISH 🏆
+  // ── Drop 3 (pos 86-88): 85↓86↓87↓88 ──
+  Offset(18, 32),  // 86
+  Offset(18, 33),  // 87
+  Offset(18, 34),  // 88
+
+  // ── Left 2 + up + left 4 (pos 89-94): 88←89←90↑91←92←93←94 ──
+  Offset(17, 34),  // 89
+  Offset(16, 34),  // 90
+  Offset(16, 33),  // 91
+  Offset(15, 33),  // 92
+  Offset(14, 33),  // 93
+  Offset(13, 33),  // 94
+
+  // ── Drop 4 (pos 95-98): 94↓95↓96↓97↓98 ──
+  Offset(13, 34),  // 95
+  Offset(13, 35),  // 96
+  Offset(13, 36),  // 97
+  Offset(13, 37),  // 98
+
+  // ── Right 2 (pos 99-100 FINISH): 98→99→100 ──
+  Offset(14, 37),  // 99
+  Offset(15, 37),  // 100  FINISH 🏆
 ];
 
 // ==================== PLAY SCREEN ====================
