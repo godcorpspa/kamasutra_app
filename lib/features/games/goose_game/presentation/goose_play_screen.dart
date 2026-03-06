@@ -26,14 +26,15 @@ const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
 const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
 
 // ── Board canvas / tile constants ──
-const double _kTileW    = 56.0;    // isometric tile width
-const double _kTileH    = 28.0;    // isometric tile height
-const double _kBlockH   = 15.0;    // 3-D block depth
+const double _kTileW    = 76.0;    // isometric tile width  (was 56)
+const double _kTileH    = 38.0;    // isometric tile height (was 28)
+const double _kBlockH   = 18.0;    // 3-D block depth
 const double _kTileStep = 1.22;    // grid-to-screen spacing multiplier
-const double _kBoardCX  = 1350.0;  // board centre-X in the large canvas
+const double _kRound    = 5.0;     // corner rounding for tiles
+const double _kBoardCX  = 1800.0;  // board centre-X in the large canvas
 const double _kBoardTY  = 60.0;    // board top-Y in the large canvas
-const double _kCanvasW  = 2100.0;
-const double _kCanvasH  = 1100.0;
+const double _kCanvasW  = 2800.0;
+const double _kCanvasH  = 1450.0;
 const _kSkin = Color(0xFFFFCCBC);  // skin tone for pawn heads
 const _kHair = Color(0xFF4A2C2A);  // dark hair colour
 
@@ -987,8 +988,8 @@ class _IsoBoardPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // ── 1. Draw path-connecting trail between consecutive cells ──
     final trailPaint = Paint()
-      ..color = Colors.white.withOpacity(0.10)
-      ..strokeWidth = 3.0
+      ..color = Colors.white.withOpacity(0.12)
+      ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
 
@@ -1034,88 +1035,144 @@ class _IsoBoardPainter extends CustomPainter {
     }
   }
 
+  // Build a rounded isometric diamond path using quadratic bezier corners.
+  Path _roundedDiamond(Offset vT, Offset vR, Offset vB, Offset vL, double r) {
+    return Path()
+      // Start mid-way on top-left edge, approach top vertex
+      ..moveTo(vT.dx + (vL.dx - vT.dx) * r, vT.dy + (vL.dy - vT.dy) * r)
+      // Round corner at top
+      ..quadraticBezierTo(vT.dx, vT.dy,
+          vT.dx + (vR.dx - vT.dx) * r, vT.dy + (vR.dy - vT.dy) * r)
+      // Line to near right vertex
+      ..lineTo(vR.dx + (vT.dx - vR.dx) * r, vR.dy + (vT.dy - vR.dy) * r)
+      // Round corner at right
+      ..quadraticBezierTo(vR.dx, vR.dy,
+          vR.dx + (vB.dx - vR.dx) * r, vR.dy + (vB.dy - vR.dy) * r)
+      // Line to near bottom vertex
+      ..lineTo(vB.dx + (vR.dx - vB.dx) * r, vB.dy + (vR.dy - vB.dy) * r)
+      // Round corner at bottom
+      ..quadraticBezierTo(vB.dx, vB.dy,
+          vB.dx + (vL.dx - vB.dx) * r, vB.dy + (vL.dy - vB.dy) * r)
+      // Line to near left vertex
+      ..lineTo(vL.dx + (vB.dx - vL.dx) * r, vL.dy + (vB.dy - vL.dy) * r)
+      // Round corner at left
+      ..quadraticBezierTo(vL.dx, vL.dy,
+          vL.dx + (vT.dx - vL.dx) * r, vL.dy + (vT.dy - vL.dy) * r)
+      ..close();
+  }
+
   void _drawTile(Canvas canvas, Offset c, GooseSquare sq, bool hasP1, bool hasP2) {
     const hw = _kTileW / 2, hh = _kTileH / 2, bh = _kBlockH;
+    const r = 0.12; // rounding factor (0 = sharp, 0.5 = max)
     final vT = Offset(c.dx,      c.dy - hh);
     final vR = Offset(c.dx + hw, c.dy     );
     final vB = Offset(c.dx,      c.dy + hh);
     final vL = Offset(c.dx - hw, c.dy     );
 
     final col   = _topColor(sq.type);
+    final colBr = _brighten(col, 0.18); // brighter highlight
     final colL  = _dim(col, 0.30);
     final colR  = _dim(col, 0.48);
 
-    // Top face
-    final topFace = Path()
-      ..moveTo(vT.dx, vT.dy)..lineTo(vR.dx, vR.dy)
-      ..lineTo(vB.dx, vB.dy)..lineTo(vL.dx, vL.dy)..close();
-    canvas.drawPath(topFace, Paint()..color = col);
+    // ── Soft glow shadow under tile ──
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(c.dx, c.dy + bh + 3), width: hw * 1.6, height: hh * 0.9),
+      Paint()
+        ..color = Colors.black.withOpacity(0.25)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+    );
+
+    // ── Left face (rounded bottom-left) ──
+    final leftFace = Path()
+      ..moveTo(vL.dx, vL.dy)..lineTo(vB.dx, vB.dy)
+      ..lineTo(vB.dx, vB.dy + bh)
+      ..quadraticBezierTo(vB.dx - hw * 0.06, vB.dy + bh,
+          vL.dx, vL.dy + bh)
+      ..close();
+    canvas.drawPath(leftFace, Paint()..color = colL);
+
+    // ── Right face (rounded bottom-right) ──
+    final rightFace = Path()
+      ..moveTo(vB.dx, vB.dy)..lineTo(vR.dx, vR.dy)
+      ..lineTo(vR.dx, vR.dy + bh)
+      ..quadraticBezierTo(vR.dx - hw * 0.06, vR.dy + bh,
+          vB.dx, vB.dy + bh)
+      ..close();
+    canvas.drawPath(rightFace, Paint()..color = colR);
+
+    // ── Top face (rounded diamond) with gradient ──
+    final topFace = _roundedDiamond(vT, vR, vB, vL, r);
+
+    // Gradient fill: lighter at top-left, darker at bottom-right
+    final topGrad = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft, end: Alignment.bottomRight,
+        colors: [colBr, col, _dim(col, 0.12)],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCenter(center: c, width: hw * 2, height: hh * 2));
+    canvas.drawPath(topFace, topGrad);
+
+    // Subtle inner highlight at top edge
     canvas.drawPath(topFace, Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.white.withOpacity(0.15)
-      ..strokeWidth = 0.7);
+      ..color = Colors.white.withOpacity(0.22)
+      ..strokeWidth = 1.2);
 
-    // Left face
-    canvas.drawPath(
-      Path()..moveTo(vL.dx, vL.dy)..lineTo(vB.dx, vB.dy)
-            ..lineTo(vB.dx, vB.dy + bh)..lineTo(vL.dx, vL.dy + bh)..close(),
-      Paint()..color = colL,
-    );
-    // Right face
-    canvas.drawPath(
-      Path()..moveTo(vB.dx, vB.dy)..lineTo(vR.dx, vR.dy)
-            ..lineTo(vR.dx, vR.dy + bh)..lineTo(vB.dx, vB.dy + bh)..close(),
-      Paint()..color = colR,
-    );
-
-    // Glow border
+    // ── Glow border for special tiles ──
     final gc = _glowColor(sq.type);
     if (gc != null) {
+      // Outer glow
       canvas.drawPath(topFace, Paint()
         ..style = PaintingStyle.stroke
-        ..color = gc.withOpacity(0.7)
-        ..strokeWidth = 1.4);
+        ..color = gc.withOpacity(0.35)
+        ..strokeWidth = 4.0
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+      // Sharp border
+      canvas.drawPath(topFace, Paint()
+        ..style = PaintingStyle.stroke
+        ..color = gc.withOpacity(0.8)
+        ..strokeWidth = 1.8);
     }
 
-    // Position number
+    // ── Position number ──
     if (sq.position > 0) {
-      _txt(canvas, '${sq.position}', c,
-          sz: _kTileW * 0.15, col: Colors.white.withOpacity(0.65));
+      _txt(canvas, '${sq.position}', Offset(c.dx, c.dy + hh * 0.15),
+          sz: _kTileW * 0.15, col: Colors.white.withOpacity(0.7));
     } else {
-      _txt(canvas, 'START', c, sz: _kTileW * 0.13, col: Colors.white70, bold: true);
+      _txt(canvas, 'START', Offset(c.dx, c.dy + hh * 0.15),
+          sz: _kTileW * 0.13, col: Colors.white70, bold: true);
     }
 
-    // Type icon
-    final iconY = c.dy - hh * 0.38;
+    // ── Type icon (positioned above centre) ──
+    final iconY = c.dy - hh * 0.32;
     switch (sq.type) {
       case GooseSquareType.ladder:
-        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: _kTileW * 0.32); break;
+        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: _kTileW * 0.30); break;
       case GooseSquareType.hole:
-        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: _kTileW * 0.32); break;
+        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: _kTileW * 0.30); break;
       case GooseSquareType.penance:
-        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: _kTileW * 0.28); break;
+        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: _kTileW * 0.26); break;
       case GooseSquareType.finish:
-        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.55), sz: _kTileW * 0.38); break;
+        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.50), sz: _kTileW * 0.36); break;
       default: break;
     }
 
-    // Jump destination
+    // ── Jump destination label ──
     if (sq.destination != null) {
       final arrow = sq.type == GooseSquareType.ladder
           ? '↑${sq.destination}' : '↓${sq.destination}';
       _txt(canvas, arrow,
-          Offset(c.dx + hw * 0.5, c.dy + hh * 0.5),
-          sz: _kTileW * 0.12,
+          Offset(c.dx + hw * 0.5, c.dy + hh * 0.55),
+          sz: _kTileW * 0.11,
           col: sq.type == GooseSquareType.ladder ? _kGreen : _kRed);
     }
 
-    // Player pawns
+    // ── Player pawns ──
     if (!hasP1 && !hasP2) return;
-    // Pawn base sits just above the top face's top vertex
-    final baseY = c.dy - hh - 2;
+    final baseY = c.dy - hh - 4;
     if (hasP1 && hasP2) {
-      _drawMalePawn(canvas,   Offset(c.dx - 11, baseY), p1Color);
-      _drawFemalePawn(canvas, Offset(c.dx + 11, baseY), p2Color);
+      _drawMalePawn(canvas,   Offset(c.dx - 14, baseY), p1Color);
+      _drawFemalePawn(canvas, Offset(c.dx + 14, baseY), p2Color);
     } else if (hasP1) {
       _drawMalePawn(canvas,   Offset(c.dx, baseY), p1Color);
     } else {
@@ -1125,7 +1182,7 @@ class _IsoBoardPainter extends CustomPainter {
 
   // ── Male pawn (shirt + legs + skin head + hair + eyes) ───────────
   void _drawMalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 12.0;
+    const s = 14.0;
     final bodyP = Paint()..color = color;
     final legsP = Paint()..color = _dim(color, 0.28);
     final skinP = Paint()..color = _kSkin;
@@ -1201,7 +1258,7 @@ class _IsoBoardPainter extends CustomPainter {
 
   // ── Female pawn (dress + skin head + coloured hair + eyes) ───────
   void _drawFemalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 12.0;
+    const s = 14.0;
     final dressP  = Paint()..color = color;
     final skinP   = Paint()..color = _kSkin;
     final hairCol = _brighten(color, 0.35);
