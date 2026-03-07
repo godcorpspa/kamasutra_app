@@ -1394,7 +1394,8 @@ class _IsoBoardPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _IsoBoardPainter old) =>
       old.p1Pos != p1Pos || old.p2Pos != p2Pos ||
-      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard;
+      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard ||
+      old.bgImage != bgImage;
 }
 
 // ==================== DIALOGS ====================
