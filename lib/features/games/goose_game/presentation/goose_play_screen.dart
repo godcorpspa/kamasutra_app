@@ -26,15 +26,15 @@ const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
 const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
 
 // ── Board canvas / tile constants ──
-const double _kTileW    = 76.0;    // isometric tile width  (was 56)
-const double _kTileH    = 38.0;    // isometric tile height (was 28)
-const double _kBlockH   = 18.0;    // 3-D block depth
-const double _kTileStep = 1.22;    // grid-to-screen spacing multiplier
+const double _kTileW    = 96.0;    // isometric tile width
+const double _kTileH    = 48.0;    // isometric tile height
+const double _kBlockH   = 22.0;    // 3-D block depth
+const double _kTileStep = 1.18;    // grid-to-screen spacing multiplier
 const double _kRound    = 5.0;     // corner rounding for tiles
-const double _kBoardCX  = 1800.0;  // board centre-X in the large canvas
-const double _kBoardTY  = 60.0;    // board top-Y in the large canvas
-const double _kCanvasW  = 2800.0;
-const double _kCanvasH  = 1450.0;
+const double _kBoardCX  = 2200.0;  // board centre-X in the large canvas
+const double _kBoardTY  = 80.0;    // board top-Y in the large canvas
+const double _kCanvasW  = 3600.0;
+const double _kCanvasH  = 1900.0;
 const _kSkin = Color(0xFFFFCCBC);  // skin tone for pawn heads
 const _kHair = Color(0xFF4A2C2A);  // dark hair colour
 
@@ -986,6 +986,9 @@ class _IsoBoardPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // ── 0. Themed background ──
+    _drawBackground(canvas, size);
+
     // ── 1. Draw path-connecting trail between consecutive cells ──
     final trailPaint = Paint()
       ..color = Colors.white.withOpacity(0.12)
@@ -1033,6 +1036,76 @@ class _IsoBoardPainter extends CustomPainter {
       final sc = _toScreen(_gridOf(pos));
       _drawTile(canvas, sc, board[pos], pos == p1Pos, pos == p2Pos);
     }
+  }
+
+  // ── Themed background with subtle pattern ──
+  void _drawBackground(Canvas canvas, Size size) {
+    // Deep gradient
+    final bgRect = Rect.fromLTWH(0, 0, size.width, size.height);
+    canvas.drawRect(bgRect, Paint()
+      ..shader = const RadialGradient(
+        center: Alignment(0.0, -0.3),
+        radius: 1.4,
+        colors: [
+          Color(0xFF1A0A2E),  // deep purple centre
+          Color(0xFF0D0D1A),  // dark edges
+          Color(0xFF050510),  // near-black
+        ],
+        stops: [0.0, 0.6, 1.0],
+      ).createShader(bgRect));
+
+    // Subtle hearts pattern (scattered, very low opacity)
+    final heartPaint = Paint()
+      ..color = const Color(0xFFFF3B5C).withOpacity(0.04)
+      ..style = PaintingStyle.fill;
+    final heartStroke = Paint()
+      ..color = const Color(0xFFFF3B5C).withOpacity(0.06)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.8;
+
+    final rng = Random(42); // fixed seed for consistent pattern
+    for (int i = 0; i < 60; i++) {
+      final hx = rng.nextDouble() * size.width;
+      final hy = rng.nextDouble() * size.height;
+      final hs = 8.0 + rng.nextDouble() * 14.0;
+      _drawHeart(canvas, Offset(hx, hy), hs, heartPaint);
+      _drawHeart(canvas, Offset(hx, hy), hs, heartStroke);
+    }
+
+    // Subtle sparkle dots
+    final sparklePaint = Paint()
+      ..color = Colors.white.withOpacity(0.06);
+    for (int i = 0; i < 100; i++) {
+      final sx = rng.nextDouble() * size.width;
+      final sy = rng.nextDouble() * size.height;
+      final sr = 0.5 + rng.nextDouble() * 1.5;
+      canvas.drawCircle(Offset(sx, sy), sr, sparklePaint);
+    }
+
+    // Soft vignette overlay
+    canvas.drawRect(bgRect, Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.transparent,
+          Colors.black.withOpacity(0.3),
+        ],
+        stops: const [0.5, 1.0],
+      ).createShader(bgRect));
+  }
+
+  // Draw a small heart shape at a given position
+  void _drawHeart(Canvas canvas, Offset center, double size, Paint paint) {
+    final s = size / 2;
+    final path = Path()
+      ..moveTo(center.dx, center.dy + s * 0.6)
+      ..cubicTo(center.dx - s * 1.2, center.dy - s * 0.2,
+                center.dx - s * 0.6, center.dy - s * 1.0,
+                center.dx, center.dy - s * 0.4)
+      ..cubicTo(center.dx + s * 0.6, center.dy - s * 1.0,
+                center.dx + s * 1.2, center.dy - s * 0.2,
+                center.dx, center.dy + s * 0.6)
+      ..close();
+    canvas.drawPath(path, paint);
   }
 
   // Build a rounded isometric diamond path using quadratic bezier corners.
@@ -1134,194 +1207,150 @@ class _IsoBoardPainter extends CustomPainter {
         ..strokeWidth = 1.8);
     }
 
-    // ── Position number ──
-    if (sq.position > 0) {
-      _txt(canvas, '${sq.position}', Offset(c.dx, c.dy + hh * 0.15),
-          sz: _kTileW * 0.15, col: Colors.white.withOpacity(0.7));
+    // ── Tile content (number, icon, destination) ──
+    final isSpecial = sq.type != GooseSquareType.normal;
+
+    if (!isSpecial) {
+      // Normal tile: show position number
+      if (sq.position > 0) {
+        _txt(canvas, '${sq.position}', c,
+            sz: _kTileW * 0.18, col: Colors.white.withOpacity(0.75), bold: true);
+      } else {
+        _txt(canvas, 'START', c,
+            sz: _kTileW * 0.14, col: Colors.white70, bold: true);
+      }
     } else {
-      _txt(canvas, 'START', Offset(c.dx, c.dy + hh * 0.15),
-          sz: _kTileW * 0.13, col: Colors.white70, bold: true);
-    }
+      // Special tile: show big icon centred, NO position number
+      switch (sq.type) {
+        case GooseSquareType.ladder:
+          _txt(canvas, '🪜', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.35); break;
+        case GooseSquareType.hole:
+          _txt(canvas, '🕳️', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.35); break;
+        case GooseSquareType.penance:
+          _txt(canvas, '🔥', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.32); break;
+        case GooseSquareType.finish:
+          _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.15), sz: _kTileW * 0.40); break;
+        default: break;
+      }
 
-    // ── Type icon (positioned above centre) ──
-    final iconY = c.dy - hh * 0.32;
-    switch (sq.type) {
-      case GooseSquareType.ladder:
-        _txt(canvas, '🪜', Offset(c.dx, iconY), sz: _kTileW * 0.30); break;
-      case GooseSquareType.hole:
-        _txt(canvas, '🕳️', Offset(c.dx, iconY), sz: _kTileW * 0.30); break;
-      case GooseSquareType.penance:
-        _txt(canvas, '🔥', Offset(c.dx, iconY), sz: _kTileW * 0.26); break;
-      case GooseSquareType.finish:
-        _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.50), sz: _kTileW * 0.36); break;
-      default: break;
-    }
+      // Destination badge beside tile (for ladder/hole)
+      if (sq.destination != null) {
+        final isLadder = sq.type == GooseSquareType.ladder;
+        final badgeColor = isLadder ? _kGreen : _kRed;
+        final label = isLadder ? '→ ${sq.destination}' : '→ ${sq.destination}';
+        final badgeX = c.dx + hw * 0.85;
+        final badgeY = c.dy + hh * 0.2;
 
-    // ── Jump destination label ──
-    if (sq.destination != null) {
-      final arrow = sq.type == GooseSquareType.ladder
-          ? '↑${sq.destination}' : '↓${sq.destination}';
-      _txt(canvas, arrow,
-          Offset(c.dx + hw * 0.5, c.dy + hh * 0.55),
-          sz: _kTileW * 0.11,
-          col: sq.type == GooseSquareType.ladder ? _kGreen : _kRed);
+        // Badge background pill
+        final badgeW = _kTileW * 0.42;
+        final badgeH = _kTileH * 0.38;
+        final badgeRect = RRect.fromRectAndRadius(
+          Rect.fromCenter(center: Offset(badgeX, badgeY), width: badgeW, height: badgeH),
+          const Radius.circular(6),
+        );
+        canvas.drawRRect(badgeRect, Paint()..color = badgeColor.withOpacity(0.85));
+        canvas.drawRRect(badgeRect, Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white.withOpacity(0.5)
+          ..strokeWidth = 0.8);
+        _txt(canvas, label, Offset(badgeX, badgeY),
+            sz: _kTileW * 0.11, col: Colors.white, bold: true);
+      }
     }
 
     // ── Player pawns ──
     if (!hasP1 && !hasP2) return;
-    final baseY = c.dy - hh - 4;
+    final baseY = c.dy - hh - 6;
     if (hasP1 && hasP2) {
-      _drawMalePawn(canvas,   Offset(c.dx - 14, baseY), p1Color);
-      _drawFemalePawn(canvas, Offset(c.dx + 14, baseY), p2Color);
+      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, '♂');
+      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, '♀');
     } else if (hasP1) {
-      _drawMalePawn(canvas,   Offset(c.dx, baseY), p1Color);
+      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, '♂');
     } else {
-      _drawFemalePawn(canvas, Offset(c.dx, baseY), p2Color);
+      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, '♀');
     }
   }
 
-  // ── Male pawn (shirt + legs + skin head + hair + eyes) ───────────
-  void _drawMalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 14.0;
-    final bodyP = Paint()..color = color;
-    final legsP = Paint()..color = _dim(color, 0.28);
-    final skinP = Paint()..color = _kSkin;
-    final hairP = Paint()..color = _kHair;
-    final outP  = Paint()
-      ..color = Colors.white.withOpacity(0.80)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1;
+  // ── Cute glowing gem pawn with heart shape ───────────────────────
+  void _drawPawn(Canvas canvas, Offset base, Color color, String symbol) {
+    const s = 16.0;
+    final cx = base.dx, cy = base.dy - s * 1.5;
 
-    // Glow
-    canvas.drawCircle(
-      Offset(base.dx, base.dy - s), s * 2.2,
+    // Outer glow halo
+    canvas.drawCircle(Offset(cx, cy), s * 2.0, Paint()
+      ..color = color.withOpacity(0.18)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12));
+
+    // Shadow on ground
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx, base.dy + 2), width: s * 1.8, height: s * 0.5),
       Paint()
-        ..color = color.withOpacity(0.22)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-    );
+        ..color = Colors.black.withOpacity(0.35)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
 
-    // Legs (darker trousers)
-    final legs = Path()
-      ..moveTo(base.dx - s * 0.45, base.dy - s * 0.50)
-      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.50)
-      ..lineTo(base.dx + s * 0.80, base.dy + s * 0.12)
-      ..lineTo(base.dx + s * 0.42, base.dy + s * 0.12)
-      ..lineTo(base.dx + s * 0.17, base.dy - s * 0.28)
-      ..lineTo(base.dx - s * 0.17, base.dy - s * 0.28)
-      ..lineTo(base.dx - s * 0.42, base.dy + s * 0.12)
-      ..lineTo(base.dx - s * 0.80, base.dy + s * 0.12)
+    // Pedestal (small rounded trapezoid)
+    final pedestal = Path()
+      ..moveTo(cx - s * 0.5, base.dy)
+      ..lineTo(cx + s * 0.5, base.dy)
+      ..lineTo(cx + s * 0.35, base.dy - s * 0.45)
+      ..lineTo(cx - s * 0.35, base.dy - s * 0.45)
       ..close();
-    canvas.drawPath(legs, legsP);
-
-    // Shirt / torso
-    final shirt = Path()
-      ..moveTo(base.dx - s * 0.65, base.dy - s * 2.2)
-      ..lineTo(base.dx + s * 0.65, base.dy - s * 2.2)
-      ..lineTo(base.dx + s * 0.50, base.dy - s * 1.30)
-      ..lineTo(base.dx + s * 0.45, base.dy - s * 0.50)
-      ..lineTo(base.dx - s * 0.45, base.dy - s * 0.50)
-      ..lineTo(base.dx - s * 0.50, base.dy - s * 1.30)
-      ..close();
-    canvas.drawPath(shirt, bodyP);
-    canvas.drawPath(shirt, outP);
-    canvas.drawPath(legs,  outP);
-
-    // Neck
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(base.dx, base.dy - s * 2.32),
-        width: s * 0.32, height: s * 0.30,
-      ),
-      skinP,
-    );
-
-    final headC = Offset(base.dx, base.dy - s * 2.82);
-
-    // Hair cap (top semicircle behind head)
-    final hairPath = Path();
-    hairPath.addArc(
-      Rect.fromCenter(center: headC, width: s * 1.18, height: s * 1.18),
-      pi, pi,
-    );
-    hairPath.close();
-    canvas.drawPath(hairPath, hairP);
-
-    // Skin head
-    canvas.drawCircle(headC, s * 0.56, skinP);
-    canvas.drawCircle(headC, s * 0.56, outP);
-
-    // Eyes
-    final eyeP = Paint()..color = const Color(0xFF3E2723);
-    canvas.drawCircle(Offset(headC.dx - s * 0.17, headC.dy), 1.1, eyeP);
-    canvas.drawCircle(Offset(headC.dx + s * 0.17, headC.dy), 1.1, eyeP);
-  }
-
-  // ── Female pawn (dress + skin head + coloured hair + eyes) ───────
-  void _drawFemalePawn(Canvas canvas, Offset base, Color color) {
-    const s = 14.0;
-    final dressP  = Paint()..color = color;
-    final skinP   = Paint()..color = _kSkin;
-    final hairCol = _brighten(color, 0.35);
-    final hairP   = Paint()..color = hairCol;
-    final outP    = Paint()
-      ..color = Colors.white.withOpacity(0.80)
+    canvas.drawPath(pedestal, Paint()..color = _dim(color, 0.45));
+    canvas.drawPath(pedestal, Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.1;
+      ..color = color.withOpacity(0.6)
+      ..strokeWidth = 1.0);
 
-    // Glow
-    canvas.drawCircle(
-      Offset(base.dx, base.dy - s), s * 2.2,
+    // Main gem body (rounded circle with gradient)
+    final gemRect = Rect.fromCenter(center: Offset(cx, cy), width: s * 1.8, height: s * 1.8);
+    canvas.drawOval(gemRect, Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.3, -0.3),
+        colors: [_brighten(color, 0.5), color, _dim(color, 0.35)],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(gemRect));
+
+    // Glass highlight (top-left arc)
+    canvas.drawArc(
+      Rect.fromCenter(center: Offset(cx - s * 0.2, cy - s * 0.2), width: s * 1.2, height: s * 1.1),
+      pi * 0.9, pi * 0.7, false,
       Paint()
-        ..color = color.withOpacity(0.22)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-    );
+        ..style = PaintingStyle.stroke
+        ..color = Colors.white.withOpacity(0.55)
+        ..strokeWidth = 2.0
+        ..strokeCap = StrokeCap.round);
 
-    // Dress (trapezoidal: narrow at shoulders, wide at hem)
-    final dress = Path()
-      ..moveTo(base.dx - s * 0.38, base.dy - s * 2.2)   // L shoulder
-      ..lineTo(base.dx + s * 0.38, base.dy - s * 2.2)   // R shoulder
-      ..lineTo(base.dx + s * 0.26, base.dy - s * 1.42)  // R waist
-      ..lineTo(base.dx + s * 0.95, base.dy + s * 0.12)  // R hem
-      ..lineTo(base.dx - s * 0.95, base.dy + s * 0.12)  // L hem
-      ..lineTo(base.dx - s * 0.26, base.dy - s * 1.42)  // L waist
-      ..close();
-    canvas.drawPath(dress, dressP);
-    canvas.drawPath(dress, outP);
+    // Sparkle dot
+    canvas.drawCircle(Offset(cx - s * 0.35, cy - s * 0.35), 2.0,
+      Paint()..color = Colors.white.withOpacity(0.85));
 
-    // Neck
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(base.dx, base.dy - s * 2.32),
-        width: s * 0.28, height: s * 0.28,
-      ),
-      skinP,
-    );
+    // Outer ring
+    canvas.drawOval(gemRect, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white.withOpacity(0.4)
+      ..strokeWidth = 1.5);
 
-    final headC = Offset(base.dx, base.dy - s * 2.88);
+    // Inner glow ring
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx, cy), width: s * 2.2, height: s * 2.2),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = color.withOpacity(0.25)
+        ..strokeWidth = 2.5
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
 
-    // Hair bumps behind head (long wavy hair sides)
-    final hair = Path()
-      ..addOval(Rect.fromCenter(
-          center: Offset(base.dx - s * 0.36, base.dy - s * 3.10),
-          width: s * 0.70, height: s * 0.88))
-      ..addOval(Rect.fromCenter(
-          center: Offset(base.dx + s * 0.36, base.dy - s * 3.10),
-          width: s * 0.70, height: s * 0.88))
-      // hair top arch
-      ..addOval(Rect.fromCenter(
-          center: Offset(base.dx, base.dy - s * 3.28),
-          width: s * 0.82, height: s * 0.55));
-    canvas.drawPath(hair, hairP);
-    canvas.drawPath(hair, outP);
+    // Gender symbol in centre
+    _txt(canvas, symbol, Offset(cx, cy), sz: s * 0.85,
+        col: Colors.white.withOpacity(0.9), bold: true);
 
-    // Skin head (drawn on top of hair)
-    canvas.drawCircle(headC, s * 0.54, skinP);
-    canvas.drawCircle(headC, s * 0.54, outP);
-
-    // Eyes
-    final eyeP = Paint()..color = const Color(0xFF3E2723);
-    canvas.drawCircle(Offset(headC.dx - s * 0.16, headC.dy), 1.1, eyeP);
-    canvas.drawCircle(Offset(headC.dx + s * 0.16, headC.dy), 1.1, eyeP);
+    // Stem connecting pedestal to gem
+    canvas.drawLine(
+      Offset(cx, base.dy - s * 0.45),
+      Offset(cx, cy + s * 0.9),
+      Paint()
+        ..color = _dim(color, 0.3)
+        ..strokeWidth = 2.5
+        ..strokeCap = StrokeCap.round);
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────
