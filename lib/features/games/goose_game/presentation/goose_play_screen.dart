@@ -19,7 +19,7 @@ const _kRed      = Color(0xFFFF3B5C);
 const _kGreen    = Color(0xFF00E676);
 const _kOrange   = Color(0xFFFF6D00);
 const _kBlue     = Color(0xFF448AFF);
-const _kP1       = Color(0xFF42A5F5);   // player 1 – blue
+const _kP1       = Color(0xFFEF5350);   // player 1 – red
 const _kP2       = Color(0xFFFFD600);   // player 2 – gold
 
 // ── Clothing slot icons per player ──
@@ -1234,17 +1234,17 @@ class _IsoBoardPainter extends CustomPainter {
     if (!hasP1 && !hasP2) return;
     final baseY = c.dy - hh - 6;
     if (hasP1 && hasP2) {
-      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, '♂');
+      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, '♂', symbolColor: const Color(0xFF42A5F5));
       _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, '♀');
     } else if (hasP1) {
-      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, '♂');
+      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, '♂', symbolColor: const Color(0xFF42A5F5));
     } else {
       _drawPawn(canvas, Offset(c.dx, baseY), p2Color, '♀');
     }
   }
 
   // ── Cute glowing gem pawn with heart shape ───────────────────────
-  void _drawPawn(Canvas canvas, Offset base, Color color, String symbol) {
+  void _drawPawn(Canvas canvas, Offset base, Color color, String symbol, {Color? symbolColor}) {
     const s = 16.0;
     final cx = base.dx, cy = base.dy - s * 1.5;
 
@@ -1313,7 +1313,7 @@ class _IsoBoardPainter extends CustomPainter {
 
     // Gender symbol in centre
     _txt(canvas, symbol, Offset(cx, cy), sz: s * 0.85,
-        col: Colors.white.withOpacity(0.9), bold: true);
+        col: symbolColor ?? Colors.white.withOpacity(0.9), bold: true);
 
     // Stem connecting pedestal to gem
     canvas.drawLine(
