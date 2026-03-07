@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -257,8 +255,6 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   // ── Background music ──
   final AudioPlayer _bgMusic = AudioPlayer();
 
-  // ── Background image ──
-  ui.Image? _bgImage;
 
   static const _diceDots = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
@@ -274,7 +270,6 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         duration: const Duration(milliseconds: 400), vsync: this);
     _confetti = ConfettiController(duration: const Duration(seconds: 5));
     _startBgMusic();
-    _loadBgImage();
   }
 
   Future<void> _startBgMusic() async {
@@ -287,16 +282,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     }
   }
 
-  Future<void> _loadBgImage() async {
-    try {
-      final data = await rootBundle.load('assets/images/goose_board_bg.png');
-      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-      final frame = await codec.getNextFrame();
-      if (mounted) setState(() => _bgImage = frame.image);
-    } catch (_) {
-      // Image not yet available – fallback to generated background
-    }
-  }
+  // Background image is now rendered as a widget (Image.asset) behind the board.
 
   @override
   void dispose() {
@@ -769,25 +755,52 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         p1Color: _kP1,         p2Color: _kP2,
         p1Name: widget.config.player1Name,
         p2Name: widget.config.player2Name,
-        bgImage: _bgImage,
       );
 
-      return ClipRect(
-        child: TweenAnimationBuilder<Offset>(
-          duration: const Duration(milliseconds: 600),
-          curve: Curves.easeInOutCubic,
-          tween: Tween<Offset>(end: camEnd),
-          builder: (_, cam, child) =>
-              Transform.translate(offset: cam, child: child!),
-          child: SizedBox(
-            width:  _kCanvasW,
-            height: _kCanvasH,
-            child: CustomPaint(
-              size: const Size(_kCanvasW, _kCanvasH),
-              painter: painter,
+      return Stack(
+        children: [
+          // Background image layer (static, fills viewport)
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/goose_board_bg.png',
+              fit: BoxFit.cover,
+              color: Colors.black.withOpacity(0.45),
+              colorBlendMode: BlendMode.darken,
+              errorBuilder: (_, __, ___) => Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0.0, -0.3),
+                    radius: 1.4,
+                    colors: [
+                      Color(0xFF1A0A2E),
+                      Color(0xFF0D0D1A),
+                      Color(0xFF050510),
+                    ],
+                    stops: [0.0, 0.6, 1.0],
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
+          // Board layer
+          ClipRect(
+            child: TweenAnimationBuilder<Offset>(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutCubic,
+              tween: Tween<Offset>(end: camEnd),
+              builder: (_, cam, child) =>
+                  Transform.translate(offset: cam, child: child!),
+              child: SizedBox(
+                width:  _kCanvasW,
+                height: _kCanvasH,
+                child: CustomPaint(
+                  size: const Size(_kCanvasW, _kCanvasH),
+                  painter: painter,
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     });
   }
@@ -997,7 +1010,6 @@ class _IsoBoardPainter extends CustomPainter {
   final bool   p1OnBoard, p2OnBoard;
   final Color  p1Color, p2Color;
   final String p1Name, p2Name;
-  final ui.Image? bgImage;
 
   const _IsoBoardPainter({
     required this.board,
@@ -1005,7 +1017,6 @@ class _IsoBoardPainter extends CustomPainter {
     required this.p1OnBoard, required this.p2OnBoard,
     required this.p1Color,   required this.p2Color,
     required this.p1Name,    required this.p2Name,
-    this.bgImage,
   });
 
   // Map board position → isometric grid (col, row) using the spiral path.
@@ -1076,39 +1087,12 @@ class _IsoBoardPainter extends CustomPainter {
   }
 
   // ── Themed background ──
+  // Background image is rendered as a widget layer behind the CustomPaint.
+  // Here we only draw a soft vignette overlay on the transparent canvas.
   void _drawBackground(Canvas canvas, Size size) {
     final bgRect = Rect.fromLTWH(0, 0, size.width, size.height);
 
-    if (bgImage != null) {
-      // Draw the user's custom background image, scaled to cover
-      final imgW = bgImage!.width.toDouble();
-      final imgH = bgImage!.height.toDouble();
-      final scale = (size.width / imgW).clamp(size.height / imgH, double.infinity);
-      final srcW = size.width / scale;
-      final srcH = size.height / scale;
-      final srcRect = Rect.fromLTWH(
-        (imgW - srcW) / 2, (imgH - srcH) / 2, srcW, srcH,
-      );
-      canvas.drawImageRect(bgImage!, srcRect, bgRect, Paint());
-
-      // Darken overlay so tiles remain readable
-      canvas.drawRect(bgRect, Paint()..color = Colors.black.withOpacity(0.45));
-    } else {
-      // Fallback: generated gradient background
-      canvas.drawRect(bgRect, Paint()
-        ..shader = const RadialGradient(
-          center: Alignment(0.0, -0.3),
-          radius: 1.4,
-          colors: [
-            Color(0xFF1A0A2E),
-            Color(0xFF0D0D1A),
-            Color(0xFF050510),
-          ],
-          stops: [0.0, 0.6, 1.0],
-        ).createShader(bgRect));
-    }
-
-    // Soft vignette overlay (always)
+    // Soft vignette overlay
     canvas.drawRect(bgRect, Paint()
       ..shader = RadialGradient(
         colors: [
@@ -1394,8 +1378,7 @@ class _IsoBoardPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _IsoBoardPainter old) =>
       old.p1Pos != p1Pos || old.p2Pos != p2Pos ||
-      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard ||
-      old.bgImage != bgImage;
+      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard;
 }
 
 // ==================== DIALOGS ====================
