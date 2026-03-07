@@ -19,7 +19,7 @@ const _kRed      = Color(0xFFFF3B5C);
 const _kGreen    = Color(0xFF00E676);
 const _kOrange   = Color(0xFFFF6D00);
 const _kBlue     = Color(0xFF448AFF);
-const _kP1       = Color(0xFFEF5350);   // player 1 – red
+const _kP1       = Color(0xFF42A5F5);   // player 1 – blue
 const _kP2       = Color(0xFFFFD600);   // player 2 – gold
 
 // ── Clothing slot icons per player ──
