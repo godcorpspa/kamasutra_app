@@ -1232,30 +1232,6 @@ class _IsoBoardPainter extends CustomPainter {
           _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.15), sz: _kTileW * 0.40); break;
         default: break;
       }
-
-      // Destination badge beside tile (for ladder/hole)
-      if (sq.destination != null) {
-        final isLadder = sq.type == GooseSquareType.ladder;
-        final badgeColor = isLadder ? _kGreen : _kRed;
-        final label = isLadder ? '→ ${sq.destination}' : '→ ${sq.destination}';
-        final badgeX = c.dx + hw * 0.85;
-        final badgeY = c.dy + hh * 0.2;
-
-        // Badge background pill
-        final badgeW = _kTileW * 0.42;
-        final badgeH = _kTileH * 0.38;
-        final badgeRect = RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset(badgeX, badgeY), width: badgeW, height: badgeH),
-          const Radius.circular(6),
-        );
-        canvas.drawRRect(badgeRect, Paint()..color = badgeColor.withOpacity(0.85));
-        canvas.drawRRect(badgeRect, Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.white.withOpacity(0.5)
-          ..strokeWidth = 0.8);
-        _txt(canvas, label, Offset(badgeX, badgeY),
-            sz: _kTileW * 0.11, col: Colors.white, bold: true);
-      }
     }
 
     // ── Player pawns ──
