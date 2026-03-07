@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../data/models/goose_game.dart';
@@ -252,6 +254,12 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   late AnimationController _shakeAnim;
   late ConfettiController  _confetti;
 
+  // ── Background music ──
+  final AudioPlayer _bgMusic = AudioPlayer();
+
+  // ── Background image ──
+  ui.Image? _bgImage;
+
   static const _diceDots = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
   // ─────────────────────────── LIFECYCLE ────────────────────────────
@@ -265,10 +273,35 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     _shakeAnim = AnimationController(
         duration: const Duration(milliseconds: 400), vsync: this);
     _confetti = ConfettiController(duration: const Duration(seconds: 5));
+    _startBgMusic();
+    _loadBgImage();
+  }
+
+  Future<void> _startBgMusic() async {
+    try {
+      await _bgMusic.setReleaseMode(ReleaseMode.loop);
+      await _bgMusic.setVolume(0.25);
+      await _bgMusic.play(AssetSource('audio/goose_bg_music.mp3'));
+    } catch (_) {
+      // Audio file not yet available – silently ignore
+    }
+  }
+
+  Future<void> _loadBgImage() async {
+    try {
+      final data = await rootBundle.load('assets/images/goose_board_bg.png');
+      final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+      final frame = await codec.getNextFrame();
+      if (mounted) setState(() => _bgImage = frame.image);
+    } catch (_) {
+      // Image not yet available – fallback to generated background
+    }
   }
 
   @override
   void dispose() {
+    _bgMusic.stop();
+    _bgMusic.dispose();
     _diceAnim.dispose();
     _shakeAnim.dispose();
     _confetti.dispose();
@@ -463,6 +496,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   Future<void> _handleVictory() async {
     HapticFeedback.heavyImpact();
     _confetti.play();
+    _bgMusic.stop();
     setState(() => _gameOver = true);
     await _showContentDialog(_ContentDialogArgs(
       emoji: '🏆', title: '${_playerName(_currentPlayer)} VINCE!',
@@ -735,6 +769,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         p1Color: _kP1,         p2Color: _kP2,
         p1Name: widget.config.player1Name,
         p2Name: widget.config.player2Name,
+        bgImage: _bgImage,
       );
 
       return ClipRect(
@@ -962,6 +997,7 @@ class _IsoBoardPainter extends CustomPainter {
   final bool   p1OnBoard, p2OnBoard;
   final Color  p1Color, p2Color;
   final String p1Name, p2Name;
+  final ui.Image? bgImage;
 
   const _IsoBoardPainter({
     required this.board,
@@ -969,6 +1005,7 @@ class _IsoBoardPainter extends CustomPainter {
     required this.p1OnBoard, required this.p2OnBoard,
     required this.p1Color,   required this.p2Color,
     required this.p1Name,    required this.p2Name,
+    this.bgImage,
   });
 
   // Map board position → isometric grid (col, row) using the spiral path.
@@ -1038,74 +1075,48 @@ class _IsoBoardPainter extends CustomPainter {
     }
   }
 
-  // ── Themed background with subtle pattern ──
+  // ── Themed background ──
   void _drawBackground(Canvas canvas, Size size) {
-    // Deep gradient
     final bgRect = Rect.fromLTWH(0, 0, size.width, size.height);
-    canvas.drawRect(bgRect, Paint()
-      ..shader = const RadialGradient(
-        center: Alignment(0.0, -0.3),
-        radius: 1.4,
-        colors: [
-          Color(0xFF1A0A2E),  // deep purple centre
-          Color(0xFF0D0D1A),  // dark edges
-          Color(0xFF050510),  // near-black
-        ],
-        stops: [0.0, 0.6, 1.0],
-      ).createShader(bgRect));
 
-    // Subtle hearts pattern (scattered, very low opacity)
-    final heartPaint = Paint()
-      ..color = const Color(0xFFFF3B5C).withOpacity(0.04)
-      ..style = PaintingStyle.fill;
-    final heartStroke = Paint()
-      ..color = const Color(0xFFFF3B5C).withOpacity(0.06)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.8;
+    if (bgImage != null) {
+      // Draw the user's custom background image, scaled to cover
+      final imgW = bgImage!.width.toDouble();
+      final imgH = bgImage!.height.toDouble();
+      final scale = (size.width / imgW).clamp(size.height / imgH, double.infinity);
+      final srcW = size.width / scale;
+      final srcH = size.height / scale;
+      final srcRect = Rect.fromLTWH(
+        (imgW - srcW) / 2, (imgH - srcH) / 2, srcW, srcH,
+      );
+      canvas.drawImageRect(bgImage!, srcRect, bgRect, Paint());
 
-    final rng = Random(42); // fixed seed for consistent pattern
-    for (int i = 0; i < 60; i++) {
-      final hx = rng.nextDouble() * size.width;
-      final hy = rng.nextDouble() * size.height;
-      final hs = 8.0 + rng.nextDouble() * 14.0;
-      _drawHeart(canvas, Offset(hx, hy), hs, heartPaint);
-      _drawHeart(canvas, Offset(hx, hy), hs, heartStroke);
+      // Darken overlay so tiles remain readable
+      canvas.drawRect(bgRect, Paint()..color = Colors.black.withOpacity(0.45));
+    } else {
+      // Fallback: generated gradient background
+      canvas.drawRect(bgRect, Paint()
+        ..shader = const RadialGradient(
+          center: Alignment(0.0, -0.3),
+          radius: 1.4,
+          colors: [
+            Color(0xFF1A0A2E),
+            Color(0xFF0D0D1A),
+            Color(0xFF050510),
+          ],
+          stops: [0.0, 0.6, 1.0],
+        ).createShader(bgRect));
     }
 
-    // Subtle sparkle dots
-    final sparklePaint = Paint()
-      ..color = Colors.white.withOpacity(0.06);
-    for (int i = 0; i < 100; i++) {
-      final sx = rng.nextDouble() * size.width;
-      final sy = rng.nextDouble() * size.height;
-      final sr = 0.5 + rng.nextDouble() * 1.5;
-      canvas.drawCircle(Offset(sx, sy), sr, sparklePaint);
-    }
-
-    // Soft vignette overlay
+    // Soft vignette overlay (always)
     canvas.drawRect(bgRect, Paint()
       ..shader = RadialGradient(
         colors: [
           Colors.transparent,
-          Colors.black.withOpacity(0.3),
+          Colors.black.withOpacity(0.35),
         ],
-        stops: const [0.5, 1.0],
+        stops: const [0.4, 1.0],
       ).createShader(bgRect));
-  }
-
-  // Draw a small heart shape at a given position
-  void _drawHeart(Canvas canvas, Offset center, double size, Paint paint) {
-    final s = size / 2;
-    final path = Path()
-      ..moveTo(center.dx, center.dy + s * 0.6)
-      ..cubicTo(center.dx - s * 1.2, center.dy - s * 0.2,
-                center.dx - s * 0.6, center.dy - s * 1.0,
-                center.dx, center.dy - s * 0.4)
-      ..cubicTo(center.dx + s * 0.6, center.dy - s * 1.0,
-                center.dx + s * 1.2, center.dy - s * 0.2,
-                center.dx, center.dy + s * 0.6)
-      ..close();
-    canvas.drawPath(path, paint);
   }
 
   // Build a rounded isometric diamond path using quadratic bezier corners.
@@ -1231,30 +1242,6 @@ class _IsoBoardPainter extends CustomPainter {
         case GooseSquareType.finish:
           _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.15), sz: _kTileW * 0.40); break;
         default: break;
-      }
-
-      // Destination badge beside tile (for ladder/hole)
-      if (sq.destination != null) {
-        final isLadder = sq.type == GooseSquareType.ladder;
-        final badgeColor = isLadder ? _kGreen : _kRed;
-        final label = isLadder ? '→ ${sq.destination}' : '→ ${sq.destination}';
-        final badgeX = c.dx + hw * 0.85;
-        final badgeY = c.dy + hh * 0.2;
-
-        // Badge background pill
-        final badgeW = _kTileW * 0.42;
-        final badgeH = _kTileH * 0.38;
-        final badgeRect = RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset(badgeX, badgeY), width: badgeW, height: badgeH),
-          const Radius.circular(6),
-        );
-        canvas.drawRRect(badgeRect, Paint()..color = badgeColor.withOpacity(0.85));
-        canvas.drawRRect(badgeRect, Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.white.withOpacity(0.5)
-          ..strokeWidth = 0.8);
-        _txt(canvas, label, Offset(badgeX, badgeY),
-            sz: _kTileW * 0.11, col: Colors.white, bold: true);
       }
     }
 
