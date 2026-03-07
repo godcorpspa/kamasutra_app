@@ -1040,7 +1040,7 @@ class _IsoBoardPainter extends CustomPainter {
 
     // ── 1. Draw path-connecting trail between consecutive cells ──
     final trailPaint = Paint()
-      ..color = Colors.white.withOpacity(0.12)
+      ..color = const Color(0xFFE84393).withOpacity(0.15)
       ..strokeWidth = 4.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
@@ -1138,7 +1138,7 @@ class _IsoBoardPainter extends CustomPainter {
     final vB = Offset(c.dx,      c.dy + hh);
     final vL = Offset(c.dx - hw, c.dy     );
 
-    final col   = _topColor(sq.type);
+    final col   = _topColor(sq.type, sq.position);
     final colBr = _brighten(col, 0.18); // brighter highlight
     final colL  = _dim(col, 0.30);
     final colR  = _dim(col, 0.48);
@@ -1181,10 +1181,10 @@ class _IsoBoardPainter extends CustomPainter {
       ).createShader(Rect.fromCenter(center: c, width: hw * 2, height: hh * 2));
     canvas.drawPath(topFace, topGrad);
 
-    // Subtle inner highlight at top edge
+    // Subtle inner highlight at top edge (warm rose tint)
     canvas.drawPath(topFace, Paint()
       ..style = PaintingStyle.stroke
-      ..color = Colors.white.withOpacity(0.22)
+      ..color = const Color(0xFFFFB8C9).withOpacity(0.25)
       ..strokeWidth = 1.2);
 
     // ── Glow border for special tiles ──
@@ -1326,21 +1326,35 @@ class _IsoBoardPainter extends CustomPainter {
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────
-  Color _topColor(GooseSquareType t) {
+  Color _topColor(GooseSquareType t, [int pos = 0]) {
     switch (t) {
-      case GooseSquareType.normal:  return const Color(0xFF243555);
-      case GooseSquareType.ladder:  return const Color(0xFF1A4A2A);
-      case GooseSquareType.hole:    return const Color(0xFF4A1018);
-      case GooseSquareType.penance: return const Color(0xFF4A2800);
-      case GooseSquareType.finish:  return const Color(0xFF4A3A00);
+      case GooseSquareType.normal:
+        // Cycle through sensual red-to-purple palette based on position
+        const palette = [
+          Color(0xFF6B1B3A), // deep rose
+          Color(0xFF7A1E48), // wine
+          Color(0xFF5C1A4A), // plum
+          Color(0xFF4A1850), // deep purple
+          Color(0xFF5A1640), // burgundy
+          Color(0xFF6E1A35), // crimson
+          Color(0xFF80203C), // rich red
+          Color(0xFF55184D), // violet
+          Color(0xFF72233E), // berry
+          Color(0xFF4E1C55), // grape
+        ];
+        return palette[pos % palette.length];
+      case GooseSquareType.ladder:  return const Color(0xFF2A4040); // dark teal
+      case GooseSquareType.hole:    return const Color(0xFF5A1025); // deep wine
+      case GooseSquareType.penance: return const Color(0xFF5A2035); // dark rose
+      case GooseSquareType.finish:  return const Color(0xFF5A3A18); // warm gold
     }
   }
 
   Color? _glowColor(GooseSquareType t) {
     switch (t) {
-      case GooseSquareType.ladder:  return _kGreen;
-      case GooseSquareType.hole:    return _kRed;
-      case GooseSquareType.penance: return _kOrange;
+      case GooseSquareType.ladder:  return const Color(0xFF4ECDC4); // soft teal
+      case GooseSquareType.hole:    return const Color(0xFFE84393); // hot pink
+      case GooseSquareType.penance: return const Color(0xFFFF6B81); // coral rose
       case GooseSquareType.finish:  return _kGold;
       default: return null;
     }
