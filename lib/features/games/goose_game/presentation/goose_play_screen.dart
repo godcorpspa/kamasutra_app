@@ -1234,15 +1234,19 @@ class _IsoBoardPainter extends CustomPainter {
     }
 
     // ── Player pawns ──
+    // Variant logic: both get variant 1 (canonical pair) unless same gender,
+    // in which case player 2 gets variant 2 for distinction.
     if (!hasP1 && !hasP2) return;
+    final sameGender = p1Gender == p2Gender;
+    final p2Variant = sameGender ? 2 : 1;
     final baseY = c.dy - hh - 6;
     if (hasP1 && hasP2) {
       _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, p1Gender, 1);
-      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender, 2);
+      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender, p2Variant);
     } else if (hasP1) {
       _drawPawn(canvas, Offset(c.dx, baseY), p1Color, p1Gender, 1);
     } else {
-      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender, 2);
+      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender, p2Variant);
     }
   }
 
