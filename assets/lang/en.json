@@ -69,8 +69,8 @@
     "page1_subtitle": "Over 200 illustrated positions with smart filters for every moment",
     "page2_title": "Play and Connect",
     "page2_subtitle": "12 mini-games to rediscover each other every night",
-    "page3_title": "Total Privacy",
-    "page3_subtitle": "No account, no cloud, everything stored locally on your device",
+    "page3_title": "Privacy Guaranteed",
+    "page3_subtitle": "Protected account with encrypted cloud sync. Only the two of you can access your data.",
     "get_started": "Start the evening"
   },
 
@@ -405,28 +405,18 @@
     "privacy": "Privacy",
     "pin_lock": "PIN Lock",
     "biometric": "Face ID / Touch ID",
-    "discrete_icon": "Discrete icon",
-    "panic_exit": "Panic exit",
     "preferences": "Preferences",
     "language": "Language",
-    "default_intensity": "Default intensity",
-    "illustration_style": "Illustration style",
     "sound_effects": "Sound effects",
     "haptic_feedback": "Haptic feedback",
-    "dark_mode": "Dark mode",
-    "consent_interval": "Consent check-in interval",
     "data": "Data",
     "clear_history": "Clear history",
     "clear_all_data": "Clear all data",
-    "export_data": "Export data",
     "about": "About",
     "version": "Version",
-    "feedback": "Send feedback",
-    "rate_app": "Rate the app",
     "privacy_policy": "Privacy Policy",
     "terms": "Terms of service",
-    "upgrade": "Upgrade to full version",
-    "restore_purchase": "Restore purchase"
+    "contact": "Contact us"
   },
 
   "consent": {

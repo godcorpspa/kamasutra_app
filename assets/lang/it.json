@@ -69,8 +69,8 @@
     "page1_subtitle": "Oltre 200 posizioni illustrate con filtri intelligenti per ogni momento",
     "page2_title": "Giocate e Connettevi",
     "page2_subtitle": "12 mini-giochi per riscoprirvi ogni sera",
-    "page3_title": "Privacy Totale",
-    "page3_subtitle": "Nessun account, nessun cloud, tutto locale sul vostro dispositivo",
+    "page3_title": "Privacy Garantita",
+    "page3_subtitle": "Account protetto e dati sincronizzati su cloud cifrato. Solo voi due avete accesso alle vostre informazioni.",
     "get_started": "Inizia la serata"
   },
 
@@ -405,28 +405,18 @@
     "privacy": "Privacy",
     "pin_lock": "Blocco PIN",
     "biometric": "Face ID / Touch ID",
-    "discrete_icon": "Icona discreta",
-    "panic_exit": "Uscita di emergenza",
     "preferences": "Preferenze",
     "language": "Lingua",
-    "default_intensity": "Intensità predefinita",
-    "illustration_style": "Stile illustrazioni",
     "sound_effects": "Effetti sonori",
     "haptic_feedback": "Feedback aptico",
-    "dark_mode": "Modalità scura",
-    "consent_interval": "Intervallo check-in consenso",
     "data": "Dati",
     "clear_history": "Cancella cronologia",
     "clear_all_data": "Cancella tutti i dati",
-    "export_data": "Esporta dati",
     "about": "Informazioni",
     "version": "Versione",
-    "feedback": "Invia feedback",
-    "rate_app": "Valuta l'app",
     "privacy_policy": "Privacy Policy",
     "terms": "Termini di servizio",
-    "upgrade": "Passa alla versione completa",
-    "restore_purchase": "Ripristina acquisto"
+    "contact": "Contattaci"
   },
 
   "consent": {

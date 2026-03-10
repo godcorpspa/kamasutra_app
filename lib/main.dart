@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'app/app.dart';
 import 'data/services/preferences_service.dart';
 import 'data/services/user_data_sync_service.dart';
+import 'data/services/audio_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +17,10 @@ void main() async {
   
   // Initialize preferences (SharedPreferences)
   await PreferencesService.instance.initialize();
-  
+
+  // Initialize audio service
+  AudioService.instance.initialize();
+
   // Initialize Firebase
   try {
     await Firebase.initializeApp();

@@ -69,12 +69,10 @@ class AppRoutes {
   static const String soundtrack = '/games/soundtrack';
   static const String mirrorChallenge = '/games/mirror-challenge';
   
-  // Panic exit
-  static const String panicExit = '/panic';
 }
 
-/// Shell navigation key for bottom nav
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+/// Shell navigation key for bottom nav (public so MainScaffold can pop modals)
+final shellNavigatorKey = GlobalKey<NavigatorState>();
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Router provider
@@ -95,23 +93,25 @@ final routerProvider = Provider<GoRouter>((ref) {
       final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
       final isPinEnabled = prefs.isPinEnabled;
       final isAuthenticated = prefs.isSessionAuthenticated;
-      
+      // Authentication is required if PIN is enabled
+      final requiresAuth = isPinEnabled;
+
       final isOnLogin = state.matchedLocation == AppRoutes.login;
       final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;
       final isOnOnboarding = state.matchedLocation == AppRoutes.onboarding;
       final isOnPin = state.matchedLocation == AppRoutes.pin;
-      
+
       // Non loggato -> vai al login
       if (!isLoggedIn && !isOnLogin) {
         return AppRoutes.login;
       }
-      
+
       // Loggato ma sulla pagina login -> procedi
       if (isLoggedIn && isOnLogin) {
         if (!isAgeVerified) {
           return AppRoutes.ageGate;
         }
-        if (isPinEnabled && !isAuthenticated) {
+        if (requiresAuth && !isAuthenticated) {
           return AppRoutes.pin;
         }
         if (!hasCompletedOnboarding) {
@@ -119,15 +119,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         return AppRoutes.catalog;
       }
-      
+
       // Non age verified -> age gate (solo se loggato)
       if (isLoggedIn && !isAgeVerified && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.ageGate;
       }
-      
+
       // Age verified but on age gate -> move on
       if (isAgeVerified && isOnAgeGate) {
-        if (isPinEnabled && !isAuthenticated) {
+        if (requiresAuth && !isAuthenticated) {
           return AppRoutes.pin;
         }
         if (!hasCompletedOnboarding) {
@@ -135,12 +135,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         }
         return AppRoutes.catalog;
       }
-      
-      // PIN required but not authenticated
-      if (isPinEnabled && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
+
+      // PIN/biometric required but not authenticated
+      if (requiresAuth && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
         return AppRoutes.pin;
       }
-      
+
       // Onboarding not completed
       if (!hasCompletedOnboarding && !isOnOnboarding && !isOnAgeGate && !isOnPin && !isOnLogin) {
         return AppRoutes.onboarding;
@@ -170,15 +170,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const OnboardingScreen(),
       ),
       
-      // Panic exit (neutral screen)
-      GoRoute(
-        path: AppRoutes.panicExit,
-        builder: (context, state) => const PanicExitScreen(),
-      ),
-      
       // Main app with bottom navigation
       ShellRoute(
-        navigatorKey: _shellNavigatorKey,
+        navigatorKey: shellNavigatorKey,
         builder: (context, state, child) => MainScaffold(child: child),
         routes: [
           GoRoute(
@@ -296,43 +290,3 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// Panic exit screen - appears as innocent app
-class PanicExitScreen extends StatelessWidget {
-  const PanicExitScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.calculate_outlined,
-              size: 80,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Calculator',
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w300,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Loading...',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[400],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

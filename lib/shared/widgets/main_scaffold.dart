@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme.dart';
 import '../../app/router.dart';
-import '../../data/services/preferences_service.dart';
+import '../../data/providers/providers.dart';
 
 /// Main scaffold with bottom navigation
-class MainScaffold extends StatefulWidget {
+class MainScaffold extends ConsumerStatefulWidget {
   final Widget child;
 
   const MainScaffold({super.key, required this.child});
 
   @override
-  State<MainScaffold> createState() => _MainScaffoldState();
+  ConsumerState<MainScaffold> createState() => _MainScaffoldState();
 }
 
-class _MainScaffoldState extends State<MainScaffold> {
+class _MainScaffoldState extends ConsumerState<MainScaffold> {
   int _currentIndex = 0;
-  DateTime? _lastDoubleTap;
 
   final List<String> _routes = [
     AppRoutes.catalog,
@@ -36,27 +36,10 @@ class _MainScaffoldState extends State<MainScaffold> {
     _currentIndex = _routes.indexWhere((r) => location.startsWith(r));
     if (_currentIndex < 0) _currentIndex = 0;
 
-    return GestureDetector(
-      // Panic exit: double-tap anywhere
-      onDoubleTap: _handlePanicExit,
-      child: Scaffold(
-        body: widget.child,
-        bottomNavigationBar: _buildBottomNav(context),
-      ),
+    return Scaffold(
+      body: widget.child,
+      bottomNavigationBar: _buildBottomNav(context),
     );
-  }
-
-  void _handlePanicExit() {
-    if (!PreferencesService.instance.isPanicExitEnabled) return;
-    
-    final now = DateTime.now();
-    if (_lastDoubleTap != null &&
-        now.difference(_lastDoubleTap!).inMilliseconds < 500) {
-      // Double-tap detected within 500ms
-      HapticFeedback.heavyImpact();
-      context.go(AppRoutes.panicExit);
-    }
-    _lastDoubleTap = now;
   }
 
   Widget _buildBottomNav(BuildContext context) {
@@ -124,6 +107,15 @@ class _MainScaffoldState extends State<MainScaffold> {
   void _onItemTapped(int index) {
     if (index == _currentIndex) return;
     HapticFeedback.selectionClick();
+    // Close any open bottom sheet or dialog on the shell navigator
+    final shellNav = shellNavigatorKey.currentState;
+    if (shellNav != null && shellNav.canPop()) {
+      shellNav.pop();
+    }
+    // Reset catalog favorites filter when leaving the catalog tab
+    if (_currentIndex == 0 && index != 0) {
+      ref.read(positionFilterProvider.notifier).setFavoritesOnly(false);
+    }
     context.go(_routes[index]);
   }
 }

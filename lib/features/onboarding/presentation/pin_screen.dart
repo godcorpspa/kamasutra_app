@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
@@ -20,63 +21,29 @@ class PinScreen extends StatefulWidget {
 }
 
 class _PinScreenState extends State<PinScreen> {
-  final LocalAuthentication _localAuth = LocalAuthentication();
-  
   String _enteredPin = '';
   String? _firstPin; // For confirmation during creation
   bool _isCreating = false;
   bool _isConfirming = false;
   String? _error;
-  bool _canUseBiometric = false;
 
   @override
   void initState() {
     super.initState();
-    _checkBiometric();
-    _isCreating = PreferencesService.instance.pinHash == null;
-  }
-
-  Future<void> _checkBiometric() async {
-    if (PreferencesService.instance.isBiometricEnabled) {
-      final canCheck = await _localAuth.canCheckBiometrics;
-      final isSupported = await _localAuth.isDeviceSupported();
-      setState(() {
-        _canUseBiometric = canCheck && isSupported;
-      });
-      
-      if (_canUseBiometric && !_isCreating) {
-        _authenticateWithBiometric();
-      }
-    }
-  }
-
-  Future<void> _authenticateWithBiometric() async {
-    try {
-      final didAuthenticate = await _localAuth.authenticate(
-        localizedReason: 'pin.use_biometric'.tr(),
-        options: const AuthenticationOptions(
-          stickyAuth: true,
-          biometricOnly: true,
-        ),
-      );
-      
-      if (didAuthenticate && mounted) {
-        _onAuthenticationSuccess();
-      }
-    } catch (e) {
-      // Biometric failed, user will need to enter PIN
-    }
+    final prefs = PreferencesService.instance;
+    final isPinEnabled = prefs.isPinEnabled;
+    _isCreating = isPinEnabled && prefs.pinHash == null;
   }
 
   void _onNumberPressed(int number) {
     if (_enteredPin.length >= 4) return;
-    
+
     HapticFeedback.lightImpact();
     setState(() {
       _enteredPin += number.toString();
       _error = null;
     });
-    
+
     if (_enteredPin.length == 4) {
       _verifyPin();
     }
@@ -84,7 +51,7 @@ class _PinScreenState extends State<PinScreen> {
 
   void _onBackspace() {
     if (_enteredPin.isEmpty) return;
-    
+
     HapticFeedback.selectionClick();
     setState(() {
       _enteredPin = _enteredPin.substring(0, _enteredPin.length - 1);
@@ -124,7 +91,7 @@ class _PinScreenState extends State<PinScreen> {
       // Verify existing PIN
       final storedHash = PreferencesService.instance.pinHash;
       final enteredHash = _hashPin(_enteredPin);
-      
+
       if (storedHash == enteredHash) {
         _onAuthenticationSuccess();
       } else {
@@ -145,11 +112,25 @@ class _PinScreenState extends State<PinScreen> {
   void _onAuthenticationSuccess() {
     HapticFeedback.mediumImpact();
     PreferencesService.instance.setSessionAuthenticated(true);
-    
+
     if (!PreferencesService.instance.hasCompletedOnboarding) {
       context.go(AppRoutes.onboarding);
     } else {
       context.go(AppRoutes.catalog);
+    }
+  }
+
+  Future<void> _logout() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      final googleSignIn = GoogleSignIn();
+      if (await googleSignIn.isSignedIn()) {
+        await googleSignIn.signOut();
+      }
+      PreferencesService.instance.setSessionAuthenticated(false);
+      if (mounted) context.go(AppRoutes.login);
+    } catch (e) {
+      debugPrint('Errore logout: $e');
     }
   }
 
@@ -166,16 +147,16 @@ class _PinScreenState extends State<PinScreen> {
           child: Column(
             children: [
               const Spacer(flex: 2),
-              
+
               // Title
               Text(
                 title,
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
-              
+
               const SizedBox(height: 48),
-              
+
               // PIN dots
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -200,34 +181,33 @@ class _PinScreenState extends State<PinScreen> {
                   );
                 }),
               ),
-              
+
               // Error message
               if (_error != null) ...[
                 const SizedBox(height: 16),
                 Text(
                   _error!,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.error,
-                  ),
+                        color: AppColors.error,
+                      ),
                 ),
               ],
-              
+
               const Spacer(),
-              
+
               // Number pad
               _buildNumberPad(),
-              
+
               const SizedBox(height: 24),
-              
-              // Biometric button
-              if (_canUseBiometric && !_isCreating)
-                TextButton.icon(
-                  onPressed: _authenticateWithBiometric,
-                  icon: const Icon(Icons.fingerprint),
-                  label: Text('pin.use_biometric'.tr()),
-                ),
-              
+
               const Spacer(),
+
+              // Logout
+              TextButton(
+                onPressed: _logout,
+                child: const Text('Esci dall\'account'),
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         ),

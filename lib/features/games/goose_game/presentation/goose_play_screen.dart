@@ -1,419 +1,567 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../data/models/goose_game.dart';
-import '../../../../data/models/game.dart';
 
-/// Goose Game play screen - the actual board game experience
-class GoosePlayScreen extends ConsumerStatefulWidget {
+// ── Dark theme palette ──
+const _kBg1      = Color(0xFF0D0D1A);
+const _kBg2      = Color(0xFF1A0A2E);
+const _kSurface  = Color(0xFF1E1E32);
+const _kBorder   = Color(0xFF2E2E4A);
+const _kGold     = Color(0xFFFFD700);
+const _kRed      = Color(0xFFFF3B5C);
+const _kGreen    = Color(0xFF00E676);
+const _kOrange   = Color(0xFFFF6D00);
+const _kBlue     = Color(0xFF448AFF);
+const _kP1       = Color(0xFFEF5350);   // player 1 – red
+const _kP2       = Color(0xFFFFD600);   // player 2 – gold
+
+// ── Clothing slot icons per gender ──
+const _kIconsMale   = ['👕', '👖', '🩲', '🧦'];
+const _kIconsFemale = ['👗', '👙', '🩱', '👠'];
+
+// ── Board canvas / tile constants ──
+const double _kTileW    = 96.0;    // isometric tile width
+const double _kTileH    = 48.0;    // isometric tile height
+const double _kBlockH   = 22.0;    // 3-D block depth
+const double _kTileStep = 1.18;    // grid-to-screen spacing multiplier
+const double _kRound    = 5.0;     // corner rounding for tiles
+const double _kBoardCX  = 2200.0;  // board centre-X in the large canvas
+const double _kBoardTY  = 80.0;    // board top-Y in the large canvas
+const double _kCanvasW  = 3600.0;
+const double _kCanvasH  = 1900.0;
+
+// ── Serpentine path: irregular winding snake ──
+// The path winds with varying-width horizontal runs, vertical drops,
+// narrowing passages, upward zigzags and repeating spiral modules.
+// Grid spans cols 0-18, rows 0-37.  pos 0 = START, pos 100 = FINISH.
+const List<Offset> _kGridPath = [
+  // ── Right run (pos 0-6): Start→1→2→3→4→5→6 ──
+  Offset(0, 0),    // 0  START
+  Offset(1, 0),    // 1
+  Offset(2, 0),    // 2
+  Offset(3, 0),    // 3
+  Offset(4, 0),    // 4
+  Offset(5, 0),    // 5
+  Offset(6, 0),    // 6
+
+  // ── Drop 3 (pos 7-9): 6↓7↓8↓9 ──
+  Offset(6, 1),    // 7
+  Offset(6, 2),    // 8
+  Offset(6, 3),    // 9
+
+  // ── Right run (pos 10-14): 9→10→11→12→13→14 ──
+  Offset(7, 3),    // 10
+  Offset(8, 3),    // 11
+  Offset(9, 3),    // 12
+  Offset(10, 3),   // 13
+  Offset(11, 3),   // 14
+
+  // ── Drop 2 (pos 15-16): 14↓15↓16 ──
+  Offset(11, 4),   // 15
+  Offset(11, 5),   // 16
+
+  // ── Drop + right run 7 (pos 17-23): 16↓17→18→…→23 ──
+  Offset(11, 6),   // 17
+  Offset(12, 6),   // 18
+  Offset(13, 6),   // 19
+  Offset(14, 6),   // 20
+  Offset(15, 6),   // 21
+  Offset(16, 6),   // 22
+  Offset(17, 6),   // 23
+
+  // ── Drop 2 (pos 24-25): 23↓24↓25 ──
+  Offset(17, 7),   // 24
+  Offset(17, 8),   // 25
+
+  // ── Left 1 + drop (pos 26-27): 25←26↓27 ──
+  Offset(16, 8),   // 26
+  Offset(16, 9),   // 27
+
+  // ── Left 2 + drop (pos 28-30): 27←28←29↓30 ──
+  Offset(15, 9),   // 28
+  Offset(14, 9),   // 29
+  Offset(14, 10),  // 30
+
+  // ── Left 2 + drop (pos 31-33): 30←31←32↓33 ──
+  Offset(13, 10),  // 31
+  Offset(12, 10),  // 32
+  Offset(12, 11),  // 33
+
+  // ── Drop + right 3 (pos 34-36): 33↓34→35→36 ──
+  Offset(12, 12),  // 34
+  Offset(13, 12),  // 35
+  Offset(14, 12),  // 36
+
+  // ── Drop 5 (pos 37-41): 36↓37↓38↓39↓40↓41 ──
+  Offset(14, 13),  // 37
+  Offset(14, 14),  // 38
+  Offset(14, 15),  // 39
+  Offset(14, 16),  // 40
+  Offset(14, 17),  // 41
+
+  // ── Right 2 + up 2 (pos 42-45): 41→42→43↑44↑45 ──
+  Offset(15, 17),  // 42
+  Offset(16, 17),  // 43
+  Offset(16, 16),  // 44
+  Offset(16, 15),  // 45
+
+  // ── Right 2 (pos 46-47): 45→46→47 ──
+  Offset(17, 15),  // 46
+  Offset(18, 15),  // 47
+
+  // ── Drop 5 (pos 48-52): 47↓48↓49↓50↓51↓52 ──
+  Offset(18, 16),  // 48
+  Offset(18, 17),  // 49
+  Offset(18, 18),  // 50
+  Offset(18, 19),  // 51
+  Offset(18, 20),  // 52
+
+  // ── Left 2 + drop (pos 53-55): 52←53←54↓55 ──
+  Offset(17, 20),  // 53
+  Offset(16, 20),  // 54
+  Offset(16, 21),  // 55
+
+  // ── Left 3 + drop (pos 56-59): 55←56←57←58↓59 ──
+  Offset(15, 21),  // 56
+  Offset(14, 21),  // 57
+  Offset(13, 21),  // 58
+  Offset(13, 22),  // 59
+
+  // ── Drop + right 4 (pos 60-63): 59↓60→61→62→63 ──
+  Offset(13, 23),  // 60
+  Offset(14, 23),  // 61
+  Offset(15, 23),  // 62
+  Offset(16, 23),  // 63
+
+  // ── Drop + right 2 (pos 64-66): 63↓64→65→66 ──
+  Offset(16, 24),  // 64
+  Offset(17, 24),  // 65
+  Offset(18, 24),  // 66
+
+  // ── Drop 3 (pos 67-69): 66↓67↓68↓69 ──
+  Offset(18, 25),  // 67
+  Offset(18, 26),  // 68
+  Offset(18, 27),  // 69
+
+  // ── Left 2 + up + left 4 (pos 70-75): 69←70←71↑72←73←74←75 ──
+  Offset(17, 27),  // 70
+  Offset(16, 27),  // 71
+  Offset(16, 26),  // 72
+  Offset(15, 26),  // 73
+  Offset(14, 26),  // 74
+  Offset(13, 26),  // 75
+
+  // ── Drop 4 (pos 76-79): 75↓76↓77↓78↓79 ──
+  Offset(13, 27),  // 76
+  Offset(13, 28),  // 77
+  Offset(13, 29),  // 78
+  Offset(13, 30),  // 79
+
+  // ── Right 3 + drop (pos 80-83): 79→80→81→82↓83 ──
+  Offset(14, 30),  // 80
+  Offset(15, 30),  // 81
+  Offset(16, 30),  // 82
+  Offset(16, 31),  // 83
+
+  // ── Right 2 (pos 84-85): 83→84→85 ──
+  Offset(17, 31),  // 84
+  Offset(18, 31),  // 85
+
+  // ── Drop 3 (pos 86-88): 85↓86↓87↓88 ──
+  Offset(18, 32),  // 86
+  Offset(18, 33),  // 87
+  Offset(18, 34),  // 88
+
+  // ── Left 2 + up + left 4 (pos 89-94): 88←89←90↑91←92←93←94 ──
+  Offset(17, 34),  // 89
+  Offset(16, 34),  // 90
+  Offset(16, 33),  // 91
+  Offset(15, 33),  // 92
+  Offset(14, 33),  // 93
+  Offset(13, 33),  // 94
+
+  // ── Drop 4 (pos 95-98): 94↓95↓96↓97↓98 ──
+  Offset(13, 34),  // 95
+  Offset(13, 35),  // 96
+  Offset(13, 36),  // 97
+  Offset(13, 37),  // 98
+
+  // ── Right 2 (pos 99-100 FINISH): 98→99→100 ──
+  Offset(14, 37),  // 99
+  Offset(15, 37),  // 100  FINISH 🏆
+];
+
+// ==================== PLAY SCREEN ====================
+
+class GoosePlayScreen extends StatefulWidget {
   final GooseGameConfig config;
-
-  const GoosePlayScreen({
-    super.key,
-    required this.config,
-  });
+  const GoosePlayScreen({super.key, required this.config});
 
   @override
-  ConsumerState<GoosePlayScreen> createState() => _GoosePlayScreenState();
+  State<GoosePlayScreen> createState() => _GoosePlayScreenState();
 }
 
-class _GoosePlayScreenState extends ConsumerState<GoosePlayScreen>
+class _GoosePlayScreenState extends State<GoosePlayScreen>
     with TickerProviderStateMixin {
-  
-  late GooseGameState _gameState;
-  final Random _random = Random();
-  
-  bool _isRolling = false;
-  bool _showCard = false;
-  GooseCard? _currentCard;
-  
-  late AnimationController _diceController;
-  late AnimationController _moveController;
-  late ConfettiController _confettiController;
 
-  // Sample cards (in real app, load from JSON)
-  final List<GooseCard> _sampleCards = [
-    GooseCard(id: '1', textIt: 'Sussurra qualcosa di dolce all\'orecchio del partner', textEn: 'Whisper something sweet', intensity: GameIntensity.soft, isChallenge: false),
-    GooseCard(id: '2', textIt: 'Raccontate il vostro primo ricordo insieme', textEn: 'Share your first memory together', intensity: GameIntensity.soft, isChallenge: false),
-    GooseCard(id: '3', textIt: 'Un bacio di almeno 10 secondi', textEn: 'A kiss of at least 10 seconds', intensity: GameIntensity.spicy, isChallenge: true),
-    GooseCard(id: '4', textIt: 'Massaggio alla schiena per 1 minuto', textEn: '1 minute back massage', intensity: GameIntensity.spicy, isChallenge: true),
-    GooseCard(id: '5', textIt: 'Cosa apprezzi di più nel partner? Dillo guardandolo negli occhi', textEn: 'What do you appreciate most?', intensity: GameIntensity.soft, isChallenge: false),
-  ];
+  // ── Board ──
+  late final List<GooseSquare> _board;
+  final Random _rng = Random();
+
+  // ── Positions ──
+  int _p1Pos = 0, _p2Pos = 0;
+
+  // ── Clothing (0-4) ──
+  int _p1Clothing = 4, _p2Clothing = 4;
+
+  // ── Exit mechanic ──
+  bool _p1OnBoard = false, _p2OnBoard = false;
+  int  _p1FailedExits = 0, _p2FailedExits = 0;
+  bool _waitingMovementRoll = false;
+
+  // ── Milestone tracking ──
+  int _p1LastMilestone = 0, _p2LastMilestone = 0;
+
+  // ── Turn ──
+  int _currentPlayer = 1;
+  int _consecutiveSixes = 0;
+
+  // ── Dice ──
+  int  _lastRoll = 0;
+  bool _isRolling = false;
+
+  // ── Status message overlay ──
+  String? _statusMsg;
+  Color   _statusColor = _kBlue;
+  String  _statusEmoji = '🎲';
+  Timer?  _statusTimer;
+
+  // ── Game end ──
+  bool _gameOver = false;
+
+  // ── Animations ──
+  late AnimationController _diceAnim;
+  late AnimationController _shakeAnim;
+  late ConfettiController  _confetti;
+
+  // ── Background music ──
+  final AudioPlayer _bgMusic = AudioPlayer();
+
+
+  static const _diceDots = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+  // ─────────────────────────── LIFECYCLE ────────────────────────────
 
   @override
   void initState() {
     super.initState();
-    _initializeGame();
-    _setupAnimations();
+    _board = _generateBoard();
+    _diceAnim = AnimationController(
+        duration: const Duration(milliseconds: 600), vsync: this);
+    _shakeAnim = AnimationController(
+        duration: const Duration(milliseconds: 400), vsync: this);
+    _confetti = ConfettiController(duration: const Duration(seconds: 5));
+    _startBgMusic();
   }
 
-  void _initializeGame() {
-    final board = _generateBoard();
-    _gameState = GooseGameState(
-      config: widget.config,
-      board: board,
-      player1Position: 0,
-      player2Position: 0,
-      currentPlayer: 1,
-      player1InWell: false,
-      player2InWell: false,
-      currentCard: null,
-      gameCompleted: false,
-      startedAt: DateTime.now(),
-    );
-  }
-
-  List<GooseSquare> _generateBoard() {
-    final squares = <GooseSquare>[];
-    final totalSquares = widget.config.boardSize.totalSquares;
-    
-    for (int i = 0; i <= totalSquares; i++) {
-      GooseSquareType type = GooseSquareType.normal;
-      
-      if (i == 0) {
-        type = GooseSquareType.normal; // Start
-      } else if (i == totalSquares) {
-        type = GooseSquareType.finish;
-      } else if (i % 9 == 0) {
-        type = GooseSquareType.goose; // Traditional goose squares
-      } else if (i == 6) {
-        type = GooseSquareType.bridge;
-      } else if (i == totalSquares ~/ 3 && !widget.config.excludedSquareTypes.contains(GooseSquareType.well)) {
-        type = GooseSquareType.well;
-      } else if (i == totalSquares ~/ 2 && !widget.config.excludedSquareTypes.contains(GooseSquareType.inn)) {
-        type = GooseSquareType.inn;
-      } else if (i == (totalSquares * 2 ~/ 3) && !widget.config.excludedSquareTypes.contains(GooseSquareType.labyrinth)) {
-        type = GooseSquareType.labyrinth;
-      } else if (i % 7 == 0) {
-        type = GooseSquareType.challenge;
-      } else if (i % 11 == 0) {
-        type = GooseSquareType.truth;
-      } else if (i % 13 == 0) {
-        type = GooseSquareType.bonus;
-      } else if (i % 17 == 0) {
-        type = GooseSquareType.couple;
-      }
-      
-      squares.add(GooseSquare(position: i, type: type));
-    }
-    
-    return squares;
-  }
-
-  void _setupAnimations() {
-    _diceController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    
-    _moveController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
-    
-    _confettiController = ConfettiController(duration: const Duration(seconds: 3));
-  }
-
-  void _rollDice() async {
-    if (_isRolling || _gameState.gameCompleted) return;
-    
-    // Check if current player is in well
-    final isInWell = _gameState.currentPlayer == 1 
-        ? _gameState.player1InWell 
-        : _gameState.player2InWell;
-    
-    if (isInWell) {
-      // Need to roll 5 or 6 to escape
-      HapticFeedback.mediumImpact();
-      setState(() => _isRolling = true);
-      _diceController.repeat();
-      
-      await Future.delayed(const Duration(milliseconds: 800));
-      
-      final roll = widget.config.useRiggedDice 
-          ? _random.nextInt(3) + 3 // 3-5
-          : _random.nextInt(6) + 1; // 1-6
-      
-      _diceController.stop();
-      
-      setState(() {
-        _gameState = _gameState.copyWith(lastDiceRoll: roll);
-        _isRolling = false;
-        
-        if (roll >= 5) {
-          // Escaped!
-          if (_gameState.currentPlayer == 1) {
-            _gameState = _gameState.copyWith(player1InWell: false);
-          } else {
-            _gameState = _gameState.copyWith(player2InWell: false);
-          }
-          _showMessage('games.goose_game.well_escape'.tr());
-        } else {
-          _showMessage('Hai bisogno di 5 o 6 per uscire!');
-          _switchPlayer();
-        }
-      });
-      return;
-    }
-    
-    HapticFeedback.mediumImpact();
-    setState(() => _isRolling = true);
-    _diceController.repeat();
-    
-    await Future.delayed(const Duration(milliseconds: 800));
-    
-    final roll = widget.config.useRiggedDice 
-        ? _random.nextInt(3) + 3 // 3-5
-        : _random.nextInt(6) + 1; // 1-6
-    
-    _diceController.stop();
-    
-    setState(() {
-      _gameState = _gameState.copyWith(lastDiceRoll: roll);
-      _isRolling = false;
-    });
-    
-    await _movePlayer(roll);
-  }
-
-  Future<void> _movePlayer(int spaces) async {
-    final currentPos = _gameState.currentPlayer == 1 
-        ? _gameState.player1Position 
-        : _gameState.player2Position;
-    
-    int newPos = currentPos + spaces;
-    final maxPos = widget.config.boardSize.totalSquares;
-    
-    // Check for overshoot
-    if (newPos > maxPos) {
-      final overshoot = newPos - maxPos;
-      newPos = maxPos - overshoot;
-      _showMessage('games.goose_game.bounce_back'.tr());
-    }
-    
-    // Animate movement
-    setState(() {
-      if (_gameState.currentPlayer == 1) {
-        _gameState = _gameState.copyWith(player1Position: newPos);
-      } else {
-        _gameState = _gameState.copyWith(player2Position: newPos);
-      }
-    });
-    
-    await Future.delayed(const Duration(milliseconds: 500));
-    
-    // Handle square effect
-    await _handleSquareEffect(newPos);
-  }
-
-  Future<void> _handleSquareEffect(int position) async {
-    if (position >= _gameState.board.length) return;
-    
-    final square = _gameState.board[position];
-    
-    switch (square.type) {
-      case GooseSquareType.finish:
-        _handleVictory();
-        break;
-        
-      case GooseSquareType.goose:
-        // Move forward same amount again
-        _showMessage('🪿 Oca! Tira di nuovo il dado!');
-        // In real game, would trigger another roll
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.bridge:
-        _showMessage('🌉 Ponte! Avanza alla casella 12');
-        setState(() {
-          if (_gameState.currentPlayer == 1) {
-            _gameState = _gameState.copyWith(player1Position: 12);
-          } else {
-            _gameState = _gameState.copyWith(player2Position: 12);
-          }
-        });
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.well:
-        _showMessage('games.goose_game.well_trap'.tr());
-        setState(() {
-          if (_gameState.currentPlayer == 1) {
-            _gameState = _gameState.copyWith(player1InWell: true);
-          } else {
-            _gameState = _gameState.copyWith(player2InWell: true);
-          }
-        });
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.inn:
-        _showMessage('games.goose_game.inn_message'.tr());
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.labyrinth:
-        _showMessage('🌀 Labirinto! Torna alla casella ${widget.config.boardSize.totalSquares ~/ 4}');
-        setState(() {
-          final newPos = widget.config.boardSize.totalSquares ~/ 4;
-          if (_gameState.currentPlayer == 1) {
-            _gameState = _gameState.copyWith(player1Position: newPos);
-          } else {
-            _gameState = _gameState.copyWith(player2Position: newPos);
-          }
-        });
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.challenge:
-      case GooseSquareType.truth:
-        _drawCard(square.type == GooseSquareType.challenge);
-        break;
-        
-      case GooseSquareType.bonus:
-        _showMessage('🎁 Bonus! Scegli una ricompensa per il partner');
-        _switchPlayer();
-        break;
-        
-      case GooseSquareType.couple:
-        _showMessage('💑 Casella coppia! Fate qualcosa insieme');
-        _drawCard(true);
-        break;
-        
-      default:
-        _switchPlayer();
+  Future<void> _startBgMusic() async {
+    try {
+      await _bgMusic.setReleaseMode(ReleaseMode.loop);
+      await _bgMusic.setVolume(0.25);
+      await _bgMusic.play(AssetSource('audio/goose_bg_music.mp3'));
+    } catch (_) {
+      // Audio file not yet available – silently ignore
     }
   }
 
-  void _drawCard(bool isChallenge) {
-    final filteredCards = _sampleCards
-        .where((c) => c.intensity == widget.config.intensity || c.intensity == GameIntensity.soft)
-        .toList();
-    
-    if (filteredCards.isEmpty) {
-      _switchPlayer();
-      return;
-    }
-    
-    final card = filteredCards[_random.nextInt(filteredCards.length)];
-    
-    setState(() {
-      _currentCard = card;
-      _showCard = true;
-    });
-  }
-
-  void _onCardDismissed() {
-    setState(() {
-      _showCard = false;
-      _currentCard = null;
-    });
-    _switchPlayer();
-  }
-
-  void _switchPlayer() {
-    if (widget.config.playMode == GoosePlayMode.cooperative) {
-      // In cooperative mode, alternate turns
-      setState(() {
-        _gameState = _gameState.copyWith(
-          currentPlayer: _gameState.currentPlayer == 1 ? 2 : 1,
-        );
-      });
-    } else {
-      // In challenge mode, same logic but tracking who's ahead
-      setState(() {
-        _gameState = _gameState.copyWith(
-          currentPlayer: _gameState.currentPlayer == 1 ? 2 : 1,
-        );
-      });
-    }
-  }
-
-  void _handleVictory() {
-    HapticFeedback.heavyImpact();
-    _confettiController.play();
-    
-    setState(() {
-      _gameState = _gameState.copyWith(gameCompleted: true);
-    });
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
+  // Background image is now rendered as a widget (Image.asset) behind the board.
 
   @override
   void dispose() {
-    _diceController.dispose();
-    _moveController.dispose();
-    _confettiController.dispose();
+    _bgMusic.stop();
+    _bgMusic.dispose();
+    _diceAnim.dispose();
+    _shakeAnim.dispose();
+    _confetti.dispose();
+    _statusTimer?.cancel();
     super.dispose();
   }
+
+  // ─────────────────────────── BOARD ────────────────────────────────
+
+  List<GooseSquare> _generateBoard() {
+    const total = 100;
+    return List.generate(total + 1, (i) {
+      if (i == 0)     return const GooseSquare(position: 0,     type: GooseSquareType.normal);
+      if (i == total) return const GooseSquare(position: total, type: GooseSquareType.finish);
+      if (kLadderMap.containsKey(i))
+        return GooseSquare(position: i, type: GooseSquareType.ladder, destination: kLadderMap[i]);
+      if (kHoleMap.containsKey(i))
+        return GooseSquare(position: i, type: GooseSquareType.hole,   destination: kHoleMap[i]);
+      if (kPenanceSquares.contains(i))
+        return GooseSquare(position: i, type: GooseSquareType.penance);
+      return GooseSquare(position: i, type: GooseSquareType.normal);
+    });
+  }
+
+  // ─────────────────────────── STATUS OVERLAY ───────────────────────
+
+  void _showStatus(String msg, {Color color = _kBlue, String emoji = '🎲'}) {
+    _statusTimer?.cancel();
+    setState(() { _statusMsg = msg; _statusColor = color; _statusEmoji = emoji; });
+    _statusTimer = Timer(const Duration(milliseconds: 3200), () {
+      if (mounted) setState(() => _statusMsg = null);
+    });
+  }
+
+  // ─────────────────────────── DICE LOGIC ───────────────────────────
+
+  Future<void> _rollDice() async {
+    if (_isRolling || _gameOver) return;
+    HapticFeedback.mediumImpact();
+    setState(() => _isRolling = true);
+
+    _diceAnim.repeat();
+    _shakeAnim.forward(from: 0);
+    await Future.delayed(const Duration(milliseconds: 650));
+    _diceAnim.stop();
+
+    final roll = _rng.nextInt(6) + 1;
+    setState(() { _lastRoll = roll; _isRolling = false; });
+
+    final onBoard = _currentPlayer == 1 ? _p1OnBoard : _p2OnBoard;
+
+    if (!onBoard && !_waitingMovementRoll) {
+      await _handleExitRoll(roll);
+    } else {
+      final isFirst = _waitingMovementRoll;
+      if (_waitingMovementRoll) _waitingMovementRoll = false;
+      await _movePlayer(roll, firstMove: isFirst);
+      if (roll == 6 && _consecutiveSixes < 2 && !_gameOver) {
+        _consecutiveSixes++;
+        _showStatus('🎲 Hai fatto 6! Tira ancora! (${_consecutiveSixes}/2)',
+            color: _kGold, emoji: '🎲');
+      } else {
+        _consecutiveSixes = 0;
+        if (!_gameOver) _switchPlayer();
+      }
+    }
+  }
+
+  Future<void> _handleExitRoll(int roll) async {
+    final name = _playerName(_currentPlayer);
+    if (roll >= 4) {
+      _waitingMovementRoll = true;
+      if (_currentPlayer == 1) _p1FailedExits = 0; else _p2FailedExits = 0;
+      _showStatus('$name esce! 🚀 Tira ancora per muoverti!',
+          color: _kGreen, emoji: '🚀');
+    } else {
+      if (_currentPlayer == 1) _p1FailedExits++; else _p2FailedExits++;
+      final failures = _currentPlayer == 1 ? _p1FailedExits : _p2FailedExits;
+      if (failures >= 2) {
+        if (_currentPlayer == 1) _p1FailedExits = 0; else _p2FailedExits = 0;
+        await _removeClothingFrom(_currentPlayer,
+            reason: '$name non riesce ad uscire per 2 turni!');
+        _switchPlayer();
+      } else {
+        _showStatus('Serve 4, 5 o 6! (${2 - failures} tentativo rimasto)',
+            color: _kRed, emoji: '⚠️');
+        _switchPlayer();
+      }
+    }
+  }
+
+  Future<void> _movePlayer(int spaces, {required bool firstMove}) async {
+    const total = 100;
+    final oldPos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
+    int newPos = oldPos + spaces;
+
+    if (newPos > total) {
+      newPos = total - (newPos - total);
+      _showStatus('Rimbalzo! Torna alla casella $newPos 🔄',
+          color: _kOrange, emoji: '🔄');
+    }
+
+    setState(() {
+      if (_currentPlayer == 1) { _p1Pos = newPos; if (firstMove) _p1OnBoard = true; }
+      else                     { _p2Pos = newPos; if (firstMove) _p2OnBoard = true; }
+    });
+
+    await Future.delayed(const Duration(milliseconds: 350));
+    await _checkMilestone(newPos);
+    await _handleSquare(newPos);
+  }
+
+  Future<void> _checkMilestone(int pos) async {
+    final last = _currentPlayer == 1 ? _p1LastMilestone : _p2LastMilestone;
+    for (final m in [20, 40, 60, 80]) {
+      if (pos >= m && last < m) {
+        setState(() {
+          if (_currentPlayer == 1) _p1LastMilestone = m;
+          else _p2LastMilestone = m;
+        });
+        await _removeClothingFromOpponent(
+            reason: '${_playerName(_currentPlayer)} ha superato la casella $m!');
+        return;
+      }
+    }
+  }
+
+  Future<void> _handleSquare(int pos) async {
+    if (pos >= _board.length) return;
+    final sq = _board[pos];
+    switch (sq.type) {
+      case GooseSquareType.finish:
+        await _handleVictory();
+        break;
+      case GooseSquareType.ladder:
+        final dest = sq.destination!;
+        await _showContentDialog(_ContentDialogArgs(
+          emoji: '🪜', title: 'SCALA!',
+          subtitle: 'Casella $pos → $dest (+${dest - pos})',
+          description: 'Ricevi una ricompensa dal partner:',
+          content: _rand(kRewards), color: _kGreen,
+        ));
+        setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
+        break;
+      case GooseSquareType.hole:
+        final dest = sq.destination!;
+        await _showContentDialog(_ContentDialogArgs(
+          emoji: '🕳️', title: 'BUCO!',
+          subtitle: 'Casella $pos → $dest (${dest - pos})',
+          description: 'Fai una penitenza al partner:',
+          content: _rand(kPenances), color: _kRed,
+        ));
+        setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
+        break;
+      case GooseSquareType.penance:
+        await _showContentDialog(_ContentDialogArgs(
+          emoji: '🔥', title: 'PENITENZA!',
+          subtitle: 'Casella piccante!',
+          description: 'Esegui questa penitenza:',
+          content: _rand(kPenances), color: _kOrange,
+        ));
+        break;
+      default:
+        break;
+    }
+  }
+
+  Future<void> _removeClothingFrom(int player, {required String reason}) async {
+    final count = player == 1 ? _p1Clothing : _p2Clothing;
+    if (count > 0) {
+      setState(() { if (player == 1) _p1Clothing--; else _p2Clothing--; });
+      await _showClothingModal(player, reason: reason);
+    } else {
+      await _showContentDialog(_ContentDialogArgs(
+        emoji: '🔥', title: 'NUDO/A!',
+        subtitle: '${_playerName(player)} non ha più capi!',
+        description: 'Penitenza invece di spogliarsi 😈',
+        content: _rand(kPenances), color: _kRed,
+      ));
+    }
+  }
+
+  Future<void> _removeClothingFromOpponent({required String reason}) async {
+    final opp = _currentPlayer == 1 ? 2 : 1;
+    await _removeClothingFrom(opp, reason: reason);
+  }
+
+  void _switchPlayer() {
+    setState(() => _currentPlayer = _currentPlayer == 1 ? 2 : 1);
+  }
+
+  Future<void> _handleVictory() async {
+    HapticFeedback.heavyImpact();
+    _confetti.play();
+    _bgMusic.stop();
+    setState(() => _gameOver = true);
+    await _showContentDialog(_ContentDialogArgs(
+      emoji: '🏆', title: '${_playerName(_currentPlayer)} VINCE!',
+      subtitle: 'Hai raggiunto la casella 100! 🎉',
+      description: '🔥 PREMIO FINALE — Il partner del perdente esegue:',
+      content: _rand(kFinalRewards), color: _kGold,
+      onDismiss: () { Navigator.of(context).pop(); context.pop(); },
+    ));
+  }
+
+  // ── Helpers ──
+  String       _playerName(int p)  => p == 1 ? widget.config.player1Name : widget.config.player2Name;
+  Color        _playerColor(int p) => p == 1 ? _kP1 : _kP2;
+  GooseContent _rand(List<GooseContent> l) => l[_rng.nextInt(l.length)];
+
+  // ─────────────────────────── MODALS ───────────────────────────────
+
+  Future<void> _showContentDialog(_ContentDialogArgs args) async {
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.75),
+      builder: (_) => _ContentDialog(args: args),
+    );
+  }
+
+  Future<void> _showClothingModal(int player, {required String reason}) async {
+    final name      = _playerName(player);
+    final remaining = player == 1 ? _p1Clothing : _p2Clothing;
+    final color     = _playerColor(player);
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.75),
+      builder: (_) => _ClothingDialog(
+          playerName: name, remaining: remaining,
+          reason: reason, color: color),
+    );
+  }
+
+  // ─────────────────────────── BUILD ────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('games.goose_game.title'.tr()),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: _showRules,
-          ),
-        ],
-      ),
+      backgroundColor: _kBg1,
+      appBar: _buildAppBar(),
       body: Stack(
         children: [
+          // Gradient background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                colors: [_kBg1, _kBg2, Color(0xFF0A1628)],
+              ),
+            ),
+          ),
+
           Column(
             children: [
-              // Game board
-              Expanded(
-                child: _buildBoard(),
-              ),
-              
-              // Player info and dice
+              _buildStatusBar(),
+              Expanded(child: _buildBoard()),
               _buildControlPanel(),
             ],
           ),
-          
-          // Card overlay
-          if (_showCard && _currentCard != null)
-            _buildCardOverlay(),
-          
-          // Victory overlay
-          if (_gameState.gameCompleted)
-            _buildVictoryOverlay(),
-          
+
+          // Status toast (top of board area, never covers dice button)
+          if (_statusMsg != null) _buildStatusToast(),
+
           // Confetti
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
-              confettiController: _confettiController,
+              confettiController: _confetti,
               blastDirection: pi / 2,
-              maxBlastForce: 10,
-              minBlastForce: 5,
-              emissionFrequency: 0.05,
-              numberOfParticles: 30,
-              gravity: 0.1,
-              colors: const [
-                AppColors.burgundy,
-                AppColors.gold,
-                AppColors.blush,
-              ],
+              maxBlastForce: 15, minBlastForce: 6,
+              emissionFrequency: 0.06, numberOfParticles: 35,
+              gravity: 0.12,
+              colors: const [_kP1, _kP2, _kGold, Colors.pink, _kGreen],
             ),
           ),
         ],
@@ -421,476 +569,1488 @@ class _GoosePlayScreenState extends ConsumerState<GoosePlayScreen>
     );
   }
 
-  Widget _buildBoard() {
-    final totalSquares = widget.config.boardSize.totalSquares + 1;
-    final columns = 10;
-    
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: columns,
-          mainAxisSpacing: 2,
-          crossAxisSpacing: 2,
-        ),
-        itemCount: totalSquares,
-        itemBuilder: (context, index) {
-          final square = _gameState.board[index];
-          final hasPlayer1 = _gameState.player1Position == index;
-          final hasPlayer2 = _gameState.player2Position == index;
-          
-          return _buildSquare(square, hasPlayer1, hasPlayer2);
-        },
-      ),
-    );
-  }
-
-  Widget _buildSquare(GooseSquare square, bool hasPlayer1, bool hasPlayer2) {
-    return Container(
-      decoration: BoxDecoration(
-        color: _getSquareColor(square.type),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: Colors.white.withOpacity(0.2),
-          width: 0.5,
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      title: ShaderMask(
+        shaderCallback: (b) => const LinearGradient(
+          colors: [_kGold, _kP1],
+        ).createShader(b),
+        child: const Text(
+          '🎲 Gioco dell\'Oca',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Square number
-          Text(
-            '${square.position}',
-            style: TextStyle(
-              fontSize: 8,
-              color: Colors.white.withOpacity(0.5),
-            ),
-          ),
-          
-          // Square icon
-          if (square.type != GooseSquareType.normal)
-            Text(
-              _getSquareEmoji(square.type),
-              style: const TextStyle(fontSize: 12),
-            ),
-          
-          // Players
-          if (hasPlayer1 || hasPlayer2)
-            Positioned(
-              bottom: 2,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (hasPlayer1)
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: AppColors.burgundy,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1),
-                      ),
-                    ),
-                  if (hasPlayer1 && hasPlayer2)
-                    const SizedBox(width: 2),
-                  if (hasPlayer2)
-                    Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: AppColors.gold,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Color _getSquareColor(GooseSquareType type) {
-    switch (type) {
-      case GooseSquareType.normal:
-        return AppColors.navy.withOpacity(0.3);
-      case GooseSquareType.goose:
-        return Colors.green.withOpacity(0.5);
-      case GooseSquareType.bridge:
-        return Colors.brown.withOpacity(0.5);
-      case GooseSquareType.well:
-        return Colors.blue.withOpacity(0.5);
-      case GooseSquareType.labyrinth:
-        return Colors.purple.withOpacity(0.5);
-      case GooseSquareType.inn:
-        return Colors.orange.withOpacity(0.5);
-      case GooseSquareType.challenge:
-        return AppColors.spicy.withOpacity(0.5);
-      case GooseSquareType.truth:
-        return AppColors.soft.withOpacity(0.5);
-      case GooseSquareType.bonus:
-        return AppColors.gold.withOpacity(0.5);
-      case GooseSquareType.couple:
-        return AppColors.burgundy.withOpacity(0.5);
-      case GooseSquareType.finish:
-        return Colors.yellow.withOpacity(0.7);
-    }
-  }
-
-  String _getSquareEmoji(GooseSquareType type) {
-    switch (type) {
-      case GooseSquareType.goose:
-        return '🪿';
-      case GooseSquareType.bridge:
-        return '🌉';
-      case GooseSquareType.well:
-        return '🕳️';
-      case GooseSquareType.labyrinth:
-        return '🌀';
-      case GooseSquareType.inn:
-        return '🏨';
-      case GooseSquareType.challenge:
-        return '🎯';
-      case GooseSquareType.truth:
-        return '💬';
-      case GooseSquareType.bonus:
-        return '🎁';
-      case GooseSquareType.couple:
-        return '💑';
-      case GooseSquareType.finish:
-        return '🏆';
-      default:
-        return '';
-    }
-  }
-
-  Widget _buildControlPanel() {
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Current player indicator
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _buildPlayerIndicator(1),
-                const SizedBox(width: AppSpacing.xl),
-                _buildPlayerIndicator(2),
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // Dice and roll button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Last roll display
-                if (_gameState.lastDiceRoll != null)
-                  AnimatedBuilder(
-                    animation: _diceController,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _isRolling ? _diceController.value * 2 * pi : 0,
-                        child: Container(
-                          width: 60,
-                          height: 60,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.2),
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Center(
-                            child: Text(
-                              _isRolling ? '?' : '${_gameState.lastDiceRoll}',
-                              style: const TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.navy,
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                
-                const SizedBox(width: AppSpacing.lg),
-                
-                // Roll button
-                ElevatedButton(
-                  onPressed: _isRolling ? null : _rollDice,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xl,
-                      vertical: AppSpacing.md,
-                    ),
-                    backgroundColor: AppColors.burgundy,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: Text(
-                    _isRolling 
-                        ? '...' 
-                        : 'games.roll_dice'.tr(),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.help_outline, color: Colors.white70),
+          onPressed: _showRules,
         ),
-      ),
-    );
-  }
-
-  Widget _buildPlayerIndicator(int player) {
-    final isCurrentPlayer = _gameState.currentPlayer == player;
-    final position = player == 1 
-        ? _gameState.player1Position 
-        : _gameState.player2Position;
-    final isInWell = player == 1 
-        ? _gameState.player1InWell 
-        : _gameState.player2InWell;
-    final color = player == 1 ? AppColors.burgundy : AppColors.gold;
-    
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: isCurrentPlayer ? color.withOpacity(0.2) : Colors.transparent,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: isCurrentPlayer 
-                ? Border.all(color: color, width: 2)
-                : null,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Giocatore $player',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                  Text(
-                    isInWell ? '🕳️ Nel pozzo' : 'Casella $position',
-                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        if (isCurrentPlayer)
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Text(
-              'games.your_turn'.tr(),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
       ],
     );
   }
 
-  Widget _buildCardOverlay() {
-    return GestureDetector(
-      onTap: _onCardDismissed,
-      child: Container(
-        color: Colors.black.withOpacity(0.7),
-        child: Center(
-          child: Container(
-            margin: const EdgeInsets.all(AppSpacing.xl),
-            padding: const EdgeInsets.all(AppSpacing.xl),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(AppRadius.xl),
+  // ── Status toast overlay ──
+  Widget _buildStatusToast() {
+    return Positioned(
+      top: 56, left: 12, right: 12,
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [_statusColor.withOpacity(0.92), _statusColor.withOpacity(0.75)],
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _currentCard!.isChallenge ? '🎯 Sfida!' : '💬 Verità',
-                  style: Theme.of(context).textTheme.headlineSmall,
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: _statusColor.withOpacity(0.5),
+                blurRadius: 16, spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Text(_statusEmoji, style: const TextStyle(fontSize: 18)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  _statusMsg!,
+                  style: const TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13,
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  _currentCard!.localizedText,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                ElevatedButton(
-                  onPressed: _onCardDismissed,
-                  child: Text('common.done'.tr()),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Widget _buildVictoryOverlay() {
-    final winner = _gameState.currentPlayer;
-    
+  // ── Player clothing panel (status bar) ──
+  Widget _buildStatusBar() {
     return Container(
-      color: Colors.black.withOpacity(0.8),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '🏆',
-              style: const TextStyle(fontSize: 80),
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            Text(
-              'games.goose_game.victory'.tr(),
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                color: Colors.white,
+      margin: const EdgeInsets.fromLTRB(8, 4, 8, 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF2A1060), Color(0xFF1A0840)],
+        ),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.purple.withOpacity(0.45)),
+        boxShadow: [BoxShadow(color: Colors.purple.withOpacity(0.25), blurRadius: 12)],
+      ),
+      child: Row(children: [
+        Expanded(child: _buildClothingPanel(1)),
+        Container(
+          width: 1, height: 54,
+          color: Colors.white.withOpacity(0.12),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
+        ),
+        Expanded(child: _buildClothingPanel(2)),
+      ]),
+    );
+  }
+
+  Widget _buildClothingPanel(int p) {
+    final name     = _playerName(p);
+    final clothes  = p == 1 ? _p1Clothing : _p2Clothing;
+    final color    = _playerColor(p);
+    final isActive = _currentPlayer == p && !_gameOver;
+    final gender   = p == 1 ? widget.config.player1Gender : widget.config.player2Gender;
+    final icons    = gender == PlayerGender.male ? _kIconsMale : _kIconsFemale;
+    final onBoard  = p == 1 ? _p1OnBoard : _p2OnBoard;
+    final pos      = p == 1 ? _p1Pos : _p2Pos;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Name row
+        Row(children: [
+          Icon(gender == PlayerGender.male ? Icons.male : Icons.female, color: color, size: 13),
+          const SizedBox(width: 3),
+          Expanded(
+            child: Text(name,
+              style: TextStyle(
+                color: color, fontWeight: FontWeight.bold, fontSize: 12,
+                shadows: [Shadow(color: color.withOpacity(0.55), blurRadius: 5)],
               ),
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(height: AppSpacing.md),
-            Text(
-              widget.config.playMode == GoosePlayMode.cooperative
-                  ? 'Avete completato il gioco insieme!'
-                  : 'Giocatore $winner vince!',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white.withOpacity(0.8),
+          ),
+          Text(
+            onBoard ? '📍$pos' : '🚀',
+            style: const TextStyle(color: Colors.white54, fontSize: 9),
+          ),
+          if (isActive) ...[
+            const SizedBox(width: 4),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.22),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(color: color.withOpacity(0.5)),
               ),
+              child: Text('▶', style: TextStyle(color: color, fontSize: 7)),
             ),
-            const SizedBox(height: AppSpacing.xxl),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      _initializeGame();
-                    });
-                  },
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    side: const BorderSide(color: Colors.white),
+          ],
+        ]),
+        const SizedBox(height: 5),
+        // Clothing icon slots
+        Row(
+          children: List.generate(4, (i) {
+            final has = i < clothes;
+            return Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                width: 24, height: 24,
+                decoration: BoxDecoration(
+                  color: has ? color.withOpacity(0.18) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: has ? color.withOpacity(0.55) : Colors.white12,
                   ),
-                  child: const Text('Gioca ancora'),
                 ),
-                const SizedBox(width: AppSpacing.md),
-                ElevatedButton(
-                  onPressed: () => context.pop(),
-                  child: const Text('Fine'),
+                child: Center(
+                  child: Opacity(
+                    opacity: has ? 1.0 : 0.18,
+                    child: Text(icons[i], style: const TextStyle(fontSize: 13)),
+                  ),
                 ),
-              ],
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  // ── Isometric 3D board with camera follow ──
+  Widget _buildBoard() {
+    return LayoutBuilder(builder: (ctx, constraints) {
+      final vw = constraints.maxWidth;
+      final vh = constraints.maxHeight;
+
+      // Compute iso grid position for the active player
+      final activePos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
+      final g = _kGridPath[activePos.clamp(0, _kGridPath.length - 1)];
+
+      // Convert grid → canvas coordinates (with spacing multiplier)
+      const hw = _kTileW / 2, hh = _kTileH / 2;
+      final playerCX = _kBoardCX + (g.dx - g.dy) * hw * _kTileStep;
+      final playerCY = _kBoardTY + (g.dx + g.dy) * hh * _kTileStep;
+
+      // Camera offset: shift canvas so active player is viewport-centred
+      final camEnd = Offset(vw / 2 - playerCX, vh / 2 - playerCY);
+
+      final painter = _IsoBoardPainter(
+        board: _board,
+        p1Pos: _p1Pos,        p2Pos: _p2Pos,
+        p1OnBoard: _p1OnBoard, p2OnBoard: _p2OnBoard,
+        p1Color: _kP1,         p2Color: _kP2,
+        p1Name: widget.config.player1Name,
+        p2Name: widget.config.player2Name,
+        p1Gender: widget.config.player1Gender,
+        p2Gender: widget.config.player2Gender,
+      );
+
+      return Stack(
+        children: [
+          // Background image layer (static, fills viewport)
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/goose_board_bg.png',
+              fit: BoxFit.cover,
+              color: Colors.black.withOpacity(0.45),
+              colorBlendMode: BlendMode.darken,
+              errorBuilder: (_, __, ___) => Container(
+                decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(0.0, -0.3),
+                    radius: 1.4,
+                    colors: [
+                      Color(0xFF1A0A2E),
+                      Color(0xFF0D0D1A),
+                      Color(0xFF050510),
+                    ],
+                    stops: [0.0, 0.6, 1.0],
+                  ),
+                ),
+              ),
             ),
+          ),
+          // Board layer
+          ClipRect(
+            child: TweenAnimationBuilder<Offset>(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOutCubic,
+              tween: Tween<Offset>(end: camEnd),
+              builder: (_, cam, child) =>
+                  Transform.translate(offset: cam, child: child!),
+              child: SizedBox(
+                width:  _kCanvasW,
+                height: _kCanvasH,
+                child: CustomPaint(
+                  size: const Size(_kCanvasW, _kCanvasH),
+                  painter: painter,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  // ── Control panel ──
+  Widget _buildControlPanel() {
+    final name    = _playerName(_currentPlayer);
+    final color   = _playerColor(_currentPlayer);
+    final onBoard = _currentPlayer == 1 ? _p1OnBoard : _p2OnBoard;
+
+    String phase;
+    if (!onBoard && !_waitingMovementRoll)
+      phase = '⚠️  Tira 4/5/6 per uscire dalla partenza';
+    else if (_waitingMovementRoll)
+      phase = '🚀 Sei uscito! Tira per muoverti';
+    else if (_consecutiveSixes > 0)
+      phase = '🎲 Hai fatto 6! Tira ancora (${_consecutiveSixes}/2)';
+    else
+      phase = '🎯 Il tuo turno, tira il dado!';
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
+      decoration: BoxDecoration(
+        color: _kSurface,
+        border: Border(top: BorderSide(color: _kBorder, width: 1)),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.4),
+            blurRadius: 12, offset: const Offset(0, -4))],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            // ── Dice ──
+            _buildDice(color),
+            const SizedBox(width: 14),
+
+            // ── Info ──
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(text: TextSpan(children: [
+                    TextSpan(text: _currentPlayer == 1 ? '🔴 ' : '🟡 '),
+                    TextSpan(text: name,
+                        style: TextStyle(color: color,
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ])),
+                  const SizedBox(height: 2),
+                  Text(phase,
+                      style: const TextStyle(color: Colors.white54, fontSize: 11)),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            // ── Roll button ──
+            _buildRollButton(color),
           ],
         ),
       ),
     );
   }
 
+  Widget _buildDice(Color playerColor) {
+    return AnimatedBuilder(
+      animation: _diceAnim,
+      builder: (_, __) {
+        final face = _isRolling
+            ? _diceDots[(_diceAnim.value * 6).toInt() % 6]
+            : (_lastRoll > 0 ? _diceDots[_lastRoll - 1] : '🎲');
+
+        return Transform.rotate(
+          angle: _isRolling ? _diceAnim.value * 2 * pi : 0,
+          child: Container(
+            width: 58, height: 58,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                colors: [
+                  playerColor.withOpacity(0.8),
+                  playerColor.withOpacity(0.4),
+                  const Color(0xFF0D0D1A),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: playerColor.withOpacity(0.6), width: 1.5),
+              boxShadow: [
+                BoxShadow(color: playerColor.withOpacity(0.5),
+                    blurRadius: 10, spreadRadius: 0),
+                BoxShadow(color: Colors.black.withOpacity(0.6),
+                    blurRadius: 6, offset: const Offset(3, 3)),
+                BoxShadow(color: Colors.white.withOpacity(0.08),
+                    blurRadius: 3, offset: const Offset(-1.5, -1.5)),
+              ],
+            ),
+            child: Center(
+              child: Text(face,
+                style: TextStyle(
+                  fontSize: _isRolling ? 26 : 30,
+                  color: Colors.white,
+                  shadows: const [Shadow(color: Colors.black87, blurRadius: 4)],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildRollButton(Color color) {
+    final enabled = !_isRolling && !_gameOver;
+    return GestureDetector(
+      onTap: enabled ? _rollDice : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        decoration: BoxDecoration(
+          gradient: enabled
+              ? LinearGradient(
+                  colors: [color, color.withOpacity(0.7)],
+                  begin: Alignment.topLeft, end: Alignment.bottomRight)
+              : null,
+          color: enabled ? null : Colors.white12,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: enabled
+              ? [BoxShadow(color: color.withOpacity(0.5),
+                    blurRadius: 12, spreadRadius: 1)]
+              : null,
+        ),
+        child: Text(
+          _isRolling ? '...' : 'TIRA 🎲',
+          style: TextStyle(
+            color: enabled ? Colors.white : Colors.white30,
+            fontWeight: FontWeight.w900,
+            fontSize: 15,
+            letterSpacing: 1,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Rules ──
   void _showRules() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+      builder: (_) => Container(
+        height: MediaQuery.of(context).size.height * 0.65,
+        decoration: const BoxDecoration(
+          color: _kSurface,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.xl),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Text(
-                'Regole del Gioco',
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              _buildRuleItem('🎲', 'Tira il dado e muovi la tua pedina'),
-              _buildRuleItem('🪿', 'Oca: tira di nuovo!'),
-              _buildRuleItem('🌉', 'Ponte: avanza alla casella 12'),
-              _buildRuleItem('🕳️', 'Pozzo: bloccato finché non tiri 5 o 6'),
-              _buildRuleItem('🏨', 'Locanda: salta un turno'),
-              _buildRuleItem('🌀', 'Labirinto: torna indietro'),
-              _buildRuleItem('🎯', 'Sfida: completa una sfida divertente'),
-              _buildRuleItem('💬', 'Verità: rispondi a una domanda'),
-              _buildRuleItem('🎁', 'Bonus: scegli una ricompensa'),
-              _buildRuleItem('💑', 'Coppia: fate qualcosa insieme'),
-              _buildRuleItem('🏆', 'Arrivo: devi entrare con il numero esatto!'),
+              Center(child: Container(
+                width: 40, height: 4, margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2)),
+              )),
+              const Text('Regole del Gioco',
+                  style: TextStyle(color: Colors.white,
+                      fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 14),
+              ...[
+                (_kGreen,  '🪜', 'Scala: avanza e ricevi una ricompensa'),
+                (_kRed,    '🕳️', 'Buco: torni indietro e fai una penitenza'),
+                (_kOrange, '🔥', 'Penitenza: azione hot obbligatoria'),
+                (_kGold,   '🏆', 'Arrivo: casella 100 = vittoria!'),
+                (_kBlue,   '🚀', 'Esci dalla partenza con 4/5/6. 2 fail → partner spoglia'),
+                (_kBlue,   '🎲', 'Se esci, tira ancora per muoverti'),
+                (_kP2,     '👗', 'Ogni 20 caselle superate → avversario spoglia'),
+                (_kGold,   '6️⃣', 'Fai 6 → tira ancora! Max 2 volte extra'),
+                (_kRed,    '💀', 'Nessun capo rimasto → penitenza invece'),
+                (_kBlue,   '↩️', 'Oltre 100 → rimbalzi indietro'),
+              ].map((r) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5),
+                child: Row(children: [
+                  Container(width: 4, height: 28,
+                      decoration: BoxDecoration(color: r.$1,
+                          borderRadius: BorderRadius.circular(2))),
+                  const SizedBox(width: 10),
+                  Text(r.$2, style: const TextStyle(fontSize: 20)),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text(r.$3,
+                      style: const TextStyle(color: Colors.white70, fontSize: 13))),
+                ]),
+              )),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildRuleItem(String emoji, String text) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: Row(
-        children: [
-          Text(emoji, style: const TextStyle(fontSize: 24)),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Text(
-              text,
-              style: Theme.of(context).textTheme.bodyMedium,
+// ==================== ISOMETRIC BOARD PAINTER ====================
+
+class _IsoBoardPainter extends CustomPainter {
+  final List<GooseSquare> board;
+  final int    p1Pos, p2Pos;
+  final bool   p1OnBoard, p2OnBoard;
+  final Color  p1Color, p2Color;
+  final String p1Name, p2Name;
+  final PlayerGender p1Gender, p2Gender;
+
+  const _IsoBoardPainter({
+    required this.board,
+    required this.p1Pos,     required this.p2Pos,
+    required this.p1OnBoard, required this.p2OnBoard,
+    required this.p1Color,   required this.p2Color,
+    required this.p1Name,    required this.p2Name,
+    required this.p1Gender,  required this.p2Gender,
+  });
+
+  // Map board position → isometric grid (col, row) using the spiral path.
+  Offset _gridOf(int pos) =>
+      _kGridPath[pos.clamp(0, _kGridPath.length - 1)];
+
+  // Convert grid coordinate → screen coordinate (isometric projection).
+  Offset _toScreen(Offset g) {
+    const hw = _kTileW / 2, hh = _kTileH / 2;
+    return Offset(
+      _kBoardCX + (g.dx - g.dy) * hw * _kTileStep,
+      _kBoardTY + (g.dx + g.dy) * hh * _kTileStep,
+    );
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // ── 0. Themed background ──
+    _drawBackground(canvas, size);
+
+    // ── 1. Draw path-connecting trail between consecutive cells ──
+    final trailPaint = Paint()
+      ..color = const Color(0xFFE84393).withOpacity(0.15)
+      ..strokeWidth = 4.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    for (int i = 0; i < board.length - 1; i++) {
+      final from = _toScreen(_gridOf(i));
+      final to   = _toScreen(_gridOf(i + 1));
+      canvas.drawLine(from, to, trailPaint);
+    }
+
+    // Draw small direction arrows along the trail every 4 cells
+    final arrowPaint = Paint()
+      ..color = Colors.white.withOpacity(0.18)
+      ..strokeWidth = 1.8
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    for (int i = 0; i < board.length - 1; i += 4) {
+      final from = _toScreen(_gridOf(i));
+      final to   = _toScreen(_gridOf(i + 1));
+      final mid  = Offset((from.dx + to.dx) / 2, (from.dy + to.dy) / 2);
+      final dir  = Offset(to.dx - from.dx, to.dy - from.dy);
+      final len  = dir.distance;
+      if (len < 1) continue;
+      final u = Offset(dir.dx / len, dir.dy / len);
+      final perp = Offset(-u.dy, u.dx);
+      const aLen = 5.0;
+      final tip = Offset(mid.dx + u.dx * aLen, mid.dy + u.dy * aLen);
+      canvas.drawLine(tip, Offset(mid.dx - u.dx * aLen + perp.dx * aLen,
+          mid.dy - u.dy * aLen + perp.dy * aLen), arrowPaint);
+      canvas.drawLine(tip, Offset(mid.dx - u.dx * aLen - perp.dx * aLen,
+          mid.dy - u.dy * aLen - perp.dy * aLen), arrowPaint);
+    }
+
+    // ── 2. Draw tiles (painter's algorithm: far → near) ──
+    final order = List.generate(board.length, (i) => i)
+      ..sort((a, b) => (_gridOf(a).dx + _gridOf(a).dy)
+          .compareTo(_gridOf(b).dx + _gridOf(b).dy));
+
+    for (final pos in order) {
+      if (pos >= board.length) continue;
+      final sc = _toScreen(_gridOf(pos));
+      _drawTile(canvas, sc, board[pos], pos == p1Pos, pos == p2Pos);
+    }
+  }
+
+  // ── Themed background ──
+  // Background image is rendered as a widget layer behind the CustomPaint.
+  // Here we only draw a soft vignette overlay on the transparent canvas.
+  void _drawBackground(Canvas canvas, Size size) {
+    final bgRect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    // Soft vignette overlay
+    canvas.drawRect(bgRect, Paint()
+      ..shader = RadialGradient(
+        colors: [
+          Colors.transparent,
+          Colors.black.withOpacity(0.35),
+        ],
+        stops: const [0.4, 1.0],
+      ).createShader(bgRect));
+  }
+
+  // Build a rounded isometric diamond path using quadratic bezier corners.
+  Path _roundedDiamond(Offset vT, Offset vR, Offset vB, Offset vL, double r) {
+    return Path()
+      // Start mid-way on top-left edge, approach top vertex
+      ..moveTo(vT.dx + (vL.dx - vT.dx) * r, vT.dy + (vL.dy - vT.dy) * r)
+      // Round corner at top
+      ..quadraticBezierTo(vT.dx, vT.dy,
+          vT.dx + (vR.dx - vT.dx) * r, vT.dy + (vR.dy - vT.dy) * r)
+      // Line to near right vertex
+      ..lineTo(vR.dx + (vT.dx - vR.dx) * r, vR.dy + (vT.dy - vR.dy) * r)
+      // Round corner at right
+      ..quadraticBezierTo(vR.dx, vR.dy,
+          vR.dx + (vB.dx - vR.dx) * r, vR.dy + (vB.dy - vR.dy) * r)
+      // Line to near bottom vertex
+      ..lineTo(vB.dx + (vR.dx - vB.dx) * r, vB.dy + (vR.dy - vB.dy) * r)
+      // Round corner at bottom
+      ..quadraticBezierTo(vB.dx, vB.dy,
+          vB.dx + (vL.dx - vB.dx) * r, vB.dy + (vL.dy - vB.dy) * r)
+      // Line to near left vertex
+      ..lineTo(vL.dx + (vB.dx - vL.dx) * r, vL.dy + (vB.dy - vL.dy) * r)
+      // Round corner at left
+      ..quadraticBezierTo(vL.dx, vL.dy,
+          vL.dx + (vT.dx - vL.dx) * r, vL.dy + (vT.dy - vL.dy) * r)
+      ..close();
+  }
+
+  void _drawTile(Canvas canvas, Offset c, GooseSquare sq, bool hasP1, bool hasP2) {
+    const hw = _kTileW / 2, hh = _kTileH / 2, bh = _kBlockH;
+    const r = 0.12; // rounding factor (0 = sharp, 0.5 = max)
+    final vT = Offset(c.dx,      c.dy - hh);
+    final vR = Offset(c.dx + hw, c.dy     );
+    final vB = Offset(c.dx,      c.dy + hh);
+    final vL = Offset(c.dx - hw, c.dy     );
+
+    final col   = _topColor(sq.type, sq.position);
+    final colBr = _brighten(col, 0.18); // brighter highlight
+    final colL  = _dim(col, 0.30);
+    final colR  = _dim(col, 0.48);
+
+    // ── Soft glow shadow under tile ──
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(c.dx, c.dy + bh + 3), width: hw * 1.6, height: hh * 0.9),
+      Paint()
+        ..color = Colors.black.withOpacity(0.25)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+    );
+
+    // ── Left face (rounded bottom-left) ──
+    final leftFace = Path()
+      ..moveTo(vL.dx, vL.dy)..lineTo(vB.dx, vB.dy)
+      ..lineTo(vB.dx, vB.dy + bh)
+      ..quadraticBezierTo(vB.dx - hw * 0.06, vB.dy + bh,
+          vL.dx, vL.dy + bh)
+      ..close();
+    canvas.drawPath(leftFace, Paint()..color = colL);
+
+    // ── Right face (rounded bottom-right) ──
+    final rightFace = Path()
+      ..moveTo(vB.dx, vB.dy)..lineTo(vR.dx, vR.dy)
+      ..lineTo(vR.dx, vR.dy + bh)
+      ..quadraticBezierTo(vR.dx - hw * 0.06, vR.dy + bh,
+          vB.dx, vB.dy + bh)
+      ..close();
+    canvas.drawPath(rightFace, Paint()..color = colR);
+
+    // ── Top face (rounded diamond) with gradient ──
+    final topFace = _roundedDiamond(vT, vR, vB, vL, r);
+
+    // Gradient fill: lighter at top-left, darker at bottom-right
+    final topGrad = Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topLeft, end: Alignment.bottomRight,
+        colors: [colBr, col, _dim(col, 0.12)],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(Rect.fromCenter(center: c, width: hw * 2, height: hh * 2));
+    canvas.drawPath(topFace, topGrad);
+
+    // Subtle inner highlight at top edge (warm rose tint)
+    canvas.drawPath(topFace, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = const Color(0xFFFFB8C9).withOpacity(0.25)
+      ..strokeWidth = 1.2);
+
+    // ── Glow border for special tiles ──
+    final gc = _glowColor(sq.type);
+    if (gc != null) {
+      // Outer glow
+      canvas.drawPath(topFace, Paint()
+        ..style = PaintingStyle.stroke
+        ..color = gc.withOpacity(0.35)
+        ..strokeWidth = 4.0
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+      // Sharp border
+      canvas.drawPath(topFace, Paint()
+        ..style = PaintingStyle.stroke
+        ..color = gc.withOpacity(0.8)
+        ..strokeWidth = 1.8);
+    }
+
+    // ── Tile content (number, icon, destination) ──
+    final isSpecial = sq.type != GooseSquareType.normal;
+
+    if (!isSpecial) {
+      // Normal tile: show position number
+      if (sq.position > 0) {
+        _txt(canvas, '${sq.position}', c,
+            sz: _kTileW * 0.18, col: Colors.white.withOpacity(0.75), bold: true);
+      } else {
+        _txt(canvas, 'START', c,
+            sz: _kTileW * 0.14, col: Colors.white70, bold: true);
+      }
+    } else {
+      // Special tile: show big icon centred, NO position number
+      switch (sq.type) {
+        case GooseSquareType.ladder:
+          _txt(canvas, '🪜', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.35); break;
+        case GooseSquareType.hole:
+          _txt(canvas, '🕳️', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.35); break;
+        case GooseSquareType.penance:
+          _txt(canvas, '🔥', Offset(c.dx, c.dy - hh * 0.10), sz: _kTileW * 0.32); break;
+        case GooseSquareType.finish:
+          _txt(canvas, '🏆', Offset(c.dx, c.dy - hh * 0.15), sz: _kTileW * 0.40); break;
+        default: break;
+      }
+    }
+
+    // ── Player pawns ──
+    // Variant logic: both get variant 1 (canonical pair) unless same gender,
+    // in which case player 2 gets variant 2 for distinction.
+    if (!hasP1 && !hasP2) return;
+    final sameGender = p1Gender == p2Gender;
+    final p2Variant = sameGender ? 2 : 1;
+    final baseY = c.dy - hh - 6;
+    if (hasP1 && hasP2) {
+      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, p1Gender, 1);
+      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender, p2Variant);
+    } else if (hasP1) {
+      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, p1Gender, 1);
+    } else {
+      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender, p2Variant);
+    }
+  }
+
+  // ── Chibi character pawns (clay stop-motion style) ────────────────
+  // playerNum (1 or 2) selects a visual variant so same-gender pairs
+  // are always distinguishable.
+  void _drawPawn(Canvas canvas, Offset base, Color color, PlayerGender gender, int playerNum) {
+    // Shadow on ground
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(base.dx, base.dy + 2), width: 28, height: 7),
+      Paint()
+        ..color = Colors.black.withOpacity(0.4)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+
+    if (gender == PlayerGender.male) {
+      _drawMalePawn(canvas, base, color, playerNum);
+    } else {
+      _drawFemalePawn(canvas, base, color, playerNum);
+    }
+  }
+
+  // ── Male chibi ──────────────────────────────────────────────────
+  //  Variant 1: green leaf hair · red sweater · brown pants  (foto boy)
+  //  Variant 2: orange flame hair · blue hoodie · grey pants
+  void _drawMalePawn(Canvas canvas, Offset base, Color color, int variant) {
+    final cx = base.dx;
+    final groundY = base.dy;
+
+    // ── Variant palettes ──
+    const skin     = Color(0xFFFFCCBC);
+    const skinDark = Color(0xFFE8A990);
+
+    // Sweater / top
+    final sweater  = variant == 1 ? const Color(0xFFD32F2F) : const Color(0xFF1565C0);
+    final sweaterH = variant == 1 ? const Color(0xFFEF5350) : const Color(0xFF42A5F5);
+    final sweaterD = variant == 1 ? const Color(0xFFB71C1C) : const Color(0xFF0D47A1);
+
+    // Pants
+    final pants    = variant == 1 ? const Color(0xFF6D4C41) : const Color(0xFF616161);
+    final shoe     = variant == 1 ? const Color(0xFF3E2723) : const Color(0xFF212121);
+
+    // Hair
+    final hair1    = variant == 1 ? const Color(0xFF4CAF50) : const Color(0xFFFF9800);
+    final hairDark = variant == 1 ? const Color(0xFF2E7D32) : const Color(0xFFE65100);
+    final hairLite = variant == 1 ? const Color(0xFF81C784) : const Color(0xFFFFCC80);
+
+    // ── Legs & shoes ──
+    final legY = groundY - 4;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7, legY - 10, 5, 11), const Radius.circular(2)),
+      Paint()..color = pants);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7.5, legY - 1, 6, 3), const Radius.circular(1.5)),
+      Paint()..color = shoe);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 10, 5, 11), const Radius.circular(2)),
+      Paint()..color = pants);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx + 1.5, legY - 1, 6, 3), const Radius.circular(1.5)),
+      Paint()..color = shoe);
+
+    // ── Body (sweater) ──
+    final bodyTop = groundY - 26;
+    final bodyRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(cx - 9, bodyTop, 18, 14), const Radius.circular(4));
+    canvas.drawRRect(bodyRect, Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter, end: Alignment.bottomCenter,
+        colors: [sweaterH, sweater, sweaterD],
+      ).createShader(bodyRect.outerRect));
+    for (var y = bodyTop + 3; y < bodyTop + 13; y += 3) {
+      canvas.drawLine(Offset(cx - 7, y), Offset(cx + 7, y), Paint()
+        ..color = sweaterD.withOpacity(0.3)..strokeWidth = 0.6);
+    }
+
+    // Variant 2: hoodie drawstring detail
+    if (variant == 2) {
+      canvas.drawLine(Offset(cx - 2, bodyTop + 1), Offset(cx - 3, bodyTop + 6),
+        Paint()..color = Colors.white.withOpacity(0.6)..strokeWidth = 0.7);
+      canvas.drawLine(Offset(cx + 2, bodyTop + 1), Offset(cx + 3, bodyTop + 6),
+        Paint()..color = Colors.white.withOpacity(0.6)..strokeWidth = 0.7);
+    }
+
+    // ── Arms ──
+    if (variant == 1) {
+      // V1: waving left arm
+      canvas.drawLine(Offset(cx - 9, bodyTop + 4), Offset(cx - 15, bodyTop - 6),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 15, bodyTop - 7), 3.5, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 9, bodyTop + 4), Offset(cx + 13, bodyTop + 12),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 13, bodyTop + 13), 3, Paint()..color = skin);
+    } else {
+      // V2: both hands on hips / casual
+      canvas.drawLine(Offset(cx - 9, bodyTop + 4), Offset(cx - 14, bodyTop + 10),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 14, bodyTop + 11), 3, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 9, bodyTop + 4), Offset(cx + 14, bodyTop + 10),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop + 11), 3, Paint()..color = skin);
+    }
+
+    // ── Head ──
+    final headCy = bodyTop - 8;
+    final headR = 10.0;
+    final headRect = Rect.fromCenter(center: Offset(cx, headCy), width: headR * 2, height: headR * 2.1);
+    canvas.drawOval(headRect, Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.2, -0.3),
+        colors: [skin, skinDark],
+      ).createShader(headRect));
+
+    // Eyes
+    canvas.drawCircle(Offset(cx - 3.5, headCy - 0.5), 1.8, Paint()..color = const Color(0xFF4E342E));
+    canvas.drawCircle(Offset(cx + 3.5, headCy - 0.5), 1.8, Paint()..color = const Color(0xFF4E342E));
+    canvas.drawCircle(Offset(cx - 3.0, headCy - 1.2), 0.7, Paint()..color = Colors.white);
+    canvas.drawCircle(Offset(cx + 4.0, headCy - 1.2), 0.7, Paint()..color = Colors.white);
+    // Mouth
+    canvas.drawArc(
+      Rect.fromCenter(center: Offset(cx, headCy + 3), width: 5, height: 3),
+      0, pi, false,
+      Paint()..color = const Color(0xFFBF360C)..strokeWidth = 0.8..style = PaintingStyle.stroke);
+    // Blush
+    canvas.drawCircle(Offset(cx - 6, headCy + 2), 2.5, Paint()
+      ..color = const Color(0xFFFF8A80).withOpacity(0.4));
+    canvas.drawCircle(Offset(cx + 6, headCy + 2), 2.5, Paint()
+      ..color = const Color(0xFFFF8A80).withOpacity(0.4));
+
+    // ── Hair ──
+    final hairTop = headCy - headR - 2;
+
+    if (variant == 1) {
+      // V1: Green leaf hair with tendrils
+      final leaf1 = Path()
+        ..moveTo(cx - 2, headCy - headR + 2)
+        ..quadraticBezierTo(cx - 8, hairTop - 10, cx - 1, hairTop - 14)
+        ..quadraticBezierTo(cx + 2, hairTop - 10, cx + 1, headCy - headR + 2)
+        ..close();
+      canvas.drawPath(leaf1, Paint()..color = hair1);
+      canvas.drawPath(leaf1, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.6);
+      final leaf2 = Path()
+        ..moveTo(cx + 2, headCy - headR + 2)
+        ..quadraticBezierTo(cx + 10, hairTop - 8, cx + 6, hairTop - 12)
+        ..quadraticBezierTo(cx + 3, hairTop - 6, cx + 3, headCy - headR + 2)
+        ..close();
+      canvas.drawPath(leaf2, Paint()..color = hairLite);
+      canvas.drawPath(leaf2, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      final leaf3 = Path()
+        ..moveTo(cx - 3, headCy - headR + 1)
+        ..quadraticBezierTo(cx - 12, hairTop - 4, cx - 8, hairTop - 10)
+        ..quadraticBezierTo(cx - 5, hairTop - 4, cx - 2, headCy - headR + 1)
+        ..close();
+      canvas.drawPath(leaf3, Paint()..color = hair1);
+      // Curly vine
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 7, hairTop - 6), width: 6, height: 8),
+        0, pi * 1.3, false,
+        Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 1.2..strokeCap = StrokeCap.round);
+    } else {
+      // V2: Spiky flame hair (orange)
+      for (final dx in [-5.0, -1.5, 2.0, 5.5]) {
+        final spike = Path()
+          ..moveTo(cx + dx - 2.5, headCy - headR + 2)
+          ..quadraticBezierTo(cx + dx, hairTop - 12 - (dx.abs() < 3 ? 4 : 0), cx + dx + 2.5, headCy - headR + 2)
+          ..close();
+        canvas.drawPath(spike, Paint()..color = (dx.abs() < 3) ? hairLite : hair1);
+        canvas.drawPath(spike, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      }
+      // Small flame tips
+      canvas.drawCircle(Offset(cx, hairTop - 15), 1.5, Paint()..color = hairLite);
+    }
+
+    // ── Player colour glow ring ──
+    canvas.drawCircle(Offset(cx, headCy), headR + 6, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = color.withOpacity(0.35)
+      ..strokeWidth = 2.5
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+  }
+
+  // ── Female chibi ────────────────────────────────────────────────
+  //  Variant 1: blue braided bun · glasses · yellow top · jeans  (foto girl)
+  //  Variant 2: pink long hair · no glasses · purple top · black skirt
+  void _drawFemalePawn(Canvas canvas, Offset base, Color color, int variant) {
+    final cx = base.dx;
+    final groundY = base.dy;
+
+    // ── Variant palettes ──
+    const skin     = Color(0xFFFFCCBC);
+    const skinDark = Color(0xFFE8A990);
+
+    // Top
+    final topC     = variant == 1 ? const Color(0xFFFDD835) : const Color(0xFFAB47BC);
+    final topCH    = variant == 1 ? const Color(0xFFFFF176) : const Color(0xFFCE93D8);
+    final topCD    = variant == 1 ? const Color(0xFFF9A825) : const Color(0xFF7B1FA2);
+
+    // Bottom
+    final bottom   = variant == 1 ? const Color(0xFF1565C0) : const Color(0xFF37474F);
+    final bottomD  = variant == 1 ? const Color(0xFF0D47A1) : const Color(0xFF263238);
+    final shoe     = variant == 1 ? const Color(0xFF424242) : const Color(0xFF880E4F);
+
+    // Hair
+    final hair     = variant == 1 ? const Color(0xFF42A5F5) : const Color(0xFFE91E63);
+    final hairDark = variant == 1 ? const Color(0xFF1565C0) : const Color(0xFFAD1457);
+    final hairLite = variant == 1 ? const Color(0xFF90CAF9) : const Color(0xFFF48FB1);
+
+    // ── Legs & shoes ──
+    final legY = groundY - 4;
+    if (variant == 1) {
+      // V1: jeans
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7, legY - 12, 5, 13), const Radius.circular(2)),
+        Paint()..color = bottom);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 11, 5, 12), const Radius.circular(2)),
+        Paint()..color = bottom);
+      // Jean stitching
+      canvas.drawLine(Offset(cx - 4.5, legY - 12), Offset(cx - 4.5, legY - 2),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.5);
+      canvas.drawLine(Offset(cx + 4.5, legY - 11), Offset(cx + 4.5, legY - 2),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.5);
+    } else {
+      // V2: skirt + bare legs
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 9, legY - 12, 18, 7), const Radius.circular(3)),
+        Paint()..color = bottom);
+      // Skirt hem highlight
+      canvas.drawLine(Offset(cx - 8, legY - 5.5), Offset(cx + 8, legY - 5.5),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.6);
+      // Legs (skin)
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 6, legY - 6, 4, 7), const Radius.circular(2)),
+        Paint()..color = skin);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 6, 4, 7), const Radius.circular(2)),
+        Paint()..color = skin);
+    }
+    // Shoes
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7.5, legY - 1, 6, 3), const Radius.circular(1.5)),
+      Paint()..color = shoe);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(Rect.fromLTWH(cx + 1.5, legY - 1, 6, 3), const Radius.circular(1.5)),
+      Paint()..color = shoe);
+
+    // ── Body (top) ──
+    final bodyTop = groundY - 28;
+    final bodyRect = RRect.fromRectAndRadius(
+      Rect.fromLTWH(cx - 8, bodyTop, 16, 13), const Radius.circular(4));
+    canvas.drawRRect(bodyRect, Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.topCenter, end: Alignment.bottomCenter,
+        colors: [topCH, topC, topCD],
+      ).createShader(bodyRect.outerRect));
+    for (var y = bodyTop + 3; y < bodyTop + 12; y += 3) {
+      canvas.drawLine(Offset(cx - 6, y), Offset(cx + 6, y), Paint()
+        ..color = topCD.withOpacity(0.25)..strokeWidth = 0.5);
+    }
+
+    // ── Arms ──
+    if (variant == 1) {
+      // V1: running motion
+      canvas.drawLine(Offset(cx - 8, bodyTop + 4), Offset(cx - 14, bodyTop + 10),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 14, bodyTop + 11), 2.8, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 8, bodyTop + 4), Offset(cx + 14, bodyTop - 1),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop - 2), 2.8, Paint()..color = skin);
+    } else {
+      // V2: one arm up waving, one on hip
+      canvas.drawLine(Offset(cx - 8, bodyTop + 4), Offset(cx - 13, bodyTop + 11),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 13, bodyTop + 12), 2.8, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 8, bodyTop + 4), Offset(cx + 14, bodyTop - 5),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop - 6), 2.8, Paint()..color = skin);
+    }
+
+    // ── Head ──
+    final headCy = bodyTop - 8;
+    final headR = 9.5;
+    final headRect = Rect.fromCenter(center: Offset(cx, headCy), width: headR * 2, height: headR * 2.1);
+    canvas.drawOval(headRect, Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.2, -0.3),
+        colors: [skin, skinDark],
+      ).createShader(headRect));
+
+    // Eyes
+    canvas.drawCircle(Offset(cx - 3.5, headCy - 0.5), 1.6, Paint()..color = const Color(0xFF4E342E));
+    canvas.drawCircle(Offset(cx + 3.5, headCy - 0.5), 1.6, Paint()..color = const Color(0xFF4E342E));
+    canvas.drawCircle(Offset(cx - 3.0, headCy - 1.0), 0.6, Paint()..color = Colors.white);
+    canvas.drawCircle(Offset(cx + 4.0, headCy - 1.0), 0.6, Paint()..color = Colors.white);
+
+    // V1-only: Glasses
+    if (variant == 1) {
+      const glasses = Color(0xFF37474F);
+      canvas.drawCircle(Offset(cx - 3.5, headCy - 0.3), 3.8, Paint()
+        ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
+      canvas.drawCircle(Offset(cx + 3.5, headCy - 0.3), 3.8, Paint()
+        ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
+      canvas.drawLine(Offset(cx - 0.5, headCy - 0.3), Offset(cx + 0.5, headCy - 0.3),
+        Paint()..color = glasses..strokeWidth = 1.0);
+      canvas.drawLine(Offset(cx - 7.2, headCy - 0.3), Offset(cx - 9, headCy + 1),
+        Paint()..color = glasses..strokeWidth = 0.8);
+      canvas.drawLine(Offset(cx + 7.2, headCy - 0.3), Offset(cx + 9, headCy + 1),
+        Paint()..color = glasses..strokeWidth = 0.8);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx - 3.5, headCy - 1.5), width: 3, height: 2),
+        pi * 1.1, pi * 0.5, false,
+        Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 3.5, headCy - 1.5), width: 3, height: 2),
+        pi * 1.1, pi * 0.5, false,
+        Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
+    } else {
+      // V2: longer eyelashes instead of glasses
+      canvas.drawLine(Offset(cx - 5.2, headCy - 1.5), Offset(cx - 5.8, headCy - 2.5),
+        Paint()..color = const Color(0xFF4E342E)..strokeWidth = 0.7);
+      canvas.drawLine(Offset(cx + 5.2, headCy - 1.5), Offset(cx + 5.8, headCy - 2.5),
+        Paint()..color = const Color(0xFF4E342E)..strokeWidth = 0.7);
+    }
+
+    // Mouth
+    canvas.drawArc(
+      Rect.fromCenter(center: Offset(cx, headCy + 3.5), width: 4, height: 2.5),
+      0, pi, false,
+      Paint()..color = const Color(0xFFBF360C)..strokeWidth = 0.7..style = PaintingStyle.stroke);
+    // V2: lipstick
+    if (variant == 2) {
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx, headCy + 3.5), width: 3.5, height: 1.8),
+        0, pi, true,
+        Paint()..color = const Color(0xFFE91E63).withOpacity(0.4));
+    }
+    // Blush
+    canvas.drawCircle(Offset(cx - 6.5, headCy + 2), 2.2, Paint()
+      ..color = const Color(0xFFFF8A80).withOpacity(0.35));
+    canvas.drawCircle(Offset(cx + 6.5, headCy + 2), 2.2, Paint()
+      ..color = const Color(0xFFFF8A80).withOpacity(0.35));
+
+    // ── Hair ──
+    final hairTop = headCy - headR;
+
+    if (variant == 1) {
+      // V1: Blue braided hair bun
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx - 8, headCy - 2), width: 7, height: 14),
+        pi * 0.4, pi * 0.8, false,
+        Paint()..color = hair..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 8, headCy - 2), width: 7, height: 14),
+        pi * 1.8, pi * 0.8, false,
+        Paint()..color = hair..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
+      final fringe = Path()
+        ..moveTo(cx - headR + 1, headCy - 3)
+        ..quadraticBezierTo(cx - headR + 2, hairTop - 2, cx, hairTop - 1)
+        ..quadraticBezierTo(cx + headR - 2, hairTop - 2, cx + headR - 1, headCy - 3)
+        ..lineTo(cx + headR - 2, headCy - 5)
+        ..quadraticBezierTo(cx, hairTop + 1, cx - headR + 2, headCy - 5)
+        ..close();
+      canvas.drawPath(fringe, Paint()..color = hair);
+      // Bun
+      final bunCy = hairTop - 7;
+      final bunRect = Rect.fromCenter(center: Offset(cx, bunCy), width: 14, height: 13);
+      canvas.drawOval(bunRect, Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(-0.2, -0.3),
+          colors: [hairLite, hair, hairDark],
+        ).createShader(bunRect));
+      for (var angle = -0.6; angle < 0.7; angle += 0.4) {
+        canvas.drawArc(
+          Rect.fromCenter(center: Offset(cx + angle * 4, bunCy), width: 10, height: 11),
+          -pi * 0.4, pi * 0.8, false,
+          Paint()..style = PaintingStyle.stroke..color = hairDark.withOpacity(0.4)..strokeWidth = 0.8);
+      }
+      // Golden hair tie
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx, bunCy + 5), width: 12, height: 4),
+        0, pi, false,
+        Paint()..color = const Color(0xFFFFD54F)..strokeWidth = 2.5..style = PaintingStyle.stroke..strokeCap = StrokeCap.round);
+      // Ornament
+      canvas.drawCircle(Offset(cx + 5, bunCy + 1), 2.5, Paint()
+        ..style = PaintingStyle.stroke..color = const Color(0xFF00BCD4)..strokeWidth = 1.5);
+    } else {
+      // V2: Pink long flowing hair (two side locks + fringe)
+      // Fringe
+      final fringe = Path()
+        ..moveTo(cx - headR + 1, headCy - 2)
+        ..quadraticBezierTo(cx - headR + 2, hairTop - 2, cx, hairTop - 2)
+        ..quadraticBezierTo(cx + headR - 2, hairTop - 2, cx + headR - 1, headCy - 2)
+        ..lineTo(cx + headR - 2, headCy - 4)
+        ..quadraticBezierTo(cx, hairTop, cx - headR + 2, headCy - 4)
+        ..close();
+      canvas.drawPath(fringe, Paint()..color = hair);
+      // Left long lock
+      final leftLock = Path()
+        ..moveTo(cx - headR + 1, headCy - 2)
+        ..quadraticBezierTo(cx - headR - 3, headCy + 8, cx - headR + 1, headCy + 16)
+        ..quadraticBezierTo(cx - headR + 3, headCy + 14, cx - headR + 3, headCy - 1)
+        ..close();
+      canvas.drawPath(leftLock, Paint()..color = hair);
+      canvas.drawPath(leftLock, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      // Right long lock
+      final rightLock = Path()
+        ..moveTo(cx + headR - 1, headCy - 2)
+        ..quadraticBezierTo(cx + headR + 3, headCy + 8, cx + headR - 1, headCy + 16)
+        ..quadraticBezierTo(cx + headR - 3, headCy + 14, cx + headR - 3, headCy - 1)
+        ..close();
+      canvas.drawPath(rightLock, Paint()..color = hair);
+      canvas.drawPath(rightLock, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      // Small bow on top
+      final bowX = cx + 4;
+      final bowY = hairTop - 2;
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(bowX - 3, bowY), width: 5, height: 3.5),
+        Paint()..color = const Color(0xFFE91E63));
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(bowX + 3, bowY), width: 5, height: 3.5),
+        Paint()..color = const Color(0xFFE91E63));
+      canvas.drawCircle(Offset(bowX, bowY), 1.5, Paint()..color = const Color(0xFFAD1457));
+    }
+
+    // ── Player colour glow ring ──
+    canvas.drawCircle(Offset(cx, headCy), headR + 6, Paint()
+      ..style = PaintingStyle.stroke
+      ..color = color.withOpacity(0.35)
+      ..strokeWidth = 2.5
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────
+  Color _topColor(GooseSquareType t, [int pos = 0]) {
+    switch (t) {
+      case GooseSquareType.normal:
+        // Cycle through sensual red-to-purple palette based on position
+        const palette = [
+          Color(0xFF6B1B3A), // deep rose
+          Color(0xFF7A1E48), // wine
+          Color(0xFF5C1A4A), // plum
+          Color(0xFF4A1850), // deep purple
+          Color(0xFF5A1640), // burgundy
+          Color(0xFF6E1A35), // crimson
+          Color(0xFF80203C), // rich red
+          Color(0xFF55184D), // violet
+          Color(0xFF72233E), // berry
+          Color(0xFF4E1C55), // grape
+        ];
+        return palette[pos % palette.length];
+      case GooseSquareType.ladder:  return const Color(0xFF2A4040); // dark teal
+      case GooseSquareType.hole:    return const Color(0xFF5A1025); // deep wine
+      case GooseSquareType.penance: return const Color(0xFF5A2035); // dark rose
+      case GooseSquareType.finish:  return const Color(0xFF5A3A18); // warm gold
+    }
+  }
+
+  Color? _glowColor(GooseSquareType t) {
+    switch (t) {
+      case GooseSquareType.ladder:  return const Color(0xFF4ECDC4); // soft teal
+      case GooseSquareType.hole:    return const Color(0xFFE84393); // hot pink
+      case GooseSquareType.penance: return const Color(0xFFFF6B81); // coral rose
+      case GooseSquareType.finish:  return _kGold;
+      default: return null;
+    }
+  }
+
+  Color _dim(Color c, double f) => Color.fromARGB(
+    c.alpha,
+    (c.red   * (1 - f)).clamp(0, 255).round(),
+    (c.green * (1 - f)).clamp(0, 255).round(),
+    (c.blue  * (1 - f)).clamp(0, 255).round(),
+  );
+
+  Color _brighten(Color c, double f) => Color.fromARGB(
+    c.alpha,
+    (c.red   + (255 - c.red)   * f).clamp(0, 255).round(),
+    (c.green + (255 - c.green) * f).clamp(0, 255).round(),
+    (c.blue  + (255 - c.blue)  * f).clamp(0, 255).round(),
+  );
+
+  void _txt(Canvas canvas, String text, Offset center,
+      {double sz = 10, Color col = Colors.white, bool bold = false}) {
+    final tp = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          fontSize: sz, color: col, height: 1,
+          fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas,
+        Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
+  }
+
+  @override
+  bool shouldRepaint(covariant _IsoBoardPainter old) =>
+      old.p1Pos != p1Pos || old.p2Pos != p2Pos ||
+      old.p1OnBoard != p1OnBoard || old.p2OnBoard != p2OnBoard;
+}
+
+// ==================== DIALOGS ====================
+
+class _ContentDialogArgs {
+  final String emoji, title, subtitle, description;
+  final GooseContent content;
+  final Color color;
+  final VoidCallback? onDismiss;
+
+  const _ContentDialogArgs({
+    required this.emoji, required this.title,
+    required this.subtitle, required this.description,
+    required this.content, required this.color,
+    this.onDismiss,
+  });
+}
+
+// ── Beautiful content modal ──
+class _ContentDialog extends StatefulWidget {
+  final _ContentDialogArgs args;
+  const _ContentDialog({required this.args});
+
+  @override
+  State<_ContentDialog> createState() => _ContentDialogState();
+}
+
+class _ContentDialogState extends State<_ContentDialog>
+    with SingleTickerProviderStateMixin {
+  Timer? _timer;
+  int  _remaining = 0;
+  bool _timerDone = false;
+  late AnimationController _entryAnim;
+  late Animation<double>   _scaleAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _entryAnim = AnimationController(
+        duration: const Duration(milliseconds: 350), vsync: this);
+    _scaleAnim = CurvedAnimation(parent: _entryAnim, curve: Curves.elasticOut);
+    _entryAnim.forward();
+
+    if (widget.args.content.timerSeconds != null) {
+      _remaining = widget.args.content.timerSeconds!;
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (_remaining <= 1) {
+          _timer?.cancel();
+          setState(() { _remaining = 0; _timerDone = true; });
+          HapticFeedback.heavyImpact();
+        } else {
+          setState(() => _remaining--);
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() { _timer?.cancel(); _entryAnim.dispose(); super.dispose(); }
+
+  String _fmt(int s) {
+    final m = s ~/ 60, sec = s % 60;
+    return m > 0 ? '${m}m ${sec.toString().padLeft(2,'0')}s' : '${s}s';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final a    = widget.args;
+    final hasT = a.content.timerSeconds != null;
+    final c    = a.color;
+
+    return ScaleTransition(
+      scale: _scaleAnim,
+      child: Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter, end: Alignment.bottomCenter,
+              colors: [_kSurface, const Color(0xFF12121E)],
+            ),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: c.withOpacity(0.5), width: 1.5),
+            boxShadow: [
+              BoxShadow(color: c.withOpacity(0.35), blurRadius: 30, spreadRadius: 2),
+              const BoxShadow(color: Colors.black87, blurRadius: 20),
+            ],
+          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
+
+            // ── Header ──
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(20, 22, 20, 16),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [c.withOpacity(0.3), c.withOpacity(0.05)],
+                  begin: Alignment.topCenter, end: Alignment.bottomCenter,
+                ),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(children: [
+                Text(a.emoji, style: const TextStyle(fontSize: 56)),
+                const SizedBox(height: 8),
+                Text(a.title,
+                  style: TextStyle(
+                    color: c, fontSize: 24, fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
+                    shadows: [Shadow(color: c.withOpacity(0.6), blurRadius: 12)],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 4),
+                Text(a.subtitle,
+                    style: const TextStyle(color: Colors.white54, fontSize: 13),
+                    textAlign: TextAlign.center),
+              ]),
+            ),
+
+            // ── Content ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              child: Column(children: [
+                Text(a.description,
+                    style: TextStyle(color: c.withOpacity(0.8), fontSize: 12),
+                    textAlign: TextAlign.center),
+                const SizedBox(height: 10),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: Colors.white12),
+                  ),
+                  child: Text(a.content.text,
+                    style: const TextStyle(
+                      color: Colors.white, fontSize: 16,
+                      fontWeight: FontWeight.w600, height: 1.45,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                // ── Timer ──
+                if (hasT) ...[
+                  const SizedBox(height: 14),
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: (_timerDone ? _kGreen : c).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                          color: _timerDone ? _kGreen : c, width: 1.5),
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(_timerDone ? Icons.check_circle : Icons.timer_outlined,
+                          color: _timerDone ? _kGreen : c, size: 22),
+                      const SizedBox(width: 8),
+                      Text(
+                        _timerDone ? 'Tempo scaduto! ✅' : _fmt(_remaining),
+                        style: TextStyle(
+                          color: _timerDone ? _kGreen : c,
+                          fontSize: 20, fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]),
+                  ),
+                ],
+
+                const SizedBox(height: 18),
+              ]),
+            ),
+
+            // ── Button ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: SizedBox(
+                width: double.infinity,
+                child: GestureDetector(
+                  onTap: () {
+                    if (a.onDismiss != null) a.onDismiss!();
+                    else Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          colors: [c, c.withOpacity(0.7)],
+                          begin: Alignment.topLeft, end: Alignment.bottomRight),
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [BoxShadow(color: c.withOpacity(0.5),
+                          blurRadius: 14, spreadRadius: 1)],
+                    ),
+                    child: Text(
+                      hasT && !_timerDone ? '✓ Fatto in anticipo' : 'Fatto! 😈',
+                      style: const TextStyle(
+                        color: Colors.white, fontSize: 16,
+                        fontWeight: FontWeight.bold, letterSpacing: 0.8,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Clothing removed modal ──
+class _ClothingDialog extends StatelessWidget {
+  final String playerName;
+  final int    remaining;
+  final String reason;
+  final Color  color;
+
+  const _ClothingDialog({
+    required this.playerName, required this.remaining,
+    required this.reason,     required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(horizontal: 28, vertical: 60),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+            colors: [_kSurface, Color(0xFF12121E)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: color.withOpacity(0.5), width: 1.5),
+          boxShadow: [BoxShadow(color: color.withOpacity(0.35), blurRadius: 28)],
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text('👗', style: const TextStyle(fontSize: 56)),
+          const SizedBox(height: 10),
+          Text('TOGLI UN CAPO!',
+              style: TextStyle(
+                color: color, fontSize: 22, fontWeight: FontWeight.w900,
+                letterSpacing: 1.5,
+                shadows: [Shadow(color: color.withOpacity(0.6), blurRadius: 10)],
+              )),
+          const SizedBox(height: 10),
+          Text(reason,
+              style: const TextStyle(color: Colors.white70, fontSize: 13),
+              textAlign: TextAlign.center),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: color.withOpacity(0.3)),
+            ),
+            child: Column(children: [
+              Text(playerName,
+                  style: TextStyle(color: color,
+                      fontWeight: FontWeight.bold, fontSize: 16)),
+              const SizedBox(height: 6),
+              Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(4, (i) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Icon(
+                    i < remaining ? Icons.checkroom : Icons.close,
+                    color: i < remaining ? color : Colors.white24,
+                    size: 22,
+                  ),
+                )),
+              ),
+              const SizedBox(height: 4),
+              Text(remaining == 0 ? '🔥 Nessun capo rimasto!' : '$remaining rimasti',
+                  style: TextStyle(
+                      color: remaining == 0 ? _kRed : Colors.white54,
+                      fontSize: 12)),
+            ]),
+          ),
+          const SizedBox(height: 20),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 12)],
+              ),
+              child: const Text('Fatto! 😈',
+                  style: TextStyle(color: Colors.white,
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center),
             ),
           ),
-        ],
+        ]),
       ),
     );
   }

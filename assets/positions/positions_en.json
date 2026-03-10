@@ -5,21 +5,32 @@
     "nameEn": "Missionary",
     "aliasIt": "La Classica",
     "aliasEn": "The Classic",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "connection"],
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": "Usa un cuscino sotto i fianchi per maggior comfort",
     "easyVariantEn": "Use a pillow under hips for more comfort",
-    "setupIt": "Partner sdraiato sulla schiena, l'altro sopra",
-    "setupEn": "Partner lying on back, other on top",
+    "setupIt": "1. Il partner ricevente si sdraia comodamente sulla schiena, con un cuscino sotto la testa per il comfort.\n2. Le gambe possono restare distese o leggermente piegate con le ginocchia verso l'alto.\n3. Il partner attivo si posiziona sopra, sostenendosi sugli avambracci o sui palmi delle mani.\n4. I corpi dovrebbero essere allineati, petto contro petto, per massimizzare il contatto pelle a pelle.\n5. Regolare l'altezza e l'angolo del bacino per trovare la posizione più confortevole per entrambi.\n6. Mantenere il contatto visivo e respirare insieme per aumentare l'intimità.",
+    "setupEn": "1. The receiving partner lies comfortably on their back, with a pillow under the head for comfort.\n2. Legs can stay extended or slightly bent with knees pointing up.\n3. The active partner positions themselves on top, supporting their weight on forearms or palms.\n4. Bodies should be aligned, chest to chest, to maximize skin-to-skin contact.\n5. Adjust the height and angle of the pelvis to find the most comfortable position for both.\n6. Maintain eye contact and breathe together to increase intimacy.",
     "checkinIt": "Come ti senti? Vuoi che mi muova diversamente?",
     "checkinEn": "How do you feel? Want me to move differently?",
-    "tags": ["romantico", "intimo", "facile", "classico"],
+    "tags": [
+      "romantico",
+      "intimo",
+      "facile",
+      "classico"
+    ],
     "illustrationRef": "missionary.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -31,21 +42,31 @@
     "nameEn": "Cowgirl",
     "aliasIt": "Amazzone",
     "aliasEn": "Woman on Top",
-    "categories": ["beginner", "athletic"],
+    "categories": [
+      "beginner",
+      "athletic"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["passion", "playfulness"],
+    "focus": [
+      "passion",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": "Appoggiarsi in avanti per ridurre lo sforzo",
     "easyVariantEn": "Lean forward to reduce effort",
-    "setupIt": "Un partner sdraiato, l'altro seduto sopra",
-    "setupEn": "One partner lying down, other sitting on top",
+    "setupIt": "1. Il partner inferiore si sdraia sulla schiena con le gambe leggermente divaricate.\n2. Il partner attivo si siede a cavalcioni sopra, con le ginocchia ai lati dei fianchi.\n3. Usare le cosce per sollevarsi e abbassarsi, controllando il ritmo e la profondità.\n4. Le mani possono appoggiarsi sul petto del partner, sulla testiera del letto, o restare libere.\n5. Il partner inferiore può tenere i fianchi dell'altro per guidare il movimento.\n6. Sperimentare diversi angoli di inclinazione del busto — più avanti per maggiore intimità, più indietro per sensazioni diverse.",
+    "setupEn": "1. The bottom partner lies on their back with legs slightly apart.\n2. The active partner straddles on top, with knees on either side of the hips.\n3. Use your thighs to lift and lower, controlling the rhythm and depth.\n4. Hands can rest on the partner's chest, on the headboard, or stay free.\n5. The bottom partner can hold the other's hips to guide the movement.\n6. Experiment with different torso angles — leaning forward for more intimacy, leaning back for different sensations.",
     "checkinIt": "Ti piace questo ritmo?",
     "checkinEn": "Do you like this rhythm?",
-    "tags": ["controllo", "visuale", "ritmo"],
+    "tags": [
+      "controllo",
+      "visuale",
+      "ritmo"
+    ],
     "illustrationRef": "cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -57,21 +78,34 @@
     "nameEn": "Spooning",
     "aliasIt": "Abbraccio Laterale",
     "aliasEn": "Side Cuddle",
-    "categories": ["romantic", "beginner", "lowImpact"],
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "connection", "relax"],
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": null,
     "easyVariantEn": null,
-    "setupIt": "Entrambi sdraiati sullo stesso fianco, uno dietro l'altro",
-    "setupEn": "Both lying on the same side, one behind the other",
+    "setupIt": "1. Entrambi i partner si sdraiano sullo stesso fianco, rivolti nella stessa direzione.\n2. Il partner posteriore (grande cucchiaio) si avvicina, aderendo con il petto alla schiena dell'altro.\n3. Le gambe si intrecciano naturalmente per trovare una posizione stabile e confortevole.\n4. Il braccio inferiore del partner posteriore può passare sotto il cuscino o sotto il collo dell'altro.\n5. Il braccio superiore avvolge il partner, poggiando sulla pancia o sul petto.\n6. I movimenti sono lenti e dolci, oscillando insieme come un'onda. Ideale per momenti di tenerezza al risveglio o prima di dormire.",
+    "setupEn": "1. Both partners lie on the same side, facing the same direction.\n2. The back partner (big spoon) moves close, pressing their chest against the other's back.\n3. Legs intertwine naturally to find a stable and comfortable position.\n4. The back partner's lower arm can go under the pillow or under the other's neck.\n5. The upper arm wraps around the partner, resting on the belly or chest.\n6. Movements are slow and gentle, swaying together like a wave. Ideal for tender moments when waking up or before sleep.",
     "checkinIt": "Ti senti comodo/a così?",
     "checkinEn": "Are you comfortable like this?",
-    "tags": ["intimo", "rilassante", "mattutino", "pigro"],
+    "tags": [
+      "intimo",
+      "rilassante",
+      "mattutino",
+      "pigro"
+    ],
     "illustrationRef": "spooning.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -83,21 +117,31 @@
     "nameEn": "Doggy Style",
     "aliasIt": "A Quattro Zampe",
     "aliasEn": "From Behind",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 2,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Attenzione alla profondità della penetrazione",
     "cautionsEn": "Be careful with penetration depth",
     "easyVariantIt": "Appoggiarsi sui gomiti invece che sulle mani",
     "easyVariantEn": "Rest on elbows instead of hands",
-    "setupIt": "Un partner a quattro zampe, l'altro dietro in ginocchio",
-    "setupEn": "One partner on all fours, other kneeling behind",
+    "setupIt": "1. Il partner ricevente si posiziona a quattro zampe sul letto, con le ginocchia alla larghezza delle spalle.\n2. Le braccia possono essere distese con i palmi sul materasso, oppure piegate sui gomiti per un angolo diverso.\n3. Arcuare leggermente la schiena verso il basso per un allineamento ottimale del bacino.\n4. Il partner attivo si inginocchia dietro, posizionando le ginocchia tra quelle dell'altro.\n5. Afferrare delicatamente i fianchi del partner per stabilità e guida del movimento.\n6. Iniziare con movimenti lenti per trovare l'angolazione giusta, poi regolare ritmo e profondità secondo le preferenze di entrambi.",
+    "setupEn": "1. The receiving partner gets on all fours on the bed, with knees shoulder-width apart.\n2. Arms can be extended with palms on the mattress, or bent at the elbows for a different angle.\n3. Slightly arch the back downward for optimal pelvic alignment.\n4. The active partner kneels behind, positioning their knees between the other's.\n5. Gently hold the partner's hips for stability and movement guidance.\n6. Start with slow movements to find the right angle, then adjust rhythm and depth according to both partners' preferences.",
     "checkinIt": "La profondità va bene?",
     "checkinEn": "Is the depth okay?",
-    "tags": ["passionale", "profondo", "intenso"],
+    "tags": [
+      "passionale",
+      "profondo",
+      "intenso"
+    ],
     "illustrationRef": "doggy.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -109,21 +153,33 @@
     "nameEn": "Lotus",
     "aliasIt": "Yab-Yum",
     "aliasEn": "Tantric Embrace",
-    "categories": ["romantic", "reconnect"],
+    "categories": [
+      "romantic",
+      "reconnect"
+    ],
     "difficulty": 3,
     "energy": "medium",
-    "focus": ["intimacy", "connection", "trust"],
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": "Richiede flessibilità nelle gambe",
     "cautionsEn": "Requires leg flexibility",
     "easyVariantIt": "Sedersi sul bordo del letto invece che a gambe incrociate",
     "easyVariantEn": "Sit on edge of bed instead of cross-legged",
-    "setupIt": "Un partner seduto a gambe incrociate, l'altro seduto sopra di fronte",
-    "setupEn": "One partner sitting cross-legged, other sitting on top facing them",
+    "setupIt": "1. Un partner si sdraia sulla schiena, con la testa verso i piedi dell'altro.\n2. Il secondo partner si posiziona sopra in direzione opposta, creando la forma del 69.\n3. Entrambi dovrebbero avere accesso confortevole al corpo dell'altro senza sforzare il collo.\n4. Usare cuscini sotto la testa del partner inferiore per ridurre la tensione del collo.\n5. Le gambe del partner superiore si posizionano ai lati della testa dell'altro.\n6. Comunicare costantemente per sincronizzare i ritmi e assicurarsi che entrambi siano a proprio agio.",
+    "setupEn": "1. One partner lies on their back, with their head toward the other's feet.\n2. The second partner positions themselves on top in the opposite direction, creating the 69 shape.\n3. Both should have comfortable access to each other's body without straining the neck.\n4. Use pillows under the bottom partner's head to reduce neck tension.\n5. The top partner's legs position on either side of the other's head.\n6. Communicate constantly to synchronize rhythms and make sure both are comfortable.",
     "checkinIt": "Riesci a mantenere questa posizione?",
     "checkinEn": "Can you maintain this position?",
-    "tags": ["tantrico", "spirituale", "intimo", "connessione"],
+    "tags": [
+      "tantrico",
+      "spirituale",
+      "intimo",
+      "connessione"
+    ],
     "illustrationRef": "lotus.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -135,21 +191,31 @@
     "nameEn": "69",
     "aliasIt": "Simultaneo",
     "aliasEn": "Mutual",
-    "categories": ["adventurous", "athletic"],
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Coordinazione necessaria",
     "cautionsEn": "Coordination required",
     "easyVariantIt": "Provare sdraiati su un fianco",
     "easyVariantEn": "Try lying on your side",
-    "setupIt": "Partner in direzioni opposte, testa verso i piedi dell'altro",
-    "setupEn": "Partners in opposite directions, head to feet",
+    "setupIt": "1. Il partner seduto si siede sul bordo del letto o su una sedia robusta senza braccioli.\n2. I piedi devono essere ben piantati a terra per stabilità.\n3. Il secondo partner si siede sulle ginocchia dell'altro, di fronte, con le gambe ai lati.\n4. Avvolgere le braccia intorno al collo o alle spalle del partner seduto per equilibrio.\n5. Il partner sulla sedia può tenere la vita o i fianchi dell'altro per supporto.\n6. Iniziare con movimenti lenti del bacino, oscillando avanti e indietro. La sedia fornisce un supporto naturale che riduce lo sforzo fisico.",
+    "setupEn": "1. The seated partner sits on the edge of the bed or a sturdy armless chair.\n2. Feet should be firmly planted on the ground for stability.\n3. The second partner sits on the other's lap, facing them, with legs on either side.\n4. Wrap arms around the seated partner's neck or shoulders for balance.\n5. The chair partner can hold the other's waist or hips for support.\n6. Start with slow pelvic movements, rocking back and forth. The chair provides natural support that reduces physical effort.",
     "checkinIt": "Riesci a concentrarti su entrambe le cose?",
     "checkinEn": "Can you focus on both giving and receiving?",
-    "tags": ["orale", "simultaneo", "divertente"],
+    "tags": [
+      "orale",
+      "simultaneo",
+      "divertente"
+    ],
     "illustrationRef": "sixtynine.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -161,21 +227,33 @@
     "nameEn": "Reverse Cowgirl",
     "aliasIt": "Amazzone Inversa",
     "aliasEn": "Reverse Woman on Top",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 3,
     "energy": "high",
-    "focus": ["variety", "passion"],
+    "focus": [
+      "variety",
+      "passion"
+    ],
     "duration": "medium",
-    "prerequisites": ["pos_002"],
+    "prerequisites": [
+      "pos_002"
+    ],
     "cautionsIt": "Attenzione agli angoli - rischio di piegature",
     "cautionsEn": "Be careful with angles - risk of bending",
     "easyVariantIt": "Inclinarsi leggermente in avanti",
     "easyVariantEn": "Lean slightly forward",
-    "setupIt": "Un partner sdraiato, l'altro seduto sopra rivolto verso i piedi",
-    "setupEn": "One lying down, other sitting facing their feet",
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena e porta le ginocchia verso il petto.\n2. Le caviglie possono incrociarsi dietro la testa o rimanere ai lati delle orecchie.\n3. Un cuscino sotto i fianchi aiuta a mantenere la posizione e ridurre la pressione sulla schiena.\n4. Il partner attivo si inginocchia di fronte, afferrando le cosce o i polpacci dell'altro per supporto.\n5. L'angolazione elevata del bacino permette una penetrazione più profonda — procedere con delicatezza.\n6. Comunicare costantemente sulla profondità e il comfort. Il partner piegato dovrebbe dire subito se sente tensione alla schiena o al collo.",
+    "setupEn": "1. The receiving partner lies on their back and brings their knees toward their chest.\n2. Ankles can cross behind the head or stay beside the ears.\n3. A pillow under the hips helps maintain the position and reduces back pressure.\n4. The active partner kneels in front, holding the other's thighs or calves for support.\n5. The elevated pelvic angle allows deeper penetration — proceed gently.\n6. Communicate constantly about depth and comfort. The folded partner should immediately say if they feel tension in the back or neck.",
     "checkinIt": "L'angolo va bene per te?",
     "checkinEn": "Is the angle okay for you?",
-    "tags": ["visuale", "controllo", "intenso"],
+    "tags": [
+      "visuale",
+      "controllo",
+      "intenso"
+    ],
     "illustrationRef": "reverse_cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -187,21 +265,31 @@
     "nameEn": "Scissors",
     "aliasIt": "Incastro",
     "aliasEn": "Interlocking",
-    "categories": ["lowImpact", "romantic"],
+    "categories": [
+      "lowImpact",
+      "romantic"
+    ],
     "difficulty": 2,
     "energy": "low",
-    "focus": ["intimacy", "relax"],
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": null,
     "easyVariantEn": null,
-    "setupIt": "Partner sdraiati su fianchi opposti, gambe intrecciate",
-    "setupEn": "Partners lying on opposite sides, legs intertwined",
+    "setupIt": "1. Il partner inferiore si sdraia sulla schiena con le gambe piegate e i piedi appoggiati al materasso.\n2. Il partner superiore si posiziona seduto con la schiena rivolta verso il viso dell'altro.\n3. Mettere le ginocchia ai lati delle cosce del partner inferiore per stabilità.\n4. Appoggiarsi leggermente in avanti, usando le mani sulle ginocchia o gli stinchi del partner inferiore.\n5. Il partner inferiore può guidare il ritmo tenendo i fianchi dell'altro.\n6. Questa posizione offre una visuale completamente diversa — sperimentare con l'angolo di inclinazione del busto per trovare le sensazioni migliori.",
+    "setupEn": "1. The bottom partner lies on their back with legs bent and feet resting on the mattress.\n2. The top partner sits facing away from the other's face.\n3. Place knees on either side of the bottom partner's thighs for stability.\n4. Lean slightly forward, using hands on the bottom partner's knees or shins.\n5. The bottom partner can guide the rhythm by holding the other's hips.\n6. This position offers a completely different view — experiment with torso inclination angle to find the best sensations.",
     "checkinIt": "Ti senti connesso/a?",
     "checkinEn": "Do you feel connected?",
-    "tags": ["rilassante", "intimo", "lento"],
+    "tags": [
+      "rilassante",
+      "intimo",
+      "lento"
+    ],
     "illustrationRef": "scissors.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -213,21 +301,31 @@
     "nameEn": "Bridge",
     "aliasIt": "Arco",
     "aliasEn": "Arch",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["variety", "passion"],
+    "focus": [
+      "variety",
+      "passion"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede forza nelle braccia e nella schiena",
     "cautionsEn": "Requires arm and back strength",
     "easyVariantIt": "Usare cuscini per supporto sotto la schiena",
     "easyVariantEn": "Use pillows for back support",
-    "setupIt": "Un partner in posizione ponte yoga, l'altro in ginocchio",
-    "setupEn": "One partner in yoga bridge position, other kneeling",
+    "setupIt": "1. Un partner si appoggia con la schiena saldamente contro un muro robusto.\n2. Il secondo partner si posiziona di fronte, sollevando una gamba che viene sostenuta dal partner al muro.\n3. Avvolgere le braccia intorno alle spalle dell'altro per equilibrio e connessione.\n4. La gamba sollevata può poggiare sull'anca o sulla vita del partner.\n5. Entrambi devono avere un buon appoggio dei piedi — considerare un tappetino antiscivolo.\n6. Iniziare lentamente per trovare il ritmo, usando il muro come supporto principale. Scambiare la gamba sollevata se una si stanca.",
+    "setupEn": "1. One partner leans firmly with their back against a sturdy wall.\n2. The second partner positions themselves in front, lifting one leg that is supported by the wall partner.\n3. Wrap arms around each other's shoulders for balance and connection.\n4. The raised leg can rest on the partner's hip or waist.\n5. Both must have good footing — consider a non-slip mat.\n6. Start slowly to find the rhythm, using the wall as the main support. Switch the raised leg if one gets tired.",
     "checkinIt": "Riesci a mantenere la posizione?",
     "checkinEn": "Can you hold the position?",
-    "tags": ["atletico", "sfidante", "breve"],
+    "tags": [
+      "atletico",
+      "sfidante",
+      "breve"
+    ],
     "illustrationRef": "bridge.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -239,21 +337,33 @@
     "nameEn": "Missionary with Legs Up",
     "aliasIt": "Profondo",
     "aliasEn": "Deep",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["intimacy", "passion"],
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
     "duration": "medium",
-    "prerequisites": ["pos_001"],
+    "prerequisites": [
+      "pos_001"
+    ],
     "cautionsIt": "La penetrazione è più profonda in questa variante",
     "cautionsEn": "Penetration is deeper in this variation",
     "easyVariantIt": "Gambe appoggiate sulle spalle del partner",
     "easyVariantEn": "Legs resting on partner's shoulders",
-    "setupIt": "Come missionario ma con le gambe del partner ricevente alzate o sulle spalle",
-    "setupEn": "Like missionary but with receiving partner's legs raised or on shoulders",
+    "setupIt": "1. Il partner inferiore si sdraia sulla schiena ai piedi del letto, con i glutei vicini al bordo.\n2. Le gambe pendono dal bordo del letto, con i piedi che toccano il pavimento.\n3. Il partner attivo si inginocchia a terra tra le gambe dell'altro, usando il bordo del letto come altezza di lavoro.\n4. Mettere un cuscino sotto le ginocchia di chi sta a terra per il comfort.\n5. Le mani del partner attivo possono appoggiare sulle cosce o sulla pancia dell'altro.\n6. L'altezza del letto dovrebbe allinearsi naturalmente — se non è perfetta, aggiungere cuscini sotto i fianchi del partner sdraiato.",
+    "setupEn": "1. The bottom partner lies on their back at the foot of the bed, with buttocks near the edge.\n2. Legs hang over the bed edge, with feet touching the floor.\n3. The active partner kneels on the floor between the other's legs, using the bed edge as working height.\n4. Place a cushion under the kneeling partner's knees for comfort.\n5. The active partner's hands can rest on the other's thighs or belly.\n6. The bed height should align naturally — if not perfect, add pillows under the lying partner's hips.",
     "checkinIt": "La profondità è comoda?",
     "checkinEn": "Is the depth comfortable?",
-    "tags": ["profondo", "intenso", "variante"],
+    "tags": [
+      "profondo",
+      "intenso",
+      "variante"
+    ],
     "illustrationRef": "missionary_legs.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -265,21 +375,31 @@
     "nameEn": "Chair",
     "aliasIt": "Seduta",
     "aliasEn": "Seated",
-    "categories": ["adventurous", "quickie"],
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": "Assicurarsi che la sedia sia stabile",
     "cautionsEn": "Make sure the chair is stable",
     "easyVariantIt": "Usare una sedia con braccioli per supporto",
     "easyVariantEn": "Use a chair with armrests for support",
-    "setupIt": "Un partner seduto sulla sedia, l'altro sopra di fronte o di spalle",
-    "setupEn": "One partner seated on chair, other on top facing or away",
+    "setupIt": "1. Il partner inferiore si sdraia su un fianco, con la gamba inferiore distesa e quella superiore piegata al ginocchio.\n2. Il partner attivo si inginocchia a cavalcioni della gamba distesa, posizionandosi perpendicolarmente.\n3. La gamba piegata del partner inferiore può poggiare sulla spalla o sull'anca del partner attivo.\n4. Questa angolazione a T crea sensazioni uniche grazie all'angolo laterale.\n5. Il partner attivo tiene il fianco o la coscia dell'altro per stabilità.\n6. Sperimentare con diverse altezze della gamba piegata per variare l'angolo e le sensazioni.",
+    "setupEn": "1. The bottom partner lies on one side, with the lower leg extended and the upper leg bent at the knee.\n2. The active partner kneels straddling the extended leg, positioning themselves perpendicularly.\n3. The bottom partner's bent leg can rest on the active partner's shoulder or hip.\n4. This T-angle creates unique sensations thanks to the lateral angle.\n5. The active partner holds the other's hip or thigh for stability.\n6. Experiment with different heights of the bent leg to vary the angle and sensations.",
     "checkinIt": "La sedia è comoda?",
     "checkinEn": "Is the chair comfortable?",
-    "tags": ["mobili", "creativo", "spontaneo"],
+    "tags": [
+      "mobili",
+      "creativo",
+      "spontaneo"
+    ],
     "illustrationRef": "chair.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -291,21 +411,32 @@
     "nameEn": "Standing",
     "aliasIt": "Verticale",
     "aliasEn": "Upright",
-    "categories": ["athletic", "quickie", "adventurous"],
+    "categories": [
+      "athletic",
+      "quickie",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede forza e differenza di altezza gestibile",
     "cautionsEn": "Requires strength and manageable height difference",
     "easyVariantIt": "Appoggiarsi a un muro per stabilità",
     "easyVariantEn": "Lean against a wall for stability",
-    "setupIt": "Entrambi in piedi, di fronte o da dietro",
-    "setupEn": "Both standing, facing or from behind",
+    "setupIt": "1. Entrambi i partner stanno in piedi, uno di fronte all'altro.\n2. Un partner solleva leggermente l'altro, che avvolge le gambe intorno alla vita.\n3. Le braccia del partner sollevato si aggrappano saldamente alle spalle o al collo dell'altro.\n4. Il partner che sostiene tiene i glutei o le cosce dell'altro con entrambe le mani.\n5. Appoggiarsi a un muro o a una superficie solida per maggiore stabilità e per ridurre lo sforzo.\n6. Questa posizione richiede forza — iniziare vicino al letto così da potersi sedere quando necessario. Comunicare costantemente sul peso e la fatica.",
+    "setupEn": "1. Both partners stand facing each other.\n2. One partner slightly lifts the other, who wraps their legs around the waist.\n3. The lifted partner's arms grip firmly onto the other's shoulders or neck.\n4. The supporting partner holds the other's buttocks or thighs with both hands.\n5. Lean against a wall or solid surface for more stability and to reduce effort.\n6. This position requires strength — start near the bed so you can sit down when needed. Communicate constantly about weight and fatigue.",
     "checkinIt": "Riesci a stare comodo/a in piedi?",
     "checkinEn": "Can you stay comfortable standing?",
-    "tags": ["spontaneo", "passionale", "sfidante"],
+    "tags": [
+      "spontaneo",
+      "passionale",
+      "sfidante"
+    ],
     "illustrationRef": "standing.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -317,21 +448,31 @@
     "nameEn": "Prone Bone",
     "aliasIt": "Sdraiata Prona",
     "aliasEn": "Flat on Stomach",
-    "categories": ["lowImpact", "romantic"],
+    "categories": [
+      "lowImpact",
+      "romantic"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["intimacy", "relax"],
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
     "duration": "long",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": "Cuscino sotto i fianchi per comfort",
     "easyVariantEn": "Pillow under hips for comfort",
-    "setupIt": "Un partner sdraiato a pancia in giù, l'altro sopra",
-    "setupEn": "One partner lying face down, other on top",
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena con le gambe alzate e unite, i piedi verso il soffitto.\n2. Il partner attivo si posiziona in ginocchio di fronte, con il busto eretto.\n3. Le gambe del partner inferiore poggiano contro il petto o le spalle del partner attivo.\n4. Tenere le caviglie o i piedi dell'altro per mantenere la posizione stabile.\n5. L'angolazione verticale delle gambe crea una sensazione di maggiore aderenza.\n6. Iniziare lentamente e comunicare sulla profondità, poiché l'angolo cambia le sensazioni rispetto alle posizioni standard.",
+    "setupEn": "1. The receiving partner lies on their back with legs raised and together, feet toward the ceiling.\n2. The active partner positions themselves kneeling in front, with torso upright.\n3. The bottom partner's legs rest against the active partner's chest or shoulders.\n4. Hold the other's ankles or feet to keep the position stable.\n5. The vertical angle of the legs creates a sensation of increased closeness.\n6. Start slowly and communicate about depth, as the angle changes sensations compared to standard positions.",
     "checkinIt": "Riesci a respirare bene?",
     "checkinEn": "Can you breathe well?",
-    "tags": ["rilassante", "profondo", "intimo"],
+    "tags": [
+      "rilassante",
+      "profondo",
+      "intimo"
+    ],
     "illustrationRef": "prone.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -343,21 +484,31 @@
     "nameEn": "Spread Eagle",
     "aliasIt": "X",
     "aliasEn": "X Position",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["trust", "intimacy"],
+    "focus": [
+      "trust",
+      "intimacy"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": null,
     "easyVariantEn": null,
-    "setupIt": "Un partner sdraiato con braccia e gambe aperte, l'altro sopra",
-    "setupEn": "One partner lying with arms and legs open, other on top",
+    "setupIt": "1. Entrambi i partner stanno in piedi, uno rivolto nella stessa direzione dell'altro (da dietro).\n2. Il partner davanti si inclina leggermente in avanti, appoggiando le mani su un muro, un tavolo o il bordo del letto.\n3. I piedi devono essere divaricati alla larghezza delle spalle per stabilità.\n4. Il partner dietro si avvicina, tenendo i fianchi dell'altro.\n5. Regolare l'altezza piegando leggermente le ginocchia se c'è differenza di statura.\n6. Usare il supporto del muro o del mobile per mantenere l'equilibrio. Ideale come posizione spontanea e veloce.",
+    "setupEn": "1. Both partners stand, one facing the same direction as the other (from behind).\n2. The front partner leans slightly forward, placing hands on a wall, table, or bed edge.\n3. Feet should be shoulder-width apart for stability.\n4. The back partner approaches, holding the other's hips.\n5. Adjust height by slightly bending knees if there's a height difference.\n6. Use the wall or furniture support to maintain balance. Ideal as a spontaneous and quick position.",
     "checkinIt": "Ti senti vulnerabile ma sicuro/a?",
     "checkinEn": "Do you feel vulnerable but safe?",
-    "tags": ["fiducia", "apertura", "intimo"],
+    "tags": [
+      "fiducia",
+      "apertura",
+      "intimo"
+    ],
     "illustrationRef": "spread_eagle.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -369,21 +520,31 @@
     "nameEn": "Wheelbarrow",
     "aliasIt": "Acrobatica",
     "aliasEn": "Acrobatic",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 5,
     "energy": "high",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Richiede molta forza nelle braccia",
     "cautionsEn": "Requires significant arm strength",
     "easyVariantIt": "Appoggiarsi sul letto invece che stare sospesi",
     "easyVariantEn": "Rest on bed instead of being suspended",
-    "setupIt": "Un partner sulle mani, l'altro tiene le gambe in piedi",
-    "setupEn": "One partner on hands, other holds their legs while standing",
+    "setupIt": "1. Il partner inferiore si posiziona sulle mani a terra (come per fare le flessioni), con le braccia ben distese.\n2. Il partner che sostiene afferra le gambe dell'altro all'altezza delle cosce o delle caviglie.\n3. Le gambe del partner inferiore si aprono ai lati del partner in piedi.\n4. Il partner in piedi tiene saldamente le gambe sollevate, stando eretto.\n5. Il partner sulle mani deve avere una presa salda al pavimento — usare un tappetino.\n6. Questa posizione richiede molta forza nelle braccia — iniziare con sessioni brevi e fare pause. Avere il letto vicino per appoggiarsi quando le braccia si stancano.",
+    "setupEn": "1. The bottom partner gets into a push-up position on the ground, with arms fully extended.\n2. The supporting partner grabs the other's legs at thigh or ankle height.\n3. The bottom partner's legs open to either side of the standing partner.\n4. The standing partner firmly holds the raised legs while standing upright.\n5. The partner on hands must have a firm grip on the floor — use a mat.\n6. This position requires significant arm strength — start with short sessions and take breaks. Have the bed nearby to rest on when arms get tired.",
     "checkinIt": "Le braccia reggono?",
     "checkinEn": "Are your arms holding up?",
-    "tags": ["acrobatico", "sfidante", "divertente"],
+    "tags": [
+      "acrobatico",
+      "sfidante",
+      "divertente"
+    ],
     "illustrationRef": "wheelbarrow.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -395,21 +556,31 @@
     "nameEn": "Butterfly",
     "aliasIt": "Sul Bordo",
     "aliasEn": "Edge of Bed",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 2,
     "energy": "medium",
-    "focus": ["intimacy", "passion"],
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": "Cuscino sotto i fianchi",
     "easyVariantEn": "Pillow under hips",
-    "setupIt": "Un partner sdraiato sul bordo del letto, l'altro in piedi",
-    "setupEn": "One partner lying on edge of bed, other standing",
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena sul bordo del letto, con i glutei proprio al margine.\n2. Le gambe pendono dal bordo, piegate al ginocchio o distese.\n3. Il partner attivo si posiziona in piedi tra le gambe dell'altro, di fronte al bordo del letto.\n4. L'altezza del letto è fondamentale — usare cuscini sotto i fianchi se il letto è troppo basso.\n5. Il partner in piedi tiene le cosce o i fianchi dell'altro per guidare il movimento.\n6. Il partner sdraiato può posare i piedi sulle spalle o sul petto dell'altro per variare l'angolazione. Questa posizione è ideale perché sfrutta l'altezza naturale del letto.",
+    "setupEn": "1. The receiving partner lies on their back on the edge of the bed, with buttocks right at the margin.\n2. Legs hang over the edge, bent at the knee or extended.\n3. The active partner stands between the other's legs, facing the bed edge.\n4. Bed height is crucial — use pillows under hips if the bed is too low.\n5. The standing partner holds the other's thighs or hips to guide movement.\n6. The lying partner can place feet on the other's shoulders or chest to vary the angle. This position is ideal because it uses the natural height of the bed.",
     "checkinIt": "L'altezza del letto funziona?",
     "checkinEn": "Does the bed height work?",
-    "tags": ["bordo", "angolo", "profondo"],
+    "tags": [
+      "bordo",
+      "angolo",
+      "profondo"
+    ],
     "illustrationRef": "butterfly.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -421,21 +592,31 @@
     "nameEn": "Reverse Missionary",
     "aliasIt": "Uomo Sotto",
     "aliasEn": "Man Below",
-    "categories": ["romantic", "beginner"],
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
     "difficulty": 1,
     "energy": "low",
-    "focus": ["connection", "intimacy"],
+    "focus": [
+      "connection",
+      "intimacy"
+    ],
     "duration": "medium",
     "prerequisites": [],
     "cautionsIt": null,
     "cautionsEn": null,
     "easyVariantIt": null,
     "easyVariantEn": null,
-    "setupIt": "Come missionario ma con ruoli invertiti",
-    "setupEn": "Like missionary but with reversed roles",
+    "setupIt": "1. Il partner che normalmente starebbe sopra nel missionario si sdraia invece sulla schiena.\n2. L'altro partner si posiziona sopra, replicando la posizione del missionario ma con i ruoli invertiti.\n3. Chi sta sopra si sostiene sugli avambracci o sui palmi delle mani.\n4. I corpi si allineano naturalmente, con il petto che sfiora quello dell'altro.\n5. Il partner sopra controlla il ritmo e la profondità del movimento.\n6. Questa inversione permette al partner solitamente passivo di esplorare il controllo del ritmo e del movimento, creando una dinamica nuova e stimolante.",
+    "setupEn": "1. The partner who would normally be on top in missionary lies on their back instead.\n2. The other partner positions themselves on top, replicating the missionary position but with reversed roles.\n3. The one on top supports themselves on forearms or palms.\n4. Bodies align naturally, with chests brushing against each other.\n5. The top partner controls the rhythm and depth of movement.\n6. This reversal allows the usually passive partner to explore rhythm and movement control, creating a new and stimulating dynamic.",
     "checkinIt": "Ti piace avere il controllo?",
     "checkinEn": "Do you enjoy having control?",
-    "tags": ["controllo", "intimo", "facile"],
+    "tags": [
+      "controllo",
+      "intimo",
+      "facile"
+    ],
     "illustrationRef": "reverse_missionary.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -447,21 +628,33 @@
     "nameEn": "Squatting Cowgirl",
     "aliasIt": "Rana",
     "aliasEn": "Frog",
-    "categories": ["athletic", "adventurous"],
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["passion", "variety"],
+    "focus": [
+      "passion",
+      "variety"
+    ],
     "duration": "brief",
-    "prerequisites": ["pos_002"],
+    "prerequisites": [
+      "pos_002"
+    ],
     "cautionsIt": "Richiede forza nelle gambe",
     "cautionsEn": "Requires leg strength",
     "easyVariantIt": "Alternarsi tra accovacciata e in ginocchio",
     "easyVariantEn": "Alternate between squatting and kneeling",
-    "setupIt": "Come cowgirl ma accovacciata invece che in ginocchio",
-    "setupEn": "Like cowgirl but squatting instead of kneeling",
+    "setupIt": "1. Il partner inferiore si sdraia sulla schiena con le gambe leggermente divaricate.\n2. Il partner attivo si posiziona sopra in posizione accovacciata (piedi piatti, non ginocchia) ai lati dei fianchi.\n3. I piedi si appoggiano saldamente sul materasso per equilibrio.\n4. Le mani possono poggiare sul petto del partner o sulle proprie ginocchia per stabilità.\n5. Usare la forza delle gambe per sollevarsi e abbassarsi in un movimento controllato.\n6. Questa variante è più intensa della cowgirl classica e affatica le gambe rapidamente — alternare tra posizione accovacciata e in ginocchio per gestire la fatica. Il partner inferiore può aiutare sostenendo i fianchi.",
+    "setupEn": "1. The bottom partner lies on their back with legs slightly apart.\n2. The active partner positions themselves on top in a squat (flat feet, not knees) on either side of the hips.\n3. Feet rest firmly on the mattress for balance.\n4. Hands can rest on the partner's chest or on own knees for stability.\n5. Use leg strength to rise and lower in a controlled movement.\n6. This variant is more intense than classic cowgirl and tires legs quickly — alternate between squatting and kneeling to manage fatigue. The bottom partner can help by supporting the hips.",
     "checkinIt": "Le gambe reggono?",
     "checkinEn": "Are your legs holding up?",
-    "tags": ["atletico", "intenso", "controllo"],
+    "tags": [
+      "atletico",
+      "intenso",
+      "controllo"
+    ],
     "illustrationRef": "squat_cowgirl.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -473,21 +666,31 @@
     "nameEn": "Shower",
     "aliasIt": "Bagno",
     "aliasEn": "Bathroom",
-    "categories": ["quickie", "adventurous"],
+    "categories": [
+      "quickie",
+      "adventurous"
+    ],
     "difficulty": 3,
     "energy": "medium",
-    "focus": ["variety", "playfulness"],
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
     "duration": "brief",
     "prerequisites": [],
     "cautionsIt": "Superficie scivolosa - usare tappetino antiscivolo",
     "cautionsEn": "Slippery surface - use non-slip mat",
     "easyVariantIt": "Maniglie o barre di supporto aiutano",
     "easyVariantEn": "Grab bars help for support",
-    "setupIt": "In piedi sotto la doccia, appoggiati al muro",
-    "setupEn": "Standing in shower, leaning against wall",
+    "setupIt": "1. Posizionare un tappetino antiscivolo sul fondo della doccia o della vasca — la sicurezza viene prima di tutto.\n2. Regolare l'acqua a una temperatura piacevole prima di iniziare.\n3. Un partner si appoggia con la schiena alla parete della doccia, l'altro di fronte.\n4. Se la doccia ha una barra o una maniglia, usarla come punto di appoggio.\n5. I movimenti devono essere più lenti e controllati del solito a causa della superficie scivolosa.\n6. Considerare una posizione in piedi con una gamba alzata, oppure da dietro con le mani appoggiate alla parete. L'acqua può ridurre la lubrificazione naturale — tenerne conto e usare lubrificante a base siliconica se necessario.",
+    "setupEn": "1. Place a non-slip mat on the shower or tub floor — safety comes first.\n2. Adjust water to a pleasant temperature before starting.\n3. One partner leans with their back against the shower wall, the other facing them.\n4. If the shower has a bar or handle, use it as a support point.\n5. Movements should be slower and more controlled than usual due to the slippery surface.\n6. Consider a standing position with one raised leg, or from behind with hands against the wall. Water can reduce natural lubrication — keep this in mind and use silicone-based lubricant if needed.",
     "checkinIt": "Hai un appoggio stabile?",
     "checkinEn": "Do you have stable footing?",
-    "tags": ["acqua", "spontaneo", "avventura"],
+    "tags": [
+      "acqua",
+      "spontaneo",
+      "avventura"
+    ],
     "illustrationRef": "shower.svg",
     "isFavorite": false,
     "timesViewed": 0,
@@ -499,22 +702,3128 @@
     "nameEn": "Koala Hug",
     "aliasIt": "Aggrappata",
     "aliasEn": "Clinging",
-    "categories": ["athletic", "romantic"],
+    "categories": [
+      "athletic",
+      "romantic"
+    ],
     "difficulty": 4,
     "energy": "high",
-    "focus": ["trust", "passion"],
+    "focus": [
+      "trust",
+      "passion"
+    ],
     "duration": "brief",
-    "prerequisites": ["pos_012"],
+    "prerequisites": [
+      "pos_012"
+    ],
     "cautionsIt": "Richiede forza per sostenere il partner",
     "cautionsEn": "Requires strength to support partner",
     "easyVariantIt": "Appoggiarsi a un muro per aiuto",
     "easyVariantEn": "Lean against wall for help",
-    "setupIt": "Un partner solleva l'altro che si aggrappa con braccia e gambe",
-    "setupEn": "One partner lifts other who clings with arms and legs",
+    "setupIt": "1. Il partner più forte sta in piedi con i piedi saldamente piantati a terra, leggermente divaricati.\n2. Il partner sollevato salta dolcemente addosso all'altro, avvolgendo le gambe intorno alla vita.\n3. Le braccia del partner sollevato si aggrappano saldamente intorno al collo e alle spalle dell'altro.\n4. Il partner che sostiene tiene i glutei dell'altro con entrambe le mani.\n5. Appoggiarsi a un muro per ridurre significativamente lo sforzo sulle braccia e la schiena.\n6. Iniziare con il partner sollevato seduto su un piano alto (tavolo, cassettone) per facilitare il passaggio alla posizione. La comunicazione sul peso e la fatica è essenziale — stabilire un segnale per quando bisogna cambiare posizione.",
+    "setupEn": "1. The stronger partner stands with feet firmly planted on the ground, slightly apart.\n2. The lifted partner gently jumps onto the other, wrapping legs around the waist.\n3. The lifted partner's arms grip firmly around the other's neck and shoulders.\n4. The supporting partner holds the other's buttocks with both hands.\n5. Lean against a wall to significantly reduce arm and back strain.\n6. Start with the lifted partner sitting on a high surface (table, dresser) to facilitate transition. Communication about weight and fatigue is essential — establish a signal for when you need to change position.",
     "checkinIt": "Ti sento sicuro/a tra le mie braccia?",
     "checkinEn": "Do you feel secure in my arms?",
-    "tags": ["sollevata", "fiducia", "passione"],
+    "tags": [
+      "sollevata",
+      "fiducia",
+      "passione"
+    ],
     "illustrationRef": "koala.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_021",
+    "nameIt": "Seduta di Fronte",
+    "nameEn": "Seated Face-to-Face",
+    "aliasIt": "Sultana",
+    "aliasEn": "The Sultan",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Appoggiarsi alla testiera del letto per stabilità",
+    "easyVariantEn": "Lean on headboard for stability",
+    "setupIt": "1. Un partner si siede sul letto o su una superficie comoda con le gambe distese o leggermente incrociate.\n2. Il secondo partner si siede nel grembo dell'altro, di fronte, con le gambe avvolte intorno ai fianchi.\n3. I busti sono vicini, permettendo il contatto petto a petto.\n4. Avvolgere le braccia intorno alla schiena dell'altro per sostegno reciproco.\n5. Appoggiare la schiena del partner inferiore alla testiera del letto o a dei cuscini per ridurre la fatica.\n6. I movimenti sono ondulatori e lenti, guidati dal bacino. Mantenere il contatto visivo e il respiro sincronizzato per una connessione profonda.",
+    "setupEn": "1. One partner sits on the bed or a comfortable surface with legs extended or slightly crossed.\n2. The second partner sits in the other's lap, facing them, with legs wrapped around the hips.\n3. Torsos are close together, allowing chest-to-chest contact.\n4. Wrap arms around each other's back for mutual support.\n5. Rest the bottom partner's back against the headboard or pillows to reduce fatigue.\n6. Movements are wave-like and slow, guided by the pelvis. Maintain eye contact and synchronized breathing for a deep connection.",
+    "checkinIt": "Sei comodo/a in questa posizione?",
+    "checkinEn": "Are you comfortable in this position?",
+    "tags": [
+      "romantico",
+      "intimo",
+      "occhi-negli-occhi",
+      "seduto"
+    ],
+    "illustrationRef": "seated_face_to_face.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_022",
+    "nameIt": "Forbici",
+    "nameEn": "Scissors",
+    "aliasIt": "Intreccio",
+    "aliasEn": "The Interlock",
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cuscino sotto il bacino per migliore allineamento",
+    "easyVariantEn": "Pillow under pelvis for better alignment",
+    "setupIt": "1. Entrambi i partner si sdraiano sui fianchi opposti, uno di fronte all'altro.\n2. Le gambe si intrecciano a forbice: la gamba superiore di ciascuno passa sopra la gamba inferiore dell'altro.\n3. I bacini si avvicinano nel punto di incrocio delle gambe.\n4. Usare le mani per accarezzare il corpo dell'altro o per trovare appoggio sul materasso.\n5. Un cuscino sotto il fianco o la testa migliora il comfort.\n6. Questa posizione è rilassante e intima, ideale per ritmi lenti e prolungati. I movimenti sono piccoli e ondulatori, guidati dal bacino. Non richiede forza fisica ed è perfetta per momenti di pigrizia.",
+    "setupEn": "1. Both partners lie on opposite sides, facing each other.\n2. Legs interlock in a scissors shape: each person's upper leg passes over the other's lower leg.\n3. Pelvises come together at the crossing point of the legs.\n4. Use hands to caress each other's body or for support on the mattress.\n5. A pillow under the hip or head improves comfort.\n6. This position is relaxing and intimate, ideal for slow and prolonged rhythms. Movements are small and wave-like, guided by the pelvis. No physical strength required — perfect for lazy moments.",
+    "checkinIt": "L'angolo è confortevole per te?",
+    "checkinEn": "Is the angle comfortable for you?",
+    "tags": [
+      "laterale",
+      "intrecciato",
+      "rilassante",
+      "tenero"
+    ],
+    "illustrationRef": "scissors.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_023",
+    "nameIt": "Arco",
+    "nameEn": "The Bridge",
+    "aliasIt": "Ponte del Piacere",
+    "aliasEn": "Pleasure Bridge",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": "Richiede flessibilità nella schiena",
+    "cautionsEn": "Requires back flexibility",
+    "easyVariantIt": "Posizionare un cuscino sotto la schiena per supporto",
+    "easyVariantEn": "Place a pillow under the back for support",
+    "setupIt": "1. Il partner ricevente si posiziona con la schiena arcuata verso l'alto come un ponte, mani e piedi a terra.\n2. Il bacino deve essere il punto più alto della curva del corpo.\n3. Un cuscino grande sotto la schiena può aiutare a mantenere la posizione senza affaticamento.\n4. Il partner attivo si inginocchia tra le gambe dell'altro, di fronte al bacino sollevato.\n5. Tenere i fianchi del partner in ponte per supporto e guida del movimento.\n6. Questa posizione richiede buona flessibilità della schiena — riscaldare i muscoli con stretching prima di provarla. Mantenere la posizione solo per il tempo in cui è confortevole, senza mai forzare.",
+    "setupEn": "1. The receiving partner positions themselves with back arched upward like a bridge, hands and feet on the ground.\n2. The pelvis should be the highest point of the body's curve.\n3. A large pillow under the back can help maintain the position without fatigue.\n4. The active partner kneels between the other's legs, facing the raised pelvis.\n5. Hold the bridging partner's hips for support and movement guidance.\n6. This position requires good back flexibility — warm up muscles with stretching before trying it. Only hold the position for as long as it's comfortable, never forcing it.",
+    "checkinIt": "Riesci a mantenere la posizione? Dimmelo subito se senti tensione",
+    "checkinEn": "Can you hold the position? Tell me right away if you feel strain",
+    "tags": [
+      "acrobatico",
+      "flessibile",
+      "intenso",
+      "atletico"
+    ],
+    "illustrationRef": "bridge.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_024",
+    "nameIt": "Luna Crescente",
+    "nameEn": "Crescent Moon",
+    "aliasIt": "Mezza Luna",
+    "aliasEn": "Half Moon",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dalla posizione del cucchiaio classico, con entrambi i partner sullo stesso fianco.\n2. Il partner davanti (piccolo cucchiaio) solleva la gamba superiore verso l'alto, creando una forma a mezzaluna.\n3. La gamba può poggiare sulla coscia o sull'anca del partner posteriore per supporto.\n4. Il partner posteriore può tenere la gamba sollevata con una mano per aiutare.\n5. Questa apertura della gamba cambia l'angolo e la profondità rispetto al cucchiaio classico.\n6. Mantenere il contatto con la schiena del partner e i movimenti dolci e ritmici. Se la gamba si stanca, tornare alla posizione del cucchiaio classico per riposare.",
+    "setupEn": "1. Start from the classic spooning position, with both partners on the same side.\n2. The front partner (little spoon) lifts the upper leg upward, creating a crescent moon shape.\n3. The leg can rest on the back partner's thigh or hip for support.\n4. The back partner can hold the raised leg with one hand to help.\n5. This leg opening changes the angle and depth compared to classic spooning.\n6. Maintain contact with the partner's back and keep movements gentle and rhythmic. If the leg gets tired, return to classic spooning to rest.",
+    "checkinIt": "Ti senti bene in questo angolo?",
+    "checkinEn": "Does this angle feel good for you?",
+    "tags": [
+      "laterale",
+      "romantico",
+      "delicato",
+      "mattutino"
+    ],
+    "illustrationRef": "crescent_moon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_025",
+    "nameIt": "Cowgirl Inversa",
+    "nameEn": "Reverse Cowgirl",
+    "aliasIt": "Di Spalle",
+    "aliasEn": "Facing Away",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": "Attenzione alla direzione di piegatura - comunicare sempre",
+    "cautionsEn": "Be careful with bending direction - always communicate",
+    "easyVariantIt": "Appoggiarsi alle caviglie del partner per stabilità",
+    "easyVariantEn": "Lean on partner's ankles for stability",
+    "setupIt": "1. Il partner inferiore si sdraia sulla schiena con le gambe leggermente divaricate.\n2. Il partner attivo si siede sopra, ma rivolto verso i piedi dell'altro (schiena verso il viso).\n3. Posizionare le ginocchia ai lati delle cosce del partner inferiore.\n4. Appoggiarsi leggermente in avanti, con le mani sulle ginocchia o sugli stinchi del partner inferiore.\n5. Il partner inferiore può tenere i fianchi dell'altro per guidare il ritmo.\n6. Attenzione alla direzione naturale del corpo — non piegare mai in angoli innaturali. Comunicare costantemente, specialmente riguardo alla comodità dell'angolazione. Questa posizione offre una visuale e sensazioni completamente diverse dalla cowgirl classica.",
+    "setupEn": "1. The bottom partner lies on their back with legs slightly apart.\n2. The active partner sits on top, but facing toward the other's feet (back toward the face).\n3. Position knees on either side of the bottom partner's thighs.\n4. Lean slightly forward, with hands on the bottom partner's knees or shins.\n5. The bottom partner can hold the other's hips to guide the rhythm.\n6. Pay attention to the body's natural direction — never bend at unnatural angles. Communicate constantly, especially about angle comfort. This position offers a completely different view and sensations from classic cowgirl.",
+    "checkinIt": "Questo angolo ti piace? Dimmi se devo cambiare posizione",
+    "checkinEn": "Do you like this angle? Tell me if I should adjust",
+    "tags": [
+      "controllo",
+      "visuale",
+      "sensuale",
+      "atletico"
+    ],
+    "illustrationRef": "reverse_cowgirl.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_026",
+    "nameIt": "Pecorina in Piedi",
+    "nameEn": "Standing Doggy",
+    "aliasIt": "Dall'Alto",
+    "aliasEn": "From Above",
+    "categories": [
+      "athletic",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Attenzione all'angolazione — comunicare continuamente",
+    "cautionsEn": "Pay attention to the angle — keep communicating",
+    "easyVariantIt": "Appoggiarsi a un tavolo o piano per supporto",
+    "easyVariantEn": "Lean on a table or surface for support",
+    "setupIt": "1. Il partner davanti si appoggia in avanti su una superficie stabile: tavolo, cassettone o bordo del letto.\n2. I piedi sono divaricati alla larghezza delle spalle, le ginocchia leggermente piegate.\n3. Le braccia distese sostengono il peso del busto sulla superficie di appoggio.\n4. Il partner dietro si posiziona in piedi, regolando l'altezza piegando le ginocchia se necessario.\n5. Afferrare i fianchi del partner per stabilità e controllo del ritmo.\n6. L'altezza della superficie di appoggio è fondamentale — sperimentare con diverse superfici in casa. Se c'è differenza di altezza tra i partner, le ginocchia piegate sono il modo migliore per compensare.",
+    "setupEn": "1. The front partner leans forward onto a stable surface: table, dresser, or bed edge.\n2. Feet are shoulder-width apart, knees slightly bent.\n3. Extended arms support the upper body weight on the resting surface.\n4. The back partner positions themselves standing, adjusting height by bending knees if needed.\n5. Hold the partner's hips for stability and rhythm control.\n6. The support surface height is crucial — experiment with different surfaces around the home. If there's a height difference between partners, bent knees are the best way to compensate.",
+    "checkinIt": "L'angolo ti è comodo? Hai un appoggio stabile?",
+    "checkinEn": "Is the angle comfortable? Do you have stable support?",
+    "tags": [
+      "piedi",
+      "profondo",
+      "veloce",
+      "passionale"
+    ],
+    "illustrationRef": "standing_doggy.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_027",
+    "nameIt": "Loto",
+    "nameEn": "Lotus",
+    "aliasIt": "Tantrico",
+    "aliasEn": "Tantric",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": "Utile avere cuscino sotto le ginocchia",
+    "cautionsEn": "Helpful to have a pillow under knees",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Un partner si siede a gambe incrociate sul letto, su un cuscino per elevare leggermente i fianchi.\n2. Il secondo partner si siede nel grembo dell'altro, avvolgendo le gambe intorno alla vita.\n3. I busti si avvicinano fino a toccarsi, petto contro petto.\n4. Le braccia si avvolgono intorno alla schiena dell'altro in un abbraccio stretto.\n5. Le fronti possono toccarsi, guardandosi negli occhi da vicino.\n6. Il movimento è minimo e ondulatorio, guidato dal respiro sincronizzato. Inspirare insieme, espirare insieme, muovere il bacino con il respiro. Questa è una delle posizioni più intime — prendetevi tempo, non c'è fretta.",
+    "setupEn": "1. One partner sits cross-legged on the bed, on a cushion to slightly elevate the hips.\n2. The second partner sits in the other's lap, wrapping legs around the waist.\n3. Torsos come close until touching, chest to chest.\n4. Arms wrap around each other's back in a tight embrace.\n5. Foreheads can touch, looking into each other's eyes from close up.\n6. Movement is minimal and wave-like, guided by synchronized breathing. Inhale together, exhale together, move the pelvis with the breath. This is one of the most intimate positions — take your time, there's no rush.",
+    "checkinIt": "Senti la connessione? Respiriamo insieme",
+    "checkinEn": "Do you feel the connection? Let's breathe together",
+    "tags": [
+      "tantrico",
+      "meditativo",
+      "intimo",
+      "occhi-negli-occhi"
+    ],
+    "illustrationRef": "lotus.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_028",
+    "nameIt": "Piano del Tavolo",
+    "nameEn": "Table Top",
+    "aliasIt": "Sul Piano",
+    "aliasEn": "On the Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Assicurarsi che il piano sia stabile e all'altezza giusta",
+    "cautionsEn": "Make sure the surface is stable and at the right height",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Scegliere un tavolo, isola della cucina o altra superficie stabile all'altezza dei fianchi del partner in piedi.\n2. Il partner che si siede sale sulla superficie, seduto con le gambe che pendono dal bordo.\n3. Scivolare verso il bordo fino a quando i glutei sono quasi al margine.\n4. Avvolgere le gambe intorno alla vita del partner in piedi per avvicinare i corpi.\n5. Le braccia possono appoggiarsi sulle spalle dell'altro o dietro sulla superficie per equilibrio.\n6. Il partner in piedi guida il movimento tenendo i fianchi o le cosce dell'altro. Assicurarsi che la superficie sia robusta e non scivolosa — posizionare un tappetino antiscivolo se necessario.",
+    "setupEn": "1. Choose a table, kitchen island, or other stable surface at the standing partner's hip height.\n2. The sitting partner gets onto the surface, seated with legs hanging over the edge.\n3. Slide toward the edge until buttocks are almost at the margin.\n4. Wrap legs around the standing partner's waist to bring bodies closer.\n5. Arms can rest on the other's shoulders or behind on the surface for balance.\n6. The standing partner guides movement by holding the other's hips or thighs. Make sure the surface is sturdy and non-slip — place a non-slip mat if needed.",
+    "checkinIt": "L'altezza è giusta per te?",
+    "checkinEn": "Is the height right for you?",
+    "tags": [
+      "verticale",
+      "superfici",
+      "spontaneo",
+      "avventura"
+    ],
+    "illustrationRef": "table_top.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_029",
+    "nameIt": "Bretzel",
+    "nameEn": "Pretzel",
+    "aliasIt": "L'Intreccio",
+    "aliasEn": "The Twist",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_022"
+    ],
+    "cautionsIt": "Richede flessibilità — riscaldarsi prima",
+    "cautionsEn": "Requires flexibility — warm up first",
+    "easyVariantIt": "Mantenere la gamba inferiore più dritta",
+    "easyVariantEn": "Keep the lower leg straighter",
+    "setupIt": "1. Il partner ricevente si sdraia su un fianco con la gamba inferiore distesa e rilassata.\n2. La gamba superiore si piega al ginocchio e viene sollevata verso l'alto.\n3. Il partner attivo si inginocchia accanto, a cavalcioni della gamba distesa, tenendo la gamba sollevata.\n4. La gamba piegata può poggiare sulla spalla o essere tenuta dal partner attivo per mantenere l'apertura.\n5. Questo intreccio crea un angolo di penetrazione unico che stimola in modo diverso.\n6. Fare stretching delle anche e delle gambe prima di provare questa posizione. Non forzare mai l'apertura della gamba — la flessibilità è personale. Il partner inferiore deve comunicare immediatamente se sente tensione o disagio.",
+    "setupEn": "1. The receiving partner lies on one side with the lower leg extended and relaxed.\n2. The upper leg bends at the knee and is lifted upward.\n3. The active partner kneels alongside, straddling the extended leg, holding the raised leg.\n4. The bent leg can rest on the shoulder or be held by the active partner to maintain the opening.\n5. This intertwining creates a unique penetration angle that stimulates differently.\n6. Stretch hips and legs before trying this position. Never force the leg opening — flexibility is personal. The bottom partner must communicate immediately if they feel tension or discomfort.",
+    "checkinIt": "La gamba ti sta bene? Senti tensione da qualche parte?",
+    "checkinEn": "Is your leg okay? Do you feel tension anywhere?",
+    "tags": [
+      "flessibile",
+      "laterale",
+      "intrecciato",
+      "atletico"
+    ],
+    "illustrationRef": "pretzel.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_030",
+    "nameIt": "Aquila",
+    "nameEn": "Eagle",
+    "aliasIt": "Ali Aperte",
+    "aliasEn": "Open Wings",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena come nella posizione del missionario.\n2. Piegare le ginocchia e aprire le gambe, portandole verso il petto con le ginocchia divaricate.\n3. Le piante dei piedi possono toccarsi o rimanere separate, con le ginocchia che puntano verso l'esterno.\n4. Il partner attivo si posiziona sopra, tra le gambe aperte.\n5. L'apertura profonda delle gambe permette un contatto e un'intimità maggiori.\n6. Posizionare un cuscino sotto i fianchi del partner inferiore per migliorare l'angolazione. Questa è una variante facile e accessibile del missionario che aumenta la profondità senza richiedere acrobazia.",
+    "setupEn": "1. The receiving partner lies on their back as in missionary position.\n2. Bend the knees and open the legs, bringing them toward the chest with knees spread apart.\n3. The soles of the feet can touch or stay separate, with knees pointing outward.\n4. The active partner positions themselves on top, between the open legs.\n5. The deep leg opening allows for greater contact and intimacy.\n6. Place a pillow under the bottom partner's hips to improve the angle. This is an easy and accessible missionary variant that increases depth without requiring acrobatics.",
+    "checkinIt": "Riesci ad aprire le gambe comodamente così?",
+    "checkinEn": "Can you open your legs comfortably like this?",
+    "tags": [
+      "aperto",
+      "profondo",
+      "romantico",
+      "accessibile"
+    ],
+    "illustrationRef": "eagle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_031",
+    "nameIt": "Gatto",
+    "nameEn": "The Cat",
+    "aliasIt": "Presa Elevata",
+    "aliasEn": "Coital Alignment",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dalla posizione del missionario classico con il partner ricevente sulla schiena.\n2. Il partner attivo si sposta leggermente verso l'alto rispetto al missionario standard, di circa 5-10 cm.\n3. Il bacino del partner attivo si posiziona più in alto, allineandosi per creare un contatto più diretto.\n4. I movimenti cambiano da spinte a ondulazioni — il bacino oscilla avanti e indietro più che su e giù.\n5. Le braccia del partner attivo possono passare sotto le spalle dell'altro per un abbraccio stretto.\n6. Questa piccola modifica nell'allineamento cambia drasticamente le sensazioni per il partner ricevente. Prendersi tempo per trovare l'angolo giusto — può richiedere qualche tentativo, ma la differenza è significativa.",
+    "setupEn": "1. Start from classic missionary position with receiving partner on their back.\n2. The active partner shifts slightly upward compared to standard missionary, about 5-10 cm.\n3. The active partner's pelvis positions higher, aligning for more direct contact.\n4. Movements change from thrusts to undulations — the pelvis rocks back and forth more than up and down.\n5. The active partner's arms can go under the other's shoulders for a tight embrace.\n6. This small alignment change drastically changes sensations for the receiving partner. Take time to find the right angle — it may require a few attempts, but the difference is significant.",
+    "checkinIt": "Senti la differenza nell'angolo? Ti piace così?",
+    "checkinEn": "Do you feel the difference in angle? Do you like it this way?",
+    "tags": [
+      "allineato",
+      "romantico",
+      "stimolazione",
+      "intimo"
+    ],
+    "illustrationRef": "cat.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_032",
+    "nameIt": "Sirena",
+    "nameEn": "Mermaid",
+    "aliasIt": "Piedi Uniti",
+    "aliasEn": "Legs Together",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Il partner ricevente si posiziona come nella pecorina, ma con le gambe unite e dritte invece che divaricate.\n2. Il busto può abbassarsi fino ad appoggiare il petto al materasso, con le braccia distese in avanti.\n3. Le gambe unite creano una sensazione di maggiore aderenza.\n4. Il partner attivo si posiziona dietro, in ginocchio, con le gambe ai lati dell'altro.\n5. Tenere i fianchi del partner per stabilità e guida del movimento.\n6. L'angolazione è diversa dalla pecorina classica — sperimentare con la posizione del busto (più alto o più basso) per trovare le sensazioni preferite. I movimenti dovrebbero essere fluidi e controllati.",
+    "setupEn": "1. The receiving partner gets into doggy-style position, but with legs together and straight instead of apart.\n2. The torso can lower until the chest rests on the mattress, with arms extended forward.\n3. Legs together create a sensation of greater tightness.\n4. The active partner positions behind, kneeling, with legs on either side.\n5. Hold the partner's hips for stability and movement guidance.\n6. The angle is different from classic doggy — experiment with torso position (higher or lower) to find preferred sensations. Movements should be fluid and controlled.",
+    "checkinIt": "Ti senti comodo/a con le gambe unite?",
+    "checkinEn": "Do you feel comfortable with legs together?",
+    "tags": [
+      "stretto",
+      "sensazione",
+      "intimo",
+      "variante"
+    ],
+    "illustrationRef": "mermaid.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_033",
+    "nameIt": "Sfinge",
+    "nameEn": "Sphinx",
+    "aliasIt": "Piana Bassa",
+    "aliasEn": "Flat Low",
+    "categories": [
+      "beginner",
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Il partner ricevente si sdraia a pancia in giù (posizione prona) completamente disteso.\n2. Un piccolo cuscino sotto i fianchi solleva leggermente il bacino per un migliore allineamento.\n3. Le braccia si piegano ai gomiti, con gli avambracci sul materasso come una sfinge.\n4. Le gambe possono restare unite o leggermente divaricate.\n5. Il partner attivo si posiziona sopra, sostenendosi sulle braccia per non gravare con tutto il peso.\n6. I movimenti sono lenti e profondi in questa posizione. È importante che il partner sopra distribuisca il peso correttamente per non schiacciare l'altro. Il partner sotto deve poter respirare liberamente in ogni momento.",
+    "setupEn": "1. The receiving partner lies face down (prone position) fully extended.\n2. A small pillow under the hips slightly raises the pelvis for better alignment.\n3. Arms bend at the elbows, with forearms on the mattress like a sphinx.\n4. Legs can stay together or slightly apart.\n5. The active partner positions on top, supporting themselves on their arms to not put full weight down.\n6. Movements are slow and deep in this position. It's important that the top partner distributes weight correctly to not crush the other. The bottom partner must be able to breathe freely at all times.",
+    "checkinIt": "Riesci a respirare liberamente?",
+    "checkinEn": "Can you breathe freely?",
+    "tags": [
+      "basso",
+      "prono",
+      "rilassante",
+      "facile"
+    ],
+    "illustrationRef": "sphinx.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_034",
+    "nameIt": "Stella",
+    "nameEn": "Starfish",
+    "aliasIt": "Distesa",
+    "aliasEn": "Spread Out",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "relax",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena con braccia e gambe allargate, come una stella marina.\n2. Il corpo è completamente rilassato e aperto.\n3. Il partner attivo si posiziona sopra, scegliendo la posizione preferita (missionario o variante).\n4. L'apertura totale del corpo permette al partner attivo pieno accesso e libertà di movimento.\n5. Il partner sdraiato si gode la posizione passiva e rilassata.\n6. Questa è una posizione di completa resa e fiducia — ideale quando un partner vuole lasciarsi andare completamente. Il partner attivo si prende cura dell'altro, controllando ritmo e intensità. Comunicare cosa piace e cosa no.",
+    "setupEn": "1. The receiving partner lies on their back with arms and legs spread out, like a starfish.\n2. The body is completely relaxed and open.\n3. The active partner positions on top, choosing their preferred position (missionary or variant).\n4. The total body opening allows the active partner full access and freedom of movement.\n5. The lying partner enjoys the passive, relaxed position.\n6. This is a position of complete surrender and trust — ideal when one partner wants to completely let go. The active partner takes care of the other, controlling rhythm and intensity. Communicate what feels good and what doesn't.",
+    "checkinIt": "Sei a tuo agio con le braccia così?",
+    "checkinEn": "Are you comfortable with your arms like this?",
+    "tags": [
+      "disteso",
+      "passivo",
+      "rilassante",
+      "dominante"
+    ],
+    "illustrationRef": "starfish.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_035",
+    "nameIt": "Granchio",
+    "nameEn": "Crab",
+    "aliasIt": "Puntello Inverso",
+    "aliasEn": "Reverse Prop",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [],
+    "cautionsIt": "Richiede forza nelle braccia e gambe",
+    "cautionsEn": "Requires arm and leg strength",
+    "easyVariantIt": "Appoggiarsi a un cuscino o al bordo del letto",
+    "easyVariantEn": "Lean on a pillow or bed edge",
+    "setupIt": "1. Entrambi i partner si posizionano in posizione di granchio: mani e piedi a terra, pancia verso l'alto.\n2. I bacini si avvicinano scivolando uno verso l'altro fino a incontrarsi.\n3. Le braccia sostenendo il peso del corpo devono essere forti e stabili.\n4. I piedi rimangono piantati a terra per equilibrio.\n5. I movimenti sono limitati a oscillazioni del bacino avanti e indietro.\n6. Questa è una posizione atletica e giocosa che richiede forza in braccia e gambe. Non è sostenibile a lungo — usarla come posizione divertente di transizione. Avere cuscini pronti per appoggiarsi quando le braccia si stancano.",
+    "setupEn": "1. Both partners get into crab position: hands and feet on the ground, belly facing up.\n2. Pelvises approach by sliding toward each other until they meet.\n3. Arms supporting body weight must be strong and stable.\n4. Feet remain planted on the ground for balance.\n5. Movements are limited to pelvic rocking back and forth.\n6. This is an athletic and playful position requiring arm and leg strength. Not sustainable for long — use it as a fun transitional position. Have pillows ready to rest on when arms get tired.",
+    "checkinIt": "Le braccia ti reggono? Dimmelo se è troppo sforzo",
+    "checkinEn": "Are your arms holding? Tell me if it's too much effort",
+    "tags": [
+      "atletico",
+      "divertente",
+      "sfidante",
+      "playful"
+    ],
+    "illustrationRef": "crab.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_036",
+    "nameIt": "Ancora",
+    "nameEn": "The Anchor",
+    "aliasIt": "Aggancio",
+    "aliasEn": "The Hook",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dalla posizione del missionario classico.\n2. Il partner ricevente solleva una gamba e la poggia sulla spalla del partner attivo.\n3. L'altra gamba resta piegata con il piede sul materasso o avvolta intorno alla vita del partner.\n4. Il partner attivo può tenere la caviglia o il polpaccio della gamba sollevata per supporto.\n5. Questa asimmetria delle gambe crea un angolo di penetrazione più profondo su un lato.\n6. Alternare la gamba sollevata per variare le sensazioni. Se il partner ricevente non è abbastanza flessibile per raggiungere la spalla, la gamba può poggiare sul petto o sul braccio — l'importante è che sia confortevole.",
+    "setupEn": "1. Start from classic missionary position.\n2. The receiving partner lifts one leg and rests it on the active partner's shoulder.\n3. The other leg stays bent with foot on the mattress or wrapped around the partner's waist.\n4. The active partner can hold the ankle or calf of the raised leg for support.\n5. This leg asymmetry creates a deeper penetration angle on one side.\n6. Alternate the raised leg to vary sensations. If the receiving partner isn't flexible enough to reach the shoulder, the leg can rest on the chest or arm — the important thing is that it's comfortable.",
+    "checkinIt": "La gamba in alto ti è comoda? Senti tensione?",
+    "checkinEn": "Is the raised leg comfortable? Do you feel tension?",
+    "tags": [
+      "profondo",
+      "missionario",
+      "variante",
+      "flessibile"
+    ],
+    "illustrationRef": "anchor.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_037",
+    "nameIt": "Candela",
+    "nameEn": "Candle",
+    "aliasIt": "Verticale Inverso",
+    "aliasEn": "Inverted Stand",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [],
+    "cautionsIt": "Solo se entrambi sono fisicamente preparati — rischio di cadute",
+    "cautionsEn": "Only if both are physically prepared — risk of falling",
+    "easyVariantIt": "Appoggiarsi a un muro per la versione verticale",
+    "easyVariantEn": "Lean on a wall for the vertical version",
+    "setupIt": "1. Il partner ricevente si posiziona con le spalle e la parte alta della schiena appoggiate al materasso.\n2. Il bacino si solleva verso l'alto, con le gambe che si estendono verso il soffitto — come una candela di yoga.\n3. Le mani del partner ricevente sostengono i propri fianchi per mantenere la posizione.\n4. Il partner attivo si inginocchia di fronte al bacino sollevato.\n5. Procedere con estrema delicatezza data la posizione invertita.\n6. Questa posizione è avanzata e richiede pratica con la posizione yoga della candela prima di provare l'aspetto intimo. Mai forzare la posizione sulla colonna vertebrale. Usare il muro come supporto per le gambe se necessario. Limitare la durata per evitare pressione eccessiva su collo e spalle.",
+    "setupEn": "1. The receiving partner positions with shoulders and upper back on the mattress.\n2. The pelvis lifts upward, with legs extending toward the ceiling — like a yoga candle pose.\n3. The receiving partner's hands support their own hips to maintain position.\n4. The active partner kneels in front of the raised pelvis.\n5. Proceed with extreme gentleness given the inverted position.\n6. This position is advanced and requires practice with the yoga candle pose before trying the intimate aspect. Never force the spine position. Use the wall as leg support if needed. Limit duration to avoid excessive pressure on neck and shoulders.",
+    "checkinIt": "Sei in equilibrio? Devo tenerti?",
+    "checkinEn": "Are you balanced? Should I hold you?",
+    "tags": [
+      "acrobatico",
+      "invertito",
+      "sfidante",
+      "forza"
+    ],
+    "illustrationRef": "candle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_038",
+    "nameIt": "Amaca",
+    "nameEn": "Hammock",
+    "aliasIt": "Dondolo",
+    "aliasEn": "The Swing",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dalla posizione del cucchiaio classico con entrambi i partner sullo stesso fianco.\n2. Il partner posteriore avvolge entrambe le braccia intorno al partner davanti, creando un abbraccio avvolgente.\n3. Il partner davanti si rilassa leggermente all'indietro, appoggiandosi dolcemente al petto dell'altro.\n4. Le gambe si intrecciano in modo naturale per stabilità.\n5. Il partner posteriore tiene l'altro stretto come in un'amaca, cullando con movimenti lenti.\n6. Questa variante del cucchiaio enfatizza il senso di protezione e calore. I movimenti sono minimi e ondulatori, come un dondolio. Perfetta per momenti di intimità pigra e romantica, senza fretta.",
+    "setupEn": "1. Start from classic spooning with both partners on the same side.\n2. The back partner wraps both arms around the front partner, creating an enveloping embrace.\n3. The front partner relaxes slightly backward, gently leaning into the other's chest.\n4. Legs intertwine naturally for stability.\n5. The back partner holds the other close like a hammock, rocking with slow movements.\n6. This spooning variant emphasizes the sense of protection and warmth. Movements are minimal and wave-like, like a gentle rocking. Perfect for lazy, romantic intimacy moments, without rush.",
+    "checkinIt": "Ti senti avvolto/a? È comodo così?",
+    "checkinEn": "Do you feel enveloped? Is it comfortable?",
+    "tags": [
+      "rilassante",
+      "caldo",
+      "laterale",
+      "abbraccio"
+    ],
+    "illustrationRef": "hammock.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_039",
+    "nameIt": "Panca",
+    "nameEn": "The Bench",
+    "aliasIt": "Bordo Laterale",
+    "aliasEn": "Side Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Superficie stabile obbligatoria",
+    "cautionsEn": "Stable surface required",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Trovare una superficie elevata stabile all'altezza appropriata — panca, scrivania robusta o piano del letto.\n2. Il partner seduto si posiziona lateralmente sulla superficie, con le gambe da un lato.\n3. Il partner in piedi si avvicina dal lato del partner seduto.\n4. Il partner seduto può avvolgere le braccia intorno al collo dell'altro per stabilità.\n5. Le gambe del partner seduto possono pendere o avvolgere il partner in piedi.\n6. L'angolazione laterale offre sensazioni diverse rispetto alle posizioni frontali. Assicurarsi che la superficie sia stabile e non scivoli. Questa posizione è versatile e può essere adattata a diverse superfici nella casa.",
+    "setupEn": "1. Find a stable elevated surface at appropriate height — bench, sturdy desk, or bed platform.\n2. The sitting partner positions sideways on the surface, with legs to one side.\n3. The standing partner approaches from the sitting partner's side.\n4. The sitting partner can wrap arms around the other's neck for stability.\n5. The sitting partner's legs can hang or wrap around the standing partner.\n6. The lateral angle offers different sensations compared to frontal positions. Make sure the surface is stable and doesn't slide. This position is versatile and can be adapted to different surfaces around the home.",
+    "checkinIt": "Sei stabile? Ti senti al sicuro?",
+    "checkinEn": "Are you stable? Do you feel safe?",
+    "tags": [
+      "superfici",
+      "verticale",
+      "spontaneo",
+      "variato"
+    ],
+    "illustrationRef": "bench.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_040",
+    "nameIt": "Cigno",
+    "nameEn": "Swan",
+    "aliasIt": "Collo Lungo",
+    "aliasEn": "Long Neck",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Entrambi i partner si sdraiano sulla schiena, fianco a fianco, con le teste vicine.\n2. La testa di un partner poggia dolcemente sul petto o sulla spalla dell'altro.\n3. Le braccia interne si intrecciano o una mano tiene quella dell'altro.\n4. Le gambe esterne possono restare distese o piegarsi comodamente.\n5. Il contatto è delicato: carezze, baci leggeri, respirazione sincronizzata.\n6. Questa posizione è più un'esperienza di connessione e presenza che di attività fisica intensa. Ideale come preludio o come conclusione intima, permette di parlare, ridere, guardarsi e sentire il battito del cuore dell'altro.",
+    "setupEn": "1. Both partners lie on their backs, side by side, with heads close together.\n2. One partner's head rests gently on the other's chest or shoulder.\n3. The inner arms intertwine or one hand holds the other's.\n4. Outer legs can stay extended or bend comfortably.\n5. Contact is gentle: caresses, light kisses, synchronized breathing.\n6. This position is more about connection and presence than intense physical activity. Ideal as foreplay or as an intimate conclusion, it allows talking, laughing, gazing, and feeling each other's heartbeat.",
+    "checkinIt": "Ti senti comodo/a con questa posizione delle teste?",
+    "checkinEn": "Do you feel comfortable with this head position?",
+    "tags": [
+      "romantico",
+      "intimo",
+      "dolce",
+      "connessione"
+    ],
+    "illustrationRef": "swan.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_041",
+    "nameIt": "Delfino",
+    "nameEn": "Dolphin",
+    "aliasIt": "Spinta Profonda",
+    "aliasEn": "Deep Thrust",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": "Evitare se si hanno problemi alla schiena o al collo",
+    "cautionsEn": "Avoid if you have back or neck issues",
+    "easyVariantIt": "Cuscino sotto i fianchi invece di sollevarli completamente",
+    "easyVariantEn": "Pillow under hips instead of fully raising them",
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena nella posizione del missionario.\n2. Sollevare i fianchi dal materasso, portando le gambe verso l'alto e leggermente oltre la testa.\n3. Un cuscino grande o un rialzo sotto i fianchi aiuta a mantenere la posizione senza sforzo.\n4. Le gambe possono poggiare sulle spalle del partner attivo o restare in aria.\n5. Il partner attivo si inginocchia davanti, approfittando dell'angolo elevato del bacino.\n6. L'angolo di penetrazione in questa posizione è significativamente diverso e più profondo. Procedere con molta cautela e comunicare costantemente. Non adatta a chi ha problemi alla schiena o al collo. Un ottimo compromesso è usare 2-3 cuscini impilati sotto i fianchi invece di sollevare attivamente.",
+    "setupEn": "1. The receiving partner lies on their back in missionary position.\n2. Raise hips off the mattress, bringing legs upward and slightly over the head.\n3. A large pillow or bolster under the hips helps maintain position effortlessly.\n4. Legs can rest on the active partner's shoulders or stay in the air.\n5. The active partner kneels in front, taking advantage of the elevated pelvic angle.\n6. The penetration angle in this position is significantly different and deeper. Proceed with great caution and communicate constantly. Not suitable for those with back or neck problems. A great compromise is using 2-3 stacked pillows under the hips instead of actively lifting.",
+    "checkinIt": "Riesci a tenere i fianchi così? Senti pressione da qualche parte?",
+    "checkinEn": "Can you hold your hips like this? Do you feel pressure anywhere?",
+    "tags": [
+      "profondo",
+      "atletico",
+      "intenso",
+      "avanzato"
+    ],
+    "illustrationRef": "dolphin.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_042",
+    "nameIt": "Farfalla Avanzata",
+    "nameEn": "Advanced Butterfly",
+    "aliasIt": "Farfalla Alzata",
+    "aliasEn": "Elevated Butterfly",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_016"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Versione base senza cuscino",
+    "easyVariantEn": "Basic version without pillow",
+    "setupIt": "1. Partire dalla posizione farfalla classica (partner sdraiato sul bordo del letto, l'altro in piedi).\n2. Posizionare 2-3 cuscini sotto i fianchi del partner sdraiato per elevare significativamente il bacino.\n3. Le gambe del partner sdraiato si appoggiano sulle spalle del partner in piedi.\n4. L'elevazione extra cambia l'angolazione e la profondità rispetto alla farfalla base.\n5. Il partner in piedi tiene le cosce dell'altro per stabilità.\n6. Questa versione avanzata richiede buona altezza del letto e cuscini fermi. L'angolo è più intenso della versione base, quindi iniziare lentamente. Sperimentare con diversi numeri di cuscini per trovare l'elevazione ottimale.",
+    "setupEn": "1. Start from classic butterfly position (partner lying on bed edge, other standing).\n2. Place 2-3 pillows under the lying partner's hips to significantly elevate the pelvis.\n3. The lying partner's legs rest on the standing partner's shoulders.\n4. The extra elevation changes the angle and depth compared to basic butterfly.\n5. The standing partner holds the other's thighs for stability.\n6. This advanced version requires good bed height and firm pillows. The angle is more intense than the basic version, so start slowly. Experiment with different numbers of pillows to find optimal elevation.",
+    "checkinIt": "L'angolazione è migliore così?",
+    "checkinEn": "Is the angle better like this?",
+    "tags": [
+      "elevato",
+      "profondo",
+      "variante",
+      "borderline"
+    ],
+    "illustrationRef": "advanced_butterfly.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_043",
+    "nameIt": "Scimmia",
+    "nameEn": "The Monkey",
+    "aliasIt": "Aggrappato Alto",
+    "aliasEn": "High Clinging",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "trust",
+      "passion"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Richiede forza per sostenere il partner sollevato",
+    "cautionsEn": "Requires strength to support lifted partner",
+    "easyVariantIt": "Appoggiarsi a un muro o una porta",
+    "easyVariantEn": "Lean against a wall or door",
+    "setupIt": "1. Il partner più forte si posiziona in piedi, con la schiena appoggiata saldamente a un muro.\n2. Il secondo partner si aggrappa all'altro, avvolgendo braccia e gambe intorno al corpo come una scimmia.\n3. Le gambe si aggrappano alla vita, le braccia al collo e alle spalle.\n4. Il partner che sostiene tiene i glutei dell'altro con entrambe le mani.\n5. A differenza del koala, qui il partner sollevato è più in alto, quasi sulla parte superiore del torace.\n6. L'altezza extra intensifica la posizione ma richiede molta più forza. Usare sempre un muro o una porta robusta come supporto. Stabilire prima un segnale chiaro per quando il partner che sostiene ha bisogno di posare l'altro.",
+    "setupEn": "1. The stronger partner stands with back firmly against a wall.\n2. The second partner clings to the other, wrapping arms and legs around the body like a monkey.\n3. Legs grip the waist, arms around neck and shoulders.\n4. The supporting partner holds the other's buttocks with both hands.\n5. Unlike the koala, here the lifted partner is higher up, almost on the upper chest.\n6. The extra height intensifies the position but requires much more strength. Always use a wall or sturdy door as support. Establish a clear signal beforehand for when the supporting partner needs to set the other down.",
+    "checkinIt": "Ti sento sicuro/a? Quanto riesci a reggere?",
+    "checkinEn": "Do you feel secure? How long can you hold?",
+    "tags": [
+      "sollevato",
+      "forza",
+      "fiducia",
+      "aggrappato"
+    ],
+    "illustrationRef": "monkey.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_044",
+    "nameIt": "Serpente",
+    "nameEn": "Snake",
+    "aliasIt": "Strisciante",
+    "aliasEn": "The Crawler",
+    "categories": [
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Entrambi i partner si sdraiano a pancia in giù (posizione prona), uno sopra l'altro.\n2. Il partner inferiore è completamente disteso con le gambe unite o leggermente divaricate.\n3. Il partner superiore si posiziona sopra, allineando il corpo.\n4. I movimenti sono lenti e striscianti, come un serpente che si muove.\n5. Il partner superiore si sostiene parzialmente sulle braccia per non gravare con il peso intero.\n6. Questa posizione è estremamente rilassante e sensuale, con molto contatto pelle a pelle su tutta la superficie del corpo. Il respiro caldo sulla nuca del partner inferiore aggiunge intimità. Ideale per momenti pigri e intimi, senza bisogno di prestazione atletica.",
+    "setupEn": "1. Both partners lie face down (prone), one on top of the other.\n2. The bottom partner is fully extended with legs together or slightly apart.\n3. The top partner positions on top, aligning their body.\n4. Movements are slow and crawling, like a snake moving.\n5. The top partner partially supports themselves on arms to not press with full weight.\n6. This position is extremely relaxing and sensual, with lots of skin-to-skin contact across the entire body surface. Warm breath on the bottom partner's neck adds intimacy. Ideal for lazy, intimate moments without the need for athletic performance.",
+    "checkinIt": "Riesci a respirare comodamente sotto di me?",
+    "checkinEn": "Can you breathe comfortably under me?",
+    "tags": [
+      "prono",
+      "piatto",
+      "lento",
+      "sensuale"
+    ],
+    "illustrationRef": "snake.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_045",
+    "nameIt": "Compasso",
+    "nameEn": "The Compass",
+    "aliasIt": "Ruota",
+    "aliasEn": "The Wheel",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Muoversi lentamente e con attenzione",
+    "easyVariantEn": "Move slowly and carefully",
+    "setupIt": "1. Partire dalla posizione della cowgirl classica, con il partner attivo seduto sopra.\n2. Lentamente, il partner sopra inizia a ruotare il corpo di 90 gradi mantenendo la connessione.\n3. Il movimento deve essere lentissimo e costantemente comunicato.\n4. Una volta raggiunti i 90 gradi, il corpo del partner sopra è perpendicolare a quello sotto.\n5. Stabilizzarsi nella nuova posizione prima di iniziare qualsiasi movimento.\n6. Questa transizione richiede pazienza e comunicazione costante. Non forzare mai la rotazione — se l'angolo diventa scomodo, tornare alla posizione di partenza. Il partner sotto deve restare immobile durante la rotazione. Sperimentare con diverse angolazioni (45°, 90°, 135°) per trovare la preferita.",
+    "setupEn": "1. Start from classic cowgirl position, with the active partner sitting on top.\n2. Slowly, the top partner begins rotating their body 90 degrees while maintaining connection.\n3. The movement must be very slow and constantly communicated.\n4. Once at 90 degrees, the top partner's body is perpendicular to the bottom one.\n5. Stabilize in the new position before starting any movement.\n6. This transition requires patience and constant communication. Never force the rotation — if the angle becomes uncomfortable, return to starting position. The bottom partner must stay still during rotation. Experiment with different angles (45°, 90°, 135°) to find the favorite.",
+    "checkinIt": "Come ti trovi in questo angolo?",
+    "checkinEn": "How do you feel at this angle?",
+    "tags": [
+      "rotazione",
+      "cowgirl",
+      "variante",
+      "creativo"
+    ],
+    "illustrationRef": "compass.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_046",
+    "nameIt": "Arcobaleno",
+    "nameEn": "Rainbow",
+    "aliasIt": "Arco Curvo",
+    "aliasEn": "Curved Arc",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dal cucchiaio classico, con il partner davanti leggermente curvo all'indietro.\n2. Il partner posteriore accompagna la curva, mantenendo il contatto su tutta la schiena.\n3. La schiena del partner davanti si arca dolcemente verso il partner posteriore, creando una forma a C inversa.\n4. Le braccia del partner posteriore avvolgono l'altro, seguendo la curva del corpo.\n5. La gamba superiore del partner davanti può sollevarsi leggermente per facilitare il contatto.\n6. L'arco della schiena deve essere naturale e confortevole — mai forzato. Questa curva aggiuntiva cambia l'angolazione in modo sottile ma piacevole. Ideale per coppie che amano il cucchiaio e vogliono una piccola variazione.",
+    "setupEn": "1. Start from classic spooning, with the front partner slightly curved backward.\n2. The back partner follows the curve, maintaining contact along the entire back.\n3. The front partner's back gently arches toward the back partner, creating a reverse C-shape.\n4. The back partner's arms wrap around the other, following the body's curve.\n5. The front partner's upper leg can lift slightly to facilitate contact.\n6. The back arch should be natural and comfortable — never forced. This additional curve changes the angle subtly but pleasantly. Ideal for couples who love spooning and want a small variation.",
+    "checkinIt": "L'arco della schiena è confortevole per te?",
+    "checkinEn": "Is the back arch comfortable for you?",
+    "tags": [
+      "laterale",
+      "romantico",
+      "curvo",
+      "sensuale"
+    ],
+    "illustrationRef": "rainbow.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_047",
+    "nameIt": "Vento",
+    "nameEn": "The Wind",
+    "aliasIt": "Soffiato Via",
+    "aliasEn": "Swept Away",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Un partner si appoggia con la schiena contro la parete, con i piedi saldi a terra.\n2. L'altro partner si posiziona di fronte, vicinissimo, quasi petto a petto.\n3. Le braccia si avvolgono naturalmente intorno alle spalle o alla vita dell'altro.\n4. I piedi di entrambi sono leggermente divaricati per stabilità.\n5. Un ginocchio di uno dei partner può inserirsi tra le gambe dell'altro.\n6. I movimenti sono dolci oscillazioni laterali o avanti e indietro. Il muro fornisce supporto, rendendo la posizione meno faticosa rispetto allo stare completamente in piedi senza appoggio. Ideale come posizione romantica e spontanea — in camera, in corridoio, in qualsiasi stanza con una parete.",
+    "setupEn": "1. One partner leans with their back against the wall, feet firmly on the ground.\n2. The other partner positions themselves face-to-face, very close, almost chest to chest.\n3. Arms wrap naturally around the other's shoulders or waist.\n4. Both partners' feet are slightly apart for stability.\n5. One partner's knee can slip between the other's legs.\n6. Movements are gentle side-to-side or back-and-forth swaying. The wall provides support, making the position less tiring than standing completely unsupported. Ideal as a romantic and spontaneous position — in the bedroom, hallway, or any room with a wall.",
+    "checkinIt": "Sei comodo/a contro il muro?",
+    "checkinEn": "Are you comfortable against the wall?",
+    "tags": [
+      "piedi",
+      "parete",
+      "abbraccio",
+      "romantico"
+    ],
+    "illustrationRef": "wind.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_048",
+    "nameIt": "Conchiglia",
+    "nameEn": "The Shell",
+    "aliasIt": "Raccolta",
+    "aliasEn": "Gathered",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Partire dalla posizione del cucchiaio classico con entrambi i partner sullo stesso fianco.\n2. Il partner davanti porta le ginocchia verso il petto, come in posizione fetale.\n3. Il partner posteriore si avvicina, avvolgendo il corpo dell'altro con il proprio.\n4. Le braccia del partner posteriore circondano l'altro in un abbraccio protettivo.\n5. Le gambe si conformano alla forma raccolta del partner davanti.\n6. Questa posizione simula il senso di protezione e raccoglimento di una conchiglia. I movimenti sono minimi e dolcissimi. È una posizione più emotiva che atletica — perfetta per momenti in cui un partner ha bisogno di sentirsi protetto e amato.",
+    "setupEn": "1. Start from classic spooning with both partners on the same side.\n2. The front partner brings knees toward their chest, like a fetal position.\n3. The back partner moves close, wrapping their body around the other's.\n4. The back partner's arms surround the other in a protective embrace.\n5. Legs conform to the front partner's gathered shape.\n6. This position simulates the protective, gathered feeling of a shell. Movements are minimal and very gentle. It's a more emotional than athletic position — perfect for moments when a partner needs to feel protected and loved.",
+    "checkinIt": "Ti senti protetto/a e al sicuro?",
+    "checkinEn": "Do you feel protected and safe?",
+    "tags": [
+      "protettivo",
+      "caldo",
+      "dolce",
+      "coccole"
+    ],
+    "illustrationRef": "shell.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_049",
+    "nameIt": "Scorpione",
+    "nameEn": "Scorpion",
+    "aliasIt": "Coda Alzata",
+    "aliasEn": "Raised Tail",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Alta flessibilità richiesta — non forzare mai",
+    "cautionsEn": "High flexibility required — never force it",
+    "easyVariantIt": "Mantenere la gamba a un'altezza confortevole",
+    "easyVariantEn": "Keep leg at a comfortable height",
+    "setupIt": "1. Il partner ricevente si posiziona a quattro zampe come nella pecorina classica.\n2. Una gamba si solleva verso l'alto e l'indietro, come la coda di uno scorpione.\n3. La gamba alzata può essere tenuta dal partner attivo per supporto.\n4. L'altra gamba e le braccia rimangono saldamente a terra per equilibrio.\n5. Il partner attivo si posiziona dietro, in ginocchio.\n6. Questa posizione richiede alta flessibilità nella gamba sollevata — non forzare mai oltre il proprio limite. Riscaldare i muscoli con stretching prima di provare. La gamba può alzarsi gradualmente, partendo da un'altezza bassa. Alternare le gambe se si vuole prolungare. Comunicare costantemente sulla tensione muscolare.",
+    "setupEn": "1. The receiving partner gets on all fours as in classic doggy style.\n2. One leg lifts upward and backward, like a scorpion's tail.\n3. The raised leg can be held by the active partner for support.\n4. The other leg and arms remain firmly on the ground for balance.\n5. The active partner positions behind, kneeling.\n6. This position requires high flexibility in the raised leg — never force beyond your limit. Warm up muscles with stretching before trying. The leg can rise gradually, starting from a low height. Alternate legs if wanting to extend. Communicate constantly about muscle tension.",
+    "checkinIt": "Riesci a tenere la gamba così? Dimmi se senti tensione",
+    "checkinEn": "Can you hold your leg like this? Tell me if you feel tension",
+    "tags": [
+      "acrobatico",
+      "flessibile",
+      "intenso",
+      "avanzato"
+    ],
+    "illustrationRef": "scorpion.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_050",
+    "nameIt": "Velo",
+    "nameEn": "The Veil",
+    "aliasIt": "Nascosta",
+    "aliasEn": "Hidden",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "1. Entrambi i partner si sdraiano su un fianco, uno di fronte all'altro, sotto le coperte.\n2. I corpi si avvicinano fino a toccarsi, fronte a fronte, naso a naso.\n3. Le braccia si intrecciano in un abbraccio sotto le coperte.\n4. Le gambe si intrecciano naturalmente tra loro.\n5. Le coperte avvolgono entrambi creando un piccolo mondo privato.\n6. Questa posizione è tutta incentrata sull'intimità e la connessione — il calore delle coperte, la vicinanza dei corpi, il respiro condiviso. I movimenti sono minimi e guidati dal sentimento più che dalla tecnica. Ideale per serate fredde, momenti di riconnessione, o quando si vuole semplicemente stare vicini.",
+    "setupEn": "1. Both partners lie on their sides, facing each other, under the blankets.\n2. Bodies move close until touching, forehead to forehead, nose to nose.\n3. Arms intertwine in an embrace under the blankets.\n4. Legs naturally intertwine with each other.\n5. Blankets wrap around both creating a small private world.\n6. This position is all about intimacy and connection — the warmth of the blankets, the closeness of bodies, shared breathing. Movements are minimal and guided by feeling more than technique. Ideal for cold evenings, reconnection moments, or when you simply want to be close.",
+    "checkinIt": "Ti senti al caldo e al sicuro?",
+    "checkinEn": "Do you feel warm and safe?",
+    "tags": [
+      "coperte",
+      "caldo",
+      "romantico",
+      "intimo"
+    ],
+    "illustrationRef": "veil.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_051",
+    "nameIt": "Fenice",
+    "nameEn": "Phoenix",
+    "aliasIt": "Rinascita",
+    "aliasEn": "Rebirth",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_025"
+    ],
+    "cautionsIt": "Comunicare continuamente sull'angolazione",
+    "cautionsEn": "Communicate continuously about the angle",
+    "easyVariantIt": "Versione cowgirl semplice come alternativa",
+    "easyVariantEn": "Simple cowgirl version as alternative",
+    "setupIt": "Cowgirl inversa con il partner superiore che si inclina in avanti, mani a terra",
+    "setupEn": "Reverse cowgirl with top partner leaning forward, hands on ground",
+    "checkinIt": "Come si sente l'angolo da questa posizione?",
+    "checkinEn": "How does the angle feel from this position?",
+    "tags": [
+      "atletico",
+      "cowgirl",
+      "variante",
+      "avanzato"
+    ],
+    "illustrationRef": "phoenix.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_052",
+    "nameIt": "Tartaruga",
+    "nameEn": "Turtle",
+    "aliasIt": "Guscio",
+    "aliasEn": "Shell Back",
+    "categories": [
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Un partner a quattro zampe basso (come una tartaruga), l'altro sopra abbracciato",
+    "setupEn": "One partner low on all fours (like a turtle shell), other draped on top",
+    "checkinIt": "Riesci a stare comodo/a sotto di me?",
+    "checkinEn": "Can you stay comfortable under me?",
+    "tags": [
+      "coperta",
+      "protettivo",
+      "rilassante",
+      "abbraccio"
+    ],
+    "illustrationRef": "turtle.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_053",
+    "nameIt": "Orso",
+    "nameEn": "Bear Hug",
+    "aliasIt": "Abbraccio Forte",
+    "aliasEn": "Strong Embrace",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "trust",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "In piedi, uno dietro l'altro, entrambi in piedi, abbracciati strettamente da dietro",
+    "setupEn": "Standing, one behind the other, both standing, tightly embraced from behind",
+    "checkinIt": "L'abbraccio è comodo? Non troppo stretto?",
+    "checkinEn": "Is the embrace comfortable? Not too tight?",
+    "tags": [
+      "abbraccio",
+      "caldo",
+      "sicuro",
+      "in-piedi"
+    ],
+    "illustrationRef": "bear_hug.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_054",
+    "nameIt": "Bandiera",
+    "nameEn": "The Flag",
+    "aliasIt": "Orizzontale",
+    "aliasEn": "Horizontal",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Estrema forza richiesta — solo per esperti",
+    "cautionsEn": "Extreme strength required — for experienced only",
+    "easyVariantIt": "Appoggiarsi su un letto o superficie",
+    "easyVariantEn": "Rest on a bed or surface",
+    "setupIt": "Un partner sorretto orizzontalmente dall'altro come una bandiera",
+    "setupEn": "One partner held horizontally by the other like a flag",
+    "checkinIt": "Sei in equilibrio? Devo tenere diversamente?",
+    "checkinEn": "Are you balanced? Should I hold differently?",
+    "tags": [
+      "acrobatico",
+      "forza",
+      "sfidante",
+      "estremo"
+    ],
+    "illustrationRef": "flag.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_055",
+    "nameIt": "Drago",
+    "nameEn": "Dragon",
+    "aliasIt": "Fuoco",
+    "aliasEn": "Fire",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_044"
+    ],
+    "cautionsIt": "Richiede flessibilità nella schiena",
+    "cautionsEn": "Requires back flexibility",
+    "easyVariantIt": "Versione serpente come base",
+    "easyVariantEn": "Snake version as base",
+    "setupIt": "Entrambi proni ma con spinte decise — partner superiore si raddrizza sui palmi",
+    "setupEn": "Both prone but with decisive thrusting — top partner pushes up on palms",
+    "checkinIt": "Come stai? Il ritmo è giusto?",
+    "checkinEn": "How are you? Is the rhythm right?",
+    "tags": [
+      "intenso",
+      "prono",
+      "fuoco",
+      "passionale"
+    ],
+    "illustrationRef": "dragon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_056",
+    "nameIt": "Pavone",
+    "nameEn": "Peacock",
+    "aliasIt": "Piume Aperte",
+    "aliasEn": "Open Feathers",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_030"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come aquila ma con le gambe aperte ancora di più, sorrette dal partner",
+    "setupEn": "Like eagle but with legs spread even wider, supported by partner",
+    "checkinIt": "Riesci ad aprire le gambe così senza tensione?",
+    "checkinEn": "Can you open your legs this wide without tension?",
+    "tags": [
+      "aperto",
+      "visuale",
+      "elegante",
+      "romantico"
+    ],
+    "illustrationRef": "peacock.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_057",
+    "nameIt": "Rana",
+    "nameEn": "Frog Leap",
+    "aliasIt": "Salto",
+    "aliasEn": "The Leap",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": "Riscaldare le anche prima",
+    "cautionsEn": "Warm up hips before",
+    "easyVariantIt": "Ginocchia più vicine al petto",
+    "easyVariantEn": "Knees closer to chest",
+    "setupIt": "Come pecorina ma il partner inferiore è in posizione di rana accovacciata",
+    "setupEn": "Like doggy style but lower partner is in frog squat position",
+    "checkinIt": "Le anche ti stanno bene in questa posizione?",
+    "checkinEn": "Are your hips okay in this position?",
+    "tags": [
+      "accovacciato",
+      "intenso",
+      "atletico",
+      "divertente"
+    ],
+    "illustrationRef": "frog_leap.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_058",
+    "nameIt": "Nido",
+    "nameEn": "The Nest",
+    "aliasIt": "Rannicchiati",
+    "aliasEn": "Curled Together",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi rannicchiati insieme, forma a C opposta, fronte a fronte",
+    "setupEn": "Both curled together, opposite C-shape, face to face",
+    "checkinIt": "Ti senti al caldo e protetto/a?",
+    "checkinEn": "Do you feel warm and protected?",
+    "tags": [
+      "nido",
+      "romantico",
+      "dolce",
+      "protezione"
+    ],
+    "illustrationRef": "nest.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_059",
+    "nameIt": "Elicottero",
+    "nameEn": "Helicopter",
+    "aliasIt": "Rotazione",
+    "aliasEn": "Rotation",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_045"
+    ],
+    "cautionsIt": "Muoversi molto lentamente — rischio di lesioni se affrettato",
+    "cautionsEn": "Move very slowly — risk of injury if rushed",
+    "easyVariantIt": "Completare solo 90° alla volta",
+    "easyVariantEn": "Complete only 90° at a time",
+    "setupIt": "Partendo dalla cowgirl, il partner superiore ruota di 360° mantenendo la posizione",
+    "setupEn": "Starting from cowgirl, top partner rotates 360° while maintaining position",
+    "checkinIt": "Fermati se senti qualcosa di strano — procediamo lentamente",
+    "checkinEn": "Stop if you feel anything off — let's go slowly",
+    "tags": [
+      "rotazione",
+      "estremo",
+      "sfidante",
+      "esperto"
+    ],
+    "illustrationRef": "helicopter.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_060",
+    "nameIt": "Tigre",
+    "nameEn": "Tiger",
+    "aliasIt": "Artiglio",
+    "aliasEn": "The Claw",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_004"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Rimanere fermi invece di muoversi aggressivamente",
+    "easyVariantEn": "Stay still instead of moving aggressively",
+    "setupIt": "Pecorina con il partner superiore che afferra i fianchi per maggiore controllo",
+    "setupEn": "Doggy style with top partner gripping hips for more control",
+    "checkinIt": "La presa è comoda? Troppo forte?",
+    "checkinEn": "Is the grip comfortable? Too strong?",
+    "tags": [
+      "passionale",
+      "controllo",
+      "intenso",
+      "presa"
+    ],
+    "illustrationRef": "tiger.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_061",
+    "nameIt": "Leone",
+    "nameEn": "Lion",
+    "aliasIt": "Re della Giungla",
+    "aliasEn": "King of the Jungle",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con il partner superiore appoggiato sulle mani, testa alta come un leone",
+    "setupEn": "Missionary with top partner propped on hands, head held high like a lion",
+    "checkinIt": "Vuoi che mi avvicini di più?",
+    "checkinEn": "Do you want me to come closer?",
+    "tags": [
+      "missionario",
+      "aperto",
+      "orgoglioso",
+      "visivo"
+    ],
+    "illustrationRef": "lion.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_062",
+    "nameIt": "Gabbiano",
+    "nameEn": "Seagull",
+    "aliasIt": "In Volo",
+    "aliasEn": "In Flight",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_020"
+    ],
+    "cautionsIt": "Richiede forza — appoggiarsi sempre a una parete",
+    "cautionsEn": "Requires strength — always lean on a wall",
+    "easyVariantIt": "Partner che porta con il muro come supporto",
+    "easyVariantEn": "Carrying partner with wall as support",
+    "setupIt": "Un partner sorregge l'altro che apre le braccia come ali di gabbiano",
+    "setupEn": "One partner supports the other who spreads arms like seagull wings",
+    "checkinIt": "Sei stabile? Come stai in questa posizione?",
+    "checkinEn": "Are you stable? How are you in this position?",
+    "tags": [
+      "sollevato",
+      "forza",
+      "volo",
+      "fiducia"
+    ],
+    "illustrationRef": "seagull.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_063",
+    "nameIt": "Libellula",
+    "nameEn": "Dragonfly",
+    "aliasIt": "Ali di Pizzo",
+    "aliasEn": "Lace Wings",
+    "categories": [
+      "romantic",
+      "athletic"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_022"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Forbici con entrambi i partner che si tengono per le mani sopra la testa",
+    "setupEn": "Scissors with both partners holding hands above their heads",
+    "checkinIt": "Le braccia ti danno una sensazione di connessione?",
+    "checkinEn": "Do your arms give you a feeling of connection?",
+    "tags": [
+      "intreccio",
+      "romantico",
+      "mani",
+      "forbici"
+    ],
+    "illustrationRef": "dragonfly.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_064",
+    "nameIt": "Polpo",
+    "nameEn": "Octopus",
+    "aliasIt": "Tentacoli",
+    "aliasEn": "Tentacles",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_005"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Meno arti coinvolti nella versione semplice",
+    "easyVariantEn": "Fewer limbs involved in simple version",
+    "setupIt": "69 con intrecci di gambe e braccia che si avvolgono intorno all'altro",
+    "setupEn": "69 with legs and arms entwined wrapping around each other",
+    "checkinIt": "Riesci a respirare liberamente con questa posizione delle gambe?",
+    "checkinEn": "Can you breathe freely with this leg position?",
+    "tags": [
+      "intreccio",
+      "69",
+      "complesso",
+      "avanzato"
+    ],
+    "illustrationRef": "octopus.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_065",
+    "nameIt": "Danza",
+    "nameEn": "The Dance",
+    "aliasIt": "Tango",
+    "aliasEn": "Tango",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_047"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "In piedi di fronte, in movimento come un ballo lento, intimo",
+    "setupEn": "Standing face to face, moving like a slow, intimate dance",
+    "checkinIt": "Ti piace questo ritmo lento?",
+    "checkinEn": "Do you like this slow rhythm?",
+    "tags": [
+      "danza",
+      "romantico",
+      "in-piedi",
+      "ritmo"
+    ],
+    "illustrationRef": "dance.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_066",
+    "nameIt": "Altalena",
+    "nameEn": "The Swing",
+    "aliasIt": "Su e Giù",
+    "aliasEn": "Up and Down",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": "Usare strutture certificate se si usa un'altalena vera",
+    "cautionsEn": "Use certified structures if using an actual swing",
+    "easyVariantIt": "Simulare il movimento su un letto o sedia",
+    "easyVariantEn": "Simulate the movement on a bed or chair",
+    "setupIt": "Un partner seduto su un'altalena o struttura oscillante, l'altro in piedi",
+    "setupEn": "One partner seated on a swing or oscillating structure, other standing",
+    "checkinIt": "Il movimento dell'altalena è confortevole?",
+    "checkinEn": "Is the swing movement comfortable?",
+    "tags": [
+      "oscillante",
+      "dinamico",
+      "divertente",
+      "audace"
+    ],
+    "illustrationRef": "swing.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_067",
+    "nameIt": "Specchio",
+    "nameEn": "The Mirror",
+    "aliasIt": "Riflesso",
+    "aliasEn": "Reflection",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte, movimenti sincronizzati come un riflesso nello specchio",
+    "setupEn": "Seated facing each other, movements synchronized like a mirror reflection",
+    "checkinIt": "Riesci a sentire il mio ritmo? Vuoi guidare tu?",
+    "checkinEn": "Can you feel my rhythm? Do you want to lead?",
+    "tags": [
+      "sincronia",
+      "romantico",
+      "occhi-negli-occhi",
+      "seduto"
+    ],
+    "illustrationRef": "mirror.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_068",
+    "nameIt": "Fiamma",
+    "nameEn": "Flame",
+    "aliasIt": "Ardore",
+    "aliasEn": "Ardor",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": "Assicurarsi che il partner che sorregge abbia stabilità",
+    "cautionsEn": "Make sure the supporting partner has stability",
+    "easyVariantIt": "Appoggiarsi a un muro",
+    "easyVariantEn": "Lean against a wall",
+    "setupIt": "Partner in piedi che sorregge l'altro con le gambe avvolte intorno ai fianchi, con movimento passionale",
+    "setupEn": "Standing partner holding other with legs wrapped around hips, with passionate movement",
+    "checkinIt": "Come ti senti? Vuoi che rallenti?",
+    "checkinEn": "How do you feel? Do you want me to slow down?",
+    "tags": [
+      "passionale",
+      "sollevato",
+      "fuoco",
+      "in-piedi"
+    ],
+    "illustrationRef": "flame.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_069",
+    "nameIt": "Ghiaccio",
+    "nameEn": "Ice",
+    "aliasIt": "Lento e Delicato",
+    "aliasEn": "Slow and Gentle",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione eseguita con movimenti lentissimi e consapevoli",
+    "setupEn": "Any position performed with very slow and mindful movements",
+    "checkinIt": "Ti piace questo ritmo lentissimo?",
+    "checkinEn": "Do you like this very slow rhythm?",
+    "tags": [
+      "lento",
+      "consapevole",
+      "meditativo",
+      "delicato"
+    ],
+    "illustrationRef": "ice.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_070",
+    "nameIt": "Vulcano",
+    "nameEn": "Volcano",
+    "aliasIt": "Eruzione",
+    "aliasEn": "Eruption",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_041"
+    ],
+    "cautionsIt": "Non forzare mai la schiena oltre i propri limiti",
+    "cautionsEn": "Never push the back beyond its limits",
+    "easyVariantIt": "Cuscino sotto i fianchi per ridurre lo sforzo",
+    "easyVariantEn": "Pillow under hips to reduce effort",
+    "setupIt": "Come delfino ma con il partner superiore che si inclina ulteriormente indietro",
+    "setupEn": "Like dolphin but with top partner leaning further back",
+    "checkinIt": "Come stai con questa inclinazione?",
+    "checkinEn": "How are you with this angle?",
+    "tags": [
+      "intenso",
+      "profondo",
+      "atletico",
+      "esperto"
+    ],
+    "illustrationRef": "volcano.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_071",
+    "nameIt": "Piuma",
+    "nameEn": "Feather",
+    "aliasIt": "Leggerezza",
+    "aliasEn": "Lightness",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_069"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come ghiaccio ma con massaggi e carezze integrate nel movimento",
+    "setupEn": "Like ice but with massages and caresses integrated into movement",
+    "checkinIt": "Ti piace come ti tocco qui?",
+    "checkinEn": "Do you like how I touch you here?",
+    "tags": [
+      "sensuale",
+      "lento",
+      "tatto",
+      "delicato"
+    ],
+    "illustrationRef": "feather.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_072",
+    "nameIt": "Diamante",
+    "nameEn": "Diamond",
+    "aliasIt": "Angolo Perfetto",
+    "aliasEn": "Perfect Angle",
+    "categories": [
+      "beginner",
+      "romantic"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con le gambe del partner inferiore a diamante (piedi uniti, ginocchia aperte)",
+    "setupEn": "Missionary with lower partner's legs in diamond shape (feet together, knees open)",
+    "checkinIt": "Questa posizione delle gambe è comoda?",
+    "checkinEn": "Is this leg position comfortable?",
+    "tags": [
+      "missionario",
+      "fianchi",
+      "apertura",
+      "variante"
+    ],
+    "illustrationRef": "diamond.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_073",
+    "nameIt": "Cristallo",
+    "nameEn": "Crystal",
+    "aliasIt": "Trasparente",
+    "aliasEn": "Transparent",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte, mani intrecciate, occhi negli occhi, movimenti minimi",
+    "setupEn": "Seated face to face, hands intertwined, eyes locked, minimal movements",
+    "checkinIt": "Cosa provi guardandomi negli occhi?",
+    "checkinEn": "What do you feel looking into my eyes?",
+    "tags": [
+      "occhi-negli-occhi",
+      "connessione', 'tantrico",
+      "romantico"
+    ],
+    "illustrationRef": "crystal.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_074",
+    "nameIt": "Brace",
+    "nameEn": "Embers",
+    "aliasIt": "Fuoco Lento",
+    "aliasEn": "Slow Fire",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_014"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Appoggiarsi al muro per più stabilità",
+    "easyVariantEn": "Lean on wall for more stability",
+    "setupIt": "In piedi con le gambe del partner avvolte ai fianchi, movimenti lenti e profondi",
+    "setupEn": "Standing with partner's legs wrapped around hips, slow and deep movements",
+    "checkinIt": "Vuoi più velocità o restiamo così?",
+    "checkinEn": "Do you want more speed or should we stay like this?",
+    "tags": [
+      "lento",
+      "profondo",
+      "in-piedi",
+      "passionale"
+    ],
+    "illustrationRef": "embers.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_075",
+    "nameIt": "Fenicottero",
+    "nameEn": "Flamingo",
+    "aliasIt": "Equilibrio",
+    "aliasEn": "Balance",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": "Equilibrio necessario — vicino a un muro come sicurezza",
+    "cautionsEn": "Balance needed — near a wall for safety",
+    "easyVariantIt": "Appoggiarsi a una sedia o parete",
+    "easyVariantEn": "Lean on a chair or wall",
+    "setupIt": "In piedi su una gamba, l'altra sollevata, bilanciarsi insieme come un fenicottero",
+    "setupEn": "Standing on one leg, other raised, balancing together like a flamingo",
+    "checkinIt": "Riesci a mantenerti in equilibrio? Mi avvicino di più?",
+    "checkinEn": "Can you keep your balance? Should I come closer?",
+    "tags": [
+      "equilibrio",
+      "in-piedi",
+      "gamba-alzata",
+      "atletico"
+    ],
+    "illustrationRef": "flamingo.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_076",
+    "nameIt": "Tramonto",
+    "nameEn": "Sunset",
+    "aliasIt": "Crepuscolo",
+    "aliasEn": "Twilight",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi sdraiati sulla schiena uno accanto all'altro, testa di uno sulle spalle dell'altro",
+    "setupEn": "Both lying on backs side by side, one's head on the other's shoulder",
+    "checkinIt": "Sei comodo/a qui accanto a me?",
+    "checkinEn": "Are you comfortable here beside me?",
+    "tags": [
+      "coccole",
+      "romantico",
+      "sereno",
+      "vicini"
+    ],
+    "illustrationRef": "sunset.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_077",
+    "nameIt": "Alba",
+    "nameEn": "Dawn",
+    "aliasIt": "Risveglio",
+    "aliasEn": "Awakening",
+    "categories": [
+      "romantic",
+      "lowImpact",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio mattutino, movimenti dolci e sonnolenti",
+    "setupEn": "Morning spooning, gentle and drowsy movements",
+    "checkinIt": "Ti sei svegliato/a bene? Come stai?",
+    "checkinEn": "Did you wake up well? How are you?",
+    "tags": [
+      "mattutino', 'dolce",
+      "risveglio",
+      "pigro"
+    ],
+    "illustrationRef": "dawn.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_078",
+    "nameIt": "Pioggia",
+    "nameEn": "Rain",
+    "aliasIt": "Gocce",
+    "aliasEn": "Drops",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_019"
+    ],
+    "cautionsIt": "Attenzione alle superfici bagnate",
+    "cautionsEn": "Be careful with wet surfaces",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Come doccia ma con ritmo regolare come la pioggia, movimenti cadenzati",
+    "setupEn": "Like shower but with regular rhythm like rain, cadenced movements",
+    "checkinIt": "Ti piace questo ritmo cadenzato?",
+    "checkinEn": "Do you like this rhythmic pace?",
+    "tags": [
+      "ritmo",
+      "acqua",
+      "doccia",
+      "cadenzato"
+    ],
+    "illustrationRef": "rain.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_079",
+    "nameIt": "Nebbia",
+    "nameEn": "Fog",
+    "aliasIt": "Mistero",
+    "aliasEn": "Mystery",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_071"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Piuma nella penombra o oscurità completa, affidarsi solo al tatto",
+    "setupEn": "Feather in dim light or complete darkness, relying only on touch",
+    "checkinIt": "Riesci a sentirmi senza vedermi?",
+    "checkinEn": "Can you feel me without seeing me?",
+    "tags": [
+      "buio",
+      "tatto",
+      "mistero",
+      "sensuale"
+    ],
+    "illustrationRef": "fog.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_080",
+    "nameIt": "Sole",
+    "nameEn": "Sun",
+    "aliasIt": "Calore",
+    "aliasEn": "Warmth",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_021"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Seduti di fronte all'aperto o vicino a una finestra soleggiata",
+    "setupEn": "Seated face to face outdoors or near a sunny window",
+    "checkinIt": "Il calore del sole ti fa sentire bene?",
+    "checkinEn": "Does the warmth of the sun make you feel good?",
+    "tags": [
+      "natura",
+      "sole', 'romantico",
+      "caldo"
+    ],
+    "illustrationRef": "sun.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_081",
+    "nameIt": "Luna Piena",
+    "nameEn": "Full Moon",
+    "aliasIt": "Notte Magica",
+    "aliasEn": "Magic Night",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_024"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Luna crescente di notte, alla luce della luna, movimenti lenti e misteriosi",
+    "setupEn": "Crescent moon at night, by moonlight, slow and mysterious movements",
+    "checkinIt": "Ti piace questa atmosfera notturna?",
+    "checkinEn": "Do you like this nighttime atmosphere?",
+    "tags": [
+      "notturno",
+      "romantico",
+      "luna",
+      "misterioso"
+    ],
+    "illustrationRef": "full_moon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_082",
+    "nameIt": "Cascata",
+    "nameEn": "Waterfall",
+    "aliasIt": "Torrente",
+    "aliasEn": "Torrent",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_007"
+    ],
+    "cautionsIt": "Evitare se si hanno problemi alle ginocchia",
+    "cautionsEn": "Avoid if you have knee issues",
+    "easyVariantIt": "Versione seduti invece di in piedi",
+    "easyVariantEn": "Seated version instead of standing",
+    "setupIt": "Inversione con il partner in piedi che sorregge l'altro a testa in giù brevemente",
+    "setupEn": "Inversion with standing partner briefly supporting other upside down",
+    "checkinIt": "Sei ok? Non senti vertigini?",
+    "checkinEn": "Are you okay? No dizziness?",
+    "tags": [
+      "invertito",
+      "atletico",
+      "sfidante",
+      "breve"
+    ],
+    "illustrationRef": "waterfall.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_083",
+    "nameIt": "Fiume",
+    "nameEn": "River",
+    "aliasIt": "Corrente Dolce",
+    "aliasEn": "Gentle Current",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_003"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cucchiaio con movimenti fluidi e continui come una corrente di fiume",
+    "setupEn": "Spooning with fluid and continuous movements like a river current",
+    "checkinIt": "Il ritmo fluisce bene per te?",
+    "checkinEn": "Does the rhythm flow well for you?",
+    "tags": [
+      "fluido",
+      "laterale",
+      "continuo",
+      "dolce"
+    ],
+    "illustrationRef": "river.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_084",
+    "nameIt": "Oceano",
+    "nameEn": "Ocean",
+    "aliasIt": "Profondo Blu",
+    "aliasEn": "Deep Blue",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "intimacy"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_001"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Missionario con movimenti ondulatori profondi e cadenzati come le onde del mare",
+    "setupEn": "Missionary with deep, rhythmic wave-like movements like ocean waves",
+    "checkinIt": "Ti piace questa profondità di movimento?",
+    "checkinEn": "Do you like this depth of movement?",
+    "tags": [
+      "profondo",
+      "ondulatorio",
+      "romantico",
+      "ritmico"
+    ],
+    "illustrationRef": "ocean.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_085",
+    "nameIt": "Onda",
+    "nameEn": "Wave",
+    "aliasIt": "Surf",
+    "aliasEn": "Surfing",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "playfulness"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cowgirl semplice come base",
+    "easyVariantEn": "Simple cowgirl as base",
+    "setupIt": "Cowgirl con movimenti ondulatori dinamici, come cavalcare un'onda",
+    "setupEn": "Cowgirl with dynamic wave-like movements, like riding a wave",
+    "checkinIt": "Ti piace questo movimento ondulatorio?",
+    "checkinEn": "Do you like this wave-like movement?",
+    "tags": [
+      "dinamico",
+      "cowgirl', 'ondulatorio",
+      "atletico"
+    ],
+    "illustrationRef": "wave.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_086",
+    "nameIt": "Scogliera",
+    "nameEn": "Cliff",
+    "aliasIt": "Bordo Audace",
+    "aliasEn": "Bold Edge",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_016"
+    ],
+    "cautionsIt": "Assicurarsi di essere sul bordo di una superficie stabile",
+    "cautionsEn": "Make sure you are on the edge of a stable surface",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Farfalla sul bordo estremo del letto, sensazione di pericolo controllato",
+    "setupEn": "Butterfly on the extreme edge of the bed, sensation of controlled danger",
+    "checkinIt": "Ti senti al sicuro sul bordo?",
+    "checkinEn": "Do you feel safe on the edge?",
+    "tags": [
+      "bordo",
+      "brivido",
+      "farfalla",
+      "audace"
+    ],
+    "illustrationRef": "cliff.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_087",
+    "nameIt": "Laguna",
+    "nameEn": "Lagoon",
+    "aliasIt": "Calma Piatta",
+    "aliasEn": "Flat Calm",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Entrambi in acqua tiepida (vasca da bagno) abbracciati, movimenti minimi",
+    "setupEn": "Both in warm water (bathtub) embraced, minimal movements",
+    "checkinIt": "L'acqua ha la temperatura giusta? Stai bene?",
+    "checkinEn": "Is the water the right temperature? Are you okay?",
+    "tags": [
+      "acqua",
+      "vasca",
+      "calmo",
+      "romantico"
+    ],
+    "illustrationRef": "lagoon.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_088",
+    "nameIt": "Aurora",
+    "nameEn": "Aurora",
+    "aliasIt": "Luce del Nord",
+    "aliasEn": "Northern Light",
+    "categories": [
+      "romantic",
+      "adventurous"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_012"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Versione senza sollevamento",
+    "easyVariantEn": "Version without lifting",
+    "setupIt": "In piedi abbracciati con luci colorate nell'ambiente, movimenti circolari lenti",
+    "setupEn": "Standing embraced with colored lights in the environment, slow circular movements",
+    "checkinIt": "L'atmosfera ti piace? Vuoi più luce o meno?",
+    "checkinEn": "Do you like the atmosphere? More light or less?",
+    "tags": [
+      "luci",
+      "romantico",
+      "circolare",
+      "atmosfera"
+    ],
+    "illustrationRef": "aurora.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_089",
+    "nameIt": "Meteora",
+    "nameEn": "Meteor",
+    "aliasIt": "Caduta",
+    "aliasEn": "The Fall",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_009"
+    ],
+    "cautionsIt": "Estrema attenzione — eseguire solo con grande forza e coordinazione",
+    "cautionsEn": "Extreme care — only attempt with great strength and coordination",
+    "easyVariantIt": "Versione sul letto invece che in piedi",
+    "easyVariantEn": "Version on bed instead of standing",
+    "setupIt": "Variante spinta al muro estrema con il partner completamente sorretto",
+    "setupEn": "Extreme wall thrust variant with partner completely supported",
+    "checkinIt": "Sei al sicuro? Devo tenerti diversamente?",
+    "checkinEn": "Are you safe? Should I hold you differently?",
+    "tags": [
+      "estremo",
+      "forza",
+      "muro",
+      "avanzato"
+    ],
+    "illustrationRef": "meteor.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_090",
+    "nameIt": "Cometa",
+    "nameEn": "Comet",
+    "aliasIt": "Scia Luminosa",
+    "aliasEn": "Bright Trail",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_015"
+    ],
+    "cautionsIt": "Forza nelle braccia indispensabile",
+    "cautionsEn": "Arm strength is essential",
+    "easyVariantIt": "Sul letto con appoggio",
+    "easyVariantEn": "On bed with support",
+    "setupIt": "Carriola con movimento dinamico, spostandosi nell'ambiente",
+    "setupEn": "Wheelbarrow with dynamic movement, moving around the space",
+    "checkinIt": "Riesci a seguire il movimento? Le braccia reggono?",
+    "checkinEn": "Can you follow the movement? Are your arms holding?",
+    "tags": [
+      "acrobatico",
+      "mobile",
+      "dinamico",
+      "sfidante"
+    ],
+    "illustrationRef": "comet.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_091",
+    "nameIt": "Galassia",
+    "nameEn": "Galaxy",
+    "aliasIt": "Universo",
+    "aliasEn": "Universe",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_073"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Cristallo con luci stellari (luci piccole) intorno, immaginare di essere nello spazio",
+    "setupEn": "Crystal with starry lights (small lights) around, imagining being in space",
+    "checkinIt": "Ti senti perso/a in questo momento con me?",
+    "checkinEn": "Do you feel lost in this moment with me?",
+    "tags": [
+      "spazio",
+      "romantico",
+      "immaginativo",
+      "luci"
+    ],
+    "illustrationRef": "galaxy.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_092",
+    "nameIt": "Bacio Profondo",
+    "nameEn": "Deep Kiss",
+    "aliasIt": "Tutto in Un Bacio",
+    "aliasEn": "All in One Kiss",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "medium",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione con focus totale sul bacio prolungato e profondo",
+    "setupEn": "Any position with total focus on prolonged and deep kissing",
+    "checkinIt": "Posso baciarti più a lungo?",
+    "checkinEn": "Can I kiss you longer?",
+    "tags": [
+      "bacio",
+      "romantico",
+      "bocca",
+      "connessione"
+    ],
+    "illustrationRef": "deep_kiss.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_093",
+    "nameIt": "Respiro",
+    "nameEn": "Breath",
+    "aliasIt": "Sincronia",
+    "aliasEn": "Synchrony",
+    "categories": [
+      "romantic",
+      "lowImpact"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "relax"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_069"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione con respiro sincronizzato — inspirare ed espirare insieme",
+    "setupEn": "Any position with synchronized breathing — inhale and exhale together",
+    "checkinIt": "Senti il mio respiro? Proviamo a sincronizzarci",
+    "checkinEn": "Do you feel my breath? Let's try to synchronize",
+    "tags": [
+      "respiro",
+      "meditativo",
+      "tantrico",
+      "sincronia"
+    ],
+    "illustrationRef": "breath.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_094",
+    "nameIt": "Radici",
+    "nameEn": "Roots",
+    "aliasIt": "Terra",
+    "aliasEn": "Earth",
+    "categories": [
+      "romantic",
+      "beginner",
+      "lowImpact"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_027"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Loto con le mani di entrambi appoggiate a terra, radicati",
+    "setupEn": "Lotus with both partners' hands on the ground, rooted",
+    "checkinIt": "Ti senti radicato/a e al sicuro?",
+    "checkinEn": "Do you feel rooted and safe?",
+    "tags": [
+      "loto",
+      "terra",
+      "radicato",
+      "stabile"
+    ],
+    "illustrationRef": "roots.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_095",
+    "nameIt": "Cielo",
+    "nameEn": "Sky",
+    "aliasIt": "Apertura",
+    "aliasEn": "Opening",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "medium",
+    "focus": [
+      "intimacy",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_030"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Aquila con le braccia del partner inferiore aperte come ad abbracciare il cielo",
+    "setupEn": "Eagle with lower partner's arms spread open as if embracing the sky",
+    "checkinIt": "Ti senti libero/a in questa posizione aperta?",
+    "checkinEn": "Do you feel free in this open position?",
+    "tags": [
+      "aperto",
+      "libero",
+      "aquila",
+      "romantico"
+    ],
+    "illustrationRef": "sky.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_096",
+    "nameIt": "Bosco",
+    "nameEn": "Forest",
+    "aliasIt": "Natura Selvaggia",
+    "aliasEn": "Wild Nature",
+    "categories": [
+      "adventurous",
+      "quickie"
+    ],
+    "difficulty": 3,
+    "energy": "medium",
+    "focus": [
+      "passion",
+      "variety"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_026"
+    ],
+    "cautionsIt": "Superficie naturale può essere irregolare",
+    "cautionsEn": "Natural surface may be uneven",
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Pecorina in piedi all'aperto o vicino a un albero per appoggio",
+    "setupEn": "Standing doggy outdoors or near a tree for support",
+    "checkinIt": "Sei stabile? L'ambiente ti va bene?",
+    "checkinEn": "Are you stable? Is the environment okay?",
+    "tags": [
+      "aperto",
+      "natura",
+      "avventura",
+      "spontaneo"
+    ],
+    "illustrationRef": "forest.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_097",
+    "nameIt": "Monte",
+    "nameEn": "Mountain",
+    "aliasIt": "Vetta",
+    "aliasEn": "Summit",
+    "categories": [
+      "athletic",
+      "adventurous"
+    ],
+    "difficulty": 4,
+    "energy": "high",
+    "focus": [
+      "variety",
+      "passion"
+    ],
+    "duration": "medium",
+    "prerequisites": [
+      "pos_002"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": "Cowgirl normale come base",
+    "easyVariantEn": "Regular cowgirl as base",
+    "setupIt": "Cowgirl con il partner superiore completamente raddrizzato, a ginocchia dritte come una vetta",
+    "setupEn": "Cowgirl with top partner completely upright, knees straight like a mountain summit",
+    "checkinIt": "Riesci a mantenerti stabile così in alto?",
+    "checkinEn": "Can you stay stable this high up?",
+    "tags": [
+      "cowgirl",
+      "alto",
+      "atletico",
+      "visuale"
+    ],
+    "illustrationRef": "mountain.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_098",
+    "nameIt": "Valle",
+    "nameEn": "Valley",
+    "aliasIt": "Accoglienza",
+    "aliasEn": "Welcome",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 2,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection"
+    ],
+    "duration": "long",
+    "prerequisites": [
+      "pos_072"
+    ],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Diamante con le braccia del partner inferiore che avvolgono accogliendo l'altro come una valle",
+    "setupEn": "Diamond with lower partner's arms wrapping and welcoming the other like a valley",
+    "checkinIt": "Ti senti accolto/a?",
+    "checkinEn": "Do you feel welcomed?",
+    "tags": [
+      "accogliente",
+      "missionario",
+      "romantico",
+      "aperto"
+    ],
+    "illustrationRef": "valley.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_099",
+    "nameIt": "Abisso",
+    "nameEn": "Abyss",
+    "aliasIt": "Profondità",
+    "aliasEn": "Depths",
+    "categories": [
+      "adventurous",
+      "athletic"
+    ],
+    "difficulty": 5,
+    "energy": "high",
+    "focus": [
+      "passion",
+      "trust"
+    ],
+    "duration": "brief",
+    "prerequisites": [
+      "pos_041",
+      "pos_037"
+    ],
+    "cautionsIt": "Solo per coppie molto esperte con piena fiducia reciproca",
+    "cautionsEn": "Only for very experienced couples with full mutual trust",
+    "easyVariantIt": "Versione delfino semplice",
+    "easyVariantEn": "Simple dolphin version",
+    "setupIt": "Combinazione di invertiti parziali con profondità massima — massima comunicazione",
+    "setupEn": "Combination of partial inversions with maximum depth — maximum communication",
+    "checkinIt": "Dimmi immediatamente se qualcosa non va — mi fido di te",
+    "checkinEn": "Tell me immediately if anything is wrong — I trust you",
+    "tags": [
+      "profondo",
+      "estremo",
+      "fiducia",
+      "avanzato"
+    ],
+    "illustrationRef": "abyss.svg",
+    "isFavorite": false,
+    "timesViewed": 0,
+    "lastViewed": null
+  },
+  {
+    "id": "pos_100",
+    "nameIt": "Orizzonte",
+    "nameEn": "Horizon",
+    "aliasIt": "Infinito",
+    "aliasEn": "Infinite",
+    "categories": [
+      "romantic",
+      "beginner"
+    ],
+    "difficulty": 1,
+    "energy": "low",
+    "focus": [
+      "intimacy",
+      "connection",
+      "trust"
+    ],
+    "duration": "long",
+    "prerequisites": [],
+    "cautionsIt": null,
+    "cautionsEn": null,
+    "easyVariantIt": null,
+    "easyVariantEn": null,
+    "setupIt": "Qualsiasi posizione preferita, scelta insieme, vissuta con piena presenza e consapevolezza",
+    "setupEn": "Any preferred position, chosen together, lived with full presence and mindfulness",
+    "checkinIt": "Cosa desideri in questo momento? Siamo qui insieme",
+    "checkinEn": "What do you desire right now? We are here together",
+    "tags": [
+      "libero",
+      "insieme",
+      "consapevole",
+      "romantico"
+    ],
+    "illustrationRef": "horizon.svg",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
