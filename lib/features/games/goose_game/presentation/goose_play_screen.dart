@@ -1237,17 +1237,19 @@ class _IsoBoardPainter extends CustomPainter {
     if (!hasP1 && !hasP2) return;
     final baseY = c.dy - hh - 6;
     if (hasP1 && hasP2) {
-      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, p1Gender);
-      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender);
+      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, p1Gender, 1);
+      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender, 2);
     } else if (hasP1) {
-      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, p1Gender);
+      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, p1Gender, 1);
     } else {
-      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender);
+      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender, 2);
     }
   }
 
-  // ── Chibi character pawns (inspired by clay stop-motion style) ────
-  void _drawPawn(Canvas canvas, Offset base, Color color, PlayerGender gender) {
+  // ── Chibi character pawns (clay stop-motion style) ────────────────
+  // playerNum (1 or 2) selects a visual variant so same-gender pairs
+  // are always distinguishable.
+  void _drawPawn(Canvas canvas, Offset base, Color color, PlayerGender gender, int playerNum) {
     // Shadow on ground
     canvas.drawOval(
       Rect.fromCenter(center: Offset(base.dx, base.dy + 2), width: 28, height: 7),
@@ -1256,32 +1258,38 @@ class _IsoBoardPainter extends CustomPainter {
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
 
     if (gender == PlayerGender.male) {
-      _drawMalePawn(canvas, base, color);
+      _drawMalePawn(canvas, base, color, playerNum);
     } else {
-      _drawFemalePawn(canvas, base, color);
+      _drawFemalePawn(canvas, base, color, playerNum);
     }
   }
 
-  // ── Male chibi: green leaf hair, red knit sweater, brown pants ──
-  void _drawMalePawn(Canvas canvas, Offset base, Color color) {
+  // ── Male chibi ──────────────────────────────────────────────────
+  //  Variant 1: green leaf hair · red sweater · brown pants  (foto boy)
+  //  Variant 2: orange flame hair · blue hoodie · grey pants
+  void _drawMalePawn(Canvas canvas, Offset base, Color color, int variant) {
     final cx = base.dx;
     final groundY = base.dy;
 
-    // Colour palette
+    // ── Variant palettes ──
     const skin     = Color(0xFFFFCCBC);
     const skinDark = Color(0xFFE8A990);
-    const sweater  = Color(0xFFD32F2F); // red knit
-    const sweaterH = Color(0xFFEF5350);
-    const sweaterD = Color(0xFFB71C1C);
-    const pants    = Color(0xFF6D4C41); // brown
-    const pantsD   = Color(0xFF4E342E);
-    const shoe     = Color(0xFF3E2723);
-    const leafG    = Color(0xFF4CAF50); // green leaves
-    const leafD    = Color(0xFF2E7D32);
-    const leafL    = Color(0xFF81C784);
+
+    // Sweater / top
+    final sweater  = variant == 1 ? const Color(0xFFD32F2F) : const Color(0xFF1565C0);
+    final sweaterH = variant == 1 ? const Color(0xFFEF5350) : const Color(0xFF42A5F5);
+    final sweaterD = variant == 1 ? const Color(0xFFB71C1C) : const Color(0xFF0D47A1);
+
+    // Pants
+    final pants    = variant == 1 ? const Color(0xFF6D4C41) : const Color(0xFF616161);
+    final shoe     = variant == 1 ? const Color(0xFF3E2723) : const Color(0xFF212121);
+
+    // Hair
+    final hair1    = variant == 1 ? const Color(0xFF4CAF50) : const Color(0xFFFF9800);
+    final hairDark = variant == 1 ? const Color(0xFF2E7D32) : const Color(0xFFE65100);
+    final hairLite = variant == 1 ? const Color(0xFF81C784) : const Color(0xFFFFCC80);
 
     // ── Legs & shoes ──
-    // Left leg
     final legY = groundY - 4;
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7, legY - 10, 5, 11), const Radius.circular(2)),
@@ -1289,7 +1297,6 @@ class _IsoBoardPainter extends CustomPainter {
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7.5, legY - 1, 6, 3), const Radius.circular(1.5)),
       Paint()..color = shoe);
-    // Right leg
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 10, 5, 11), const Radius.circular(2)),
       Paint()..color = pants);
@@ -1297,7 +1304,7 @@ class _IsoBoardPainter extends CustomPainter {
       RRect.fromRectAndRadius(Rect.fromLTWH(cx + 1.5, legY - 1, 6, 3), const Radius.circular(1.5)),
       Paint()..color = shoe);
 
-    // ── Body (red sweater) ──
+    // ── Body (sweater) ──
     final bodyTop = groundY - 26;
     final bodyRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(cx - 9, bodyTop, 18, 14), const Radius.circular(4));
@@ -1306,27 +1313,41 @@ class _IsoBoardPainter extends CustomPainter {
         begin: Alignment.topCenter, end: Alignment.bottomCenter,
         colors: [sweaterH, sweater, sweaterD],
       ).createShader(bodyRect.outerRect));
-    // Knit texture lines
     for (var y = bodyTop + 3; y < bodyTop + 13; y += 3) {
       canvas.drawLine(Offset(cx - 7, y), Offset(cx + 7, y), Paint()
         ..color = sweaterD.withOpacity(0.3)..strokeWidth = 0.6);
     }
 
+    // Variant 2: hoodie drawstring detail
+    if (variant == 2) {
+      canvas.drawLine(Offset(cx - 2, bodyTop + 1), Offset(cx - 3, bodyTop + 6),
+        Paint()..color = Colors.white.withOpacity(0.6)..strokeWidth = 0.7);
+      canvas.drawLine(Offset(cx + 2, bodyTop + 1), Offset(cx + 3, bodyTop + 6),
+        Paint()..color = Colors.white.withOpacity(0.6)..strokeWidth = 0.7);
+    }
+
     // ── Arms ──
-    // Left arm (waving up)
-    canvas.drawLine(Offset(cx - 9, bodyTop + 4), Offset(cx - 15, bodyTop - 6),
-      Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
-    // Left hand
-    canvas.drawCircle(Offset(cx - 15, bodyTop - 7), 3.5, Paint()..color = skin);
-    // Right arm (holding rope down)
-    canvas.drawLine(Offset(cx + 9, bodyTop + 4), Offset(cx + 13, bodyTop + 12),
-      Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
-    canvas.drawCircle(Offset(cx + 13, bodyTop + 13), 3, Paint()..color = skin);
+    if (variant == 1) {
+      // V1: waving left arm
+      canvas.drawLine(Offset(cx - 9, bodyTop + 4), Offset(cx - 15, bodyTop - 6),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 15, bodyTop - 7), 3.5, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 9, bodyTop + 4), Offset(cx + 13, bodyTop + 12),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 13, bodyTop + 13), 3, Paint()..color = skin);
+    } else {
+      // V2: both hands on hips / casual
+      canvas.drawLine(Offset(cx - 9, bodyTop + 4), Offset(cx - 14, bodyTop + 10),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 14, bodyTop + 11), 3, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 9, bodyTop + 4), Offset(cx + 14, bodyTop + 10),
+        Paint()..color = sweater..strokeWidth = 5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop + 11), 3, Paint()..color = skin);
+    }
 
     // ── Head ──
     final headCy = bodyTop - 8;
     final headR = 10.0;
-    // Head circle
     final headRect = Rect.fromCenter(center: Offset(cx, headCy), width: headR * 2, height: headR * 2.1);
     canvas.drawOval(headRect, Paint()
       ..shader = RadialGradient(
@@ -1337,10 +1358,9 @@ class _IsoBoardPainter extends CustomPainter {
     // Eyes
     canvas.drawCircle(Offset(cx - 3.5, headCy - 0.5), 1.8, Paint()..color = const Color(0xFF4E342E));
     canvas.drawCircle(Offset(cx + 3.5, headCy - 0.5), 1.8, Paint()..color = const Color(0xFF4E342E));
-    // Eye shine
     canvas.drawCircle(Offset(cx - 3.0, headCy - 1.2), 0.7, Paint()..color = Colors.white);
     canvas.drawCircle(Offset(cx + 4.0, headCy - 1.2), 0.7, Paint()..color = Colors.white);
-    // Mouth (small smile)
+    // Mouth
     canvas.drawArc(
       Rect.fromCenter(center: Offset(cx, headCy + 3), width: 5, height: 3),
       0, pi, false,
@@ -1351,39 +1371,49 @@ class _IsoBoardPainter extends CustomPainter {
     canvas.drawCircle(Offset(cx + 6, headCy + 2), 2.5, Paint()
       ..color = const Color(0xFFFF8A80).withOpacity(0.4));
 
-    // ── Green leaf hair ──
+    // ── Hair ──
     final hairTop = headCy - headR - 2;
-    // Main hair tuft (big leaf shape going up)
-    final leaf1 = Path()
-      ..moveTo(cx - 2, headCy - headR + 2)
-      ..quadraticBezierTo(cx - 8, hairTop - 10, cx - 1, hairTop - 14)
-      ..quadraticBezierTo(cx + 2, hairTop - 10, cx + 1, headCy - headR + 2)
-      ..close();
-    canvas.drawPath(leaf1, Paint()..color = leafG);
-    canvas.drawPath(leaf1, Paint()..style = PaintingStyle.stroke..color = leafD..strokeWidth = 0.6);
 
-    // Second leaf (right, smaller)
-    final leaf2 = Path()
-      ..moveTo(cx + 2, headCy - headR + 2)
-      ..quadraticBezierTo(cx + 10, hairTop - 8, cx + 6, hairTop - 12)
-      ..quadraticBezierTo(cx + 3, hairTop - 6, cx + 3, headCy - headR + 2)
-      ..close();
-    canvas.drawPath(leaf2, Paint()..color = leafL);
-    canvas.drawPath(leaf2, Paint()..style = PaintingStyle.stroke..color = leafD..strokeWidth = 0.5);
-
-    // Third leaf (left tendril)
-    final leaf3 = Path()
-      ..moveTo(cx - 3, headCy - headR + 1)
-      ..quadraticBezierTo(cx - 12, hairTop - 4, cx - 8, hairTop - 10)
-      ..quadraticBezierTo(cx - 5, hairTop - 4, cx - 2, headCy - headR + 1)
-      ..close();
-    canvas.drawPath(leaf3, Paint()..color = leafG);
-
-    // Curly vine
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx + 7, hairTop - 6), width: 6, height: 8),
-      0, pi * 1.3, false,
-      Paint()..style = PaintingStyle.stroke..color = leafD..strokeWidth = 1.2..strokeCap = StrokeCap.round);
+    if (variant == 1) {
+      // V1: Green leaf hair with tendrils
+      final leaf1 = Path()
+        ..moveTo(cx - 2, headCy - headR + 2)
+        ..quadraticBezierTo(cx - 8, hairTop - 10, cx - 1, hairTop - 14)
+        ..quadraticBezierTo(cx + 2, hairTop - 10, cx + 1, headCy - headR + 2)
+        ..close();
+      canvas.drawPath(leaf1, Paint()..color = hair1);
+      canvas.drawPath(leaf1, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.6);
+      final leaf2 = Path()
+        ..moveTo(cx + 2, headCy - headR + 2)
+        ..quadraticBezierTo(cx + 10, hairTop - 8, cx + 6, hairTop - 12)
+        ..quadraticBezierTo(cx + 3, hairTop - 6, cx + 3, headCy - headR + 2)
+        ..close();
+      canvas.drawPath(leaf2, Paint()..color = hairLite);
+      canvas.drawPath(leaf2, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      final leaf3 = Path()
+        ..moveTo(cx - 3, headCy - headR + 1)
+        ..quadraticBezierTo(cx - 12, hairTop - 4, cx - 8, hairTop - 10)
+        ..quadraticBezierTo(cx - 5, hairTop - 4, cx - 2, headCy - headR + 1)
+        ..close();
+      canvas.drawPath(leaf3, Paint()..color = hair1);
+      // Curly vine
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 7, hairTop - 6), width: 6, height: 8),
+        0, pi * 1.3, false,
+        Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 1.2..strokeCap = StrokeCap.round);
+    } else {
+      // V2: Spiky flame hair (orange)
+      for (final dx in [-5.0, -1.5, 2.0, 5.5]) {
+        final spike = Path()
+          ..moveTo(cx + dx - 2.5, headCy - headR + 2)
+          ..quadraticBezierTo(cx + dx, hairTop - 12 - (dx.abs() < 3 ? 4 : 0), cx + dx + 2.5, headCy - headR + 2)
+          ..close();
+        canvas.drawPath(spike, Paint()..color = (dx.abs() < 3) ? hairLite : hair1);
+        canvas.drawPath(spike, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      }
+      // Small flame tips
+      canvas.drawCircle(Offset(cx, hairTop - 15), 1.5, Paint()..color = hairLite);
+    }
 
     // ── Player colour glow ring ──
     canvas.drawCircle(Offset(cx, headCy), headR + 6, Paint()
@@ -1393,71 +1423,103 @@ class _IsoBoardPainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
   }
 
-  // ── Female chibi: blue braided hair bun, glasses, yellow top, jeans ──
-  void _drawFemalePawn(Canvas canvas, Offset base, Color color) {
+  // ── Female chibi ────────────────────────────────────────────────
+  //  Variant 1: blue braided bun · glasses · yellow top · jeans  (foto girl)
+  //  Variant 2: pink long hair · no glasses · purple top · black skirt
+  void _drawFemalePawn(Canvas canvas, Offset base, Color color, int variant) {
     final cx = base.dx;
     final groundY = base.dy;
 
-    // Colour palette
+    // ── Variant palettes ──
     const skin     = Color(0xFFFFCCBC);
     const skinDark = Color(0xFFE8A990);
-    const topY     = Color(0xFFFDD835); // yellow knit
-    const topYH    = Color(0xFFFFF176);
-    const topYD    = Color(0xFFF9A825);
-    const jeans    = Color(0xFF1565C0); // blue jeans
-    const jeansD   = Color(0xFF0D47A1);
-    const shoe     = Color(0xFF424242);
-    const hairB    = Color(0xFF42A5F5); // blue hair
-    const hairBD   = Color(0xFF1565C0);
-    const hairBL   = Color(0xFF90CAF9);
-    const glasses  = Color(0xFF37474F);
+
+    // Top
+    final topC     = variant == 1 ? const Color(0xFFFDD835) : const Color(0xFFAB47BC);
+    final topCH    = variant == 1 ? const Color(0xFFFFF176) : const Color(0xFFCE93D8);
+    final topCD    = variant == 1 ? const Color(0xFFF9A825) : const Color(0xFF7B1FA2);
+
+    // Bottom
+    final bottom   = variant == 1 ? const Color(0xFF1565C0) : const Color(0xFF37474F);
+    final bottomD  = variant == 1 ? const Color(0xFF0D47A1) : const Color(0xFF263238);
+    final shoe     = variant == 1 ? const Color(0xFF424242) : const Color(0xFF880E4F);
+
+    // Hair
+    final hair     = variant == 1 ? const Color(0xFF42A5F5) : const Color(0xFFE91E63);
+    final hairDark = variant == 1 ? const Color(0xFF1565C0) : const Color(0xFFAD1457);
+    final hairLite = variant == 1 ? const Color(0xFF90CAF9) : const Color(0xFFF48FB1);
 
     // ── Legs & shoes ──
     final legY = groundY - 4;
-    // Left leg (slight running pose)
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7, legY - 12, 5, 13), const Radius.circular(2)),
-      Paint()..color = jeans);
+    if (variant == 1) {
+      // V1: jeans
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7, legY - 12, 5, 13), const Radius.circular(2)),
+        Paint()..color = bottom);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 11, 5, 12), const Radius.circular(2)),
+        Paint()..color = bottom);
+      // Jean stitching
+      canvas.drawLine(Offset(cx - 4.5, legY - 12), Offset(cx - 4.5, legY - 2),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.5);
+      canvas.drawLine(Offset(cx + 4.5, legY - 11), Offset(cx + 4.5, legY - 2),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.5);
+    } else {
+      // V2: skirt + bare legs
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 9, legY - 12, 18, 7), const Radius.circular(3)),
+        Paint()..color = bottom);
+      // Skirt hem highlight
+      canvas.drawLine(Offset(cx - 8, legY - 5.5), Offset(cx + 8, legY - 5.5),
+        Paint()..color = bottomD.withOpacity(0.4)..strokeWidth = 0.6);
+      // Legs (skin)
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx - 6, legY - 6, 4, 7), const Radius.circular(2)),
+        Paint()..color = skin);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 6, 4, 7), const Radius.circular(2)),
+        Paint()..color = skin);
+    }
+    // Shoes
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(cx - 7.5, legY - 1, 6, 3), const Radius.circular(1.5)),
       Paint()..color = shoe);
-    // Right leg (slightly forward)
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(Rect.fromLTWH(cx + 2, legY - 11, 5, 12), const Radius.circular(2)),
-      Paint()..color = jeans);
     canvas.drawRRect(
       RRect.fromRectAndRadius(Rect.fromLTWH(cx + 1.5, legY - 1, 6, 3), const Radius.circular(1.5)),
       Paint()..color = shoe);
-    // Jean stitching
-    canvas.drawLine(Offset(cx - 4.5, legY - 12), Offset(cx - 4.5, legY - 2),
-      Paint()..color = jeansD.withOpacity(0.4)..strokeWidth = 0.5);
-    canvas.drawLine(Offset(cx + 4.5, legY - 11), Offset(cx + 4.5, legY - 2),
-      Paint()..color = jeansD.withOpacity(0.4)..strokeWidth = 0.5);
 
-    // ── Body (yellow knit top) ──
+    // ── Body (top) ──
     final bodyTop = groundY - 28;
     final bodyRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(cx - 8, bodyTop, 16, 13), const Radius.circular(4));
     canvas.drawRRect(bodyRect, Paint()
       ..shader = LinearGradient(
         begin: Alignment.topCenter, end: Alignment.bottomCenter,
-        colors: [topYH, topY, topYD],
+        colors: [topCH, topC, topCD],
       ).createShader(bodyRect.outerRect));
-    // Knit texture
     for (var y = bodyTop + 3; y < bodyTop + 12; y += 3) {
       canvas.drawLine(Offset(cx - 6, y), Offset(cx + 6, y), Paint()
-        ..color = topYD.withOpacity(0.25)..strokeWidth = 0.5);
+        ..color = topCD.withOpacity(0.25)..strokeWidth = 0.5);
     }
 
     // ── Arms ──
-    // Left arm (running motion back)
-    canvas.drawLine(Offset(cx - 8, bodyTop + 4), Offset(cx - 14, bodyTop + 10),
-      Paint()..color = topY..strokeWidth = 4.5..strokeCap = StrokeCap.round);
-    canvas.drawCircle(Offset(cx - 14, bodyTop + 11), 2.8, Paint()..color = skin);
-    // Right arm (forward)
-    canvas.drawLine(Offset(cx + 8, bodyTop + 4), Offset(cx + 14, bodyTop - 1),
-      Paint()..color = topY..strokeWidth = 4.5..strokeCap = StrokeCap.round);
-    canvas.drawCircle(Offset(cx + 14, bodyTop - 2), 2.8, Paint()..color = skin);
+    if (variant == 1) {
+      // V1: running motion
+      canvas.drawLine(Offset(cx - 8, bodyTop + 4), Offset(cx - 14, bodyTop + 10),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 14, bodyTop + 11), 2.8, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 8, bodyTop + 4), Offset(cx + 14, bodyTop - 1),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop - 2), 2.8, Paint()..color = skin);
+    } else {
+      // V2: one arm up waving, one on hip
+      canvas.drawLine(Offset(cx - 8, bodyTop + 4), Offset(cx - 13, bodyTop + 11),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx - 13, bodyTop + 12), 2.8, Paint()..color = skin);
+      canvas.drawLine(Offset(cx + 8, bodyTop + 4), Offset(cx + 14, bodyTop - 5),
+        Paint()..color = topC..strokeWidth = 4.5..strokeCap = StrokeCap.round);
+      canvas.drawCircle(Offset(cx + 14, bodyTop - 6), 2.8, Paint()..color = skin);
+    }
 
     // ── Head ──
     final headCy = bodyTop - 8;
@@ -1469,96 +1531,140 @@ class _IsoBoardPainter extends CustomPainter {
         colors: [skin, skinDark],
       ).createShader(headRect));
 
-    // Eyes (behind glasses)
+    // Eyes
     canvas.drawCircle(Offset(cx - 3.5, headCy - 0.5), 1.6, Paint()..color = const Color(0xFF4E342E));
     canvas.drawCircle(Offset(cx + 3.5, headCy - 0.5), 1.6, Paint()..color = const Color(0xFF4E342E));
     canvas.drawCircle(Offset(cx - 3.0, headCy - 1.0), 0.6, Paint()..color = Colors.white);
     canvas.drawCircle(Offset(cx + 4.0, headCy - 1.0), 0.6, Paint()..color = Colors.white);
 
-    // Glasses
-    // Left lens
-    canvas.drawCircle(Offset(cx - 3.5, headCy - 0.3), 3.8, Paint()
-      ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
-    // Right lens
-    canvas.drawCircle(Offset(cx + 3.5, headCy - 0.3), 3.8, Paint()
-      ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
-    // Bridge
-    canvas.drawLine(Offset(cx - 0.5, headCy - 0.3), Offset(cx + 0.5, headCy - 0.3),
-      Paint()..color = glasses..strokeWidth = 1.0);
-    // Temple arms
-    canvas.drawLine(Offset(cx - 7.2, headCy - 0.3), Offset(cx - 9, headCy + 1),
-      Paint()..color = glasses..strokeWidth = 0.8);
-    canvas.drawLine(Offset(cx + 7.2, headCy - 0.3), Offset(cx + 9, headCy + 1),
-      Paint()..color = glasses..strokeWidth = 0.8);
-    // Lens reflection
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx - 3.5, headCy - 1.5), width: 3, height: 2),
-      pi * 1.1, pi * 0.5, false,
-      Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx + 3.5, headCy - 1.5), width: 3, height: 2),
-      pi * 1.1, pi * 0.5, false,
-      Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
+    // V1-only: Glasses
+    if (variant == 1) {
+      const glasses = Color(0xFF37474F);
+      canvas.drawCircle(Offset(cx - 3.5, headCy - 0.3), 3.8, Paint()
+        ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
+      canvas.drawCircle(Offset(cx + 3.5, headCy - 0.3), 3.8, Paint()
+        ..style = PaintingStyle.stroke..color = glasses..strokeWidth = 1.0);
+      canvas.drawLine(Offset(cx - 0.5, headCy - 0.3), Offset(cx + 0.5, headCy - 0.3),
+        Paint()..color = glasses..strokeWidth = 1.0);
+      canvas.drawLine(Offset(cx - 7.2, headCy - 0.3), Offset(cx - 9, headCy + 1),
+        Paint()..color = glasses..strokeWidth = 0.8);
+      canvas.drawLine(Offset(cx + 7.2, headCy - 0.3), Offset(cx + 9, headCy + 1),
+        Paint()..color = glasses..strokeWidth = 0.8);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx - 3.5, headCy - 1.5), width: 3, height: 2),
+        pi * 1.1, pi * 0.5, false,
+        Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 3.5, headCy - 1.5), width: 3, height: 2),
+        pi * 1.1, pi * 0.5, false,
+        Paint()..style = PaintingStyle.stroke..color = Colors.white.withOpacity(0.35)..strokeWidth = 0.6);
+    } else {
+      // V2: longer eyelashes instead of glasses
+      canvas.drawLine(Offset(cx - 5.2, headCy - 1.5), Offset(cx - 5.8, headCy - 2.5),
+        Paint()..color = const Color(0xFF4E342E)..strokeWidth = 0.7);
+      canvas.drawLine(Offset(cx + 5.2, headCy - 1.5), Offset(cx + 5.8, headCy - 2.5),
+        Paint()..color = const Color(0xFF4E342E)..strokeWidth = 0.7);
+    }
 
-    // Mouth (little smile)
+    // Mouth
     canvas.drawArc(
       Rect.fromCenter(center: Offset(cx, headCy + 3.5), width: 4, height: 2.5),
       0, pi, false,
       Paint()..color = const Color(0xFFBF360C)..strokeWidth = 0.7..style = PaintingStyle.stroke);
+    // V2: lipstick
+    if (variant == 2) {
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx, headCy + 3.5), width: 3.5, height: 1.8),
+        0, pi, true,
+        Paint()..color = const Color(0xFFE91E63).withOpacity(0.4));
+    }
     // Blush
     canvas.drawCircle(Offset(cx - 6.5, headCy + 2), 2.2, Paint()
       ..color = const Color(0xFFFF8A80).withOpacity(0.35));
     canvas.drawCircle(Offset(cx + 6.5, headCy + 2), 2.2, Paint()
       ..color = const Color(0xFFFF8A80).withOpacity(0.35));
 
-    // ── Blue braided hair bun ──
+    // ── Hair ──
     final hairTop = headCy - headR;
-    // Side hair draping down
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx - 8, headCy - 2), width: 7, height: 14),
-      pi * 0.4, pi * 0.8, false,
-      Paint()..color = hairB..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx + 8, headCy - 2), width: 7, height: 14),
-      pi * 1.8, pi * 0.8, false,
-      Paint()..color = hairB..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
 
-    // Hair covering forehead
-    final fringe = Path()
-      ..moveTo(cx - headR + 1, headCy - 3)
-      ..quadraticBezierTo(cx - headR + 2, hairTop - 2, cx, hairTop - 1)
-      ..quadraticBezierTo(cx + headR - 2, hairTop - 2, cx + headR - 1, headCy - 3)
-      ..lineTo(cx + headR - 2, headCy - 5)
-      ..quadraticBezierTo(cx, hairTop + 1, cx - headR + 2, headCy - 5)
-      ..close();
-    canvas.drawPath(fringe, Paint()..color = hairB);
-
-    // Big bun on top
-    final bunCy = hairTop - 7;
-    final bunRect = Rect.fromCenter(center: Offset(cx, bunCy), width: 14, height: 13);
-    canvas.drawOval(bunRect, Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(-0.2, -0.3),
-        colors: [hairBL, hairB, hairBD],
-      ).createShader(bunRect));
-
-    // Braid texture on bun (curved lines)
-    for (var angle = -0.6; angle < 0.7; angle += 0.4) {
+    if (variant == 1) {
+      // V1: Blue braided hair bun
       canvas.drawArc(
-        Rect.fromCenter(center: Offset(cx + angle * 4, bunCy), width: 10, height: 11),
-        -pi * 0.4, pi * 0.8, false,
-        Paint()..style = PaintingStyle.stroke..color = hairBD.withOpacity(0.4)..strokeWidth = 0.8);
+        Rect.fromCenter(center: Offset(cx - 8, headCy - 2), width: 7, height: 14),
+        pi * 0.4, pi * 0.8, false,
+        Paint()..color = hair..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + 8, headCy - 2), width: 7, height: 14),
+        pi * 1.8, pi * 0.8, false,
+        Paint()..color = hair..strokeWidth = 4..strokeCap = StrokeCap.round..style = PaintingStyle.stroke);
+      final fringe = Path()
+        ..moveTo(cx - headR + 1, headCy - 3)
+        ..quadraticBezierTo(cx - headR + 2, hairTop - 2, cx, hairTop - 1)
+        ..quadraticBezierTo(cx + headR - 2, hairTop - 2, cx + headR - 1, headCy - 3)
+        ..lineTo(cx + headR - 2, headCy - 5)
+        ..quadraticBezierTo(cx, hairTop + 1, cx - headR + 2, headCy - 5)
+        ..close();
+      canvas.drawPath(fringe, Paint()..color = hair);
+      // Bun
+      final bunCy = hairTop - 7;
+      final bunRect = Rect.fromCenter(center: Offset(cx, bunCy), width: 14, height: 13);
+      canvas.drawOval(bunRect, Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(-0.2, -0.3),
+          colors: [hairLite, hair, hairDark],
+        ).createShader(bunRect));
+      for (var angle = -0.6; angle < 0.7; angle += 0.4) {
+        canvas.drawArc(
+          Rect.fromCenter(center: Offset(cx + angle * 4, bunCy), width: 10, height: 11),
+          -pi * 0.4, pi * 0.8, false,
+          Paint()..style = PaintingStyle.stroke..color = hairDark.withOpacity(0.4)..strokeWidth = 0.8);
+      }
+      // Golden hair tie
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx, bunCy + 5), width: 12, height: 4),
+        0, pi, false,
+        Paint()..color = const Color(0xFFFFD54F)..strokeWidth = 2.5..style = PaintingStyle.stroke..strokeCap = StrokeCap.round);
+      // Ornament
+      canvas.drawCircle(Offset(cx + 5, bunCy + 1), 2.5, Paint()
+        ..style = PaintingStyle.stroke..color = const Color(0xFF00BCD4)..strokeWidth = 1.5);
+    } else {
+      // V2: Pink long flowing hair (two side locks + fringe)
+      // Fringe
+      final fringe = Path()
+        ..moveTo(cx - headR + 1, headCy - 2)
+        ..quadraticBezierTo(cx - headR + 2, hairTop - 2, cx, hairTop - 2)
+        ..quadraticBezierTo(cx + headR - 2, hairTop - 2, cx + headR - 1, headCy - 2)
+        ..lineTo(cx + headR - 2, headCy - 4)
+        ..quadraticBezierTo(cx, hairTop, cx - headR + 2, headCy - 4)
+        ..close();
+      canvas.drawPath(fringe, Paint()..color = hair);
+      // Left long lock
+      final leftLock = Path()
+        ..moveTo(cx - headR + 1, headCy - 2)
+        ..quadraticBezierTo(cx - headR - 3, headCy + 8, cx - headR + 1, headCy + 16)
+        ..quadraticBezierTo(cx - headR + 3, headCy + 14, cx - headR + 3, headCy - 1)
+        ..close();
+      canvas.drawPath(leftLock, Paint()..color = hair);
+      canvas.drawPath(leftLock, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      // Right long lock
+      final rightLock = Path()
+        ..moveTo(cx + headR - 1, headCy - 2)
+        ..quadraticBezierTo(cx + headR + 3, headCy + 8, cx + headR - 1, headCy + 16)
+        ..quadraticBezierTo(cx + headR - 3, headCy + 14, cx + headR - 3, headCy - 1)
+        ..close();
+      canvas.drawPath(rightLock, Paint()..color = hair);
+      canvas.drawPath(rightLock, Paint()..style = PaintingStyle.stroke..color = hairDark..strokeWidth = 0.5);
+      // Small bow on top
+      final bowX = cx + 4;
+      final bowY = hairTop - 2;
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(bowX - 3, bowY), width: 5, height: 3.5),
+        Paint()..color = const Color(0xFFE91E63));
+      canvas.drawOval(
+        Rect.fromCenter(center: Offset(bowX + 3, bowY), width: 5, height: 3.5),
+        Paint()..color = const Color(0xFFE91E63));
+      canvas.drawCircle(Offset(bowX, bowY), 1.5, Paint()..color = const Color(0xFFAD1457));
     }
-
-    // Golden hair tie / band at base of bun
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx, bunCy + 5), width: 12, height: 4),
-      0, pi, false,
-      Paint()..color = const Color(0xFFFFD54F)..strokeWidth = 2.5..style = PaintingStyle.stroke..strokeCap = StrokeCap.round);
-
-    // Small hair ornament (blue ring like in the photo)
-    canvas.drawCircle(Offset(cx + 5, bunCy + 1), 2.5, Paint()
-      ..style = PaintingStyle.stroke..color = const Color(0xFF00BCD4)..strokeWidth = 1.5);
 
     // ── Player colour glow ring ──
     canvas.drawCircle(Offset(cx, headCy), headR + 6, Paint()
