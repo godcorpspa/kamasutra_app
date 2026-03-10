@@ -22,9 +22,9 @@ const _kBlue     = Color(0xFF448AFF);
 const _kP1       = Color(0xFFEF5350);   // player 1 – red
 const _kP2       = Color(0xFFFFD600);   // player 2 – gold
 
-// ── Clothing slot icons per player ──
-const _kIconsP1 = ['👕', '👖', '🩲', '🧦'];
-const _kIconsP2 = ['👗', '👙', '🩱', '👠'];
+// ── Clothing slot icons per gender ──
+const _kIconsMale   = ['👕', '👖', '🩲', '🧦'];
+const _kIconsFemale = ['👗', '👙', '🩱', '👠'];
 
 // ── Board canvas / tile constants ──
 const double _kTileW    = 96.0;    // isometric tile width
@@ -662,7 +662,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     final clothes  = p == 1 ? _p1Clothing : _p2Clothing;
     final color    = _playerColor(p);
     final isActive = _currentPlayer == p && !_gameOver;
-    final icons    = p == 1 ? _kIconsP1 : _kIconsP2;
+    final gender   = p == 1 ? widget.config.player1Gender : widget.config.player2Gender;
+    final icons    = gender == PlayerGender.male ? _kIconsMale : _kIconsFemale;
     final onBoard  = p == 1 ? _p1OnBoard : _p2OnBoard;
     final pos      = p == 1 ? _p1Pos : _p2Pos;
 
@@ -672,7 +673,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       children: [
         // Name row
         Row(children: [
-          Icon(p == 1 ? Icons.male : Icons.female, color: color, size: 13),
+          Icon(gender == PlayerGender.male ? Icons.male : Icons.female, color: color, size: 13),
           const SizedBox(width: 3),
           Expanded(
             child: Text(name,
@@ -756,6 +757,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         p1Color: _kP1,         p2Color: _kP2,
         p1Name: widget.config.player1Name,
         p2Name: widget.config.player2Name,
+        p1Gender: widget.config.player1Gender,
+        p2Gender: widget.config.player2Gender,
       );
 
       return Stack(
@@ -1011,6 +1014,7 @@ class _IsoBoardPainter extends CustomPainter {
   final bool   p1OnBoard, p2OnBoard;
   final Color  p1Color, p2Color;
   final String p1Name, p2Name;
+  final PlayerGender p1Gender, p2Gender;
 
   const _IsoBoardPainter({
     required this.board,
@@ -1018,6 +1022,7 @@ class _IsoBoardPainter extends CustomPainter {
     required this.p1OnBoard, required this.p2OnBoard,
     required this.p1Color,   required this.p2Color,
     required this.p1Name,    required this.p2Name,
+    required this.p1Gender,  required this.p2Gender,
   });
 
   // Map board position → isometric grid (col, row) using the spiral path.
@@ -1234,24 +1239,19 @@ class _IsoBoardPainter extends CustomPainter {
     if (!hasP1 && !hasP2) return;
     final baseY = c.dy - hh - 6;
     if (hasP1 && hasP2) {
-      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, '♂', symbolColor: const Color(0xFF42A5F5));
-      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, '♀');
+      _drawPawn(canvas, Offset(c.dx - 18, baseY), p1Color, p1Gender);
+      _drawPawn(canvas, Offset(c.dx + 18, baseY), p2Color, p2Gender);
     } else if (hasP1) {
-      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, '♂', symbolColor: const Color(0xFF42A5F5));
+      _drawPawn(canvas, Offset(c.dx, baseY), p1Color, p1Gender);
     } else {
-      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, '♀');
+      _drawPawn(canvas, Offset(c.dx, baseY), p2Color, p2Gender);
     }
   }
 
-  // ── Cute glowing gem pawn with heart shape ───────────────────────
-  void _drawPawn(Canvas canvas, Offset base, Color color, String symbol, {Color? symbolColor}) {
+  // ── Intimate body-shaped pawns ───────────────────────────────────
+  void _drawPawn(Canvas canvas, Offset base, Color color, PlayerGender gender) {
     const s = 16.0;
-    final cx = base.dx, cy = base.dy - s * 1.5;
-
-    // Outer glow halo
-    canvas.drawCircle(Offset(cx, cy), s * 2.0, Paint()
-      ..color = color.withOpacity(0.18)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12));
+    final cx = base.dx;
 
     // Shadow on ground
     canvas.drawOval(
@@ -1260,69 +1260,176 @@ class _IsoBoardPainter extends CustomPainter {
         ..color = Colors.black.withOpacity(0.35)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4));
 
-    // Pedestal (small rounded trapezoid)
-    final pedestal = Path()
-      ..moveTo(cx - s * 0.5, base.dy)
-      ..lineTo(cx + s * 0.5, base.dy)
-      ..lineTo(cx + s * 0.35, base.dy - s * 0.45)
-      ..lineTo(cx - s * 0.35, base.dy - s * 0.45)
-      ..close();
-    canvas.drawPath(pedestal, Paint()..color = _dim(color, 0.45));
-    canvas.drawPath(pedestal, Paint()
-      ..style = PaintingStyle.stroke
-      ..color = color.withOpacity(0.6)
-      ..strokeWidth = 1.0);
+    // Outer glow halo
+    final glowCy = base.dy - s * 2.2;
+    canvas.drawCircle(Offset(cx, glowCy), s * 2.0, Paint()
+      ..color = color.withOpacity(0.18)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12));
 
-    // Main gem body (rounded circle with gradient)
-    final gemRect = Rect.fromCenter(center: Offset(cx, cy), width: s * 1.8, height: s * 1.8);
-    canvas.drawOval(gemRect, Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(-0.3, -0.3),
-        colors: [_brighten(color, 0.5), color, _dim(color, 0.35)],
-        stops: const [0.0, 0.5, 1.0],
-      ).createShader(gemRect));
+    if (gender == PlayerGender.male) {
+      _drawMalePawn(canvas, base, color, s);
+    } else {
+      _drawFemalePawn(canvas, base, color, s);
+    }
+  }
 
-    // Glass highlight (top-left arc)
-    canvas.drawArc(
-      Rect.fromCenter(center: Offset(cx - s * 0.2, cy - s * 0.2), width: s * 1.2, height: s * 1.1),
-      pi * 0.9, pi * 0.7, false,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.white.withOpacity(0.55)
-        ..strokeWidth = 2.0
-        ..strokeCap = StrokeCap.round);
+  // Male pawn: phallic shape with rounded tip
+  void _drawMalePawn(Canvas canvas, Offset base, Color color, double s) {
+    final cx = base.dx;
+    final bodyH = s * 3.2;
+    final tipY = base.dy - bodyH;
+    final baseY = base.dy;
+    final shaftW = s * 0.55;
+    final tipR = s * 0.65;
 
-    // Sparkle dot
-    canvas.drawCircle(Offset(cx - s * 0.35, cy - s * 0.35), 2.0,
-      Paint()..color = Colors.white.withOpacity(0.85));
+    // Base (two rounded spheres)
+    final ballR = s * 0.55;
+    final ballY = baseY - ballR * 0.6;
+    for (final dx in [-s * 0.45, s * 0.45]) {
+      final ballRect = Rect.fromCenter(
+        center: Offset(cx + dx, ballY), width: ballR * 2, height: ballR * 2);
+      canvas.drawOval(ballRect, Paint()
+        ..shader = RadialGradient(
+          center: const Alignment(-0.3, -0.3),
+          colors: [_brighten(color, 0.4), color, _dim(color, 0.35)],
+          stops: const [0.0, 0.5, 1.0],
+        ).createShader(ballRect));
+      // Highlight
+      canvas.drawArc(
+        Rect.fromCenter(center: Offset(cx + dx - 2, ballY - 2), width: ballR, height: ballR * 0.9),
+        pi * 0.9, pi * 0.6, false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white.withOpacity(0.4)
+          ..strokeWidth = 1.2
+          ..strokeCap = StrokeCap.round);
+    }
 
-    // Outer ring
-    canvas.drawOval(gemRect, Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white.withOpacity(0.4)
-      ..strokeWidth = 1.5);
+    // Shaft
+    final shaftTop = tipY + tipR * 0.6;
+    final shaftBot = ballY - ballR * 0.5;
+    final shaftRect = RRect.fromRectAndRadius(
+      Rect.fromLTRB(cx - shaftW, shaftTop, cx + shaftW, shaftBot),
+      Radius.circular(shaftW * 0.3));
+    canvas.drawRRect(shaftRect, Paint()
+      ..shader = LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [_dim(color, 0.3), _brighten(color, 0.3), color, _dim(color, 0.3)],
+        stops: const [0.0, 0.35, 0.65, 1.0],
+      ).createShader(shaftRect.outerRect));
 
-    // Inner glow ring
-    canvas.drawOval(
-      Rect.fromCenter(center: Offset(cx, cy), width: s * 2.2, height: s * 2.2),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = color.withOpacity(0.25)
-        ..strokeWidth = 2.5
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
-
-    // Gender symbol in centre
-    _txt(canvas, symbol, Offset(cx, cy), sz: s * 0.85,
-        col: symbolColor ?? Colors.white.withOpacity(0.9), bold: true);
-
-    // Stem connecting pedestal to gem
+    // Shaft highlight line
     canvas.drawLine(
-      Offset(cx, base.dy - s * 0.45),
-      Offset(cx, cy + s * 0.9),
+      Offset(cx - shaftW * 0.3, shaftTop + 4),
+      Offset(cx - shaftW * 0.3, shaftBot - 4),
       Paint()
-        ..color = _dim(color, 0.3)
-        ..strokeWidth = 2.5
+        ..color = Colors.white.withOpacity(0.25)
+        ..strokeWidth = 1.0
         ..strokeCap = StrokeCap.round);
+
+    // Rounded tip (glans)
+    final tipCy = tipY + tipR * 0.1;
+    final tipRect = Rect.fromCenter(
+      center: Offset(cx, tipCy), width: tipR * 2.2, height: tipR * 2.0);
+    canvas.drawOval(tipRect, Paint()
+      ..shader = RadialGradient(
+        center: const Alignment(-0.2, -0.3),
+        colors: [_brighten(color, 0.5), color, _dim(color, 0.3)],
+        stops: const [0.0, 0.5, 1.0],
+      ).createShader(tipRect));
+
+    // Tip highlight
+    canvas.drawArc(
+      Rect.fromCenter(center: Offset(cx - tipR * 0.2, tipCy - tipR * 0.2), width: tipR * 1.2, height: tipR),
+      pi * 0.9, pi * 0.6, false,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = Colors.white.withOpacity(0.5)
+        ..strokeWidth = 1.5
+        ..strokeCap = StrokeCap.round);
+
+    // Sparkle
+    canvas.drawCircle(Offset(cx - tipR * 0.35, tipCy - tipR * 0.35), 1.5,
+      Paint()..color = Colors.white.withOpacity(0.8));
+
+    // Outer glow ring
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(cx, tipCy), width: tipR * 2.8, height: tipR * 2.6),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = color.withOpacity(0.2)
+        ..strokeWidth = 2.0
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
+  }
+
+  // Female pawn: breast / venus shape
+  void _drawFemalePawn(Canvas canvas, Offset base, Color color, double s) {
+    final cx = base.dx;
+    final bodyH = s * 3.0;
+    final topY = base.dy - bodyH;
+
+    // Two breasts side by side
+    final breastR = s * 0.85;
+    final breastCy = base.dy - breastR * 1.3;
+    final breastSpacing = s * 0.55;
+
+    for (final dx in [-breastSpacing, breastSpacing]) {
+      final bRect = Rect.fromCenter(
+        center: Offset(cx + dx, breastCy), width: breastR * 2, height: breastR * 2.1);
+      canvas.drawOval(bRect, Paint()
+        ..shader = RadialGradient(
+          center: Alignment(dx < 0 ? -0.25 : 0.25, -0.3),
+          colors: [_brighten(color, 0.45), color, _dim(color, 0.35)],
+          stops: const [0.0, 0.5, 1.0],
+        ).createShader(bRect));
+
+      // Highlight arc
+      canvas.drawArc(
+        Rect.fromCenter(
+          center: Offset(cx + dx + (dx < 0 ? -3 : 3), breastCy - breastR * 0.3),
+          width: breastR * 1.0, height: breastR * 0.9),
+        pi * 0.9, pi * 0.6, false,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white.withOpacity(0.45)
+          ..strokeWidth = 1.5
+          ..strokeCap = StrokeCap.round);
+
+      // Nipple
+      final nipR = breastR * 0.15;
+      final nipCy = breastCy - breastR * 0.05;
+      canvas.drawCircle(Offset(cx + dx, nipCy), nipR, Paint()
+        ..color = _dim(color, 0.2));
+      canvas.drawCircle(Offset(cx + dx, nipCy), nipR * 0.5, Paint()
+        ..color = _dim(color, 0.1));
+    }
+
+    // Cleavage shadow (soft line between)
+    canvas.drawLine(
+      Offset(cx, breastCy - breastR * 0.6),
+      Offset(cx, breastCy + breastR * 0.4),
+      Paint()
+        ..color = _dim(color, 0.15).withOpacity(0.5)
+        ..strokeWidth = 2.0
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2));
+
+    // Sparkle
+    canvas.drawCircle(Offset(cx - breastSpacing - breastR * 0.3, breastCy - breastR * 0.5), 1.5,
+      Paint()..color = Colors.white.withOpacity(0.8));
+
+    // Outer glow ring
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(cx, breastCy),
+        width: (breastSpacing + breastR) * 2.4,
+        height: breastR * 2.8),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..color = color.withOpacity(0.2)
+        ..strokeWidth = 2.0
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3));
   }
 
   // ── Helpers ─────────────────────────────────────────────────────────

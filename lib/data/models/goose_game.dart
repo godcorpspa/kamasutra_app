@@ -58,26 +58,41 @@ class GooseContent {
   const GooseContent(this.text, {this.timerSeconds});
 }
 
+// ==================== GENDER ====================
+
+enum PlayerGender { male, female }
+
 // ==================== GAME CONFIG ====================
 
 class GooseGameConfig extends Equatable {
   final String player1Name;
   final String player2Name;
+  final PlayerGender player1Gender;
+  final PlayerGender player2Gender;
 
   const GooseGameConfig({
     this.player1Name = 'Giocatore 1',
     this.player2Name = 'Giocatore 2',
+    this.player1Gender = PlayerGender.male,
+    this.player2Gender = PlayerGender.female,
   });
 
-  GooseGameConfig copyWith({String? player1Name, String? player2Name}) {
+  GooseGameConfig copyWith({
+    String? player1Name,
+    String? player2Name,
+    PlayerGender? player1Gender,
+    PlayerGender? player2Gender,
+  }) {
     return GooseGameConfig(
       player1Name: player1Name ?? this.player1Name,
       player2Name: player2Name ?? this.player2Name,
+      player1Gender: player1Gender ?? this.player1Gender,
+      player2Gender: player2Gender ?? this.player2Gender,
     );
   }
 
   @override
-  List<Object?> get props => [player1Name, player2Name];
+  List<Object?> get props => [player1Name, player2Name, player1Gender, player2Gender];
 }
 
 // ==================== BOARD CONSTANTS ====================

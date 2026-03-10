@@ -18,6 +18,8 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
   final _player1Controller = TextEditingController(text: 'Giocatore 1');
   final _player2Controller = TextEditingController(text: 'Giocatore 2');
   final _formKey = GlobalKey<FormState>();
+  PlayerGender _player1Gender = PlayerGender.male;
+  PlayerGender _player2Gender = PlayerGender.female;
 
   @override
   void initState() {
@@ -51,6 +53,8 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
       player2Name: _player2Controller.text.trim().isEmpty
           ? 'Giocatore 2'
           : _player2Controller.text.trim(),
+      player1Gender: _player1Gender,
+      player2Gender: _player2Gender,
     );
 
     context.push(AppRoutes.gooseGame, extra: config);
@@ -139,6 +143,8 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
                 playerNumber: 1,
                 color: AppColors.burgundy,
                 emoji: '🔴',
+                gender: _player1Gender,
+                onGenderChanged: (g) => setState(() => _player1Gender = g),
               ),
 
               const SizedBox(height: AppSpacing.md),
@@ -149,6 +155,8 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
                 playerNumber: 2,
                 color: AppColors.gold,
                 emoji: '🟡',
+                gender: _player2Gender,
+                onGenderChanged: (g) => setState(() => _player2Gender = g),
               ),
 
               const SizedBox(height: AppSpacing.xxl),
@@ -251,53 +259,124 @@ class _PlayerNameField extends StatelessWidget {
   final int playerNumber;
   final Color color;
   final String emoji;
+  final PlayerGender gender;
+  final ValueChanged<PlayerGender> onGenderChanged;
 
   const _PlayerNameField({
     required this.controller,
     required this.playerNumber,
     required this.color,
     required this.emoji,
+    required this.gender,
+    required this.onGenderChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      maxLength: 20,
-      decoration: InputDecoration(
-        labelText: '$emoji Giocatore $playerNumber',
-        prefixIcon: Container(
-          margin: const EdgeInsets.all(8),
-          width: 36,
-          height: 36,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              '$playerNumber',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: controller,
+          maxLength: 20,
+          decoration: InputDecoration(
+            labelText: '$emoji Giocatore $playerNumber',
+            prefixIcon: Container(
+              margin: const EdgeInsets.all(8),
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Text(
+                  '$playerNumber',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
               ),
             ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              borderSide: BorderSide(color: color, width: 2),
+            ),
+            counterText: '',
+          ),
+          validator: (v) {
+            if (v == null || v.trim().isEmpty) return 'Inserisci un nome';
+            return null;
+          },
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        Row(
+          children: [
+            const SizedBox(width: 4),
+            Text('Sesso:', style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(width: AppSpacing.sm),
+            _GenderChip(
+              label: '♂ Maschio',
+              selected: gender == PlayerGender.male,
+              color: color,
+              onTap: () => onGenderChanged(PlayerGender.male),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            _GenderChip(
+              label: '♀ Femmina',
+              selected: gender == PlayerGender.female,
+              color: color,
+              onTap: () => onGenderChanged(PlayerGender.female),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _GenderChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _GenderChip({
+    required this.label,
+    required this.selected,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected ? color.withOpacity(0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          border: Border.all(
+            color: selected ? color : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+            width: selected ? 2 : 1,
           ),
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+            color: selected ? color : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: color, width: 2),
-        ),
-        counterText: '',
       ),
-      validator: (v) {
-        if (v == null || v.trim().isEmpty) return 'Inserisci un nome';
-        return null;
-      },
     );
   }
 }
@@ -422,7 +501,11 @@ class _TutorialDialogState extends State<_TutorialDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.xl),
       ),
-      child: Padding(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
+        ),
+        child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -449,8 +532,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
             const SizedBox(height: AppSpacing.lg),
 
             // Content
-            SizedBox(
-              height: 240,
+            Flexible(
               child: PageView.builder(
                 controller: _pageController,
                 onPageChanged: (i) => setState(() => _page = i),
@@ -495,6 +577,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
           ],
         ),
       ),
+      ),
     );
   }
 }
@@ -511,28 +594,30 @@ class _TutorialPage {
   });
 
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 52)),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: AppColors.burgundy,
-              ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          body,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                height: 1.5,
-              ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 52)),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.burgundy,
+                ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            body,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  height: 1.5,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
