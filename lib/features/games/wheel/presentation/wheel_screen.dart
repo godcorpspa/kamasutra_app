@@ -16,6 +16,7 @@ class _WheelScreenState extends State<WheelScreen>
   late AnimationController _spinController;
   late AnimationController _pulseController;
   late AnimationController _glowController;
+  late AnimationController _ledController;
   late Animation<double> _spinAnimation;
   late Animation<double> _pulseAnimation;
   late Animation<double> _glowAnimation;
@@ -24,16 +25,18 @@ class _WheelScreenState extends State<WheelScreen>
   bool _isSpinning = false;
   String _intensity = 'spicy';
   int? _lastWinningIndex;
+  int _spinCount = 0;
+  final List<String> _history = [];
 
   final List<WheelSegment> _segments = [
-    WheelSegment('Bacio', '💋', const Color(0xFFE91E63), const Color(0xFFF48FB1)),
-    WheelSegment('Massaggio', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
-    WheelSegment('Complimento', '💬', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
-    WheelSegment('Sfida', '🎯', const Color(0xFFF44336), const Color(0xFFFF8A80)),
-    WheelSegment('Posizione', '🔥', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
-    WheelSegment('Fantasia', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
-    WheelSegment('Carezza', '🤚', const Color(0xFFE91E63), const Color(0xFFF8BBD0)),
-    WheelSegment('Sorpresa', '🎁', const Color(0xFF00897B), const Color(0xFF80CBC4)),
+    WheelSegment('Bacio\nProibito', '💋', const Color(0xFFE91E63), const Color(0xFFF48FB1)),
+    WheelSegment('Massaggio\nErotico', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
+    WheelSegment('Strip\nTease', '👙', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
+    WheelSegment('Posizione\nHot', '🔥', const Color(0xFFF44336), const Color(0xFFFF8A80)),
+    WheelSegment('Gioco\ndi Ruolo', '🎭', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
+    WheelSegment('Desiderio\nSegreto', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
+    WheelSegment('Tocco\nSensuale', '🤚', const Color(0xFFD81B60), const Color(0xFFF8BBD0)),
+    WheelSegment('Carta\nJolly', '🃏', const Color(0xFF00897B), const Color(0xFF80CBC4)),
   ];
 
   @override
@@ -61,6 +64,11 @@ class _WheelScreenState extends State<WheelScreen>
     _glowAnimation = Tween<double>(begin: 0.3, end: 0.9).animate(
       CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
     );
+
+    _ledController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    )..repeat(reverse: true);
   }
 
   @override
@@ -68,6 +76,7 @@ class _WheelScreenState extends State<WheelScreen>
     _spinController.dispose();
     _pulseController.dispose();
     _glowController.dispose();
+    _ledController.dispose();
     super.dispose();
   }
 
@@ -82,7 +91,7 @@ class _WheelScreenState extends State<WheelScreen>
     });
 
     final random = Random();
-    final extraSpins = 6 + random.nextInt(4); // 6-9 full rotations
+    final extraSpins = 6 + random.nextInt(4);
     final targetSegment = random.nextInt(_segments.length);
     final segmentAngle = (2 * pi) / _segments.length;
     final targetAngle =
@@ -100,7 +109,6 @@ class _WheelScreenState extends State<WheelScreen>
       setState(() {
         _currentRotation = _spinAnimation.value;
       });
-      // Tick sound simulation via haptics near the end
       if (_spinController.value > 0.7) {
         final progress = (_spinController.value - 0.7) / 0.3;
         if (random.nextDouble() > progress * 0.8) {
@@ -114,6 +122,10 @@ class _WheelScreenState extends State<WheelScreen>
       setState(() {
         _isSpinning = false;
         _lastWinningIndex = targetSegment;
+        _spinCount++;
+        final seg = _segments[targetSegment];
+        _history.insert(0, '${seg.emoji} ${seg.name.replaceAll('\n', ' ')}');
+        if (_history.length > 10) _history.removeLast();
       });
       _showResultDialog(targetSegment);
     });
@@ -138,15 +150,19 @@ class _WheelScreenState extends State<WheelScreen>
           scale: curvedAnim,
           child: FadeTransition(
             opacity: anim,
-            child: _ResultDialog(
-              segment: segment,
-              action: action,
-              intensity: _intensity,
-              onSpinAgain: () {
-                Navigator.pop(context);
-                _spin();
-              },
-              onDone: () => Navigator.pop(context),
+            child: DefaultTextStyle(
+              style: const TextStyle(decoration: TextDecoration.none),
+              child: _ResultDialog(
+                segment: segment,
+                action: action,
+                intensity: _intensity,
+                spinCount: _spinCount,
+                onSpinAgain: () {
+                  Navigator.pop(context);
+                  _spin();
+                },
+                onDone: () => Navigator.pop(context),
+              ),
             ),
           ),
         );
@@ -155,50 +171,52 @@ class _WheelScreenState extends State<WheelScreen>
   }
 
   String _getActionForSegment(WheelSegment segment, String intensity) {
+    // Use first word of name as key for matching
+    final key = segment.name.split('\n').first;
     final actions = {
       'Bacio': {
-        'soft': 'Datevi un bacio dolce sulla fronte',
-        'spicy': 'Un bacio appassionato di almeno 30 secondi',
-        'extra_spicy': 'Bacio sensuale sul collo per 1 minuto',
+        'soft': 'Bacia dolcemente il collo del partner per 30 secondi, alternando baci leggeri e respiri caldi',
+        'spicy': 'Bacia il partner partendo dalle labbra scendendo lentamente lungo il corpo per 2 minuti',
+        'extra_spicy': 'Bacia e mordicchia ogni zona erogena del partner, lasciandoti guidare dai suoi gemiti',
       },
       'Massaggio': {
-        'soft': 'Massaggio rilassante alle spalle per 2 minuti',
-        'spicy': 'Massaggio sensuale alla schiena con olio',
-        'extra_spicy': 'Massaggio completo con esplorazione libera',
+        'soft': 'Massaggia sensualmente le spalle e la schiena con olio caldo per 3 minuti',
+        'spicy': 'Massaggio erotico con olio su tutto il corpo, concentrandoti sulle zone più sensibili',
+        'extra_spicy': 'Massaggio corpo a corpo: usa il tuo corpo per massaggiare il partner disteso',
       },
-      'Complimento': {
-        'soft': 'Di\' 3 cose che ami del partner',
-        'spicy': 'Sussurra all\'orecchio cosa ti attrae di più',
-        'extra_spicy': 'Descrivi la tua fantasia preferita con il partner',
-      },
-      'Sfida': {
-        'soft': 'Guardatevi negli occhi per 60 secondi',
-        'spicy': 'Spogliati di un indumento a scelta del partner',
-        'extra_spicy': 'Il partner sceglie la prossima posizione',
+      'Strip': {
+        'soft': 'Togli lentamente un indumento al partner guardandolo negli occhi',
+        'spicy': 'Fai uno strip tease lento e provocante togliendo 2 indumenti con musica',
+        'extra_spicy': 'Strip tease completo: spogliati lentamente ballando, il partner può solo guardare',
       },
       'Posizione': {
-        'soft': 'Abbraccio intimo per 3 minuti',
-        'spicy': 'Prova una nuova posizione romantica',
-        'extra_spicy': 'Posizione a sorpresa dal catalogo',
+        'soft': 'Abbracciatevi nudi pelle a pelle per 3 minuti, sentendo il calore reciproco',
+        'spicy': 'Provate una nuova posizione intima scelta dal partner che ha girato',
+        'extra_spicy': 'Il partner sceglie una posizione dal Kamasutra e la provate per almeno 5 minuti',
       },
-      'Fantasia': {
-        'soft': 'Racconta un sogno romantico',
-        'spicy': 'Condividi una fantasia segreta',
-        'extra_spicy': 'Realizza una mini-fantasia del partner',
+      'Gioco': {
+        'soft': 'Sussurrate a turno le vostre fantasie più romantiche all\'orecchio',
+        'spicy': 'Interpretate un incontro tra sconosciuti: seducetevi come fosse la prima volta',
+        'extra_spicy': 'Gioco di dominazione: uno comanda e l\'altro ubbidisce per i prossimi 10 minuti',
       },
-      'Carezza': {
-        'soft': 'Accarezza dolcemente il viso del partner',
-        'spicy': 'Carezze sensuali dove sceglie il partner',
-        'extra_spicy': 'Esplorazione tattile bendati',
+      'Desiderio': {
+        'soft': 'Confessa al partner il tuo desiderio segreto più romantico',
+        'spicy': 'Descrivi in dettaglio la tua fantasia erotica preferita con il partner',
+        'extra_spicy': 'Realizzate immediatamente il desiderio più audace che uno dei due confessa',
       },
-      'Sorpresa': {
-        'soft': 'Fai qualcosa di carino per il partner',
-        'spicy': 'Il partner sceglie l\'azione',
-        'extra_spicy': 'Carta jolly: qualsiasi cosa concordata',
+      'Tocco': {
+        'soft': 'Accarezza lentamente tutto il corpo del partner con la punta delle dita per 2 minuti',
+        'spicy': 'Il partner si benda: esplora il suo corpo con mani, labbra e un cubetto di ghiaccio',
+        'extra_spicy': 'Esplorazione tattile completa bendati: toccate e assaggiate ogni centimetro del partner',
+      },
+      'Carta': {
+        'soft': 'Baciatevi per 2 minuti senza mai staccarvi, variando intensità e passione',
+        'spicy': 'Il partner sceglie qualsiasi azione dalla ruota e decide l\'intensità',
+        'extra_spicy': 'Carta jolly totale: tutto è permesso per i prossimi 15 minuti, senza limiti concordati',
       },
     };
 
-    return actions[segment.name]?[intensity] ?? 'Azione speciale!';
+    return actions[key]?[intensity] ?? 'Sorpresa! Inventate qualcosa insieme...';
   }
 
   @override
@@ -213,7 +231,14 @@ class _WheelScreenState extends State<WheelScreen>
         title: const Text('Ruota della Fortuna'),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        foregroundColor: Colors.white,
         actions: [
+          if (_history.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.history_rounded),
+              onPressed: _showHistory,
+              tooltip: 'Cronologia',
+            ),
           IconButton(
             icon: const Icon(Icons.help_outline_rounded),
             onPressed: _showRules,
@@ -235,9 +260,24 @@ class _WheelScreenState extends State<WheelScreen>
         child: SafeArea(
           child: Column(
             children: [
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               // Intensity selector
               _buildIntensitySelector(),
+
+              // Spin counter
+              if (_spinCount > 0)
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Text(
+                    'Giro #$_spinCount',
+                    style: TextStyle(
+                      color: AppColors.gold.withOpacity(0.6),
+                      fontSize: 13,
+                      fontFamily: AppTypography.bodyFont,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
 
               // Wheel area
               Expanded(
@@ -276,16 +316,23 @@ class _WheelScreenState extends State<WheelScreen>
                           },
                         ),
 
-                        // The wheel
-                        Transform.rotate(
-                          angle: _currentRotation,
-                          child: CustomPaint(
-                            size: Size(wheelSize, wheelSize),
-                            painter: WheelPainter(
-                              segments: _segments,
-                              highlightIndex: _lastWinningIndex,
-                            ),
-                          ),
+                        // The wheel with LED ring
+                        AnimatedBuilder(
+                          animation: _ledController,
+                          builder: (context, child) {
+                            return Transform.rotate(
+                              angle: _currentRotation,
+                              child: CustomPaint(
+                                size: Size(wheelSize, wheelSize),
+                                painter: WheelPainter(
+                                  segments: _segments,
+                                  highlightIndex: _lastWinningIndex,
+                                  ledPhase: _isSpinning ? _ledController.value : 0,
+                                  isSpinning: _isSpinning,
+                                ),
+                              ),
+                            );
+                          },
                         ),
 
                         // Center button
@@ -376,6 +423,7 @@ class _WheelScreenState extends State<WheelScreen>
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 fontSize: 14,
                 fontFamily: AppTypography.bodyFont,
+                decoration: TextDecoration.none,
               ),
             ),
           ],
@@ -433,13 +481,12 @@ class _WheelScreenState extends State<WheelScreen>
               ),
               child: Center(
                 child: _isSpinning
-                    ? SizedBox(
+                    ? const SizedBox(
                         width: 32,
                         height: 32,
                         child: CircularProgressIndicator(
                           color: AppColors.fuchsiaLight,
                           strokeWidth: 3,
-                          strokeCap: StrokeCap.round,
                         ),
                       )
                     : Column(
@@ -459,6 +506,7 @@ class _WheelScreenState extends State<WheelScreen>
                               fontSize: 13,
                               fontFamily: AppTypography.bodyFont,
                               letterSpacing: 2,
+                              decoration: TextDecoration.none,
                             ),
                           ),
                         ],
@@ -501,9 +549,99 @@ class _WheelScreenState extends State<WheelScreen>
                 color: Colors.white.withOpacity(0.8),
                 fontSize: 15,
                 fontFamily: AppTypography.bodyFont,
+                decoration: TextDecoration.none,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  void _showHistory() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DefaultTextStyle(
+        style: const TextStyle(decoration: TextDecoration.none),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
+            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40, height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Icon(Icons.history_rounded, color: AppColors.gold, size: 22),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Cronologia (${ _spinCount} giri)',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AppTypography.displayFont,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ..._history.asMap().entries.map((entry) {
+                final idx = entry.key;
+                final item = entry.value;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 28, height: 28,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${_spinCount - idx}',
+                            style: TextStyle(
+                              color: AppColors.gold.withOpacity(0.7),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: AppTypography.bodyFont,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        item,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 15,
+                          fontFamily: AppTypography.bodyFont,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -514,103 +652,106 @@ class _WheelScreenState extends State<WheelScreen>
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF2D1536),
-              Color(0xFF1A0A2E),
-            ],
+      builder: (context) => DefaultTextStyle(
+        style: const TextStyle(decoration: TextDecoration.none),
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
+            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40, height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.gold.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Text('🎡', style: TextStyle(fontSize: 24)),
-                ),
-                const SizedBox(width: 14),
-                Text(
-                  'Come si gioca',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: AppTypography.displayFont,
+                    color: Colors.white24,
+                    borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            _buildRuleItem('1', 'Scegli l\'intensità desiderata', Icons.tune_rounded),
-            _buildRuleItem('2', 'Tocca il centro per girare la ruota', Icons.touch_app_rounded),
-            _buildRuleItem('3', 'Segui l\'azione indicata', Icons.favorite_rounded),
-            _buildRuleItem('4', 'Potete sempre saltare e rigirare', Icons.refresh_rounded),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.fuchsia.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.fuchsia.withOpacity(0.2)),
               ),
-              child: Row(
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  const Text('💕', style: TextStyle(fontSize: 20)),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Ricorda: il consenso viene prima di tutto. Divertitevi!',
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontStyle: FontStyle.italic,
-                        fontSize: 14,
-                        fontFamily: AppTypography.bodyFont,
-                      ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.gold.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Text('🎡', style: TextStyle(fontSize: 24)),
+                  ),
+                  const SizedBox(width: 14),
+                  Text(
+                    'Come si gioca',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AppTypography.displayFont,
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-          ],
+              const SizedBox(height: 20),
+              _buildRuleItem('Scegli l\'intensità: Soft, Spicy o Extra 🔥', Icons.tune_rounded),
+              _buildRuleItem('Tocca il centro della ruota per farla girare', Icons.touch_app_rounded),
+              _buildRuleItem('Esegui l\'azione indicata con il partner', Icons.favorite_rounded),
+              _buildRuleItem('Potete sempre saltare e rigirare la ruota', Icons.refresh_rounded),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.fuchsia.withOpacity(0.15),
+                      AppColors.fuchsia.withOpacity(0.05),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.fuchsia.withOpacity(0.2)),
+                ),
+                child: Row(
+                  children: [
+                    const Text('💕', style: TextStyle(fontSize: 20)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'Ricorda: il consenso viene prima di tutto!\nDivertitevi in sicurezza.',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.7),
+                          fontStyle: FontStyle.italic,
+                          fontSize: 14,
+                          fontFamily: AppTypography.bodyFont,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildRuleItem(String number, String text, IconData icon) {
+  Widget _buildRuleItem(String text, IconData icon) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Container(
-            width: 36,
-            height: 36,
+            width: 36, height: 36,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -620,9 +761,7 @@ class _WheelScreenState extends State<WheelScreen>
               ),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Center(
-              child: Icon(icon, color: AppColors.gold, size: 18),
-            ),
+            child: Center(child: Icon(icon, color: AppColors.gold, size: 18)),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -647,18 +786,18 @@ class _WheelSpinCurve extends Curve {
 
   @override
   double transformInternal(double t) {
-    // Starts fast then decelerates with a slight bounce feel
     return 1 - pow(1 - t, 4).toDouble();
   }
 }
 
 // ============================================
-// Result Dialog
+// Result Dialog — with confetti-like particles
 // ============================================
-class _ResultDialog extends StatelessWidget {
+class _ResultDialog extends StatefulWidget {
   final WheelSegment segment;
   final String action;
   final String intensity;
+  final int spinCount;
   final VoidCallback onSpinAgain;
   final VoidCallback onDone;
 
@@ -666,12 +805,40 @@ class _ResultDialog extends StatelessWidget {
     required this.segment,
     required this.action,
     required this.intensity,
+    required this.spinCount,
     required this.onSpinAgain,
     required this.onDone,
   });
 
+  @override
+  State<_ResultDialog> createState() => _ResultDialogState();
+}
+
+class _ResultDialogState extends State<_ResultDialog>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _particleController;
+  late List<_Particle> _particles;
+
+  @override
+  void initState() {
+    super.initState();
+    final random = Random();
+    _particles = List.generate(20, (_) => _Particle(random));
+
+    _particleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2500),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _particleController.dispose();
+    super.dispose();
+  }
+
   String get _intensityLabel {
-    switch (intensity) {
+    switch (widget.intensity) {
       case 'soft':
         return '🌸 Soft';
       case 'spicy':
@@ -685,192 +852,308 @@ class _ResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final displayName = widget.segment.name.replaceAll('\n', ' ');
+
     return Center(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 32),
-        padding: const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(28),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF2D1536),
-              Color(0xFF1A0A2E),
-            ],
-          ),
-          border: Border.all(
-            color: segment.color.withOpacity(0.5),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: segment.color.withOpacity(0.3),
-              blurRadius: 30,
-              spreadRadius: 5,
-            ),
-            const BoxShadow(
-              color: Colors.black26,
-              blurRadius: 20,
-              offset: Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Top banner with segment color
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 28),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    segment.color.withOpacity(0.3),
-                    segment.colorSecondary.withOpacity(0.1),
-                  ],
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Confetti particles
+          AnimatedBuilder(
+            animation: _particleController,
+            builder: (context, child) {
+              return CustomPaint(
+                size: const Size(350, 500),
+                painter: _ParticlePainter(
+                  particles: _particles,
+                  progress: _particleController.value,
+                  color: widget.segment.color,
                 ),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(26),
-                ),
+              );
+            },
+          ),
+
+          // Dialog card
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 32),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(28),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
               ),
-              child: Column(
-                children: [
-                  // Emoji with glow
-                  Container(
-                    width: 90,
-                    height: 90,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          segment.color.withOpacity(0.3),
-                          segment.color.withOpacity(0.05),
-                        ],
-                      ),
-                      border: Border.all(
-                        color: segment.color.withOpacity(0.4),
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: segment.color.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 3,
-                        ),
+              border: Border.all(
+                color: widget.segment.color.withOpacity(0.5),
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.segment.color.withOpacity(0.3),
+                  blurRadius: 30,
+                  spreadRadius: 5,
+                ),
+                const BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 20,
+                  offset: Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Top banner
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        widget.segment.color.withOpacity(0.35),
+                        widget.segment.colorSecondary.withOpacity(0.1),
                       ],
                     ),
-                    child: Center(
-                      child: Text(
-                        segment.emoji,
-                        style: const TextStyle(fontSize: 44),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(26),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      // Emoji with glow
+                      Container(
+                        width: 90, height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: RadialGradient(
+                            colors: [
+                              widget.segment.color.withOpacity(0.3),
+                              widget.segment.color.withOpacity(0.05),
+                            ],
+                          ),
+                          border: Border.all(
+                            color: widget.segment.color.withOpacity(0.4),
+                            width: 2,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: widget.segment.color.withOpacity(0.3),
+                              blurRadius: 20,
+                              spreadRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.segment.emoji,
+                            style: const TextStyle(
+                              fontSize: 44,
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 14),
+                      Text(
+                        displayName.toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: AppTypography.displayFont,
+                          letterSpacing: 3,
+                          decoration: TextDecoration.none,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              _intensityLabel,
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.7),
+                                fontSize: 12,
+                                fontFamily: AppTypography.bodyFont,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.gold.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              'Giro #${widget.spinCount}',
+                              style: TextStyle(
+                                color: AppColors.gold.withOpacity(0.8),
+                                fontSize: 12,
+                                fontFamily: AppTypography.bodyFont,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 14),
-                  Text(
-                    segment.name.toUpperCase(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: AppTypography.displayFont,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 4),
+                ),
+
+                // Action description
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white.withOpacity(0.08)),
                     ),
                     child: Text(
-                      _intensityLabel,
+                      widget.action,
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
-                        fontSize: 12,
+                        color: Colors.white.withOpacity(0.9),
+                        fontSize: 16,
+                        height: 1.5,
                         fontFamily: AppTypography.bodyFont,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.w400,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                ],
-              ),
-            ),
-
-            // Action description
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.06),
-                  borderRadius: BorderRadius.circular(16),
-                  border:
-                      Border.all(color: Colors.white.withOpacity(0.08)),
                 ),
-                child: Text(
-                  action,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.9),
-                    fontSize: 17,
-                    height: 1.5,
-                    fontFamily: AppTypography.bodyFont,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
 
-            // Buttons
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: onSpinAgain,
-                      icon: const Icon(Icons.refresh_rounded, size: 18),
-                      label: const Text('Gira ancora'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white70,
-                        side: BorderSide(
-                            color: Colors.white.withOpacity(0.2)),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                // Buttons
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: widget.onSpinAgain,
+                          icon: const Icon(Icons.refresh_rounded, size: 18),
+                          label: const Text('Gira ancora'),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white70,
+                            side: BorderSide(
+                                color: Colors.white.withOpacity(0.2)),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: onDone,
-                      icon: const Icon(Icons.check_rounded, size: 18),
-                      label: const Text('Fatto!'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: segment.color,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: widget.onDone,
+                          icon: const Icon(Icons.check_rounded, size: 18),
+                          label: const Text('Fatto!'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: widget.segment.color,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            elevation: 6,
+                            shadowColor: widget.segment.color.withOpacity(0.5),
+                          ),
                         ),
-                        elevation: 6,
-                        shadowColor: segment.color.withOpacity(0.5),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
+}
+
+// ============================================
+// Confetti particle system
+// ============================================
+class _Particle {
+  final double x;        // -1..1 horizontal spread
+  final double speed;    // fall speed multiplier
+  final double size;
+  final double rotation;
+  final int colorIndex;  // 0 = segment, 1 = gold, 2 = white
+
+  _Particle(Random r)
+      : x = r.nextDouble() * 2 - 1,
+        speed = 0.3 + r.nextDouble() * 0.7,
+        size = 3 + r.nextDouble() * 5,
+        rotation = r.nextDouble() * 2 * pi,
+        colorIndex = r.nextInt(3);
+}
+
+class _ParticlePainter extends CustomPainter {
+  final List<_Particle> particles;
+  final double progress;
+  final Color color;
+
+  _ParticlePainter({
+    required this.particles,
+    required this.progress,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (final p in particles) {
+      final opacity = (1 - progress).clamp(0.0, 1.0);
+      if (opacity <= 0) continue;
+
+      final colors = [color, const Color(0xFFFFD700), Colors.white];
+      final paint = Paint()
+        ..color = colors[p.colorIndex].withOpacity(opacity * 0.8);
+
+      // Particles fly upward then fall
+      final yProgress = progress * p.speed;
+      final yOffset = -200 * yProgress + 300 * yProgress * yProgress;
+      final xOffset = p.x * 150 * progress;
+
+      final pos = Offset(
+        size.width / 2 + xOffset,
+        size.height / 2 + yOffset,
+      );
+
+      canvas.save();
+      canvas.translate(pos.dx, pos.dy);
+      canvas.rotate(p.rotation + progress * 6);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.6),
+          const Radius.circular(1),
+        ),
+        paint,
+      );
+      canvas.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _ParticlePainter old) =>
+      progress != old.progress;
 }
 
 // ============================================
@@ -886,13 +1169,20 @@ class WheelSegment {
 }
 
 // ============================================
-// Wheel Painter — Premium
+// Wheel Painter — Premium with LED lights
 // ============================================
 class WheelPainter extends CustomPainter {
   final List<WheelSegment> segments;
   final int? highlightIndex;
+  final double ledPhase;
+  final bool isSpinning;
 
-  WheelPainter({required this.segments, this.highlightIndex});
+  WheelPainter({
+    required this.segments,
+    this.highlightIndex,
+    this.ledPhase = 0,
+    this.isSpinning = false,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -931,13 +1221,13 @@ class WheelPainter extends CustomPainter {
 
       canvas.drawArc(segRect, startAngle, segmentAngle, true, segPaint);
 
-      // Inner highlight — creates a "shiny" feel
+      // Inner highlight
       final highlightPaint = Paint()
         ..shader = ui.Gradient.radial(
           center + Offset.fromDirection(startAngle + segmentAngle / 2, radius * 0.3),
           radius * 0.7,
           [
-            Colors.white.withOpacity(0.15),
+            Colors.white.withOpacity(0.18),
             Colors.transparent,
           ],
         )
@@ -946,14 +1236,14 @@ class WheelPainter extends CustomPainter {
 
       // Segment divider lines
       final dividerPaint = Paint()
-        ..color = Colors.white.withOpacity(0.4)
+        ..color = Colors.white.withOpacity(0.5)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5;
 
       final lineEnd = center + Offset.fromDirection(startAngle, radius);
       canvas.drawLine(center, lineEnd, dividerPaint);
 
-      // --- Draw emoji + name ---
+      // --- Draw name + emoji (name ABOVE emoji) ---
       _drawSegmentContent(canvas, center, radius, startAngle, segmentAngle, i);
     }
 
@@ -971,8 +1261,42 @@ class WheelPainter extends CustomPainter {
       double startAngle, double segmentAngle, int index) {
     final midAngle = startAngle + segmentAngle / 2;
 
-    // Emoji (outer)
-    final emojiRadius = radius * 0.68;
+    // Name (outer — above emoji, where there is more space)
+    final nameRadius = radius * 0.72;
+    final namePos = center + Offset.fromDirection(midAngle, nameRadius);
+
+    canvas.save();
+    canvas.translate(namePos.dx, namePos.dy);
+    canvas.rotate(midAngle + pi / 2);
+
+    final namePainter = TextPainter(
+      text: TextSpan(
+        text: segments[index].name.replaceAll('\n', '\n'),
+        style: TextStyle(
+          fontSize: 9.5,
+          color: Colors.white.withOpacity(0.95),
+          fontWeight: FontWeight.w800,
+          fontFamily: AppTypography.bodyFont,
+          letterSpacing: 0.3,
+          height: 1.15,
+          shadows: const [
+            Shadow(color: Colors.black87, blurRadius: 5),
+            Shadow(color: Colors.black54, blurRadius: 2, offset: Offset(0, 1)),
+          ],
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.center,
+    );
+    namePainter.layout();
+    namePainter.paint(
+      canvas,
+      Offset(-namePainter.width / 2, -namePainter.height / 2),
+    );
+    canvas.restore();
+
+    // Emoji (inner — below name, closer to center)
+    final emojiRadius = radius * 0.46;
     final emojiPos = center + Offset.fromDirection(midAngle, emojiRadius);
 
     canvas.save();
@@ -982,7 +1306,7 @@ class WheelPainter extends CustomPainter {
     final emojiPainter = TextPainter(
       text: TextSpan(
         text: segments[index].emoji,
-        style: const TextStyle(fontSize: 26),
+        style: const TextStyle(fontSize: 22),
       ),
       textDirection: TextDirection.ltr,
     );
@@ -991,47 +1315,14 @@ class WheelPainter extends CustomPainter {
       canvas,
       Offset(-emojiPainter.width / 2, -emojiPainter.height / 2),
     );
-
-    canvas.restore();
-
-    // Name (inner, closer to center)
-    final nameRadius = radius * 0.42;
-    final namePos = center + Offset.fromDirection(midAngle, nameRadius);
-
-    canvas.save();
-    canvas.translate(namePos.dx, namePos.dy);
-    canvas.rotate(midAngle + pi / 2);
-
-    final namePainter = TextPainter(
-      text: TextSpan(
-        text: segments[index].name,
-        style: TextStyle(
-          fontSize: 11,
-          color: Colors.white.withOpacity(0.95),
-          fontWeight: FontWeight.w700,
-          fontFamily: AppTypography.bodyFont,
-          letterSpacing: 0.5,
-          shadows: const [
-            Shadow(color: Colors.black54, blurRadius: 4),
-          ],
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    namePainter.layout();
-    namePainter.paint(
-      canvas,
-      Offset(-namePainter.width / 2, -namePainter.height / 2),
-    );
-
     canvas.restore();
   }
 
   void _drawOuterRim(Canvas canvas, Offset center, double radius) {
-    // Outer dark ring
+    // Outer golden ring with sweep gradient
     final outerRingPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12
+      ..strokeWidth = 14
       ..shader = ui.Gradient.sweep(
         center,
         [
@@ -1043,21 +1334,21 @@ class WheelPainter extends CustomPainter {
         ],
         [0.0, 0.25, 0.5, 0.75, 1.0],
       );
-    canvas.drawCircle(center, radius + 2, outerRingPaint);
+    canvas.drawCircle(center, radius + 3, outerRingPaint);
 
-    // Thin inner accent ring
+    // Inner accent ring
     final innerRingPaint = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..color = Colors.white.withOpacity(0.3);
-    canvas.drawCircle(center, radius - 2, innerRingPaint);
+      ..strokeWidth = 1.5
+      ..color = Colors.white.withOpacity(0.35);
+    canvas.drawCircle(center, radius - 1, innerRingPaint);
 
-    // Outer bright edge
+    // Outermost thin bright edge
     final outerEdgePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5
-      ..color = const Color(0xFFFFD700).withOpacity(0.7);
-    canvas.drawCircle(center, radius + 8, outerEdgePaint);
+      ..color = const Color(0xFFFFD700).withOpacity(0.6);
+    canvas.drawCircle(center, radius + 10, outerEdgePaint);
   }
 
   void _drawInnerHub(Canvas canvas, Offset center, double radius) {
@@ -1092,25 +1383,38 @@ class WheelPainter extends CustomPainter {
     final lightCount = segments.length * 3; // 24 lights
     for (int i = 0; i < lightCount; i++) {
       final angle = (2 * pi / lightCount) * i - pi / 2;
-      final pos = center + Offset.fromDirection(angle, radius + 2);
+      final pos = center + Offset.fromDirection(angle, radius + 3);
 
       final isHighlight = i % 3 == 0;
-      final dotRadius = isHighlight ? 3.5 : 2.0;
-      final opacity = isHighlight ? 0.9 : 0.5;
 
-      final dotPaint = Paint()
-        ..color = (isHighlight ? const Color(0xFFFFD700) : Colors.white)
-            .withOpacity(opacity);
+      // Alternate LED colors during spin
+      double opacity;
+      Color dotColor;
+      double dotRadius;
 
-      canvas.drawCircle(pos, dotRadius, dotPaint);
+      if (isSpinning) {
+        // Alternate on/off based on ledPhase
+        final isOn = (i % 2 == 0) ? ledPhase > 0.5 : ledPhase <= 0.5;
+        opacity = isOn ? 1.0 : 0.2;
+        dotColor = isOn
+            ? (isHighlight ? const Color(0xFFFFD700) : Colors.white)
+            : Colors.white24;
+        dotRadius = isHighlight ? 4.0 : 2.5;
+      } else {
+        opacity = isHighlight ? 0.9 : 0.5;
+        dotColor = isHighlight ? const Color(0xFFFFD700) : Colors.white;
+        dotRadius = isHighlight ? 3.5 : 2.0;
+      }
 
-      if (isHighlight) {
+      canvas.drawCircle(pos, dotRadius, Paint()..color = dotColor.withOpacity(opacity));
+
+      if ((isHighlight && !isSpinning) || (isSpinning && opacity > 0.5)) {
         canvas.drawCircle(
           pos,
-          dotRadius + 3,
+          dotRadius + 4,
           Paint()
-            ..color = const Color(0xFFFFD700).withOpacity(0.2)
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4),
+            ..color = const Color(0xFFFFD700).withOpacity(isSpinning ? 0.35 : 0.2)
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
         );
       }
     }
@@ -1118,7 +1422,9 @@ class WheelPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant WheelPainter oldDelegate) =>
-      highlightIndex != oldDelegate.highlightIndex;
+      highlightIndex != oldDelegate.highlightIndex ||
+      ledPhase != oldDelegate.ledPhase ||
+      isSpinning != oldDelegate.isSpinning;
 }
 
 // ============================================
@@ -1147,10 +1453,10 @@ class PointerPainter extends CustomPainter {
 
     // Main gem shape
     final gemPath = Path()
-      ..moveTo(centerX, size.height) // bottom point
+      ..moveTo(centerX, size.height)
       ..lineTo(centerX - 14, 10)
-      ..lineTo(centerX - 10, 0) // top left
-      ..lineTo(centerX + 10, 0) // top right
+      ..lineTo(centerX - 10, 0)
+      ..lineTo(centerX + 10, 0)
       ..lineTo(centerX + 14, 10)
       ..close();
 
@@ -1176,11 +1482,7 @@ class PointerPainter extends CustomPainter {
       ..lineTo(centerX, 0)
       ..lineTo(centerX, 10)
       ..close();
-
-    canvas.drawPath(
-      leftFacet,
-      Paint()..color = Colors.white.withOpacity(0.2),
-    );
+    canvas.drawPath(leftFacet, Paint()..color = Colors.white.withOpacity(0.2));
 
     // Top shine
     final shinePath = Path()
@@ -1188,26 +1490,24 @@ class PointerPainter extends CustomPainter {
       ..lineTo(centerX + 2, 2)
       ..lineTo(centerX, 6)
       ..close();
-
-    canvas.drawPath(
-      shinePath,
-      Paint()..color = Colors.white.withOpacity(0.5),
-    );
+    canvas.drawPath(shinePath, Paint()..color = Colors.white.withOpacity(0.5));
 
     // Border
-    final borderPaint = Paint()
-      ..color = const Color(0xFFFFD700).withOpacity(0.8)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    canvas.drawPath(gemPath, borderPaint);
+    canvas.drawPath(
+      gemPath,
+      Paint()
+        ..color = const Color(0xFFFFD700).withOpacity(0.8)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
 
     // Glow at bottom tip
     canvas.drawCircle(
       Offset(centerX, size.height - 2),
-      4,
+      5,
       Paint()
-        ..color = const Color(0xFFFFD700).withOpacity(0.4)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+        ..color = const Color(0xFFFFD700).withOpacity(0.5)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
     );
   }
 
