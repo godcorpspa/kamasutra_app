@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../app/theme.dart';
+import '../data/wheel_actions.dart';
 
 class WheelScreen extends StatefulWidget {
   const WheelScreen({super.key});
@@ -94,8 +95,19 @@ class _WheelScreenState extends State<WheelScreen>
     final extraSpins = 6 + random.nextInt(4);
     final targetSegment = random.nextInt(_segments.length);
     final segmentAngle = (2 * pi) / _segments.length;
-    final targetAngle =
-        extraSpins * 2 * pi + (targetSegment * segmentAngle) + (segmentAngle / 2);
+
+    // Calculate the exact rotation so the pointer (fixed at top) lands
+    // on the center of targetSegment.
+    // Segments are drawn at startAngle = i * segmentAngle - π/2.
+    // After rotating the wheel by θ, the pointer (at -π/2) points to
+    // wheel-coordinate angle (-θ mod 2π). We need that to equal the
+    // center of segment t: t * segmentAngle + segmentAngle/2.
+    // So: θ mod 2π = (2π - t * segmentAngle - segmentAngle/2) mod 2π
+    final desiredMod = (2 * pi - targetSegment * segmentAngle - segmentAngle / 2) % (2 * pi);
+    final currentMod = _currentRotation % (2 * pi);
+    double delta = desiredMod - currentMod;
+    if (delta < 0) delta += 2 * pi;
+    final targetAngle = extraSpins * 2 * pi + delta;
 
     _spinAnimation = Tween<double>(
       begin: _currentRotation,
@@ -171,52 +183,8 @@ class _WheelScreenState extends State<WheelScreen>
   }
 
   String _getActionForSegment(WheelSegment segment, String intensity) {
-    // Use first word of name as key for matching
     final key = segment.name.split('\n').first;
-    final actions = {
-      'Bacio': {
-        'soft': 'Bacia dolcemente il collo del partner per 30 secondi, alternando baci leggeri e respiri caldi',
-        'spicy': 'Bacia il partner partendo dalle labbra scendendo lentamente lungo il corpo per 2 minuti',
-        'extra_spicy': 'Bacia e mordicchia ogni zona erogena del partner, lasciandoti guidare dai suoi gemiti',
-      },
-      'Massaggio': {
-        'soft': 'Massaggia sensualmente le spalle e la schiena con olio caldo per 3 minuti',
-        'spicy': 'Massaggio erotico con olio su tutto il corpo, concentrandoti sulle zone più sensibili',
-        'extra_spicy': 'Massaggio corpo a corpo: usa il tuo corpo per massaggiare il partner disteso',
-      },
-      'Strip': {
-        'soft': 'Togli lentamente un indumento al partner guardandolo negli occhi',
-        'spicy': 'Fai uno strip tease lento e provocante togliendo 2 indumenti con musica',
-        'extra_spicy': 'Strip tease completo: spogliati lentamente ballando, il partner può solo guardare',
-      },
-      'Posizione': {
-        'soft': 'Abbracciatevi nudi pelle a pelle per 3 minuti, sentendo il calore reciproco',
-        'spicy': 'Provate una nuova posizione intima scelta dal partner che ha girato',
-        'extra_spicy': 'Il partner sceglie una posizione dal Kamasutra e la provate per almeno 5 minuti',
-      },
-      'Gioco': {
-        'soft': 'Sussurrate a turno le vostre fantasie più romantiche all\'orecchio',
-        'spicy': 'Interpretate un incontro tra sconosciuti: seducetevi come fosse la prima volta',
-        'extra_spicy': 'Gioco di dominazione: uno comanda e l\'altro ubbidisce per i prossimi 10 minuti',
-      },
-      'Desiderio': {
-        'soft': 'Confessa al partner il tuo desiderio segreto più romantico',
-        'spicy': 'Descrivi in dettaglio la tua fantasia erotica preferita con il partner',
-        'extra_spicy': 'Realizzate immediatamente il desiderio più audace che uno dei due confessa',
-      },
-      'Tocco': {
-        'soft': 'Accarezza lentamente tutto il corpo del partner con la punta delle dita per 2 minuti',
-        'spicy': 'Il partner si benda: esplora il suo corpo con mani, labbra e un cubetto di ghiaccio',
-        'extra_spicy': 'Esplorazione tattile completa bendati: toccate e assaggiate ogni centimetro del partner',
-      },
-      'Carta': {
-        'soft': 'Baciatevi per 2 minuti senza mai staccarvi, variando intensità e passione',
-        'spicy': 'Il partner sceglie qualsiasi azione dalla ruota e decide l\'intensità',
-        'extra_spicy': 'Carta jolly totale: tutto è permesso per i prossimi 15 minuti, senza limiti concordati',
-      },
-    };
-
-    return actions[key]?[intensity] ?? 'Sorpresa! Inventate qualcosa insieme...';
+    return WheelActions.getAction(key, intensity);
   }
 
   @override
