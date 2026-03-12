@@ -205,13 +205,13 @@
     },
     
     "truth_dare": {
-      "title": "Verità o Osare",
+      "title": "Obbligo o Verità",
       "subtitle": "Edizione Intimità",
       "truth": "💬 Verità",
-      "dare": "🎯 Osare",
+      "dare": "🎯 Obbligo",
       "pass": "Passo",
       "passes_left": "{count} passi rimasti",
-      "double_dare": "Doppio Osare",
+      "double_dare": "Doppio Obbligo",
       "swap": "Scambio ruoli"
     },
     
