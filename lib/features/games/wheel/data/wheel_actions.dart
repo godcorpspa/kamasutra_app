@@ -712,7 +712,7 @@ class WheelActions {
       'extra_spicy': [
         '69 fino all\'orgasmo reciproco: non fermatevi finché entrambi non venite',
         'Masturbarvi reciprocamente con l\'obiettivo di venire contemporaneamente',
-        '69 con penetrazione digitale simultanea per stimolazione doppia',
+        '69 con penetrazione simultanea per stimolazione doppia',
         'Fate sesso orale reciproco con giocattoli aggiunti (plug, vibratore)',
         '69 con edging: portatevi sull\'orlo a vicenda 3 volte prima di lasciarvi andare',
         'Masturbarvi a vicenda in un luogo rischioso (balcone, macchina parcheggiata)',
