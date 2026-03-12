@@ -18,6 +18,7 @@ class _WheelScreenState extends State<WheelScreen>
   late AnimationController _pulseController;
   late AnimationController _glowController;
   late AnimationController _ledController;
+  late AnimationController _vortexController;
   late Animation<double> _spinAnimation;
   late Animation<double> _pulseAnimation;
   late Animation<double> _glowAnimation;
@@ -73,6 +74,11 @@ class _WheelScreenState extends State<WheelScreen>
       vsync: this,
       duration: const Duration(milliseconds: 150),
     )..repeat(reverse: true);
+
+    _vortexController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
   }
 
   @override
@@ -81,6 +87,7 @@ class _WheelScreenState extends State<WheelScreen>
     _pulseController.dispose();
     _glowController.dispose();
     _ledController.dispose();
+    _vortexController.dispose();
     super.dispose();
   }
 
@@ -405,7 +412,7 @@ class _WheelScreenState extends State<WheelScreen>
 
   Widget _buildCenterButton() {
     return AnimatedBuilder(
-      animation: _pulseAnimation,
+      animation: Listenable.merge([_pulseAnimation, _vortexController, _glowAnimation]),
       builder: (context, child) {
         final scale = _isSpinning ? 1.0 : _pulseAnimation.value;
         return Transform.scale(
@@ -417,21 +424,25 @@ class _WheelScreenState extends State<WheelScreen>
               height: 85,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: _isSpinning
-                      ? [
-                          const Color(0xFF2D1536),
-                          const Color(0xFF1A0A1F),
-                        ]
-                      : [
-                          const Color(0xFFFFD700),
-                          const Color(0xFFD4A574),
-                          const Color(0xFFB8860B),
+                gradient: _isSpinning
+                    ? const RadialGradient(
+                        colors: [
+                          Color(0xFF2D1536),
+                          Color(0xFF1A0A1F),
                         ],
-                  stops: _isSpinning ? null : const [0.0, 0.5, 1.0],
-                ),
+                      )
+                    : const RadialGradient(
+                        colors: [
+                          Color(0xFFFFD700),
+                          Color(0xFFD4A574),
+                          Color(0xFFB8860B),
+                        ],
+                        stops: [0.0, 0.5, 1.0],
+                      ),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: _isSpinning
+                      ? AppColors.fuchsia.withOpacity(0.6)
+                      : Colors.white.withOpacity(0.5),
                   width: 2,
                 ),
                 boxShadow: [
@@ -439,9 +450,9 @@ class _WheelScreenState extends State<WheelScreen>
                     color: (_isSpinning
                             ? AppColors.fuchsia
                             : AppColors.gold)
-                        .withOpacity(0.5),
-                    blurRadius: 25,
-                    spreadRadius: 3,
+                        .withOpacity(_isSpinning ? _glowAnimation.value * 0.7 : 0.5),
+                    blurRadius: _isSpinning ? 35 : 25,
+                    spreadRadius: _isSpinning ? 5 : 3,
                   ),
                   const BoxShadow(
                     color: Colors.black26,
@@ -450,17 +461,18 @@ class _WheelScreenState extends State<WheelScreen>
                   ),
                 ],
               ),
-              child: Center(
-                child: _isSpinning
-                    ? const SizedBox(
-                        width: 32,
-                        height: 32,
-                        child: CircularProgressIndicator(
-                          color: AppColors.fuchsiaLight,
-                          strokeWidth: 3,
+              child: _isSpinning
+                  ? ClipOval(
+                      child: CustomPaint(
+                        size: const Size(81, 81),
+                        painter: _VortexPainter(
+                          rotation: _vortexController.value * 2 * pi,
+                          glowIntensity: _glowAnimation.value,
                         ),
-                      )
-                    : Column(
+                      ),
+                    )
+                  : Center(
+                      child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(
@@ -482,7 +494,7 @@ class _WheelScreenState extends State<WheelScreen>
                           ),
                         ],
                       ),
-              ),
+                    ),
             ),
           ),
         );
@@ -1403,6 +1415,96 @@ class WheelPainter extends CustomPainter {
       highlightIndex != oldDelegate.highlightIndex ||
       ledPhase != oldDelegate.ledPhase ||
       isSpinning != oldDelegate.isSpinning;
+}
+
+// ============================================
+// Vortex Painter — Hypnotic spinning portal
+// ============================================
+class _VortexPainter extends CustomPainter {
+  final double rotation;
+  final double glowIntensity;
+
+  _VortexPainter({required this.rotation, required this.glowIntensity});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final maxRadius = size.width / 2;
+
+    // Background
+    canvas.drawCircle(
+      center,
+      maxRadius,
+      Paint()..color = const Color(0xFF1A0A1F),
+    );
+
+    // Draw concentric spinning arcs (3 rings, each rotates differently)
+    for (int ring = 0; ring < 3; ring++) {
+      final ringRadius = maxRadius * (0.4 + ring * 0.22);
+      final ringRotation = rotation * (ring.isEven ? 1.0 : -1.0) * (1.0 + ring * 0.3);
+      final arcCount = 3 + ring;
+
+      for (int i = 0; i < arcCount; i++) {
+        final startAngle = ringRotation + (2 * pi / arcCount) * i;
+        final sweepAngle = pi / (arcCount + 1);
+
+        // Gold/fuchsia alternating colors
+        final colors = ring == 1
+            ? [
+                AppColors.fuchsia.withOpacity(0.6 + glowIntensity * 0.3),
+                AppColors.fuchsiaLight.withOpacity(0.2),
+              ]
+            : [
+                const Color(0xFFFFD700).withOpacity(0.5 + glowIntensity * 0.4),
+                const Color(0xFFD4A574).withOpacity(0.1),
+              ];
+
+        final arcPaint = Paint()
+          ..shader = ui.Gradient.sweep(
+            center,
+            colors,
+            [0.0, 1.0],
+            TileMode.clamp,
+            startAngle,
+            startAngle + sweepAngle,
+          )
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3.0 - ring * 0.5
+          ..strokeCap = StrokeCap.round;
+
+        canvas.drawArc(
+          Rect.fromCircle(center: center, radius: ringRadius),
+          startAngle,
+          sweepAngle,
+          false,
+          arcPaint,
+        );
+      }
+    }
+
+    // Central glowing star/dot
+    final starGlow = Paint()
+      ..color = const Color(0xFFFFD700).withOpacity(glowIntensity * 0.6)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+    canvas.drawCircle(center, 6, starGlow);
+
+    canvas.drawCircle(
+      center,
+      3,
+      Paint()..color = Colors.white.withOpacity(0.9),
+    );
+
+    // Outer glow ring
+    final outerGlow = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..color = AppColors.fuchsia.withOpacity(glowIntensity * 0.4);
+    canvas.drawCircle(center, maxRadius - 2, outerGlow);
+  }
+
+  @override
+  bool shouldRepaint(covariant _VortexPainter old) =>
+      rotation != old.rotation || glowIntensity != old.glowIntensity;
 }
 
 // ============================================
