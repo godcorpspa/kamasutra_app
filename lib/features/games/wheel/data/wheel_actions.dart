@@ -16,7 +16,7 @@ class WheelActions {
     // =========================================================
     // BACIO PROIBITO 💋
     // =========================================================
-    'Bacio': {
+    'Bacio\nProibito': {
       'soft': [
         'Bacia dolcemente il collo del partner per 30 secondi',
         'Dai un bacio a fior di labbra che duri almeno 10 secondi',
@@ -88,7 +88,7 @@ class WheelActions {
     // =========================================================
     // MASSAGGIO EROTICO 💆
     // =========================================================
-    'Massaggio': {
+    'Massaggio\nErotico': {
       'soft': [
         'Massaggia le spalle e la nuca del partner per 3 minuti con olio caldo',
         'Massaggio ai piedi: dedica 2 minuti a ogni piede con movimenti circolari',
@@ -160,7 +160,7 @@ class WheelActions {
     // =========================================================
     // STRIP TEASE 👙
     // =========================================================
-    'Strip': {
+    'Strip\nTease': {
       'soft': [
         'Togli lentamente un indumento al partner guardandolo negli occhi',
         'Sbottona la camicia del partner un bottone alla volta',
@@ -232,7 +232,7 @@ class WheelActions {
     // =========================================================
     // POSIZIONE HOT 🔥
     // =========================================================
-    'Posizione': {
+    'Posizione\nHot': {
       'soft': [
         'Abbracciatevi nudi pelle a pelle per 3 minuti sentendo il calore reciproco',
         'Sdraiatevi uno sopra l\'altro completamente allineati e respirate insieme',
@@ -304,7 +304,7 @@ class WheelActions {
     // =========================================================
     // GIOCO DI RUOLO 🎭
     // =========================================================
-    'Gioco': {
+    'Gioco\ndi Ruolo': {
       'soft': [
         'Sussurrate a turno le vostre fantasie più romantiche all\'orecchio',
         'Fingete di incontrarvi per la prima volta: presentatevi e flirtate',
@@ -376,7 +376,7 @@ class WheelActions {
     // =========================================================
     // DESIDERIO SEGRETO ✨
     // =========================================================
-    'Desiderio': {
+    'Desiderio\nSegreto': {
       'soft': [
         'Confessa al partner il tuo desiderio segreto più romantico',
         'Racconta il tuo sogno erotico più recente in cui c\'era il partner',
@@ -448,7 +448,7 @@ class WheelActions {
     // =========================================================
     // TOCCO SENSUALE 🤚
     // =========================================================
-    'Tocco': {
+    'Tocco\nSensuale': {
       'soft': [
         'Accarezza lentamente tutto il corpo del partner con la punta delle dita per 2 minuti',
         'Passa le dita tra i capelli del partner massaggiando il cuoio capelluto',
@@ -520,7 +520,7 @@ class WheelActions {
     // =========================================================
     // CARTA JOLLY 🃏
     // =========================================================
-    'Carta': {
+    'Carta\nJolly': {
       'soft': [
         'Baciatevi per 2 minuti senza mai staccarvi, variando intensità',
         'Ballate insieme abbracciati una canzone romantica a vostra scelta',
@@ -586,6 +586,222 @@ class WheelActions {
         'Edging reciproco: portatevi sull\'orlo 5 volte prima di concedervi l\'orgasmo',
         'Notte senza regole: per le prossime 2 ore ogni fantasia è realizzabile',
         'Create un patto sessuale: scrivete 3 nuove cose da provare e iniziate stasera',
+      ],
+    },
+
+    // =========================================================
+    // PIACERE ORALE 👅
+    // =========================================================
+    'Piacere\nOrale': {
+      'soft': [
+        'Bacia e lecca il collo del partner scendendo lentamente verso il petto',
+        'Usa la lingua per tracciare cerchi sulla pancia del partner scendendo verso il basso',
+        'Bacia l\'interno coscia del partner avvicinandoti lentamente alla zona intima',
+        'Soffia e bacia delicatamente sulla zona intima del partner senza toccarla direttamente',
+        'Lecca e bacia l\'inguine del partner sfiorando appena le zone sensibili',
+        'Bacia tutta la zona dell\'inguine e del basso ventre per 2 minuti',
+        'Passa la lingua lungo la linea del bikini/boxer del partner',
+        'Dai baci leggeri e respiri caldi sulla zona intima del partner sopra la biancheria',
+        'Lecca le labbra del partner e sussurragli cosa gli farai tra poco',
+        'Bacia il basso ventre del partner formando un percorso verso il basso',
+        'Usa le labbra per sfiorare la zona intima del partner appena appena',
+        'Bacia l\'osso dell\'anca del partner e avvicinati lentamente al centro',
+        'Passa la lingua dall\'ombelico verso il basso fermandoti prima della zona intima',
+        'Dai baci bagnati sull\'interno coscia alternando le gambe',
+        'Lecca delicatamente il perineo del partner con tocchi leggerissimi',
+        'Bacia il partner dall\'ombelico scendendo lungo la linea dei peli',
+        'Usa la punta della lingua per solleticare la zona intima del partner',
+        'Bacia e mordicchia la piega dell\'inguine del partner',
+        'Soffia aria calda sulla zona intima del partner mentre la baci intorno',
+        'Dai piccoli baci sulla zona intima del partner come farfalle',
+      ],
+      'spicy': [
+        'Fai sesso orale al partner per 3 minuti concentrandoti sulla parte che preferisce',
+        'Cunnilingus/fellatio lento e sensuale: usa solo la lingua per 2 minuti',
+        'Alterna baci, leccate e suzione sulla zona intima del partner',
+        'Fai sesso orale al partner mentre gli accarezzi le cosce e i glutei',
+        'Usa la lingua piatta e larga sulla zona intima del partner con movimenti lenti',
+        'Fai sesso orale con variazioni di velocità: lento, medio, veloce, e ricomincia',
+        'Prendi il partner in bocca/usa la lingua e usa anche le mani contemporaneamente',
+        'Fai sesso orale al partner guardandolo negli occhi',
+        'Alterna sesso orale con baci sull\'interno coscia per creare attesa',
+        'Fai un pompino/cunnilingus lento concentrandoti sul punto più sensibile',
+        'Usa le labbra per succhiare delicatamente la zona più sensibile del partner',
+        'Fai sesso orale al partner mentre lui/lei è in piedi',
+        'Alterna la lingua con piccoli morsi sulla zona intima e le cosce',
+        'Fai sesso orale lentissimo: ogni movimento deve durare secondi',
+        'Usa la punta della lingua per stimolare il clitoride/frenulo con movimenti circolari',
+        'Fai sesso orale al partner mentre gli tieni le mani bloccate sui fianchi',
+        'Alterna suzione profonda con leccate superficiali per variare il piacere',
+        'Fai sesso orale al partner nascosto sotto le lenzuola',
+        'Usa la lingua per scrivere l\'alfabeto sulla zona intima del partner',
+        'Fai sesso orale al partner seduto/a sulla sedia',
+      ],
+      'extra_spicy': [
+        'Deep throat/cunnilingus profondo: dai tutto te stesso per 5 minuti senza fermarti',
+        'Fai sesso orale al partner fino a portarlo all\'orgasmo',
+        'Fai un pompino/cunnilingus mentre il partner ti guida tenendoti la testa',
+        'Sesso orale con ghiaccio in bocca: alterna freddo e caldo sulla zona intima',
+        'Fai sesso orale al partner bendato: non sa quando e come leccherai',
+        'Fai sesso orale in ginocchio mentre il partner è in piedi e ti guarda',
+        'Alterna sesso orale con penetrazione con le dita per stimolazione doppia',
+        'Fai sesso orale al partner per 10 minuti usando ogni tecnica che conosci',
+        'Sveglia il partner con sesso orale a sorpresa (con consenso preventivo!)',
+        'Fai sesso orale al partner mentre usa un vibratore/stimolatore aggiuntivo',
+        'Sesso orale con panna montata/cioccolato spalmato sulla zona intima',
+        'Fai sesso orale al partner in una posizione insolita: bordo del letto, divano, vasca',
+        'Fai edging orale: porta il partner vicino all\'orgasmo con la bocca, fermati, ripeti 5 volte',
+        'Fai sesso orale al partner legato: solo tu decidi ritmo e intensità',
+        'Pratica il cunnilingus/pompino più lungo e dettagliato che tu abbia mai fatto',
+        'Fai sesso orale al partner filmandovi (con consenso!) per rivedervi insieme',
+        'Sesso orale sotto la doccia con acqua calda che scorre',
+        'Fai sesso orale al partner mentre lui/lei ti descrive cosa sente',
+        'Pratica sesso orale combinato: lingua, labbra, mani e giocattoli insieme',
+        'Fai sesso orale al partner fino all\'orgasmo e poi ricomincia subito',
+      ],
+    },
+
+    // =========================================================
+    // 69 & PIACERE RECIPROCO 🔄
+    // =========================================================
+    'Piacere\nReciproco': {
+      'soft': [
+        'Baciatevi contemporaneamente il collo l\'uno dell\'altro',
+        'Accarezzatevi reciprocamente le zone intime sopra i vestiti per 2 minuti',
+        'Massaggiatevi a vicenda i piedi contemporaneamente con olio',
+        'Sdraiatevi testa-piedi e accarezzatevi le gambe a vicenda',
+        'Baciatevi il petto reciprocamente allo stesso tempo',
+        'Accarezzatevi reciprocamente la schiena e i glutei contemporaneamente',
+        'Leccatevi a vicenda le dita e le mani sensualmente',
+        'Stimolatevi reciprocamente le zone erogene con carezze leggere',
+        'Massaggiatevi l\'inguine a vicenda con movimenti lenti e dolci',
+        'Baciatevi reciprocamente l\'interno coscia allo stesso tempo',
+        'Accarezzatevi a vicenda il basso ventre con le punte delle dita',
+        'Esplorate reciprocamente il corpo dell\'altro con le mani contemporaneamente',
+        'Stringetevi forte e muovete i bacini l\'uno contro l\'altro con dolcezza',
+        'Massaggiatevi reciprocamente i glutei con impastamento lento',
+        'Baciatevi a vicenda dalla fronte alla pancia contemporaneamente',
+        'Accarezzatevi le zone intime a vicenda con estrema delicatezza',
+        'Sdraiatevi faccia a faccia e stimolatevi reciprocamente con le mani',
+        'Massaggiatevi a vicenda il perineo e le zone circostanti',
+        'Abbracciatevi nudi e strusciatevi l\'uno contro l\'altro lentamente',
+        'Esplorate con le mani la zona intima del partner mentre lui/lei fa lo stesso',
+      ],
+      'spicy': [
+        'Posizione 69: stimolatevi oralmente a vicenda per 3 minuti',
+        'Masturbarvi reciprocamente guardandovi negli occhi',
+        'Fate sesso orale reciproco in posizione laterale, comodi e rilassati',
+        'Stimolatevi a vicenda con le mani sotto le coperte',
+        '69 con variazione: uno si concentra sulla lingua, l\'altro sulle mani',
+        'Masturbarvi insieme fianco a fianco raccontandovi fantasie',
+        'Fate sesso orale a turno: 2 minuti ciascuno, avanti e indietro',
+        '69 con il partner sopra che controlla il ritmo e la profondità',
+        'Stimolatevi reciprocamente con le mani mentre vi baciate',
+        'Posizione 69 con una sola regola: non potete usare le mani, solo la bocca',
+        'Masturbarvi a vicenda seguendo le istruzioni verbali dell\'altro',
+        'Fate sesso orale reciproco alternando chi sta sopra ogni 2 minuti',
+        'Stimolate il partner con la mano mentre lui/lei vi fa sesso orale',
+        '69 con ghiaccio: entrambi avete un cubetto in bocca',
+        'Masturbarvi reciprocamente in piedi abbracciati',
+        'Fate sesso orale a vicenda in una posizione diversa dalla classica 69',
+        'Stimolatevi reciprocamente: una mano sulle zone intime, l\'altra sul petto',
+        '69 lentissimo: l\'obiettivo non è l\'orgasmo ma il piacere prolungato',
+        'Masturbarvi a vicenda con olio lubrificante per sensazioni diverse',
+        'Fate sesso orale reciproco sotto la doccia',
+      ],
+      'extra_spicy': [
+        '69 fino all\'orgasmo reciproco: non fermatevi finché entrambi non venite',
+        'Masturbarvi reciprocamente con l\'obiettivo di venire contemporaneamente',
+        '69 con penetrazione digitale simultanea per stimolazione doppia',
+        'Fate sesso orale reciproco con giocattoli aggiunti (plug, vibratore)',
+        '69 con edging: portatevi sull\'orlo a vicenda 3 volte prima di lasciarvi andare',
+        'Masturbarvi a vicenda in un luogo rischioso (balcone, macchina parcheggiata)',
+        '69 con dominazione: chi sta sopra controlla il ritmo di entrambi',
+        'Stimolatevi reciprocamente con le mani fino all\'orgasmo multiplo',
+        '69 con cibo: panna, cioccolato, miele sulle zone intime prima di leccare',
+        'Gara del 69: chi fa venire l\'altro per primo vince un premio',
+        'Masturbarvi reciprocamente bendati: solo il tatto guida le mani',
+        '69 con regola del silenzio: non potete emettere suoni, chi geme per primo perde',
+        'Stimolatevi reciprocamente: mani + bocca + giocattoli, tutto contemporaneamente',
+        '69 acrobatico: provate la posizione in piedi o contro il muro',
+        'Maratona del piacere reciproco: stimolatevi a vicenda per 20 minuti senza fermarvi',
+        '69 con dirty talk: raccontatevi fantasie sporche mentre vi date piacere',
+        'Masturbarvi reciprocamente con vibrazione aggiunta per entrambi',
+        '69 con finale a sorpresa: chi viene per primo deve realizzare una fantasia dell\'altro',
+        'Stimolazione reciproca completa: orale + manuale + anale (con consenso)',
+        'Maratona 69: alternate chi sta sopra ogni 3 minuti per 15 minuti totali',
+      ],
+    },
+
+    // =========================================================
+    // TENTAZIONE PROIBITA 😈
+    // =========================================================
+    'Tentazione\nProibita': {
+      'soft': [
+        'Sussurra all\'orecchio del partner la cosa più sporca che ti viene in mente',
+        'Tocca il partner sotto il tavolo/coperte di nascosto come se foste in pubblico',
+        'Manda un messaggio esplicito al partner stando nella stessa stanza',
+        'Descrivi al partner cosa gli faresti se foste in un luogo pubblico',
+        'Fai una foto provocante e mandala al partner seduto accanto a te',
+        'Racconta una fantasia proibita che coinvolge un luogo pubblico',
+        'Tocca il partner in modo provocante e poi fingi che non sia successo nulla',
+        'Scrivi con il dito sulla schiena del partner cosa vorresti fargli',
+        'Sussurra "ti voglio adesso" all\'orecchio del partner e mordicchiagli il lobo',
+        'Fissa il partner con sguardo provocante per 1 minuto senza parlare',
+        'Tocca il partner sotto i vestiti di nascosto come se foste in un ristorante',
+        'Manda un vocale sexy al partner dalla stessa stanza descrivendo cosa indossi sotto',
+        'Racconta una fantasia che include qualcosa di "proibito" o tabù leggero',
+        'Fai il gioco del piede sotto il tavolo: stimola il partner con il piede',
+        'Sussurra nel dettaglio cosa gli farai quando sarete soli (ma siete già soli!)',
+        'Sfida il partner: chi riesce a non eccitarsi per 3 minuti mentre l\'altro provoca?',
+        'Tocca il partner nella zona intima per un secondo solo e poi smetti: ripeti 10 volte',
+        'Lascia un segno di rossetto/morso leggero in una zona nascosta del partner',
+        'Racconta la cosa più trasgressiva che hai mai pensato di fare col partner',
+        'Guarda il partner negli occhi e descrivi lentamente come lo spoglieresti adesso',
+      ],
+      'spicy': [
+        'Masturbati davanti al partner: fatti guardare mentre ti dai piacere',
+        'Fai sesso orale al partner in un posto insolito della casa (cucina, balcone)',
+        'Sesso veloce e urgente: avete solo 5 minuti, fate tutto ora',
+        'Mettiti in una posizione provocante e ordina al partner di guardarti senza toccarti per 2 minuti',
+        'Fate sesso con i vestiti addosso: togliete solo il minimo necessario',
+        'Il partner deve farsi toccare senza reagire: sfida di resistenza al piacere',
+        'Fate sexting esplicito da stanze diverse e poi rincontratevi per fare tutto',
+        'Sesso in un posto dove potreste essere "scoperti" (balcone, macchina)',
+        'Masturbatevi insieme guardandovi: ognuno si tocca da solo ma guardate l\'altro',
+        'Fate sesso con una regola: potete solo sussurrare, non parlare ad alta voce',
+        'Sesso urgente contro il muro: passione improvvisa e incontenibile',
+        'Il partner deve provocare l\'altro fino a farlo cedere e implorare',
+        'Fate sesso bendati entrambi: solo tatto, suoni e istinto',
+        'Sesso sotto la doccia bollente: scivolosi e appassionati',
+        'Masturbate il partner in un luogo dove normalmente non lo fareste',
+        'Fate sesso con un timer: dovete finire prima che scada',
+        'Provocate il partner toccandovi davanti a lui/lei fino a farlo impazzire',
+        'Sesso con dirty talk continuo: non smettete mai di parlarvi',
+        'Il partner deve venire solo con stimolazione orale: nient\'altro è permesso',
+        'Fate sesso con la porta aperta: il brivido del proibito anche se siete soli',
+      ],
+      'extra_spicy': [
+        'Sesso anale (con preparazione e lubrificante): esplorate insieme con calma',
+        'Doppia penetrazione con giocattolo: usate un sex toy insieme alla penetrazione',
+        'Sesso in un luogo semi-pubblico: macchina, camerino, bagno di un locale',
+        'Il partner dominante decide tutto: posizione, ritmo, durata, finale',
+        'Sesso con manette e benda: chi è legato subisce qualsiasi cosa l\'altro decida',
+        'Fate sesso filmandovi (con consenso!) per poi riguardare insieme',
+        'Maratona sessuale: non fermatevi per almeno 30 minuti cambiando tutto',
+        'Sesso con giocattoli multipli: vibrator, plug, manette, benda - usateli tutti',
+        'Il partner sottomesso deve chiedere il permesso per ogni gemito e movimento',
+        'Sesso con spanking: sculacciate durante la penetrazione di intensità crescente',
+        'Fate sesso davanti allo specchio in ogni posizione guardandovi',
+        'Sesso con stimolazione anale simultanea per entrambi',
+        'Edging estremo durante il sesso: 10 volte sull\'orlo prima di concedere l\'orgasmo',
+        'Sesso con gioco di ruolo completo: costumi, scenario e dialoghi',
+        'Il partner dominante usa il partner come vuole per 15 minuti: completa sottomissione',
+        'Sesso con vibrazione costante: un vibratore acceso durante tutta la penetrazione',
+        'Fate sesso provando ogni posizione del Kamasutra che riuscite in 20 minuti',
+        'Sesso con orgasmo negato: il dominante decide quando il partner può venire',
+        'Serata completamente dedicata al sesso: esplorate tutto senza tabù per 1 ora',
+        'Sesso con tutti i sensi amplificati: benda, tappi, lacci - solo tatto e piacere',
       ],
     },
   };

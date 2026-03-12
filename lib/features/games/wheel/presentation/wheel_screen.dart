@@ -34,9 +34,12 @@ class _WheelScreenState extends State<WheelScreen>
     WheelSegment('Massaggio\nErotico', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
     WheelSegment('Strip\nTease', '👙', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
     WheelSegment('Posizione\nHot', '🔥', const Color(0xFFF44336), const Color(0xFFFF8A80)),
+    WheelSegment('Piacere\nOrale', '👅', const Color(0xFFAD1457), const Color(0xFFF06292)),
     WheelSegment('Gioco\ndi Ruolo', '🎭', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
+    WheelSegment('Piacere\nReciproco', '🔄', const Color(0xFFC62828), const Color(0xFFEF9A9A)),
     WheelSegment('Desiderio\nSegreto', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
     WheelSegment('Tocco\nSensuale', '🤚', const Color(0xFFD81B60), const Color(0xFFF8BBD0)),
+    WheelSegment('Tentazione\nProibita', '😈', const Color(0xFF4A148C), const Color(0xFFAB47BC)),
     WheelSegment('Carta\nJolly', '🃏', const Color(0xFF00897B), const Color(0xFF80CBC4)),
   ];
 
@@ -183,8 +186,8 @@ class _WheelScreenState extends State<WheelScreen>
   }
 
   String _getActionForSegment(WheelSegment segment, String intensity) {
-    final key = segment.name.split('\n').first;
-    return WheelActions.getAction(key, intensity);
+    // Use full name (with \n) as key to avoid collisions (e.g. "Piacere\nOrale" vs "Piacere\nReciproco")
+    return WheelActions.getAction(segment.name, intensity);
   }
 
   @override
@@ -1229,8 +1232,15 @@ class WheelPainter extends CustomPainter {
       double startAngle, double segmentAngle, int index) {
     final midAngle = startAngle + segmentAngle / 2;
 
+    // Adapt sizes based on number of segments
+    final count = segments.length;
+    final nameFontSize = count > 8 ? 8.0 : 9.5;
+    final emojiFontSize = count > 8 ? 18.0 : 22.0;
+    final nameRadiusFactor = count > 8 ? 0.74 : 0.72;
+    final emojiRadiusFactor = count > 8 ? 0.48 : 0.46;
+
     // Name (outer — above emoji, where there is more space)
-    final nameRadius = radius * 0.72;
+    final nameRadius = radius * nameRadiusFactor;
     final namePos = center + Offset.fromDirection(midAngle, nameRadius);
 
     canvas.save();
@@ -1239,14 +1249,14 @@ class WheelPainter extends CustomPainter {
 
     final namePainter = TextPainter(
       text: TextSpan(
-        text: segments[index].name.replaceAll('\n', '\n'),
+        text: segments[index].name,
         style: TextStyle(
-          fontSize: 9.5,
+          fontSize: nameFontSize,
           color: Colors.white.withOpacity(0.95),
           fontWeight: FontWeight.w800,
           fontFamily: AppTypography.bodyFont,
-          letterSpacing: 0.3,
-          height: 1.15,
+          letterSpacing: 0.2,
+          height: 1.1,
           shadows: const [
             Shadow(color: Colors.black87, blurRadius: 5),
             Shadow(color: Colors.black54, blurRadius: 2, offset: Offset(0, 1)),
@@ -1264,7 +1274,7 @@ class WheelPainter extends CustomPainter {
     canvas.restore();
 
     // Emoji (inner — below name, closer to center)
-    final emojiRadius = radius * 0.46;
+    final emojiRadius = radius * emojiRadiusFactor;
     final emojiPos = center + Offset.fromDirection(midAngle, emojiRadius);
 
     canvas.save();
@@ -1274,7 +1284,7 @@ class WheelPainter extends CustomPainter {
     final emojiPainter = TextPainter(
       text: TextSpan(
         text: segments[index].emoji,
-        style: const TextStyle(fontSize: 22),
+        style: TextStyle(fontSize: emojiFontSize),
       ),
       textDirection: TextDirection.ltr,
     );
