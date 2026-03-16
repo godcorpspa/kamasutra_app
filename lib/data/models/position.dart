@@ -46,8 +46,10 @@ class Position extends Equatable {
   final String id;
   final String nameIt;
   final String nameEn;
+  final String? nameEs;
   final String? aliasIt;
   final String? aliasEn;
+  final String? aliasEs;
   final List<PositionCategory> categories;
   final int difficulty; // 1-5
   final EnergyLevel energy;
@@ -56,12 +58,16 @@ class Position extends Equatable {
   final List<String> prerequisites;
   final String? cautionsIt;
   final String? cautionsEn;
+  final String? cautionsEs;
   final String? easyVariantIt;
   final String? easyVariantEn;
+  final String? easyVariantEs;
   final String? setupIt;
   final String? setupEn;
+  final String? setupEs;
   final String? checkinIt;
   final String? checkinEn;
+  final String? checkinEs;
   final List<String> tags;
   final String illustrationRef;
   final bool isFavorite;
@@ -72,8 +78,10 @@ class Position extends Equatable {
     required this.id,
     required this.nameIt,
     required this.nameEn,
+    this.nameEs,
     this.aliasIt,
     this.aliasEn,
+    this.aliasEs,
     required this.categories,
     required this.difficulty,
     required this.energy,
@@ -82,12 +90,16 @@ class Position extends Equatable {
     this.prerequisites = const [],
     this.cautionsIt,
     this.cautionsEn,
+    this.cautionsEs,
     this.easyVariantIt,
     this.easyVariantEn,
+    this.easyVariantEs,
     this.setupIt,
     this.setupEn,
+    this.setupEs,
     this.checkinIt,
     this.checkinEn,
+    this.checkinEs,
     this.tags = const [],
     required this.illustrationRef,
     this.isFavorite = false,
@@ -96,22 +108,46 @@ class Position extends Equatable {
   });
 
   /// Get localized name
-  String getName(String locale) => locale == 'it' ? nameIt : nameEn;
-  
+  String getName(String locale) {
+    if (locale == 'it') return nameIt;
+    if (locale == 'es') return nameEs ?? nameEn;
+    return nameEn;
+  }
+
   /// Get localized alias
-  String? getAlias(String locale) => locale == 'it' ? aliasIt : aliasEn;
-  
+  String? getAlias(String locale) {
+    if (locale == 'it') return aliasIt;
+    if (locale == 'es') return aliasEs ?? aliasEn;
+    return aliasEn;
+  }
+
   /// Get localized cautions
-  String? getCautions(String locale) => locale == 'it' ? cautionsIt : cautionsEn;
-  
+  String? getCautions(String locale) {
+    if (locale == 'it') return cautionsIt;
+    if (locale == 'es') return cautionsEs ?? cautionsEn;
+    return cautionsEn;
+  }
+
   /// Get localized easy variant
-  String? getEasyVariant(String locale) => locale == 'it' ? easyVariantIt : easyVariantEn;
-  
+  String? getEasyVariant(String locale) {
+    if (locale == 'it') return easyVariantIt;
+    if (locale == 'es') return easyVariantEs ?? easyVariantEn;
+    return easyVariantEn;
+  }
+
   /// Get localized setup instructions
-  String? getSetup(String locale) => locale == 'it' ? setupIt : setupEn;
-  
+  String? getSetup(String locale) {
+    if (locale == 'it') return setupIt;
+    if (locale == 'es') return setupEs ?? setupEn;
+    return setupEn;
+  }
+
   /// Get localized check-in prompt
-  String? getCheckin(String locale) => locale == 'it' ? checkinIt : checkinEn;
+  String? getCheckin(String locale) {
+    if (locale == 'it') return checkinIt;
+    if (locale == 'es') return checkinEs ?? checkinEn;
+    return checkinEn;
+  }
 
   // Convenience getters (default to English)
   String get name => nameIt;
@@ -134,8 +170,10 @@ class Position extends Equatable {
     String? id,
     String? nameIt,
     String? nameEn,
+    String? nameEs,
     String? aliasIt,
     String? aliasEn,
+    String? aliasEs,
     List<PositionCategory>? categories,
     int? difficulty,
     EnergyLevel? energy,
@@ -144,12 +182,16 @@ class Position extends Equatable {
     List<String>? prerequisites,
     String? cautionsIt,
     String? cautionsEn,
+    String? cautionsEs,
     String? easyVariantIt,
     String? easyVariantEn,
+    String? easyVariantEs,
     String? setupIt,
     String? setupEn,
+    String? setupEs,
     String? checkinIt,
     String? checkinEn,
+    String? checkinEs,
     List<String>? tags,
     String? illustrationRef,
     bool? isFavorite,
@@ -160,8 +202,10 @@ class Position extends Equatable {
       id: id ?? this.id,
       nameIt: nameIt ?? this.nameIt,
       nameEn: nameEn ?? this.nameEn,
+      nameEs: nameEs ?? this.nameEs,
       aliasIt: aliasIt ?? this.aliasIt,
       aliasEn: aliasEn ?? this.aliasEn,
+      aliasEs: aliasEs ?? this.aliasEs,
       categories: categories ?? this.categories,
       difficulty: difficulty ?? this.difficulty,
       energy: energy ?? this.energy,
@@ -170,12 +214,16 @@ class Position extends Equatable {
       prerequisites: prerequisites ?? this.prerequisites,
       cautionsIt: cautionsIt ?? this.cautionsIt,
       cautionsEn: cautionsEn ?? this.cautionsEn,
+      cautionsEs: cautionsEs ?? this.cautionsEs,
       easyVariantIt: easyVariantIt ?? this.easyVariantIt,
       easyVariantEn: easyVariantEn ?? this.easyVariantEn,
+      easyVariantEs: easyVariantEs ?? this.easyVariantEs,
       setupIt: setupIt ?? this.setupIt,
       setupEn: setupEn ?? this.setupEn,
+      setupEs: setupEs ?? this.setupEs,
       checkinIt: checkinIt ?? this.checkinIt,
       checkinEn: checkinEn ?? this.checkinEn,
+      checkinEs: checkinEs ?? this.checkinEs,
       tags: tags ?? this.tags,
       illustrationRef: illustrationRef ?? this.illustrationRef,
       isFavorite: isFavorite ?? this.isFavorite,
@@ -192,8 +240,10 @@ class Position extends Equatable {
     id,
     nameIt,
     nameEn,
+    nameEs,
     aliasIt,
     aliasEn,
+    aliasEs,
     categories,
     difficulty,
     energy,
@@ -202,12 +252,16 @@ class Position extends Equatable {
     prerequisites,
     cautionsIt,
     cautionsEn,
+    cautionsEs,
     easyVariantIt,
     easyVariantEn,
+    easyVariantEs,
     setupIt,
     setupEn,
+    setupEs,
     checkinIt,
     checkinEn,
+    checkinEs,
     tags,
     illustrationRef,
     isFavorite,
@@ -305,9 +359,11 @@ class PositionFilter extends Equatable {
       if (searchQuery != null && searchQuery!.isNotEmpty) {
         final query = searchQuery!.toLowerCase();
         final nameMatch = p.nameIt.toLowerCase().contains(query) ||
-            p.nameEn.toLowerCase().contains(query);
+            p.nameEn.toLowerCase().contains(query) ||
+            (p.nameEs?.toLowerCase().contains(query) ?? false);
         final aliasMatch = (p.aliasIt?.toLowerCase().contains(query) ?? false) ||
-            (p.aliasEn?.toLowerCase().contains(query) ?? false);
+            (p.aliasEn?.toLowerCase().contains(query) ?? false) ||
+            (p.aliasEs?.toLowerCase().contains(query) ?? false);
         final tagMatch = p.tags.any((t) => t.toLowerCase().contains(query));
         if (!nameMatch && !aliasMatch && !tagMatch) {
           return false;

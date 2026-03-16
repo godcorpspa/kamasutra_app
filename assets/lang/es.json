@@ -1,0 +1,474 @@
+{
+  "app_name": "Kamasutra & Juegos de Pareja",
+
+  "common": {
+    "continue": "Continuar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "skip": "Esta noche no, gracias",
+    "done": "Hecho",
+    "ok": "OK",
+    "yes": "Sí",
+    "no": "No",
+    "loading": "Cargando...",
+    "error": "Error",
+    "retry": "Reintentar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear_filters": "Borrar filtros",
+    "no_results": "Sin resultados",
+    "settings": "Ajustes"
+  },
+
+  "energy": {
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta"
+  },
+
+  "duration": {
+    "brief": "Breve",
+    "medium": "Media",
+    "long": "Larga"
+  },
+
+  "focus": {
+    "intimacy": "Intimidad",
+    "variety": "Variedad",
+    "connection": "Conexión",
+    "relax": "Relax",
+    "playfulness": "Diversión",
+    "passion": "Pasión",
+    "trust": "Confianza"
+  },
+
+  "intensity": {
+    "soft": "🌸 Suave",
+    "spicy": "🔥 Picante",
+    "extraSpicy": "🌶️ Extra Picante"
+  },
+
+  "age_gate": {
+    "title": "Bienvenido",
+    "subtitle": "Esta app contiene contenido para adultos",
+    "question": "¿Tienes al menos 18 años?",
+    "confirm": "Sí, tengo 18+ años",
+    "deny": "No, no tengo 18 años",
+    "denied_message": "Debes tener al menos 18 años para usar esta app.",
+    "legal_notice": "Al continuar, confirmas que tienes la edad legal en tu país."
+  },
+
+  "onboarding": {
+    "welcome_title": "Bienvenidos, exploradores",
+    "welcome_subtitle": "¿Listos para una nueva aventura juntos?",
+    "page1_title": "Explorad Juntos",
+    "page1_subtitle": "Más de 200 posiciones ilustradas con filtros inteligentes para cada momento",
+    "page2_title": "Jugad y Conectad",
+    "page2_subtitle": "12 minijuegos para redescubriros cada noche",
+    "page3_title": "Privacidad Garantizada",
+    "page3_subtitle": "Cuenta protegida y datos sincronizados en la nube cifrada. Solo vosotros dos tenéis acceso a vuestra información.",
+    "get_started": "Empezar la velada"
+  },
+
+  "pin": {
+    "enter_pin": "Introducir PIN",
+    "create_pin": "Crear un PIN",
+    "confirm_pin": "Confirmar PIN",
+    "wrong_pin": "PIN incorrecto",
+    "pins_dont_match": "Los PIN no coinciden",
+    "use_biometric": "Usar Face ID / Touch ID",
+    "forgot_pin": "¿PIN olvidado?"
+  },
+
+  "nav": {
+    "catalog": "Catálogo",
+    "shuffle": "Aleatorio",
+    "games": "Juegos",
+    "progress": "Progreso",
+    "settings": "Más"
+  },
+
+  "catalog": {
+    "title": "Catálogo",
+    "search_hint": "Buscar posiciones...",
+    "favorites": "Favoritos",
+    "all_positions": "Todas las posiciones",
+    "no_favorites": "Aún no hay favoritos. ¡Explorad y guardad vuestros descubrimientos!",
+    "added_to_favorites": "Añadido a tu colección secreta ✨",
+    "removed_from_favorites": "Eliminado de favoritos",
+    "position_count": " posiciones",
+    "filter_by": "Filtrar por",
+    "difficulty": "Dificultad",
+    "energy": "Energía",
+    "duration": "Duración",
+    "category": "Categoría",
+    "focus": "Enfoque"
+  },
+
+  "position": {
+    "difficulty": "Dificultad",
+    "energy": "Energía",
+    "duration": "Duración",
+    "cautions": "Precauciones",
+    "easy_version": "Versión fácil",
+    "setup": "Preparación",
+    "check_in": "Check-in",
+    "prerequisites": "Requisitos previos",
+    "tags": "Etiquetas",
+    "try_this": "Prueba esta",
+    "similar_positions": "Posiciones similares"
+  },
+
+  "categories": {
+    "romantic": "Romántico",
+    "beginner": "Para empezar",
+    "athletic": "Atlético",
+    "supported": "Con apoyo",
+    "lowImpact": "Bajo impacto",
+    "adventurous": "Aventurero",
+    "reconnect": "Reconexión",
+    "quickie": "Rápido"
+  },
+
+  "shuffle": {
+    "title": "Posiciones aleatorias",
+    "subtitle": "Déjate sorprender",
+    "card_count": "Número de cartas",
+    "cards": "cartas",
+    "start_session": "Empezar la velada",
+    "filters_active": "Filtros activos",
+    "no_filters": "Sin filtros",
+    "session_complete": "¡Sesión completada!",
+    "next_card": "Siguiente",
+    "save_card": "Guardar",
+    "try_easy": "Versión fácil"
+  },
+
+  "games": {
+    "title": "Juegos",
+    "subtitle": "Elegid vuestra aventura",
+    "players": "jugadores",
+    "duration": "{minutes} min",
+    "start_game": "Empezar",
+    "end_game": "Terminar juego",
+    "pause": "Pausa",
+    "resume": "Reanudar",
+    "your_turn": "¡Te toca!",
+    "partner_turn": "¡Le toca a tu pareja!",
+    "both_turn": "¡Os toca a los dos!",
+    "roll_dice": "Tirar el dado",
+    "draw_card": "Sacar una carta",
+    "complete": "¡Completado!",
+    "skip_card": "Saltar (pausa)",
+    "safe_word_hint": "Pulsa pausa para saltar sin penalización",
+
+    "goose_game": {
+      "title": "Juego de la Oca",
+      "description": "Un recorrido de desafíos y descubrimientos",
+      "setup_title": "Configurar la partida",
+      "board_size": "Tamaño del tablero",
+      "quick": "Rápido (15-20 min)",
+      "medium": "Medio (30-40 min)",
+      "long": "Largo (60+ min)",
+      "play_mode": "Modo de juego",
+      "cooperative": "Cooperativo",
+      "cooperative_desc": "Avanzáis juntos, una sola ficha",
+      "sweetChallenge": "Dulce Desafío",
+      "sweet_challenge_desc": "Dos fichas, ambos ganáis",
+      "intensity": "Intensidad",
+      "soft": "🌸 Suave",
+      "spicy": "🔥 Picante",
+      "extra_spicy": "🌶️ Extra Picante",
+      "rigged_dice": "Dado facilitado (3-5)",
+      "square_challenge": "🎯 Desafío",
+      "square_truth": "💬 Verdad",
+      "square_bonus": "⭐ Bonus",
+      "square_goose": "🪿 Oca",
+      "square_bridge": "🌉 Puente",
+      "square_well": "🕳️ Pozo",
+      "square_labyrinth": "🌀 Laberinto",
+      "square_inn": "🏨 Posada",
+      "square_couple": "💑 Pareja",
+      "square_finish": "🏁 Llegada",
+      "checkpoint": "¡Meta volante! 🎉",
+      "checkpoint_message": "¡Habéis llegado a la casilla {number}! Os merecéis una pequeña celebración.",
+      "well_escape": "¡Escapa del pozo con un cumplido sincero!",
+      "inn_message": "Pausa romántica: elegid una posición del catálogo",
+      "finish_exact": "¡Necesitáis exactamente {count} para ganar!",
+      "bounce_back": "¡Demasiado! Rebotáis {count} hacia atrás",
+      "victory": "¡Victoria! 🎊",
+      "victory_message": "¡Habéis completado el recorrido juntos!"
+    },
+
+    "truth_dare": {
+      "title": "Verdad o Reto",
+      "subtitle": "Edición Intimidad",
+      "truth": "💬 Verdad",
+      "dare": "🎯 Reto",
+      "pass": "Paso",
+      "passes_left": "{count} pasos restantes",
+      "double_dare": "Doble Reto",
+      "swap": "Intercambio de roles"
+    },
+
+    "wheel": {
+      "title": "Ruleta de la Fortuna",
+      "subtitle": "Edición Romántica",
+      "spin": "¡Gira!",
+      "spin_button": "GIRA",
+      "customize": "Personalizar",
+      "add_slice": "Añadir sección",
+      "remove_slice": "Quitar sección",
+      "modifiers": "Modificadores",
+      "blindfolded": "...con los ojos vendados",
+      "in_silence": "...en silencio",
+      "timed": "...a contrarreloj",
+      "history": "Historial",
+      "history_title": "Historial ({count} tiradas)",
+      "spin_number": "Tirada #{count}",
+      "spinning": "La ruleta está girando...",
+      "tap_to_spin": "¡Toca el centro para girar!",
+      "how_to_play": "Cómo se juega",
+      "rule_1": "Elige la intensidad: Suave, Picante o Extra 🔥",
+      "rule_2": "Toca el centro de la ruleta para hacerla girar",
+      "rule_3": "Realizad la acción indicada con vuestra pareja",
+      "rule_4": "Siempre podéis saltar y volver a girar",
+      "consent_reminder": "Recuerda: ¡el consentimiento es lo primero!\nDisfrutad con seguridad.",
+      "spin_again": "Girar otra vez",
+      "done": "¡Hecho!",
+      "fallback_action": "¡Sorpresa! Inventad algo juntos...",
+      "segments": {
+        "forbidden_kiss": "Beso\nProhibido",
+        "erotic_massage": "Masaje\nErótico",
+        "strip_tease": "Strip\nTease",
+        "hot_position": "Posición\nArdiente",
+        "oral_pleasure": "Placer\nOral",
+        "role_play": "Juego\nde Roles",
+        "mutual_pleasure": "Placer\nMutuo",
+        "secret_desire": "Deseo\nSecreto",
+        "sensual_touch": "Toque\nSensual",
+        "forbidden_temptation": "Tentación\nProhibida",
+        "wild_card": "Carta\nComodín"
+      }
+    },
+
+    "hot_cold": {
+      "title": "Caliente y Frío",
+      "subtitle": "Guiados solo por palabras",
+      "cold": "Frío ❄️",
+      "warm": "Tibio",
+      "hot": "Caliente 🔥",
+      "boiling": "¡Hirviendo! 🌋",
+      "mission_complete": "¡Misión cumplida!",
+      "new_mission": "Nueva misión",
+      "blindfold_mode": "Modo con los ojos vendados"
+    },
+
+    "love_notes": {
+      "title": "Notas de Amor",
+      "subtitle": "Escribid desde el corazón",
+      "prompt": "Inspiración",
+      "write": "Escribe...",
+      "read_aloud": "Leed en voz alta",
+      "save_to_box": "Guardar en la caja",
+      "saved": "Guardado en los recuerdos ❤️",
+      "your_notes": "Vuestras notas"
+    },
+
+    "fantasy_builder": {
+      "title": "Construyamos una Fantasía",
+      "subtitle": "Cread vuestra historia juntos",
+      "opening": "Inicio",
+      "your_turn_to_add": "Añade una frase...",
+      "gentle_veto": "Veto amable",
+      "save_scenario": "Guardar escenario",
+      "your_scenarios": "Vuestros escenarios"
+    },
+
+    "compliment_battle": {
+      "title": "Batalla de Cumplidos",
+      "subtitle": "¿Quién sabe apreciar más?",
+      "timer": "Temporizador",
+      "accepted": "Aceptado ✓",
+      "rejected": "Ya dicho / Genérico ✗",
+      "score": "Puntuación",
+      "winner": "¡Ganador!",
+      "categories": {
+        "physical": "Solo físicos",
+        "personality": "Solo personalidad",
+        "actions": "Solo acciones",
+        "free": "Libre"
+      }
+    },
+
+    "question_quest": {
+      "title": "Búsqueda de Preguntas",
+      "subtitle": "36 preguntas para (re)enamorarse",
+      "level": "Nivel {number}",
+      "surface": "Superficie",
+      "depth": "Profundidad",
+      "ready_to_advance": "¿Listos para avanzar?",
+      "both_confirm": "Ambos deben confirmar"
+    },
+
+    "two_minutes": {
+      "title": "2 Minutos de Nosotros",
+      "subtitle": "Un momento de conexión",
+      "start": "Empezar",
+      "how_do_you_feel": "¿Cómo os sentís?",
+      "activities": {
+        "eye_contact": "Contacto visual en silencio",
+        "hug": "Abrazo sin hablar",
+        "breathing": "Respiración sincronizada",
+        "gratitude": "Un pensamiento de gratitud cada uno"
+      }
+    },
+
+    "intimacy_map": {
+      "title": "Mapa de la Intimidad",
+      "subtitle": "Explorad vuestras preferencias",
+      "instructions": "Coloreá las zonas con vuestro código",
+      "green": "💚 Me gusta",
+      "yellow": "💛 Depende / Curioso",
+      "red": "🔴 Prefiero que no",
+      "compare": "Comparar",
+      "matches": "Coincidencias",
+      "discoveries": "Descubrimientos"
+    },
+
+    "soundtrack": {
+      "title": "Nuestra Banda Sonora",
+      "subtitle": "Las canciones de vuestra historia",
+      "prompts": {
+        "first_kiss": "Canción del primer beso",
+        "represents_us": "Canción que nos representa",
+        "romantic_evening": "Canción para una velada romántica",
+        "first_dance": "Canción del primer baile",
+        "road_trip": "Canción de nuestros viajes"
+      },
+      "compare_choices": "Comparar elecciones",
+      "create_playlist": "Crear playlist"
+    },
+
+    "mirror_challenge": {
+      "title": "Desafío del Espejo",
+      "subtitle": "Conexión sin palabras",
+      "leader": "Guía",
+      "mirror": "Espejo",
+      "swap_roles": "Intercambiar roles",
+      "eyes_closed": "Modo ojos cerrados"
+    }
+  },
+
+  "progress": {
+    "title": "Progreso",
+    "badges": "Insignias",
+    "streaks": "Rachas",
+    "statistics": "Estadísticas",
+    "current_streak": "Racha actual",
+    "longest_streak": "Racha más larga",
+    "days": "días",
+    "grace_days": "Días de gracia restantes: {count}",
+    "streak_broken": "La vida pasa. Vuelve cuando quieras — estamos aquí.",
+    "positions_explored": "Posiciones exploradas",
+    "games_played": "Partidas jugadas",
+    "total_time": "Tiempo juntos",
+    "favorites_count": "Favoritos guardados",
+    "badge_unlocked": "¡Nuevo logro desbloqueado! 🎉"
+  },
+
+  "badges": {
+    "explorer": {
+      "name": "Explorador",
+      "description": "Has visto 10 posiciones diferentes"
+    },
+    "adventurer": {
+      "name": "Aventurero",
+      "description": "Has probado 5 posiciones atléticas"
+    },
+    "romantic": {
+      "name": "Romántico",
+      "description": "10 posiciones románticas exploradas"
+    },
+    "collector": {
+      "name": "Coleccionista",
+      "description": "25 favoritos guardados"
+    },
+    "dedicated": {
+      "name": "Dedicado",
+      "description": "7 días seguidos"
+    },
+    "soul_explorers": {
+      "name": "Exploradores del Alma",
+      "description": "Búsqueda de Preguntas completada"
+    },
+    "intimacy_cartographers": {
+      "name": "Cartógrafos de la Intimidad",
+      "description": "Primer Mapa de la Intimidad completado"
+    },
+    "poet": {
+      "name": "Poeta",
+      "description": "20 notas guardadas"
+    },
+    "supreme_flatterer": {
+      "name": "Adulador Supremo",
+      "description": "100 cumplidos aceptados"
+    },
+    "shared_confessions": {
+      "name": "Confesiones Compartidas",
+      "description": "50 verdades contadas"
+    },
+    "adventurers": {
+      "name": "Temerarios",
+      "description": "50 desafíos completados"
+    }
+  },
+
+  "settings": {
+    "title": "Ajustes",
+    "privacy": "Privacidad",
+    "pin_lock": "Bloqueo PIN",
+    "biometric": "Face ID / Touch ID",
+    "preferences": "Preferencias",
+    "language": "Idioma",
+    "sound_effects": "Efectos de sonido",
+    "haptic_feedback": "Respuesta háptica",
+    "data": "Datos",
+    "clear_history": "Borrar historial",
+    "clear_all_data": "Borrar todos los datos",
+    "about": "Información",
+    "version": "Versión",
+    "privacy_policy": "Política de Privacidad",
+    "terms": "Términos de servicio",
+    "contact": "Contáctanos"
+  },
+
+  "consent": {
+    "check_in": "¿Todo bien? Buen momento para un check-in.",
+    "all_good": "👍 Todo bien",
+    "lets_pause": "🛑 Hagamos una pausa",
+    "safe_word": "Pausa",
+    "paused_title": "En pausa",
+    "paused_message": "Tomaos todo el tiempo que necesitéis. Estamos aquí cuando queráis continuar.",
+    "resume": "Reanudar",
+    "end_session": "Terminar sesión"
+  },
+
+  "reactions": {
+    "loved": "❤️ Encantó",
+    "liked": "👍 Gustó",
+    "neutral": "😐 Neutral",
+    "skipped": "⏭️ Saltado",
+    "too_hard": "😅 Demasiado difícil"
+  },
+
+  "errors": {
+    "generic": "Algo salió mal",
+    "no_positions": "No se encontraron posiciones con estos filtros",
+    "try_different_filters": "Prueba con filtros diferentes"
+  }
+}

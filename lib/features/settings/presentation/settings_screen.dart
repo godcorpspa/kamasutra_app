@@ -721,6 +721,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   : null,
             ),
           ),
+          SimpleDialogOption(
+            onPressed: () {
+              context.setLocale(const Locale('es'));
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: ListTile(
+              leading: const Text('🇪🇸', style: TextStyle(fontSize: 24)),
+              title: const Text('Español'),
+              trailing: context.locale.languageCode == 'es'
+                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  : null,
+            ),
+          ),
         ],
       ),
     );
