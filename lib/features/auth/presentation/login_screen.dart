@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
@@ -46,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Validazione password avanzata
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Inserisci la password';
+      return 'auth.enter_password'.tr();
     }
     
     // Per il login, verifica solo che non sia vuota
@@ -58,19 +59,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     List<String> errors = [];
     
     if (value.length < 8) {
-      errors.add('almeno 8 caratteri');
+      errors.add('auth.min_8_chars'.tr());
     }
     
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      errors.add('una lettera maiuscola');
+      errors.add('auth.one_uppercase'.tr());
     }
     
     if (!value.contains(RegExp(r'[a-z]'))) {
-      errors.add('una lettera minuscola');
+      errors.add('auth.one_lowercase'.tr());
     }
     
     if (!value.contains(RegExp(r'[0-9]'))) {
-      errors.add('un numero');
+      errors.add('auth.one_number'.tr());
     }
     
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/`~]'))) {
