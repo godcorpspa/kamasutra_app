@@ -1282,7 +1282,7 @@ class WheelPainter extends CustomPainter {
           ],
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
       textAlign: TextAlign.center,
     );
     namePainter.layout();
@@ -1305,7 +1305,7 @@ class WheelPainter extends CustomPainter {
         text: segments[index].emoji,
         style: TextStyle(fontSize: emojiFontSize),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     );
     emojiPainter.layout();
     emojiPainter.paint(

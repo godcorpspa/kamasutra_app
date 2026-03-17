@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 
 /// Repository of all wheel actions organized by category and intensity.
 /// Each category has 20+ actions per intensity level.
@@ -6,9 +7,9 @@ class WheelActions {
   static final _random = Random();
 
   /// Returns a random action for the given category key and intensity.
-  static String getAction(String categoryKey, String intensity) {
+  static String getAction(String categoryKey, String intensity, String locale) {
     final list = _actions[categoryKey]?[intensity];
-    if (list == null || list.isEmpty) return 'Sorpresa! Inventate qualcosa insieme...';
+    if (list == null || list.isEmpty) return 'games.wheel.fallback_action'.tr();
     return list[_random.nextInt(list.length)];
   }
 
@@ -16,7 +17,7 @@ class WheelActions {
     // =========================================================
     // BACIO PROIBITO 💋
     // =========================================================
-    'Bacio\nProibito': {
+    'forbidden_kiss': {
       'soft': [
         'Bacia dolcemente il collo del partner per 30 secondi',
         'Dai un bacio a fior di labbra che duri almeno 10 secondi',
@@ -88,7 +89,7 @@ class WheelActions {
     // =========================================================
     // MASSAGGIO EROTICO 💆
     // =========================================================
-    'Massaggio\nErotico': {
+    'erotic_massage': {
       'soft': [
         'Massaggia le spalle e la nuca del partner per 3 minuti con olio caldo',
         'Massaggio ai piedi: dedica 2 minuti a ogni piede con movimenti circolari',
@@ -160,7 +161,7 @@ class WheelActions {
     // =========================================================
     // STRIP TEASE 👙
     // =========================================================
-    'Strip\nTease': {
+    'strip_tease': {
       'soft': [
         'Togli lentamente un indumento al partner guardandolo negli occhi',
         'Sbottona la camicia del partner un bottone alla volta',
@@ -232,7 +233,7 @@ class WheelActions {
     // =========================================================
     // POSIZIONE HOT 🔥
     // =========================================================
-    'Posizione\nHot': {
+    'hot_position': {
       'soft': [
         'Abbracciatevi nudi pelle a pelle per 3 minuti sentendo il calore reciproco',
         'Sdraiatevi uno sopra l\'altro completamente allineati e respirate insieme',
@@ -304,7 +305,7 @@ class WheelActions {
     // =========================================================
     // GIOCO DI RUOLO 🎭
     // =========================================================
-    'Gioco\ndi Ruolo': {
+    'role_play': {
       'soft': [
         'Sussurrate a turno le vostre fantasie più romantiche all\'orecchio',
         'Fingete di incontrarvi per la prima volta: presentatevi e flirtate',
@@ -376,7 +377,7 @@ class WheelActions {
     // =========================================================
     // DESIDERIO SEGRETO ✨
     // =========================================================
-    'Desiderio\nSegreto': {
+    'secret_desire': {
       'soft': [
         'Confessa al partner il tuo desiderio segreto più romantico',
         'Racconta il tuo sogno erotico più recente in cui c\'era il partner',
@@ -448,7 +449,7 @@ class WheelActions {
     // =========================================================
     // TOCCO SENSUALE 🤚
     // =========================================================
-    'Tocco\nSensuale': {
+    'sensual_touch': {
       'soft': [
         'Accarezza lentamente tutto il corpo del partner con la punta delle dita per 2 minuti',
         'Passa le dita tra i capelli del partner massaggiando il cuoio capelluto',
@@ -520,7 +521,7 @@ class WheelActions {
     // =========================================================
     // CARTA JOLLY 🃏
     // =========================================================
-    'Carta\nJolly': {
+    'wild_card': {
       'soft': [
         'Baciatevi per 2 minuti senza mai staccarvi, variando intensità',
         'Ballate insieme abbracciati una canzone romantica a vostra scelta',
@@ -592,7 +593,7 @@ class WheelActions {
     // =========================================================
     // PIACERE ORALE 👅
     // =========================================================
-    'Piacere\nOrale': {
+    'oral_pleasure': {
       'soft': [
         'Bacia e lecca il collo del partner scendendo lentamente verso il petto',
         'Usa la lingua per tracciare cerchi sulla pancia del partner scendendo verso il basso',
@@ -664,7 +665,7 @@ class WheelActions {
     // =========================================================
     // 69 & PIACERE RECIPROCO 🔄
     // =========================================================
-    'Piacere\nReciproco': {
+    'mutual_pleasure': {
       'soft': [
         'Baciatevi contemporaneamente il collo l\'uno dell\'altro',
         'Accarezzatevi reciprocamente le zone intime sopra i vestiti per 2 minuti',
@@ -736,7 +737,7 @@ class WheelActions {
     // =========================================================
     // TENTAZIONE PROIBITA 😈
     // =========================================================
-    'Tentazione\nProibita': {
+    'forbidden_temptation': {
       'soft': [
         'Sussurra all\'orecchio del partner la cosa più sporca che ti viene in mente',
         'Tocca il partner sotto il tavolo/coperte di nascosto come se foste in pubblico',
