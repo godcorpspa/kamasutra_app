@@ -145,7 +145,17 @@
     "session_complete": "Session complete!",
     "next_card": "Next",
     "save_card": "Save",
-    "try_easy": "Easy version"
+    "try_easy": "Easy version",
+    "no_positions": "No positions found",
+    "no_favorites_desc": "You haven't saved any favorite positions yet.\nExplore the catalog and tap ❤️ to add some!",
+    "no_filter_results_desc": "No positions match the selected filters.\nTry changing the filters.",
+    "preparing_cards": "Preparing cards...",
+    "explored_positions": "You explored {count} positions together!",
+    "again": "Again",
+    "tap_for_details": "Tap for details",
+    "skip": "Skip",
+    "save": "Save",
+    "tried": "Tried"
   },
 
   "games": {

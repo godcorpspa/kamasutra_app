@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../app/theme.dart';
 
 class HotColdScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
   Timer? _timer;
   int _timeRemaining = 60;
   double _temperature = 0.5; // 0 = freezing, 1 = burning
-  
+
   final List<Map<String, dynamic>> _zones = [
     {'name': 'Collo', 'emoji': '👔', 'hint': 'Zona alta, molto sensibile'},
     {'name': 'Spalle', 'emoji': '💪', 'hint': 'Supportano tutto'},
@@ -49,18 +50,18 @@ class _HotColdScreenState extends State<HotColdScreen> {
   }
 
   void _startGame() {
-    final allZones = _intensity == 'soft' 
-        ? _zones 
+    final allZones = _intensity == 'soft'
+        ? _zones
         : [..._zones, ..._spicyZones];
     allZones.shuffle();
-    
+
     setState(() {
       _gameStarted = true;
       _currentZone = allZones.first['name'];
       _temperature = 0.5;
       _timeRemaining = 60;
     });
-    
+
     _startTimer();
     _showZoneToGuider();
   }
@@ -71,7 +72,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
       setState(() {
         _timeRemaining--;
       });
-      
+
       if (_timeRemaining <= 0) {
         _timer?.cancel();
         _handleTimeout();
@@ -87,7 +88,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: Text(
-          _isSeeker ? 'Giocatore 2: Guida!' : 'Giocatore 1: Guida!',
+          'game_ui.player_guides'.tr(args: [_isSeeker ? 'game_ui.player_2'.tr() : 'game_ui.player_1'.tr()]),
           style: const TextStyle(color: AppColors.gold),
         ),
         content: Column(
@@ -118,14 +119,14 @@ class _HotColdScreenState extends State<HotColdScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Guida il partner usando solo "caldo" e "freddo"!',
+            Text(
+              'game_ui.guide_instructions'.tr(),
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
+              style: const TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 8),
             Text(
-              'Suggerimento: ${zone['hint']}',
+              '${'games.hot_cold.hint_label'.tr()}: ${zone['hint']}',
               style: const TextStyle(
                 color: AppColors.textSecondary,
                 fontStyle: FontStyle.italic,
@@ -140,7 +141,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
               backgroundColor: AppColors.burgundy,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Ho capito!'),
+            child: Text('game_ui.understood'.tr()),
           ),
         ],
       ),
@@ -163,10 +164,10 @@ class _HotColdScreenState extends State<HotColdScreen> {
 
   void _handleFound() {
     _timer?.cancel();
-    
+
     // Score based on time remaining
     final score = (_timeRemaining / 10).ceil() + 5;
-    
+
     setState(() {
       if (_isSeeker) {
         _player1Score += score;
@@ -174,7 +175,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
         _player2Score += score;
       }
     });
-    
+
     _showRoundResult(true, score);
   }
 
@@ -189,7 +190,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
         title: Text(
-          found ? 'Trovato! 🎉' : 'Tempo scaduto! ⏰',
+          found ? 'games.hot_cold.found_title'.tr() : 'game_ui.time_expired'.tr(),
           style: TextStyle(
             color: found ? AppColors.gold : AppColors.spicy,
           ),
@@ -199,7 +200,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
           children: [
             if (found) ...[
               Text(
-                '+$score punti',
+                'game_ui.points'.tr(args: [score.toString()]),
                 style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -208,12 +209,12 @@ class _HotColdScreenState extends State<HotColdScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'La zona era: $_currentZone',
+                'game_ui.zone_was'.tr(namedArgs: {'zone': _currentZone!}),
                 style: const TextStyle(color: AppColors.textSecondary),
               ),
             ] else ...[
               Text(
-                'La zona era: $_currentZone',
+                'game_ui.zone_was'.tr(namedArgs: {'zone': _currentZone!}),
                 style: const TextStyle(
                   fontSize: 18,
                   color: AppColors.textPrimary,
@@ -232,7 +233,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 children: [
                   Column(
                     children: [
-                      const Text('Giocatore 1', style: TextStyle(color: AppColors.textSecondary)),
+                      Text('game_ui.player_1'.tr(), style: const TextStyle(color: AppColors.textSecondary)),
                       Text(
                         '$_player1Score',
                         style: const TextStyle(
@@ -243,10 +244,10 @@ class _HotColdScreenState extends State<HotColdScreen> {
                       ),
                     ],
                   ),
-                  const Text('VS', style: TextStyle(color: AppColors.gold)),
+                  Text('game_ui.vs'.tr(), style: const TextStyle(color: AppColors.gold)),
                   Column(
                     children: [
-                      const Text('Giocatore 2', style: TextStyle(color: AppColors.textSecondary)),
+                      Text('game_ui.player_2'.tr(), style: const TextStyle(color: AppColors.textSecondary)),
                       Text(
                         '$_player2Score',
                         style: const TextStyle(
@@ -273,7 +274,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 backgroundColor: AppColors.burgundy,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Prossimo round'),
+              child: Text('game_ui.next_round'.tr()),
             )
           else
             ElevatedButton(
@@ -285,7 +286,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 backgroundColor: AppColors.gold,
                 foregroundColor: AppColors.background,
               ),
-              child: const Text('Vedi risultati'),
+              child: Text('game_ui.see_results'.tr()),
             ),
         ],
       ),
@@ -293,11 +294,11 @@ class _HotColdScreenState extends State<HotColdScreen> {
   }
 
   void _nextRound() {
-    final allZones = _intensity == 'soft' 
-        ? _zones 
+    final allZones = _intensity == 'soft'
+        ? _zones
         : [..._zones, ..._spicyZones];
     allZones.shuffle();
-    
+
     setState(() {
       _roundNumber++;
       _isSeeker = !_isSeeker;
@@ -305,26 +306,26 @@ class _HotColdScreenState extends State<HotColdScreen> {
       _temperature = 0.5;
       _timeRemaining = 60;
     });
-    
+
     _startTimer();
     _showZoneToGuider();
   }
 
   void _showFinalResults() {
-    final winner = _player1Score > _player2Score 
-        ? 'Giocatore 1' 
-        : _player1Score < _player2Score 
-            ? 'Giocatore 2' 
-            : 'Pareggio';
-    
+    final winner = _player1Score > _player2Score
+        ? 'game_ui.player_1'.tr()
+        : _player1Score < _player2Score
+            ? 'game_ui.player_2'.tr()
+            : 'game_ui.draw'.tr();
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
-          'Gioco terminato! 🏆',
-          style: TextStyle(color: AppColors.gold),
+        title: Text(
+          'game_ui.game_over'.tr(),
+          style: const TextStyle(color: AppColors.gold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -335,7 +336,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              winner == 'Pareggio' ? 'Pareggio!' : 'Vince $winner!',
+              winner == 'game_ui.draw'.tr() ? '${'game_ui.draw'.tr()}!' : 'game_ui.wins'.tr(namedArgs: {'player': winner}),
               style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -348,7 +349,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
               children: [
                 Column(
                   children: [
-                    const Text('Giocatore 1', style: TextStyle(color: AppColors.textSecondary)),
+                    Text('game_ui.player_1'.tr(), style: const TextStyle(color: AppColors.textSecondary)),
                     Text(
                       '$_player1Score',
                       style: const TextStyle(
@@ -361,7 +362,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 ),
                 Column(
                   children: [
-                    const Text('Giocatore 2', style: TextStyle(color: AppColors.textSecondary)),
+                    Text('game_ui.player_2'.tr(), style: const TextStyle(color: AppColors.textSecondary)),
                     Text(
                       '$_player2Score',
                       style: const TextStyle(
@@ -376,9 +377,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              winner != 'Pareggio' 
-                  ? 'Il vincitore sceglie il premio! 💝'
-                  : 'Festeggiate insieme! 💕',
+              winner != 'game_ui.draw'.tr()
+                  ? 'game_ui.winner_prize'.tr()
+                  : 'game_ui.celebrate_together'.tr(),
               style: const TextStyle(
                 color: AppColors.gold,
                 fontStyle: FontStyle.italic,
@@ -397,7 +398,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 _player2Score = 0;
               });
             },
-            child: const Text('Nuova partita'),
+            child: Text('game_ui.new_game'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -408,7 +409,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
               backgroundColor: AppColors.burgundy,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Fine'),
+            child: Text('game_ui.end'.tr()),
           ),
         ],
       ),
@@ -424,11 +425,11 @@ class _HotColdScreenState extends State<HotColdScreen> {
   }
 
   String _getTemperatureText() {
-    if (_temperature < 0.2) return '🥶 Gelido!';
-    if (_temperature < 0.4) return '❄️ Freddo';
-    if (_temperature < 0.6) return '🌡️ Tiepido';
-    if (_temperature < 0.8) return '🔥 Caldo!';
-    return '🌋 Bollente!';
+    if (_temperature < 0.2) return 'games.hot_cold.freezing'.tr();
+    if (_temperature < 0.4) return 'games.hot_cold.cold'.tr();
+    if (_temperature < 0.6) return 'games.hot_cold.warm'.tr();
+    if (_temperature < 0.8) return 'games.hot_cold.hot'.tr();
+    return 'games.hot_cold.boiling'.tr();
   }
 
   @override
@@ -436,7 +437,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Caldo & Freddo'),
+        title: Text('games.hot_cold.title'.tr()),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -467,7 +468,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Caldo & Freddo',
+                    'games.hot_cold.title'.tr(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
@@ -475,7 +476,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Trova la zona segreta seguendo le indicazioni!',
+                    'game_ui.find_secret_zone'.tr(),
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -484,12 +485,12 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Intensity
             Text(
-              'Intensità',
+              'game_ui.intensity'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -497,17 +498,17 @@ class _HotColdScreenState extends State<HotColdScreen> {
             const SizedBox(height: 12),
             Row(
               children: [
-                _buildIntensityOption('soft', '🌸 Soft', 'Zone classiche'),
+                _buildIntensityOption('soft', 'game_ui.soft_label'.tr(), 'game_ui.soft_zones'.tr()),
                 const SizedBox(width: 12),
-                _buildIntensityOption('spicy', '🌶️ Spicy', 'Zone + sensuali'),
+                _buildIntensityOption('spicy', 'game_ui.spicy_label'.tr(), 'game_ui.spicy_zones'.tr()),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Rounds
             Text(
-              'Numero di round',
+              'game_ui.number_of_rounds'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -544,9 +545,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 );
               }).toList(),
             ),
-            
+
             const Spacer(),
-            
+
             // Start button
             SizedBox(
               width: double.infinity,
@@ -560,9 +561,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Inizia a giocare',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  'game_ui.start_playing'.tr(),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -616,7 +617,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Round $_roundNumber/$_totalRounds',
+                  'game_ui.round_of'.tr(namedArgs: {'current': '$_roundNumber', 'total': '$_totalRounds'}),
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.bold,
@@ -649,9 +650,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Current seeker
             Container(
               padding: const EdgeInsets.all(16),
@@ -665,7 +666,7 @@ class _HotColdScreenState extends State<HotColdScreen> {
                   const Text('🔍', style: TextStyle(fontSize: 24)),
                   const SizedBox(width: 12),
                   Text(
-                    _isSeeker ? 'Giocatore 1 cerca' : 'Giocatore 2 cerca',
+                    'game_ui.player_searches'.tr(namedArgs: {'player': _isSeeker ? '1' : '2'}),
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
@@ -675,9 +676,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 ],
               ),
             ),
-            
+
             const Spacer(),
-            
+
             // Temperature indicator
             Container(
               width: 200,
@@ -708,12 +709,12 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 ),
               ),
             ),
-            
+
             const Spacer(),
-            
+
             // Temperature controls (for guider)
             Text(
-              'Chi guida: usa questi bottoni',
+              'game_ui.guider_buttons'.tr(),
               style: TextStyle(color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
@@ -726,9 +727,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                 _buildTempButton('🌋', 0.3, Colors.red),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Found button
             SizedBox(
               width: double.infinity,
@@ -742,9 +743,9 @@ class _HotColdScreenState extends State<HotColdScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Trovato! 🎯',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  'game_ui.found'.tr(),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -786,20 +787,20 @@ class _HotColdScreenState extends State<HotColdScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Come si gioca 🌡️',
+              'games.hot_cold.how_to_play'.tr(),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
-            _buildRuleItem('1', 'Un giocatore vede la zona segreta'),
-            _buildRuleItem('2', 'L\'altro deve trovarla con le dita'),
-            _buildRuleItem('3', 'Chi guida dice solo "caldo" o "freddo"'),
-            _buildRuleItem('4', 'Più veloce trovi, più punti guadagni!'),
+            _buildRuleItem('1', 'games.hot_cold.rule_1'.tr()),
+            _buildRuleItem('2', 'games.hot_cold.rule_2'.tr()),
+            _buildRuleItem('3', 'games.hot_cold.rule_3'.tr()),
+            _buildRuleItem('4', 'games.hot_cold.rule_4'.tr()),
             const SizedBox(height: 16),
             Text(
-              'Esplorate con dolcezza e divertimento! 💕',
+              'game_ui.explore_with_fun'.tr(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.textSecondary,
                 fontStyle: FontStyle.italic,

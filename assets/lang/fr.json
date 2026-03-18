@@ -145,7 +145,17 @@
     "session_complete": "Session terminée !",
     "next_card": "Suivante",
     "save_card": "Enregistrer",
-    "try_easy": "Version facile"
+    "try_easy": "Version facile",
+    "no_positions": "Aucune position trouvée",
+    "no_favorites_desc": "Vous n'avez pas encore enregistré de positions favorites.\nExplorez le catalogue et appuyez sur ❤️ pour en ajouter !",
+    "no_filter_results_desc": "Aucune position ne correspond aux filtres sélectionnés.\nEssayez de changer les filtres.",
+    "preparing_cards": "Préparation des cartes...",
+    "explored_positions": "Vous avez exploré {count} positions ensemble !",
+    "again": "Encore",
+    "tap_for_details": "Appuyez pour les détails",
+    "skip": "Passer",
+    "save": "Enregistrer",
+    "tried": "Essayée"
   },
 
   "games": {
