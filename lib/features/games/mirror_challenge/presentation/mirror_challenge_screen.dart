@@ -25,54 +25,54 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
   late AnimationController _breathController;
   late Animation<double> _breathAnimation;
 
-  final List<Map<String, dynamic>> _challenges = [
+  List<Map<String, dynamic>> get _challenges => [
     {
-      'title': 'Mani Danzanti',
-      'description': 'Il leader muove le mani lentamente. Il partner rispecchia ogni movimento.',
+      'title': 'games.mirror_challenge.ch1_title'.tr(),
+      'description': 'games.mirror_challenge.ch1_desc'.tr(),
       'icon': Icons.pan_tool,
-      'tip': 'Iniziate con movimenti lenti e fluidi',
+      'tip': 'games.mirror_challenge.ch1_tip'.tr(),
     },
     {
-      'title': 'Espressioni Facciali',
-      'description': 'Cambiate espressioni lentamente. Il partner deve imitare ogni sfumatura.',
+      'title': 'games.mirror_challenge.ch2_title'.tr(),
+      'description': 'games.mirror_challenge.ch2_desc'.tr(),
       'icon': Icons.face,
-      'tip': 'Passate da un\'emozione all\'altra gradualmente',
+      'tip': 'games.mirror_challenge.ch2_tip'.tr(),
     },
     {
-      'title': 'Danza del Corpo',
-      'description': 'Movimenti dolci di tutto il corpo. Restate sincronizzati.',
+      'title': 'games.mirror_challenge.ch3_title'.tr(),
+      'description': 'games.mirror_challenge.ch3_desc'.tr(),
       'icon': Icons.accessibility_new,
-      'tip': 'Muovetevi come se foste sott\'acqua',
+      'tip': 'games.mirror_challenge.ch3_tip'.tr(),
     },
     {
-      'title': 'Respiro Sincronizzato',
-      'description': 'Il leader guida il ritmo del respiro con gesti delle mani.',
+      'title': 'games.mirror_challenge.ch4_title'.tr(),
+      'description': 'games.mirror_challenge.ch4_desc'.tr(),
       'icon': Icons.air,
-      'tip': 'Inspirate quando le mani salgono, espirate quando scendono',
+      'tip': 'games.mirror_challenge.ch4_tip'.tr(),
     },
     {
-      'title': 'Occhi Chiusi',
-      'description': 'Chiudete gli occhi. Toccatevi le mani e muovetevi insieme.',
+      'title': 'games.mirror_challenge.ch5_title'.tr(),
+      'description': 'games.mirror_challenge.ch5_desc'.tr(),
       'icon': Icons.visibility_off,
-      'tip': 'Fidatevi del tatto per restare sincronizzati',
+      'tip': 'games.mirror_challenge.ch5_tip'.tr(),
     },
     {
-      'title': 'Rallentatore',
-      'description': 'Ogni movimento al rallentatore estremo. Massima concentrazione.',
+      'title': 'games.mirror_challenge.ch6_title'.tr(),
+      'description': 'games.mirror_challenge.ch6_desc'.tr(),
       'icon': Icons.slow_motion_video,
-      'tip': 'Più lento è meglio. Sentite ogni micro-movimento.',
+      'tip': 'games.mirror_challenge.ch6_tip'.tr(),
     },
     {
-      'title': 'Scultura Vivente',
-      'description': 'Il leader crea pose. Il partner le replica esattamente.',
+      'title': 'games.mirror_challenge.ch7_title'.tr(),
+      'description': 'games.mirror_challenge.ch7_desc'.tr(),
       'icon': Icons.person,
-      'tip': 'Mantenete ogni posa per 5 secondi prima di passare alla successiva',
+      'tip': 'games.mirror_challenge.ch7_tip'.tr(),
     },
     {
-      'title': 'Avvicinamento',
-      'description': 'Partite distanti. Avvicinatevi lentamente mantenendo il rispecchiamento.',
+      'title': 'games.mirror_challenge.ch8_title'.tr(),
+      'description': 'games.mirror_challenge.ch8_desc'.tr(),
       'icon': Icons.people,
-      'tip': 'L\'obiettivo finale è toccarvi le punte delle dita',
+      'tip': 'games.mirror_challenge.ch8_tip'.tr(),
     },
   ];
 
@@ -759,7 +759,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'Partner $_currentLeader guida',
+            'games.mirror_challenge.partner_guides'.tr(namedArgs: {'player': '$_currentLeader'}),
             style: TextStyle(
               color: _currentLeader == 1
                   ? const Color(0xFF8B5CF6)
@@ -801,7 +801,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                       ),
                     ),
                     Text(
-                      'secondi',
+                      'games.mirror_challenge.seconds'.tr(),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 16,
@@ -848,7 +848,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           TextButton(
             onPressed: _endRound,
             child: Text(
-              'Termina Prima',
+              'games.mirror_challenge.end_early'.tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
               ),

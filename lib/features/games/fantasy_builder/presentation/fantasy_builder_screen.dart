@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../app/theme.dart';
 
 class FantasyBuilderScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
   int _currentStep = 0;
   int _currentPlayer = 1;
   String _intensity = 'spicy';
-  
+
   // Fantasy building blocks
   String? _selectedSetting;
   String? _selectedMood;
@@ -23,59 +24,59 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
   final List<String> _customDetails = [];
   final TextEditingController _detailController = TextEditingController();
 
-  final Map<String, List<Map<String, String>>> _options = {
+  Map<String, List<Map<String, String>>> get _options => {
     'settings': [
-      {'value': 'beach_sunset', 'emoji': '🏖️', 'label': 'Spiaggia al tramonto'},
-      {'value': 'mountain_cabin', 'emoji': '🏔️', 'label': 'Baita in montagna'},
-      {'value': 'candlelit_room', 'emoji': '🕯️', 'label': 'Stanza a lume di candela'},
-      {'value': 'rooftop_city', 'emoji': '🌃', 'label': 'Terrazza sulla città'},
-      {'value': 'forest_clearing', 'emoji': '🌲', 'label': 'Radura nel bosco'},
-      {'value': 'luxury_hotel', 'emoji': '🏨', 'label': 'Hotel di lusso'},
-      {'value': 'private_pool', 'emoji': '🏊', 'label': 'Piscina privata'},
-      {'value': 'vintage_train', 'emoji': '🚂', 'label': 'Treno d\'epoca'},
+      {'value': 'beach_sunset', 'emoji': '🏖️', 'label': 'games.fantasy_builder.settings.beach_sunset'.tr()},
+      {'value': 'mountain_cabin', 'emoji': '🏔️', 'label': 'games.fantasy_builder.settings.mountain_cabin'.tr()},
+      {'value': 'candlelit_room', 'emoji': '🕯️', 'label': 'games.fantasy_builder.settings.candlelit_room'.tr()},
+      {'value': 'rooftop_city', 'emoji': '🌃', 'label': 'games.fantasy_builder.settings.rooftop_city'.tr()},
+      {'value': 'forest_clearing', 'emoji': '🌲', 'label': 'games.fantasy_builder.settings.forest_clearing'.tr()},
+      {'value': 'luxury_hotel', 'emoji': '🏨', 'label': 'games.fantasy_builder.settings.luxury_hotel'.tr()},
+      {'value': 'private_pool', 'emoji': '🏊', 'label': 'games.fantasy_builder.settings.private_pool'.tr()},
+      {'value': 'vintage_train', 'emoji': '🚂', 'label': 'games.fantasy_builder.settings.vintage_train'.tr()},
     ],
     'moods': [
-      {'value': 'romantic', 'emoji': '💕', 'label': 'Romantico e dolce'},
-      {'value': 'playful', 'emoji': '😏', 'label': 'Giocoso e scherzoso'},
-      {'value': 'passionate', 'emoji': '🔥', 'label': 'Passionale e intenso'},
-      {'value': 'mysterious', 'emoji': '🎭', 'label': 'Misterioso e seducente'},
-      {'value': 'adventurous', 'emoji': '⚡', 'label': 'Avventuroso e audace'},
-      {'value': 'tender', 'emoji': '🌸', 'label': 'Tenero e delicato'},
+      {'value': 'romantic', 'emoji': '💕', 'label': 'games.fantasy_builder.moods.romantic'.tr()},
+      {'value': 'playful', 'emoji': '😏', 'label': 'games.fantasy_builder.moods.playful'.tr()},
+      {'value': 'passionate', 'emoji': '🔥', 'label': 'games.fantasy_builder.moods.passionate'.tr()},
+      {'value': 'mysterious', 'emoji': '🎭', 'label': 'games.fantasy_builder.moods.mysterious'.tr()},
+      {'value': 'adventurous', 'emoji': '⚡', 'label': 'games.fantasy_builder.moods.adventurous'.tr()},
+      {'value': 'tender', 'emoji': '🌸', 'label': 'games.fantasy_builder.moods.tender'.tr()},
     ],
     'actions_soft': [
-      {'value': 'massage', 'emoji': '💆', 'label': 'Massaggio rilassante'},
-      {'value': 'dance', 'emoji': '💃', 'label': 'Ballo lento insieme'},
-      {'value': 'bath', 'emoji': '🛁', 'label': 'Bagno caldo insieme'},
-      {'value': 'stargazing', 'emoji': '⭐', 'label': 'Guardare le stelle'},
-      {'value': 'cooking', 'emoji': '👨‍🍳', 'label': 'Cucinare insieme'},
-      {'value': 'reading', 'emoji': '📖', 'label': 'Leggere poesie'},
+      {'value': 'massage', 'emoji': '💆', 'label': 'games.fantasy_builder.actions_soft.massage'.tr()},
+      {'value': 'dance', 'emoji': '💃', 'label': 'games.fantasy_builder.actions_soft.dance'.tr()},
+      {'value': 'bath', 'emoji': '🛁', 'label': 'games.fantasy_builder.actions_soft.bath'.tr()},
+      {'value': 'stargazing', 'emoji': '⭐', 'label': 'games.fantasy_builder.actions_soft.stargazing'.tr()},
+      {'value': 'cooking', 'emoji': '👨‍🍳', 'label': 'games.fantasy_builder.actions_soft.cooking'.tr()},
+      {'value': 'reading', 'emoji': '📖', 'label': 'games.fantasy_builder.actions_soft.reading'.tr()},
     ],
     'actions_spicy': [
-      {'value': 'blindfold', 'emoji': '🙈', 'label': 'Gioco della benda'},
-      {'value': 'roleplay', 'emoji': '🎭', 'label': 'Gioco di ruolo'},
-      {'value': 'ice_game', 'emoji': '🧊', 'label': 'Gioco del ghiaccio'},
-      {'value': 'feather', 'emoji': '🪶', 'label': 'Esplorazione con piuma'},
-      {'value': 'oil_massage', 'emoji': '✨', 'label': 'Massaggio con oli'},
-      {'value': 'strip_game', 'emoji': '🎲', 'label': 'Gioco a eliminazione'},
+      {'value': 'blindfold', 'emoji': '🙈', 'label': 'games.fantasy_builder.actions_spicy.blindfold'.tr()},
+      {'value': 'roleplay', 'emoji': '🎭', 'label': 'games.fantasy_builder.actions_spicy.roleplay'.tr()},
+      {'value': 'ice_game', 'emoji': '🧊', 'label': 'games.fantasy_builder.actions_spicy.ice_game'.tr()},
+      {'value': 'feather', 'emoji': '🪶', 'label': 'games.fantasy_builder.actions_spicy.feather'.tr()},
+      {'value': 'oil_massage', 'emoji': '✨', 'label': 'games.fantasy_builder.actions_spicy.oil_massage'.tr()},
+      {'value': 'strip_game', 'emoji': '🎲', 'label': 'games.fantasy_builder.actions_spicy.strip_game'.tr()},
     ],
     'surprises': [
-      {'value': 'music', 'emoji': '🎵', 'label': 'Playlist speciale'},
-      {'value': 'champagne', 'emoji': '🥂', 'label': 'Champagne o drink'},
-      {'value': 'chocolate', 'emoji': '🍫', 'label': 'Cioccolato e fragole'},
-      {'value': 'flowers', 'emoji': '💐', 'label': 'Petali di rosa'},
-      {'value': 'lingerie', 'emoji': '👙', 'label': 'Sorpresa di stile'},
-      {'value': 'letter', 'emoji': '💌', 'label': 'Lettera d\'amore'},
-      {'value': 'perfume', 'emoji': '✨', 'label': 'Profumo preferito'},
-      {'value': 'game', 'emoji': '🎮', 'label': 'Gioco a sorpresa'},
+      {'value': 'music', 'emoji': '🎵', 'label': 'games.fantasy_builder.surprises.music'.tr()},
+      {'value': 'champagne', 'emoji': '🥂', 'label': 'games.fantasy_builder.surprises.champagne'.tr()},
+      {'value': 'chocolate', 'emoji': '🍫', 'label': 'games.fantasy_builder.surprises.chocolate'.tr()},
+      {'value': 'flowers', 'emoji': '💐', 'label': 'games.fantasy_builder.surprises.flowers'.tr()},
+      {'value': 'lingerie', 'emoji': '👙', 'label': 'games.fantasy_builder.surprises.lingerie'.tr()},
+      {'value': 'letter', 'emoji': '💌', 'label': 'games.fantasy_builder.surprises.letter'.tr()},
+      {'value': 'perfume', 'emoji': '✨', 'label': 'games.fantasy_builder.surprises.perfume'.tr()},
+      {'value': 'game', 'emoji': '🎮', 'label': 'games.fantasy_builder.surprises.game'.tr()},
     ],
   };
 
-  final List<String> _steps = [
-    'Ambientazione',
-    'Atmosfera',
-    'Azione principale',
-    'Sorpresa',
-    'Dettagli finali',
+  List<String> get _steps => [
+    'games.fantasy_builder.steps.setting'.tr(),
+    'games.fantasy_builder.steps.atmosphere'.tr(),
+    'games.fantasy_builder.steps.main_action'.tr(),
+    'games.fantasy_builder.steps.surprise'.tr(),
+    'games.fantasy_builder.steps.final_details'.tr(),
   ];
 
   @override
@@ -182,7 +183,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Header
                 Center(
                   child: Column(
@@ -193,7 +194,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'La vostra fantasia',
+                        'games.fantasy_builder.your_fantasy'.tr(),
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           color: AppColors.gold,
                           fontWeight: FontWeight.bold,
@@ -203,7 +204,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Fantasy card
                 Container(
                   padding: const EdgeInsets.all(20),
@@ -223,37 +224,37 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildFantasyItem(
-                        'Ambientazione',
+                        'game_ui.setting'.tr(),
                         '${setting['emoji']} ${setting['label']}',
                       ),
                       const Divider(color: AppColors.gold, height: 24),
                       _buildFantasyItem(
-                        'Atmosfera',
+                        'game_ui.atmosphere'.tr(),
                         '${mood['emoji']} ${mood['label']}',
                       ),
                       const Divider(color: AppColors.gold, height: 24),
                       _buildFantasyItem(
-                        'Azione',
+                        'game_ui.main_action'.tr(),
                         '${action['emoji']} ${action['label']}',
                       ),
                       const Divider(color: AppColors.gold, height: 24),
                       _buildFantasyItem(
-                        'Sorpresa',
+                        'game_ui.surprise'.tr(),
                         '${surprise['emoji']} ${surprise['label']}',
                       ),
                       if (_customDetails.isNotEmpty) ...[
                         const Divider(color: AppColors.gold, height: 24),
                         _buildFantasyItem(
-                          'Dettagli speciali',
+                          'game_ui.special_details'.tr(),
                           _customDetails.join('\n• '),
                         ),
                       ],
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Narrative
                 Container(
                   padding: const EdgeInsets.all(16),
@@ -264,9 +265,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        '📖 La vostra storia:',
-                        style: TextStyle(
+                      Text(
+                        'game_ui.your_story'.tr(),
+                        style: const TextStyle(
                           color: AppColors.gold,
                           fontWeight: FontWeight.bold,
                         ),
@@ -283,9 +284,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Action buttons
                 Row(
                   children: [
@@ -299,7 +300,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                           foregroundColor: AppColors.textSecondary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Nuova fantasia'),
+                        child: Text('game_ui.new_fantasy'.tr()),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -314,7 +315,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Realizzala! 🔥'),
+                        child: Text('game_ui.realize_it'.tr()),
                       ),
                     ),
                   ],
@@ -333,12 +334,15 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
     Map<String, String> action,
     Map<String, String> surprise,
   ) {
-    return 'Immaginate di essere in ${setting['label']?.toLowerCase() ?? 'un luogo speciale'}. '
-        'L\'atmosfera è ${mood['label']?.toLowerCase() ?? 'magica'}. '
-        'Iniziate con ${action['label']?.toLowerCase() ?? 'qualcosa di speciale'}, '
-        'mentre una ${surprise['label']?.toLowerCase() ?? 'sorpresa'} rende tutto ancora più memorabile. '
-        '${_customDetails.isNotEmpty ? '\n\nI vostri dettagli speciali: ${_customDetails.join(", ")}.' : ''}'
-        '\n\nLasciatevi trasportare dalla fantasia e rendetela realtà quando vi sentite pronti! 💫';
+    return 'games.fantasy_builder.narrative.body'.tr(namedArgs: {
+      'setting': setting['label']?.toLowerCase() ?? 'games.fantasy_builder.narrative.default_setting'.tr(),
+      'mood': mood['label']?.toLowerCase() ?? 'games.fantasy_builder.narrative.default_mood'.tr(),
+      'action': action['label']?.toLowerCase() ?? 'games.fantasy_builder.narrative.default_action'.tr(),
+      'surprise': surprise['label']?.toLowerCase() ?? 'games.fantasy_builder.narrative.default_surprise'.tr(),
+      'customDetails': _customDetails.isNotEmpty
+          ? '\n\n${'games.fantasy_builder.narrative.your_special_details'.tr()}: ${_customDetails.join(", ")}.'
+          : '',
+    });
   }
 
   Widget _buildFantasyItem(String label, String value) {
@@ -370,26 +374,26 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text(
-          'Quando realizzarla? 📅',
-          style: TextStyle(color: AppColors.gold),
+        title: Text(
+          'game_ui.when_realize'.tr(),
+          style: const TextStyle(color: AppColors.gold),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildRealizationOption('🌙', 'Stasera', 'Iniziamo subito!'),
+            _buildRealizationOption('🌙', 'game_ui.tonight'.tr(), 'game_ui.tonight_desc'.tr()),
             const SizedBox(height: 8),
-            _buildRealizationOption('📅', 'Questo weekend', 'Pianifichiamo con calma'),
+            _buildRealizationOption('📅', 'game_ui.this_weekend'.tr(), 'game_ui.this_weekend_desc'.tr()),
             const SizedBox(height: 8),
-            _buildRealizationOption('🎁', 'Occasione speciale', 'Per un\'occasione memorabile'),
+            _buildRealizationOption('🎁', 'game_ui.special_occasion'.tr(), 'game_ui.special_occasion_desc'.tr()),
             const SizedBox(height: 8),
-            _buildRealizationOption('💭', 'Solo fantasia', 'Per ora solo da immaginare'),
+            _buildRealizationOption('💭', 'game_ui.just_fantasy'.tr(), 'game_ui.just_fantasy_desc'.tr()),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Chiudi'),
+            child: Text('common.close'.tr()),
           ),
         ],
       ),
@@ -402,7 +406,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('$emoji Perfetto! $title'),
+            content: Text('$emoji ${'game_ui.perfect'.tr()} $title'),
             backgroundColor: AppColors.burgundy,
           ),
         );
@@ -450,7 +454,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Fantasy Builder'),
+        title: Text('games.fantasy_builder.title'.tr()),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -477,7 +481,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Fantasy Builder',
+              'games.fantasy_builder.title'.tr(),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -485,18 +489,18 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Costruite insieme la fantasia perfetta',
+              'game_ui.build_perfect_fantasy'.tr(),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                 color: AppColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Intensity selection
             Text(
-              'Intensità',
+              'game_ui.intensity'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -509,9 +513,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                 _buildIntensityOption('spicy', '🔥 Spicy'),
               ],
             ),
-            
+
             const Spacer(),
-            
+
             // How it works
             Container(
               padding: const EdgeInsets.all(16),
@@ -521,17 +525,16 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Come funziona:',
-                    style: TextStyle(
+                  Text(
+                    'game_ui.how_it_works'.tr(),
+                    style: const TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'A turno scegliete gli elementi della fantasia. '
-                    'Alla fine avrete una storia unica da realizzare insieme!',
+                    'game_ui.how_it_works_description'.tr(),
                     style: TextStyle(
                       color: AppColors.textSecondary,
                     ),
@@ -540,9 +543,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Start button
             SizedBox(
               width: double.infinity,
@@ -556,9 +559,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Inizia a creare',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  'game_ui.start_creating'.tr(),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -613,10 +616,10 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                     height: 4,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      color: isCompleted 
-                          ? AppColors.gold 
-                          : isCurrent 
-                              ? AppColors.burgundy 
+                      color: isCompleted
+                          ? AppColors.gold
+                          : isCurrent
+                              ? AppColors.burgundy
                               : AppColors.surface,
                       borderRadius: BorderRadius.circular(2),
                     ),
@@ -625,18 +628,18 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
               }),
             ),
             const SizedBox(height: 16),
-            
+
             // Current player
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: _currentPlayer == 1 
-                    ? AppColors.burgundy.withOpacity(0.2) 
+                color: _currentPlayer == 1
+                    ? AppColors.burgundy.withOpacity(0.2)
                     : AppColors.spicy.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                'Giocatore $_currentPlayer sceglie',
+                'game_ui.player_chooses'.tr(namedArgs: {'player': '$_currentPlayer'}),
                 style: TextStyle(
                   color: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
                   fontWeight: FontWeight.bold,
@@ -644,7 +647,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Step title
             Text(
               _steps[_currentStep],
@@ -654,14 +657,14 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Options or custom input
             Expanded(
-              child: _currentStep < 4 
-                  ? _buildOptionsGrid() 
+              child: _currentStep < 4
+                  ? _buildOptionsGrid()
                   : _buildCustomDetails(),
             ),
-            
+
             // Next button
             SizedBox(
               width: double.infinity,
@@ -676,7 +679,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                   ),
                 ),
                 child: Text(
-                  _currentStep < 4 ? 'Conferma e passa' : 'Vedi la fantasia! ✨',
+                  _currentStep < 4 ? 'game_ui.confirm_and_pass'.tr() : 'game_ui.see_fantasy'.tr(),
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -707,7 +710,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
   Widget _buildOptionsGrid() {
     List<Map<String, String>> options;
     String? selectedValue;
-    
+
     switch (_currentStep) {
       case 0:
         options = _options['settings']!;
@@ -718,8 +721,8 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
         selectedValue = _selectedMood;
         break;
       case 2:
-        options = _intensity == 'soft' 
-            ? _options['actions_soft']! 
+        options = _intensity == 'soft'
+            ? _options['actions_soft']!
             : _options['actions_spicy']!;
         selectedValue = _selectedAction;
         break;
@@ -731,7 +734,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
         options = [];
         selectedValue = null;
     }
-    
+
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
@@ -743,7 +746,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
       itemBuilder: (context, index) {
         final option = options[index];
         final isSelected = selectedValue == option['value'];
-        
+
         return GestureDetector(
           onTap: () => _selectOption(option['value']!),
           child: Container(
@@ -788,11 +791,11 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Aggiungete dettagli speciali (opzionale)',
+          'game_ui.add_special_details'.tr(),
           style: TextStyle(color: AppColors.textSecondary),
         ),
         const SizedBox(height: 12),
-        
+
         Row(
           children: [
             Expanded(
@@ -800,7 +803,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                 controller: _detailController,
                 style: const TextStyle(color: AppColors.textPrimary),
                 decoration: InputDecoration(
-                  hintText: 'Es: musica jazz, champagne...',
+                  hintText: 'game_ui.detail_hint'.tr(),
                   hintStyle: TextStyle(color: AppColors.textSecondary.withOpacity(0.5)),
                   filled: true,
                   fillColor: AppColors.surface,
@@ -819,9 +822,9 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         Expanded(
           child: ListView.builder(
             itemCount: _customDetails.length,
@@ -876,20 +879,20 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Come funziona ✨',
+              'game_ui.how_it_works'.tr(),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
-            _buildRuleItem('1', 'A turno scegliete gli elementi'),
-            _buildRuleItem('2', 'Ogni scelta costruisce la fantasia'),
-            _buildRuleItem('3', 'Aggiungete dettagli personali'),
-            _buildRuleItem('4', 'Alla fine, decidete quando realizzarla!'),
+            _buildRuleItem('1', 'games.fantasy_builder.rules.rule_1'.tr()),
+            _buildRuleItem('2', 'games.fantasy_builder.rules.rule_2'.tr()),
+            _buildRuleItem('3', 'games.fantasy_builder.rules.rule_3'.tr()),
+            _buildRuleItem('4', 'games.fantasy_builder.rules.rule_4'.tr()),
             const SizedBox(height: 16),
             Text(
-              'Create qualcosa di unico insieme! 💕',
+              'games.fantasy_builder.rules.closing'.tr(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.textSecondary,
                 fontStyle: FontStyle.italic,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class TwoMinutesScreen extends StatefulWidget {
   const TwoMinutesScreen({super.key});
@@ -16,93 +17,93 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   int _currentChallengeIndex = 0;
   String _selectedIntensity = 'spicy';
   int _selectedDuration = 120; // 2 minutes default
-  
+
   Timer? _timer;
   int _remainingSeconds = 120;
-  
+
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   late AnimationController _countdownController;
 
-  final Map<String, List<Map<String, dynamic>>> _challenges = {
+  Map<String, List<Map<String, dynamic>>> get _challenges => {
     'soft': [
       {
-        'title': 'Sguardo Profondo',
-        'description': 'Guardatevi negli occhi senza distogliere lo sguardo. Respirate insieme.',
+        'title': 'games.two_minutes.soft.deep_gaze_title'.tr(),
+        'description': 'games.two_minutes.soft.deep_gaze_desc'.tr(),
         'icon': Icons.visibility,
       },
       {
-        'title': 'Massaggio Mani',
-        'description': 'Massaggia delicatamente le mani del tuo partner, dito per dito.',
+        'title': 'games.two_minutes.soft.hand_massage_title'.tr(),
+        'description': 'games.two_minutes.soft.hand_massage_desc'.tr(),
         'icon': Icons.pan_tool,
       },
       {
-        'title': 'Sussurri',
-        'description': 'Sussurra all\'orecchio del partner 5 cose che ami di lui/lei.',
+        'title': 'games.two_minutes.soft.whispers_title'.tr(),
+        'description': 'games.two_minutes.soft.whispers_desc'.tr(),
         'icon': Icons.hearing,
       },
       {
-        'title': 'Respiro Sincronizzato',
-        'description': 'Sdraiatevi e sincronizzate il vostro respiro. Inspirate ed espirate insieme.',
+        'title': 'games.two_minutes.soft.sync_breathing_title'.tr(),
+        'description': 'games.two_minutes.soft.sync_breathing_desc'.tr(),
         'icon': Icons.air,
       },
       {
-        'title': 'Carezze Leggere',
-        'description': 'Accarezza il viso del partner con la punta delle dita, lentamente.',
+        'title': 'games.two_minutes.soft.light_caresses_title'.tr(),
+        'description': 'games.two_minutes.soft.light_caresses_desc'.tr(),
         'icon': Icons.face,
       },
     ],
     'spicy': [
       {
-        'title': 'Baci Esplorativi',
-        'description': 'Bacia ogni parte del viso del partner: fronte, guance, naso, mento...',
+        'title': 'games.two_minutes.spicy.exploring_kisses_title'.tr(),
+        'description': 'games.two_minutes.spicy.exploring_kisses_desc'.tr(),
         'icon': Icons.favorite,
       },
       {
-        'title': 'Massaggio Collo',
-        'description': 'Massaggia collo e spalle del partner, cercando i punti di tensione.',
+        'title': 'games.two_minutes.spicy.neck_massage_title'.tr(),
+        'description': 'games.two_minutes.spicy.neck_massage_desc'.tr(),
         'icon': Icons.spa,
       },
       {
-        'title': 'Abbraccio Totale',
-        'description': 'Abbracciatevi stretti, sentite il battito del cuore dell\'altro.',
+        'title': 'games.two_minutes.spicy.total_hug_title'.tr(),
+        'description': 'games.two_minutes.spicy.total_hug_desc'.tr(),
         'icon': Icons.people,
       },
       {
-        'title': 'Danza Lenta',
-        'description': 'Ballate lentamente abbracciati, anche senza musica.',
+        'title': 'games.two_minutes.spicy.slow_dance_title'.tr(),
+        'description': 'games.two_minutes.spicy.slow_dance_desc'.tr(),
         'icon': Icons.music_note,
       },
       {
-        'title': 'Tocco Cieco',
-        'description': 'Chiudi gli occhi e lascia che il partner guidi le tue mani su di sé.',
+        'title': 'games.two_minutes.spicy.blind_touch_title'.tr(),
+        'description': 'games.two_minutes.spicy.blind_touch_desc'.tr(),
         'icon': Icons.touch_app,
       },
     ],
     'extra_spicy': [
       {
-        'title': 'Punti Sensibili',
-        'description': 'Esplora con le labbra le zone più sensibili del collo del partner.',
+        'title': 'games.two_minutes.extra_spicy.sensitive_spots_title'.tr(),
+        'description': 'games.two_minutes.extra_spicy.sensitive_spots_desc'.tr(),
         'icon': Icons.whatshot,
       },
       {
-        'title': 'Massaggio Schiena',
-        'description': 'Massaggio profondo sulla schiena, dalle spalle ai fianchi.',
+        'title': 'games.two_minutes.extra_spicy.back_massage_title'.tr(),
+        'description': 'games.two_minutes.extra_spicy.back_massage_desc'.tr(),
         'icon': Icons.self_improvement,
       },
       {
-        'title': 'Baci Ovunque',
-        'description': 'Bacia ogni centimetro delle braccia del partner, dal polso alla spalla.',
+        'title': 'games.two_minutes.extra_spicy.kisses_everywhere_title'.tr(),
+        'description': 'games.two_minutes.extra_spicy.kisses_everywhere_desc'.tr(),
         'icon': Icons.local_fire_department,
       },
       {
-        'title': 'Esplorazione Tattile',
-        'description': 'Con gli occhi chiusi, memorizza il corpo del partner solo col tatto.',
+        'title': 'games.two_minutes.extra_spicy.tactile_exploration_title'.tr(),
+        'description': 'games.two_minutes.extra_spicy.tactile_exploration_desc'.tr(),
         'icon': Icons.explore,
       },
       {
-        'title': 'Connessione Totale',
-        'description': 'Sdraiatevi pelle contro pelle, sentite il calore reciproco.',
+        'title': 'games.two_minutes.extra_spicy.total_connection_title'.tr(),
+        'description': 'games.two_minutes.extra_spicy.total_connection_desc'.tr(),
         'icon': Icons.bolt,
       },
     ],
@@ -118,11 +119,11 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
       duration: const Duration(milliseconds: 1000),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
     );
-    
+
     _countdownController = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -140,7 +141,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   void _startGame() {
     _currentChallenges = List.from(_challenges[_selectedIntensity]!);
     _currentChallenges.shuffle();
-    
+
     setState(() {
       _gameStarted = true;
       _currentChallengeIndex = 0;
@@ -184,27 +185,27 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
     setState(() {
       _completedChallenges++;
     });
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.timer, color: Color(0xFFEC4899)),
-            SizedBox(width: 8),
+            const Icon(Icons.timer, color: Color(0xFFEC4899)),
+            const SizedBox(width: 8),
             Text(
-              'Tempo Scaduto!',
-              style: TextStyle(color: Colors.white),
+              'games.two_minutes.time_up'.tr(),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
-        content: const Text(
-          'Com\'è stato? Volete continuare con un\'altra sfida?',
-          style: TextStyle(color: Colors.white70),
+        content: Text(
+          'games.two_minutes.how_was_it'.tr(),
+          style: const TextStyle(color: Colors.white70),
           textAlign: TextAlign.center,
         ),
         actions: [
@@ -213,7 +214,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               Navigator.of(context).pop();
               _endSession();
             },
-            child: const Text('Termina'),
+            child: Text('games.two_minutes.end'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -223,7 +224,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEC4899),
             ),
-            child: const Text('Prossima Sfida'),
+            child: Text('games.two_minutes.next_challenge'.tr()),
           ),
         ],
       ),
@@ -248,24 +249,24 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
 
   void _endSession() {
     _timer?.cancel();
-    
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          '🔥 Sessione Completata!',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'games.two_minutes.session_complete'.tr(),
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Speriamo sia stato un momento speciale!',
-              style: TextStyle(color: Colors.white70),
+            Text(
+              'games.two_minutes.special_moment'.tr(),
+              style: const TextStyle(color: Colors.white70),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -282,9 +283,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'Sfide Completate',
-                    style: TextStyle(color: Colors.white54),
+                  Text(
+                    'games.two_minutes.challenges_completed'.tr(),
+                    style: const TextStyle(color: Colors.white54),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -296,7 +297,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                     ),
                   ),
                   Text(
-                    'di ${_currentChallenges.length}',
+                    'games.two_minutes.of_total'.tr(args: [_currentChallenges.length.toString()]),
                     style: const TextStyle(color: Colors.white54),
                   ),
                 ],
@@ -310,7 +311,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               Navigator.of(context).pop();
               Navigator.of(context).pop();
             },
-            child: const Text('Esci'),
+            child: Text('games.two_minutes.exit'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -320,7 +321,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFEC4899),
             ),
-            child: const Text('Gioca Ancora'),
+            child: Text('games.two_minutes.play_again'.tr()),
           ),
         ],
       ),
@@ -340,9 +341,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Due Minuti',
-          style: TextStyle(
+        title: Text(
+          'games.two_minutes.title'.tr(),
+          style: const TextStyle(
             fontFamily: 'PlayfairDisplay',
             fontWeight: FontWeight.bold,
           ),
@@ -355,7 +356,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
           },
         ),
       ),
-      body: _gameStarted 
+      body: _gameStarted
           ? (_challengeActive ? _buildChallengeView() : _buildPreChallengeView())
           : _buildSetupView(),
     );
@@ -386,10 +387,10 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
             ),
           ),
           const SizedBox(height: 16),
-          const Center(
+          Center(
             child: Text(
-              'Sfide intime a tempo',
-              style: TextStyle(
+              'games.two_minutes.subtitle'.tr(),
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
               ),
@@ -398,9 +399,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
           const SizedBox(height: 32),
 
           // Duration Selection
-          const Text(
-            'Durata Sfida',
-            style: TextStyle(
+          Text(
+            'games.two_minutes.challenge_duration'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -409,32 +410,32 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildDurationOption(60, '1 min'),
+              _buildDurationOption(60, 'games.two_minutes.dur_1min'.tr()),
               const SizedBox(width: 12),
-              _buildDurationOption(120, '2 min'),
+              _buildDurationOption(120, 'games.two_minutes.dur_2min'.tr()),
               const SizedBox(width: 12),
-              _buildDurationOption(180, '3 min'),
+              _buildDurationOption(180, 'games.two_minutes.dur_3min'.tr()),
               const SizedBox(width: 12),
-              _buildDurationOption(300, '5 min'),
+              _buildDurationOption(300, 'games.two_minutes.dur_5min'.tr()),
             ],
           ),
           const SizedBox(height: 32),
 
           // Intensity Selection
-          const Text(
-            'Intensità',
-            style: TextStyle(
+          Text(
+            'games.two_minutes.intensity'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          _buildIntensityOption('soft', 'Soft', '🌸', 'Dolce e romantico'),
+          _buildIntensityOption('soft', 'games.two_minutes.intensity_soft'.tr(), '🌸', 'games.two_minutes.intensity_soft_desc'.tr()),
           const SizedBox(height: 12),
-          _buildIntensityOption('spicy', 'Spicy', '🌶️', 'Passionale'),
+          _buildIntensityOption('spicy', 'games.two_minutes.intensity_spicy'.tr(), '🌶️', 'games.two_minutes.intensity_spicy_desc'.tr()),
           const SizedBox(height: 12),
-          _buildIntensityOption('extra_spicy', 'Extra Spicy', '🔥', 'Bollente'),
+          _buildIntensityOption('extra_spicy', 'games.two_minutes.intensity_extra_spicy'.tr(), '🔥', 'games.two_minutes.intensity_extra_spicy_desc'.tr()),
           const SizedBox(height: 32),
 
           // Start Button
@@ -449,9 +450,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Inizia Sessione',
-                style: TextStyle(
+              child: Text(
+                'games.two_minutes.start_session'.tr(),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -471,13 +472,13 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected 
-                ? const Color(0xFFEC4899) 
+            color: isSelected
+                ? const Color(0xFFEC4899)
                 : Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: isSelected 
-                  ? const Color(0xFFEC4899) 
+              color: isSelected
+                  ? const Color(0xFFEC4899)
                   : Colors.white.withOpacity(0.2),
             ),
           ),
@@ -501,13 +502,13 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFFEC4899).withOpacity(0.2) 
+          color: isSelected
+              ? const Color(0xFFEC4899).withOpacity(0.2)
               : Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected 
-                ? const Color(0xFFEC4899) 
+            color: isSelected
+                ? const Color(0xFFEC4899)
                 : Colors.white.withOpacity(0.1),
             width: isSelected ? 2 : 1,
           ),
@@ -548,14 +549,14 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
 
   Widget _buildPreChallengeView() {
     final challenge = _currentChallenges[_currentChallengeIndex];
-    
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         children: [
           // Progress
           Text(
-            'Sfida ${_currentChallengeIndex + 1} di ${_currentChallenges.length}',
+            'games.two_minutes.challenge_of'.tr(args: [(_currentChallengeIndex + 1).toString(), _currentChallenges.length.toString()]),
             style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 8),
@@ -564,9 +565,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
             backgroundColor: Colors.white.withOpacity(0.1),
             valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEC4899)),
           ),
-          
+
           const Spacer(),
-          
+
           // Challenge Preview Card
           Container(
             width: double.infinity,
@@ -645,9 +646,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               ],
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Action Buttons
           Row(
             children: [
@@ -662,7 +663,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Salta'),
+                  child: Text('games.two_minutes.skip'.tr()),
                 ),
               ),
               const SizedBox(width: 16),
@@ -671,7 +672,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                 child: ElevatedButton.icon(
                   onPressed: _startChallenge,
                   icon: const Icon(Icons.play_arrow),
-                  label: const Text('Inizia Timer'),
+                  label: Text('games.two_minutes.start_timer'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFEC4899),
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -691,7 +692,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   Widget _buildChallengeView() {
     final challenge = _currentChallenges[_currentChallengeIndex];
     final progress = 1 - (_remainingSeconds / _selectedDuration);
-    
+
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -705,9 +706,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               fontWeight: FontWeight.bold,
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Timer Circle
           ScaleTransition(
             scale: _pulseAnimation,
@@ -722,8 +723,8 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                     strokeWidth: 12,
                     backgroundColor: Colors.white.withOpacity(0.1),
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      _remainingSeconds <= 10 
-                          ? Colors.red 
+                      _remainingSeconds <= 10
+                          ? Colors.red
                           : const Color(0xFFEC4899),
                     ),
                   ),
@@ -741,7 +742,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
                       ),
                     ),
                     Text(
-                      _isPaused ? 'In Pausa' : 'Rimanenti',
+                      _isPaused ? 'games.two_minutes.paused'.tr() : 'games.two_minutes.remaining'.tr(),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 16,
@@ -752,9 +753,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               ],
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // Challenge description reminder
           Container(
             padding: const EdgeInsets.all(16),
@@ -771,9 +772,9 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               textAlign: TextAlign.center,
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Control Buttons
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -522,7 +522,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                 TextButton(
                   onPressed: _skipAll,
                   child: Text(
-                    'Salta tutto',
+                    'games.goose_game.skip_all'.tr(),
                     style: TextStyle(
                       color: Theme.of(
                         context,
@@ -542,7 +542,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                       vertical: AppSpacing.sm,
                     ),
                   ),
-                  child: Text(isLast ? 'Iniziamo! 🎲' : 'Avanti →'),
+                  child: Text(isLast ? 'games.goose_game.lets_start'.tr() : 'games.goose_game.forward'.tr()),
                 ),
               ],
             ),
