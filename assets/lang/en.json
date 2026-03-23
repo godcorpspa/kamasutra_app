@@ -1,6 +1,5 @@
 {
   "app_name": "Kamasutra & Couple Games",
-  
   "common": {
     "continue": "Continue",
     "cancel": "Cancel",
@@ -23,19 +22,16 @@
     "no_results": "No results",
     "settings": "Settings"
   },
-
   "energy": {
     "low": "Low",
     "medium": "Medium",
     "high": "High"
   },
-
   "duration": {
     "brief": "Brief",
     "medium": "Medium",
     "long": "Long"
   },
-
   "focus": {
     "intimacy": "Intimacy",
     "variety": "Variety",
@@ -45,13 +41,11 @@
     "passion": "Passion",
     "trust": "Trust"
   },
-
   "intensity": {
     "soft": "🌸 Soft",
     "spicy": "🔥 Spicy",
     "extraSpicy": "🌶️ Extra Spicy"
   },
-
   "age_gate": {
     "title": "Welcome",
     "subtitle": "This app contains adult content",
@@ -61,7 +55,6 @@
     "denied_message": "You must be at least 18 years old to use this app.",
     "legal_notice": "By continuing, you confirm you are of legal age in your country."
   },
-
   "onboarding": {
     "welcome_title": "Welcome back, explorers",
     "welcome_subtitle": "Ready for a new adventure together?",
@@ -73,7 +66,6 @@
     "page3_subtitle": "Protected account with encrypted cloud sync. Only the two of you can access your data.",
     "get_started": "Start the evening"
   },
-
   "pin": {
     "enter_pin": "Enter PIN",
     "create_pin": "Create a PIN",
@@ -83,7 +75,6 @@
     "use_biometric": "Use Face ID / Touch ID",
     "forgot_pin": "Forgot PIN?"
   },
-
   "nav": {
     "catalog": "Catalog",
     "shuffle": "Shuffle",
@@ -91,7 +82,6 @@
     "progress": "Progress",
     "settings": "More"
   },
-
   "catalog": {
     "title": "Catalog",
     "search_hint": "Search positions...",
@@ -108,7 +98,6 @@
     "category": "Category",
     "focus": "Focus"
   },
-
   "position": {
     "difficulty": "Difficulty",
     "energy": "Energy",
@@ -122,7 +111,6 @@
     "try_this": "Try this",
     "similar_positions": "Similar positions"
   },
-
   "categories": {
     "romantic": "Romantic",
     "beginner": "Beginner",
@@ -133,7 +121,6 @@
     "reconnect": "Reconnect",
     "quickie": "Quickie"
   },
-
   "shuffle": {
     "title": "Shuffle positions",
     "subtitle": "Let yourself be surprised",
@@ -157,7 +144,6 @@
     "save": "Save",
     "tried": "Tried"
   },
-
   "games": {
     "title": "Games",
     "subtitle": "Choose your adventure",
@@ -175,7 +161,6 @@
     "complete": "Complete!",
     "skip_card": "Skip (pause)",
     "safe_word_hint": "Press pause to skip without penalty",
-    
     "goose_game": {
       "title": "Goose Game",
       "description": "A path of challenges and discoveries",
@@ -213,15 +198,15 @@
       "victory": "Victory! 🎊",
       "victory_message": "You completed the journey together!",
       "spicy_goose_game_title": "Spicy Goose Game",
-      "subtitle_description": "100 squares \u2022 4 garments each \u2022 Ladders, Holes and Penances \ud83d\udd25",
+      "subtitle_description": "100 squares • 4 garments each • Ladders, Holes and Penances 🔥",
       "player_names": "Player Names",
       "player_label": "Player {number}",
       "player_1_default": "Player 1",
       "player_2_default": "Player 2",
       "enter_name": "Enter a name",
       "gender_label": "Gender:",
-      "gender_male": "\u2642 Male",
-      "gender_female": "\u2640 Female",
+      "gender_male": "♂ Male",
+      "gender_female": "♀ Female",
       "start_game": "START THE GAME",
       "rules": "Rules",
       "quick_rule_exit": "To leave start: roll 4, 5 or 6",
@@ -233,34 +218,34 @@
       "quick_rule_six": "Roll a 6: roll again (max 2 times)",
       "quick_rules_title": "Quick Rules",
       "tutorial_welcome_title": "Welcome!",
-      "tutorial_welcome_body": "The Spicy Goose Game is a couples game on 100 squares, full of steamy rewards, hot penances and twists! Whoever reaches square 100 wins and gets a special reward from their partner \ud83d\ude08",
+      "tutorial_welcome_body": "The Spicy Goose Game is a couples game on 100 squares, full of steamy rewards, hot penances and twists! Whoever reaches square 100 wins and gets a special reward from their partner 😈",
       "tutorial_clothing_title": "4 Garments Each",
-      "tutorial_clothing_body": "Each player starts with 4 garments. As the game progresses, you'll lose them... If you have no more garments to remove, a spicy penance kicks in! \ud83d\udd25",
+      "tutorial_clothing_body": "Each player starts with 4 garments. As the game progresses, you'll lose them... If you have no more garments to remove, a spicy penance kicks in! 🔥",
       "tutorial_exit_title": "Leaving Start",
       "tutorial_exit_body": "To leave square 0 you must roll 4, 5 or 6. If you fail for TWO consecutive turns, your partner removes one of your garments!\n\nWhen you leave, roll the dice again to move.",
       "tutorial_rule20_title": "The Rule of 20",
-      "tutorial_rule20_body": "Every time you pass a multiple of 20 (squares 20, 40, 60, 80), your opponent must remove a garment!\n\nAdvance quickly to undress your partner \ud83d\ude0f",
+      "tutorial_rule20_body": "Every time you pass a multiple of 20 (squares 20, 40, 60, 80), your opponent must remove a garment!\n\nAdvance quickly to undress your partner 😏",
       "tutorial_ladders_title": "Ladders and Holes",
-      "tutorial_ladders_body": "\ud83e\ude9c LADDER: jump forward to a higher square and receive a reward from your partner!\n\n\ud83d\udd73\ufe0f HOLE: go back to a lower square and you must perform a penance for your partner!",
+      "tutorial_ladders_body": "🪜 LADDER: jump forward to a higher square and receive a reward from your partner!\n\n🕳️ HOLE: go back to a lower square and you must perform a penance for your partner!",
       "tutorial_penance_title": "Penance Squares",
-      "tutorial_penance_body": "Scattered across the board are Penance squares \ud83d\udd25\n\nIf you land on one, draw a spicy penance and... perform it! No excuses! \ud83d\ude08",
+      "tutorial_penance_body": "Scattered across the board are Penance squares 🔥\n\nIf you land on one, draw a spicy penance and... perform it! No excuses! 😈",
       "tutorial_six_title": "The Lucky 6",
-      "tutorial_six_body": "If you roll a 6, roll again!\n\nYou can do this up to 2 consecutive times (so 3 rolls total per turn). Take advantage to make the biggest leap! \ud83d\ude80",
+      "tutorial_six_body": "If you roll a 6, roll again!\n\nYou can do this up to 2 consecutive times (so 3 rolls total per turn). Take advantage to make the biggest leap! 🚀",
       "tutorial_timer_title": "Timed Rewards",
-      "tutorial_timer_body": "Some rewards and penances have a timer!\n\nWhen the countdown appears, you must perform the action for the entire indicated time. The timer starts automatically. Ready? \ud83d\ude09",
+      "tutorial_timer_body": "Some rewards and penances have a timer!\n\nWhen the countdown appears, you must perform the action for the entire indicated time. The timer starts automatically. Ready? 😉",
       "tutorial_victory_title": "Victory!",
-      "tutorial_victory_body": "Whoever reaches exactly square 100 wins!\n\nIf your roll takes you past 100, you bounce back. The winner receives a special reward from their partner!\n\nHave fun! \ud83c\udf89",
+      "tutorial_victory_body": "Whoever reaches exactly square 100 wins!\n\nIf your roll takes you past 100, you bounce back. The winner receives a special reward from their partner!\n\nHave fun! 🎉",
       "skip_all": "Skip all",
-      "lets_start": "Let's start! \ud83c\udfb2",
-      "forward": "Next \u2192",
-      "rolled_six_again": "\ud83c\udfb2 You rolled a 6! Roll again! ({count}/2)",
-      "rolled_six_extra": "\ud83c\udfb2 You rolled a 6! Roll again ({count}/2)",
-      "player_exits": "{player} exits! \ud83d\ude80 Roll again to move!",
+      "lets_start": "Let's start! 🎲",
+      "forward": "Next →",
+      "rolled_six_again": "🎲 You rolled a 6! Roll again! ({count}/2)",
+      "rolled_six_extra": "🎲 You rolled a 6! Roll again ({count}/2)",
+      "player_exits": "{player} exits! 🚀 Roll again to move!",
       "failed_exit": "{player} failed to exit for 2 turns!",
       "need_456": "Need 4, 5 or 6! ({remaining} attempt remaining)",
       "passed_square": "{player} passed square {square}!",
       "ladder_title": "LADDER!",
-      "square_move": "Square {from} \u2192 {to} ({diff})",
+      "square_move": "Square {from} → {to} ({diff})",
       "reward_description": "Receive a reward from your partner:",
       "hole_title": "HOLE!",
       "penance_do": "Perform a penance for your partner:",
@@ -269,34 +254,33 @@
       "execute_penance": "Perform this penance:",
       "naked_title": "NAKED!",
       "no_clothes": "{player} has no more garments!",
-      "penance_instead": "Penance instead of undressing \ud83d\ude08",
+      "penance_instead": "Penance instead of undressing 😈",
       "player_wins": "{player} WINS!",
-      "reached_100": "You reached square 100! \ud83c\udf89",
-      "final_prize": "\ud83d\udd25 FINAL PRIZE \u2014 The loser's partner performs:",
-      "game_title": "\ud83c\udfb2 Goose Game",
-      "roll_to_exit": "\u26a0\ufe0f  Roll 4/5/6 to leave start",
-      "exited_roll_move": "\ud83d\ude80 You exited! Roll to move",
-      "your_turn": "\ud83c\udfaf Your turn, roll the dice!",
-      "roll_dice": "ROLL \ud83c\udfb2",
+      "reached_100": "You reached square 100! 🎉",
+      "final_prize": "🔥 FINAL PRIZE — The loser's partner performs:",
+      "game_title": "🎲 Goose Game",
+      "roll_to_exit": "⚠️  Roll 4/5/6 to leave start",
+      "exited_roll_move": "🚀 You exited! Roll to move",
+      "your_turn": "🎯 Your turn, roll the dice!",
+      "roll_dice": "ROLL 🎲",
       "game_rules": "Game Rules",
       "rule_ladder": "Ladder: advance and receive a reward",
       "rule_hole": "Hole: go back and perform a penance",
       "rule_penance": "Penance: mandatory hot action",
       "rule_finish": "Finish: square 100 = victory!",
-      "rule_exit": "Leave start with 4/5/6. 2 fails \u2192 partner undresses",
+      "rule_exit": "Leave start with 4/5/6. 2 fails → partner undresses",
       "rule_exit_roll": "When you exit, roll again to move",
-      "rule_milestone": "Every 20 squares passed \u2192 opponent undresses",
-      "rule_six": "Roll a 6 \u2192 roll again! Max 2 extra times",
-      "rule_no_clothes": "No garments left \u2192 penance instead",
-      "rule_bounce": "Past 100 \u2192 bounce back",
-      "time_up": "Time's up! \u2705",
-      "done_early": "\u2713 Done early",
-      "done_evil": "Done! \ud83d\ude08",
+      "rule_milestone": "Every 20 squares passed → opponent undresses",
+      "rule_six": "Roll a 6 → roll again! Max 2 extra times",
+      "rule_no_clothes": "No garments left → penance instead",
+      "rule_bounce": "Past 100 → bounce back",
+      "time_up": "Time's up! ✅",
+      "done_early": "✓ Done early",
+      "done_evil": "Done! 😈",
       "remove_clothing": "REMOVE A GARMENT!",
-      "no_clothes_left": "\ud83d\udd25 No garments left!",
+      "no_clothes_left": "🔥 No garments left!",
       "remaining_clothes": "{count} remaining"
     },
-    
     "truth_dare": {
       "title": "Truth or Dare",
       "subtitle": "Intimacy Edition",
@@ -307,7 +291,6 @@
       "double_dare": "Double Dare",
       "swap": "Swap roles"
     },
-    
     "wheel": {
       "title": "Wheel of Fortune",
       "subtitle": "Romantic Edition",
@@ -348,7 +331,6 @@
         "wild_card": "Wild\nCard"
       }
     },
-    
     "hot_cold": {
       "title": "Hot & Cold",
       "subtitle": "Guided only by words",
@@ -358,9 +340,16 @@
       "boiling": "Boiling! 🌋",
       "mission_complete": "Mission complete!",
       "new_mission": "New mission",
-      "blindfold_mode": "Blindfold mode"
+      "blindfold_mode": "Blindfold mode",
+      "freezing": "Freezing! 🥶",
+      "found_title": "Found! 🎯",
+      "hint_label": "Hint",
+      "how_to_play": "How to play 🔥❄️",
+      "rule_1": "One partner chooses a secret body zone",
+      "rule_2": "The other explores with their fingers, guided by clues",
+      "rule_3": "The closer you get, the 'hotter' it becomes!",
+      "rule_4": "When you find the right zone... prize!"
     },
-    
     "love_notes": {
       "title": "Love Notes",
       "subtitle": "Write from the heart",
@@ -369,9 +358,13 @@
       "read_aloud": "Read aloud",
       "save_to_box": "Save to box",
       "saved": "Saved to memories ❤️",
-      "your_notes": "Your notes"
+      "your_notes": "Your notes",
+      "rules_title": "How to play 💌",
+      "rule_1": "Write a secret message to your partner",
+      "rule_2": "Don't let them see what you write!",
+      "rule_3": "At the end, read them together out loud",
+      "rule_4": "Keep your favorites as a memory"
     },
-    
     "fantasy_builder": {
       "title": "Fantasy Builder",
       "subtitle": "Create your story together",
@@ -448,7 +441,6 @@
         "closing": "Create something unique together! 💕"
       }
     },
-    
     "compliment_battle": {
       "title": "Compliment Battle",
       "subtitle": "Who appreciates more?",
@@ -522,7 +514,6 @@
       "rule5": "Whoever has the most points wins!",
       "be_creative": "Be creative and sincere! 💕"
     },
-    
     "question_quest": {
       "title": "Question Quest",
       "subtitle": "36 questions to (re)fall in love",
@@ -615,7 +606,6 @@
       "q_deep_intimacy_2": "What does true love mean to you?",
       "q_deep_intimacy_3": "When did you feel completely safe with me?"
     },
-    
     "two_minutes": {
       "title": "Two Minutes",
       "subtitle": "Timed intimate challenges",
@@ -692,7 +682,6 @@
         "total_connection_desc": "Lie skin to skin, feel each other's warmth."
       }
     },
-    
     "intimacy_map": {
       "title": "Intimacy Map",
       "subtitle": "Discover each other's pleasure zones",
@@ -764,7 +753,6 @@
       "instr5": "Compare maps at the end!",
       "got_it": "Got it"
     },
-    
     "soundtrack": {
       "title": "Our Soundtrack",
       "subtitle": "The songs of your story",
@@ -782,7 +770,6 @@
       "step_choose_song": "Choose the perfect song",
       "step_final_playlist": "Create the final playlist"
     },
-
     "mirror_challenge": {
       "title": "Mirror Challenge",
       "subtitle": "Connection without words",
@@ -844,45 +831,8 @@
       "ch8_title": "Synchronized Dance",
       "ch8_desc": "Create a dance together, without music. Let instinct guide you.",
       "ch8_tip": "Don't think, just go with the flow"
-    },
-
-    "hot_cold": {
-      "title": "Hot & Cold",
-      "subtitle": "Guided only by words",
-      "cold": "Cold ❄️",
-      "warm": "Warm",
-      "hot": "Hot 🔥",
-      "boiling": "Boiling! 🌋",
-      "mission_complete": "Mission complete!",
-      "new_mission": "New mission",
-      "blindfold_mode": "Blindfold mode",
-      "freezing": "Freezing! 🥶",
-      "found_title": "Found! 🎯",
-      "hint_label": "Hint",
-      "how_to_play": "How to play 🔥❄️",
-      "rule_1": "One partner chooses a secret body zone",
-      "rule_2": "The other explores with their fingers, guided by clues",
-      "rule_3": "The closer you get, the 'hotter' it becomes!",
-      "rule_4": "When you find the right zone... prize!"
-    },
-
-    "love_notes": {
-      "title": "Love Notes",
-      "subtitle": "Write from the heart",
-      "prompt": "Prompt",
-      "write": "Write...",
-      "read_aloud": "Read aloud",
-      "save_to_box": "Save to box",
-      "saved": "Saved to memories ❤️",
-      "your_notes": "Your notes",
-      "rules_title": "How to play 💌",
-      "rule_1": "Write a secret message to your partner",
-      "rule_2": "Don't let them see what you write!",
-      "rule_3": "At the end, read them together out loud",
-      "rule_4": "Keep your favorites as a memory"
     }
   },
-
   "progress": {
     "title": "Progress",
     "badges": "Badges",
@@ -899,7 +849,6 @@
     "favorites_count": "Favorites saved",
     "badge_unlocked": "New achievement unlocked! 🎉"
   },
-
   "badges": {
     "explorer": {
       "name": "Explorer",
@@ -946,7 +895,6 @@
       "description": "50 challenges completed"
     }
   },
-
   "settings": {
     "title": "Settings",
     "privacy": "Privacy",
@@ -974,7 +922,6 @@
     "logout_and_disconnect": "Sign out",
     "logout_disconnect_desc": "Disconnect and return to login"
   },
-
   "consent": {
     "check_in": "All ok? Good moment for a check-in.",
     "all_good": "👍 All good",
@@ -985,7 +932,6 @@
     "resume": "Resume",
     "end_session": "End session"
   },
-
   "reactions": {
     "loved": "❤️ Loved",
     "liked": "👍 Liked",
@@ -993,13 +939,11 @@
     "skipped": "⏭️ Skipped",
     "too_hard": "😅 Too hard"
   },
-
   "errors": {
     "generic": "Something went wrong",
     "no_positions": "No positions found with these filters",
     "try_different_filters": "Try different filters"
   },
-
   "game_ui": {
     "player_1": "Player 1",
     "player_2": "Player 2",
@@ -1187,7 +1131,6 @@
     "create_unique_together": "Create something unique together! 💕",
     "difficulty_response_time": "Difficulty (response time)"
   },
-
   "settings_extra": {
     "change_password": "Change password",
     "change_password_desc": "We'll send an email to {email} with instructions to reset your password.",
@@ -1232,7 +1175,6 @@
     "wrong_password": "Wrong password",
     "error_delete_account": "Error: unable to delete account"
   },
-
   "auth": {
     "email_label": "Email",
     "password_label": "Password",
@@ -1284,11 +1226,356 @@
     "req_number": "One number (0-9)",
     "req_special": "One special character (!@#$%...)"
   },
-
   "progress_extra": {
     "positions_explored": "Positions explored",
     "games_played": "Games played",
     "time_together": "Time together",
     "favorites_saved": "Favorites saved"
+  },
+  "progress_ui": {
+    "tried_tab": "Tried",
+    "current_streak": "Current streak",
+    "record": "🏅 Record",
+    "motivational_0": "Start your adventure today!",
+    "motivational_1": "Great start! Come back tomorrow 💪",
+    "motivational_7": "You're doing great!",
+    "motivational_30": "What a great couple! 🔥",
+    "motivational_100": "You're unstoppable! 🏆",
+    "day_singular": "1 day",
+    "day_plural": "{n} days",
+    "positions_explored": "Positions explored",
+    "games_played": "Games played",
+    "time_together": "Time together",
+    "favorites_saved": "Favorites saved",
+    "categories_explored": "Categories explored",
+    "start_exploring_stats": "Start exploring to see your stats!",
+    "no_tried_yet": "No positions tried yet",
+    "explore_catalog_hint": "Explore the catalog or play shuffle to add positions!",
+    "keep_exploring": "Keep exploring to unlock!",
+    "progress_label": "Progress: {progress}",
+    "streak_days": "{n} days"
+  },
+  "badge_list": {
+    "first_step": {
+      "name": "First Step",
+      "desc": "Try your first position"
+    },
+    "explorer": {
+      "name": "Explorer",
+      "desc": "Try 5 different positions"
+    },
+    "initiator": {
+      "name": "Initiator",
+      "desc": "Try 10 different positions"
+    },
+    "adventurer": {
+      "name": "Adventurer",
+      "desc": "Try 20 different positions"
+    },
+    "enthusiast": {
+      "name": "Enthusiast",
+      "desc": "Try 30 different positions"
+    },
+    "collector": {
+      "name": "Collector",
+      "desc": "Try 50 different positions"
+    },
+    "master": {
+      "name": "Master",
+      "desc": "Try 100 different positions"
+    },
+    "legend": {
+      "name": "Legend",
+      "desc": "Try 150 different positions"
+    },
+    "grand_master": {
+      "name": "Grand Master",
+      "desc": "Try 200 different positions"
+    },
+    "first_spark": {
+      "name": "First Spark",
+      "desc": "Save your first favorite position"
+    },
+    "romantic": {
+      "name": "Romantic",
+      "desc": "Save 5 positions to favorites"
+    },
+    "big_heart": {
+      "name": "Big Heart",
+      "desc": "Save 10 positions to favorites"
+    },
+    "heart_collector": {
+      "name": "Heart Collector",
+      "desc": "Save 20 positions to favorites"
+    },
+    "third_day": {
+      "name": "Third Day",
+      "desc": "Reach a 3-day streak"
+    },
+    "dedicated": {
+      "name": "Dedicated",
+      "desc": "Reach a 7-day streak"
+    },
+    "momentum": {
+      "name": "Momentum",
+      "desc": "Reach a 14-day streak"
+    },
+    "champion": {
+      "name": "Champion",
+      "desc": "Reach a 30-day streak"
+    },
+    "faithful": {
+      "name": "Faithful",
+      "desc": "Reach a 60-day streak"
+    },
+    "irresistible": {
+      "name": "Irresistible",
+      "desc": "Reach a 100-day streak"
+    },
+    "on_streak": {
+      "name": "On a Streak",
+      "desc": "You have an active streak of at least 3 days"
+    },
+    "first_game": {
+      "name": "First Game",
+      "desc": "Complete your first shuffle session"
+    },
+    "player": {
+      "name": "Player",
+      "desc": "Complete 5 shuffle sessions"
+    },
+    "soul_explorers": {
+      "name": "Soul Explorers",
+      "desc": "Complete 10 shuffle sessions"
+    },
+    "game_expert": {
+      "name": "Game Expert",
+      "desc": "Complete 25 shuffle sessions"
+    },
+    "professional": {
+      "name": "Professional",
+      "desc": "Complete 50 shuffle sessions"
+    },
+    "world_explorer": {
+      "name": "World Explorer",
+      "desc": "Try positions from 3 different categories"
+    },
+    "versatile": {
+      "name": "Versatile",
+      "desc": "Try positions from 5 different categories"
+    },
+    "complete_artist": {
+      "name": "Complete Artist",
+      "desc": "Try positions from all categories"
+    },
+    "brave": {
+      "name": "Brave",
+      "desc": "Try 5 high difficulty positions (4-5⭐)"
+    },
+    "acrobat": {
+      "name": "Acrobat",
+      "desc": "Try 15 high difficulty positions (4-5⭐)"
+    },
+    "first_hour": {
+      "name": "First Hour",
+      "desc": "Spend 60 minutes together in the app"
+    },
+    "time_lovers": {
+      "name": "Time Lovers",
+      "desc": "Spend 5 hours together in the app"
+    },
+    "deep_connection": {
+      "name": "Deep Connection",
+      "desc": "Spend 24 hours together in the app"
+    },
+    "summit": {
+      "name": "Summit",
+      "desc": "Try 250 different positions"
+    },
+    "olympian": {
+      "name": "Olympian",
+      "desc": "Try 300 different positions"
+    },
+    "great_collection": {
+      "name": "Great Collection",
+      "desc": "Save 30 positions to favorites"
+    },
+    "love_castle": {
+      "name": "Love Castle",
+      "desc": "Save 50 positions to favorites"
+    },
+    "invincible": {
+      "name": "Invincible",
+      "desc": "Reach a 150-day streak"
+    },
+    "infinite": {
+      "name": "Infinite",
+      "desc": "Reach a 200-day streak"
+    },
+    "year_together": {
+      "name": "Year Together",
+      "desc": "Reach a 365-day streak"
+    },
+    "great_player": {
+      "name": "Great Player",
+      "desc": "Complete 75 shuffle sessions"
+    },
+    "games_champion": {
+      "name": "Games Champion",
+      "desc": "Complete 100 shuffle sessions"
+    },
+    "games_master": {
+      "name": "Games Master",
+      "desc": "Complete 150 shuffle sessions"
+    },
+    "games_legend": {
+      "name": "Games Legend",
+      "desc": "Complete 200 shuffle sessions"
+    },
+    "warrior": {
+      "name": "Warrior",
+      "desc": "Try 25 high difficulty positions (4-5⭐)"
+    },
+    "eagle": {
+      "name": "Eagle",
+      "desc": "Try 30 high difficulty positions (4-5⭐)"
+    },
+    "extreme": {
+      "name": "Extreme",
+      "desc": "Try 3 maximum difficulty positions (5⭐)"
+    },
+    "ultras": {
+      "name": "Ultras",
+      "desc": "Try 10 maximum difficulty positions (5⭐)"
+    },
+    "ocean_of_time": {
+      "name": "Ocean of Time",
+      "desc": "Spend 10 hours together in the app"
+    },
+    "endless_night": {
+      "name": "Endless Night",
+      "desc": "Spend 48 hours together in the app"
+    },
+    "a_journey": {
+      "name": "A Journey",
+      "desc": "Spend 100 hours together in the app"
+    },
+    "romantic_heart": {
+      "name": "Romantic Heart",
+      "desc": "Try 5 positions from Romantic category"
+    },
+    "expert_beginner": {
+      "name": "Expert Beginner",
+      "desc": "Try 5 positions from Beginner category"
+    },
+    "passionate_athlete": {
+      "name": "Passionate Athlete",
+      "desc": "Try 5 positions from Athletic category"
+    },
+    "supported_couple": {
+      "name": "Supported Couple",
+      "desc": "Try 5 positions from Supported category"
+    },
+    "light_touch": {
+      "name": "Light Touch",
+      "desc": "Try 5 positions from Low Impact category"
+    },
+    "adventurous_spirit": {
+      "name": "Adventurous Spirit",
+      "desc": "Try 5 positions from Adventurous category"
+    },
+    "bonds_found": {
+      "name": "Bonds Found",
+      "desc": "Try 5 positions from Reconnection category"
+    },
+    "extreme_speed": {
+      "name": "Extreme Speed",
+      "desc": "Try 5 positions from Quickie category"
+    },
+    "calm_relax": {
+      "name": "Calm and Relax",
+      "desc": "Try 5 low energy positions"
+    },
+    "high_energy": {
+      "name": "High Energy",
+      "desc": "Try 5 high energy positions"
+    },
+    "take_time": {
+      "name": "Take Your Time",
+      "desc": "Try 3 long duration positions"
+    },
+    "full_focus": {
+      "name": "Full Focus",
+      "desc": "Try positions covering all 7 focus types"
+    }
+  },
+  "truth_dare_ui": {
+    "title": "Truth or Dare",
+    "subtitle_setup": "Discover your most intimate secrets...",
+    "choose_intensity": "Choose intensity",
+    "intensity_soft": "Sweet",
+    "intensity_spicy": "Spicy",
+    "intensity_extra": "On Fire",
+    "desc_soft": "Romantic and playful, to break the ice",
+    "desc_spicy": "Bold and provocative, raise the temperature",
+    "desc_extra": "No limits, only for the bravest",
+    "how_to_play": "How to play",
+    "rule_1": "Take turns, choose Truth or Dare",
+    "rule_2": "Read the card and... do it!",
+    "rule_3": "No lies, no excuses 😏",
+    "start_game": "START THE GAME",
+    "player_n": "Player {n}",
+    "round_n": "Round {n}",
+    "what_choose": "What do you choose?",
+    "tap_card": "Tap a card to discover your fate",
+    "truth": "TRUTH",
+    "dare": "DARE",
+    "truth_sub": "Confess everything...",
+    "dare_sub": "Dare everything...",
+    "end_game": "End game",
+    "change": "Change",
+    "done_next": "Done! Next turn"
+  },
+  "soundtrack_prompts": {
+    "first_impression": {
+      "title": "First Impression",
+      "desc": "A song that reminds you of the first meeting"
+    },
+    "special_moment": {
+      "title": "Special Moment",
+      "desc": "The song of an unforgettable memory together"
+    },
+    "road_trip": {
+      "title": "Road Trip",
+      "desc": "A perfect song to drive together"
+    },
+    "romantic_evening": {
+      "title": "Romantic Evening",
+      "desc": "The ideal soundtrack for a candlelit dinner"
+    },
+    "energy": {
+      "title": "Energy",
+      "desc": "A song that makes you want to dance"
+    },
+    "comfort": {
+      "title": "Comfort",
+      "desc": "The song to listen to when you need comfort"
+    },
+    "passion": {
+      "title": "Passion",
+      "desc": "A song that ignites passion"
+    },
+    "nostalgia": {
+      "title": "Nostalgia",
+      "desc": "A song that takes you back in time"
+    },
+    "future_together": {
+      "title": "Future Together",
+      "desc": "A song that represents your dreams"
+    },
+    "our_song": {
+      "title": "Our Song",
+      "desc": "If you had to choose ONE song for your story"
+    }
   }
 }

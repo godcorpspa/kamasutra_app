@@ -1,6 +1,5 @@
 {
   "app_name": "Kamasutra & Jeux de Couple",
-
   "common": {
     "continue": "Continuer",
     "cancel": "Annuler",
@@ -23,19 +22,16 @@
     "no_results": "Aucun résultat",
     "settings": "Paramètres"
   },
-
   "energy": {
     "low": "Basse",
     "medium": "Moyenne",
     "high": "Haute"
   },
-
   "duration": {
     "brief": "Brève",
     "medium": "Moyenne",
     "long": "Longue"
   },
-
   "focus": {
     "intimacy": "Intimité",
     "variety": "Variété",
@@ -45,13 +41,11 @@
     "passion": "Passion",
     "trust": "Confiance"
   },
-
   "intensity": {
     "soft": "🌸 Doux",
     "spicy": "🔥 Pimenté",
     "extraSpicy": "🌶️ Extra Pimenté"
   },
-
   "age_gate": {
     "title": "Bienvenue",
     "subtitle": "Cette application contient du contenu pour adultes",
@@ -61,7 +55,6 @@
     "denied_message": "Vous devez avoir au moins 18 ans pour utiliser cette application.",
     "legal_notice": "En continuant, vous confirmez avoir l'âge légal dans votre pays."
   },
-
   "onboarding": {
     "welcome_title": "Bienvenue, explorateurs",
     "welcome_subtitle": "Prêts pour une nouvelle aventure ensemble ?",
@@ -73,7 +66,6 @@
     "page3_subtitle": "Compte protégé et données synchronisées sur un cloud chiffré. Vous seuls avez accès à vos informations.",
     "get_started": "Commencer la soirée"
   },
-
   "pin": {
     "enter_pin": "Entrer le PIN",
     "create_pin": "Créer un PIN",
@@ -83,7 +75,6 @@
     "use_biometric": "Utiliser Face ID / Touch ID",
     "forgot_pin": "PIN oublié ?"
   },
-
   "nav": {
     "catalog": "Catalogue",
     "shuffle": "Aléatoire",
@@ -91,7 +82,6 @@
     "progress": "Progrès",
     "settings": "Plus"
   },
-
   "catalog": {
     "title": "Catalogue",
     "search_hint": "Rechercher des positions...",
@@ -108,7 +98,6 @@
     "category": "Catégorie",
     "focus": "Focus"
   },
-
   "position": {
     "difficulty": "Difficulté",
     "energy": "Énergie",
@@ -122,7 +111,6 @@
     "try_this": "Essayez celle-ci",
     "similar_positions": "Positions similaires"
   },
-
   "categories": {
     "romantic": "Romantique",
     "beginner": "Pour débuter",
@@ -133,7 +121,6 @@
     "reconnect": "Reconnexion",
     "quickie": "Rapide"
   },
-
   "shuffle": {
     "title": "Positions aléatoires",
     "subtitle": "Laissez-vous surprendre",
@@ -157,7 +144,6 @@
     "save": "Enregistrer",
     "tried": "Essayée"
   },
-
   "games": {
     "title": "Jeux",
     "subtitle": "Choisissez votre aventure",
@@ -175,7 +161,6 @@
     "complete": "Terminé !",
     "skip_card": "Passer (pause)",
     "safe_word_hint": "Appuyez sur pause pour passer sans pénalité",
-
     "goose_game": {
       "title": "Jeu de l'Oie",
       "description": "Un parcours de défis et de découvertes",
@@ -213,7 +198,6 @@
       "victory": "Victoire ! 🎊",
       "victory_message": "Vous avez terminé le parcours ensemble !"
     },
-
     "truth_dare": {
       "title": "Action ou Vérité",
       "subtitle": "Édition Intimité",
@@ -224,7 +208,6 @@
       "double_dare": "Double Action",
       "swap": "Échange de rôles"
     },
-
     "wheel": {
       "title": "Roue de la Fortune",
       "subtitle": "Édition Romantique",
@@ -265,7 +248,6 @@
         "wild_card": "Carte\nJoker"
       }
     },
-
     "hot_cold": {
       "title": "Chaud et Froid",
       "subtitle": "Guidés uniquement par les mots",
@@ -277,7 +259,6 @@
       "new_mission": "Nouvelle mission",
       "blindfold_mode": "Mode yeux bandés"
     },
-
     "love_notes": {
       "title": "Mots d'Amour",
       "subtitle": "Écrivez avec le cœur",
@@ -288,7 +269,6 @@
       "saved": "Sauvegardé dans les souvenirs ❤️",
       "your_notes": "Vos mots"
     },
-
     "fantasy_builder": {
       "title": "Construisons un Fantasme",
       "subtitle": "Créez votre histoire ensemble",
@@ -298,7 +278,6 @@
       "save_scenario": "Sauvegarder le scénario",
       "your_scenarios": "Vos scénarios"
     },
-
     "compliment_battle": {
       "title": "Bataille de Compliments",
       "subtitle": "Qui sait apprécier le mieux ?",
@@ -314,7 +293,6 @@
         "free": "Libre"
       }
     },
-
     "question_quest": {
       "title": "Quête de Questions",
       "subtitle": "36 questions pour (re)tomber amoureux",
@@ -324,7 +302,6 @@
       "ready_to_advance": "Prêts à avancer ?",
       "both_confirm": "Les deux doivent confirmer"
     },
-
     "two_minutes": {
       "title": "2 Minutes pour Nous",
       "subtitle": "Un moment de connexion",
@@ -337,7 +314,6 @@
         "gratitude": "Une pensée de gratitude chacun"
       }
     },
-
     "intimacy_map": {
       "title": "Carte de l'Intimité",
       "subtitle": "Explorez vos préférences",
@@ -349,7 +325,6 @@
       "matches": "Correspondances",
       "discoveries": "Découvertes"
     },
-
     "soundtrack": {
       "title": "Notre Bande Sonore",
       "subtitle": "Les chansons de votre histoire",
@@ -363,7 +338,6 @@
       "compare_choices": "Comparer les choix",
       "create_playlist": "Créer une playlist"
     },
-
     "mirror_challenge": {
       "title": "Défi du Miroir",
       "subtitle": "Connexion sans mots",
@@ -373,7 +347,6 @@
       "eyes_closed": "Mode yeux fermés"
     }
   },
-
   "progress": {
     "title": "Progrès",
     "badges": "Badges",
@@ -390,7 +363,6 @@
     "favorites_count": "Favoris sauvegardés",
     "badge_unlocked": "Nouveau badge débloqué ! 🎉"
   },
-
   "badges": {
     "explorer": {
       "name": "Explorateur",
@@ -437,7 +409,6 @@
       "description": "50 défis complétés"
     }
   },
-
   "settings": {
     "title": "Paramètres",
     "privacy": "Vie privée",
@@ -465,7 +436,6 @@
     "logout_and_disconnect": "Se déconnecter",
     "logout_disconnect_desc": "Se déconnecter et revenir au login"
   },
-
   "consent": {
     "check_in": "Tout va bien ? Bon moment pour un check-in.",
     "all_good": "👍 Tout va bien",
@@ -476,7 +446,6 @@
     "resume": "Reprendre",
     "end_session": "Terminer la session"
   },
-
   "reactions": {
     "loved": "❤️ Adoré",
     "liked": "👍 Aimé",
@@ -484,13 +453,11 @@
     "skipped": "⏭️ Passé",
     "too_hard": "😅 Trop difficile"
   },
-
   "errors": {
     "generic": "Quelque chose s'est mal passé",
     "no_positions": "Aucune position trouvée avec ces filtres",
     "try_different_filters": "Essayez avec des filtres différents"
   },
-
   "game_ui": {
     "player_1": "Joueur 1",
     "player_2": "Joueur 2",
@@ -678,7 +645,6 @@
     "create_unique_together": "Créez quelque chose d'unique ensemble ! 💕",
     "difficulty_response_time": "Difficulté (temps de réponse)"
   },
-
   "settings_extra": {
     "change_password": "Changer le mot de passe",
     "change_password_desc": "Nous enverrons un email à {email} avec les instructions pour réinitialiser votre mot de passe.",
@@ -723,7 +689,6 @@
     "wrong_password": "Mot de passe incorrect",
     "error_delete_account": "Erreur : impossible de supprimer le compte"
   },
-
   "auth": {
     "email_label": "Email",
     "password_label": "Mot de passe",
@@ -775,11 +740,356 @@
     "req_number": "Un chiffre (0-9)",
     "req_special": "Un caractère spécial (!@#$%...)"
   },
-
   "progress_extra": {
     "positions_explored": "Positions explorées",
     "games_played": "Parties jouées",
     "time_together": "Temps ensemble",
     "favorites_saved": "Favoris sauvegardés"
+  },
+  "progress_ui": {
+    "tried_tab": "Essayées",
+    "current_streak": "Série actuelle",
+    "record": "🏅 Record",
+    "motivational_0": "Commencez votre aventure aujourd'hui !",
+    "motivational_1": "Bon début ! Revenez demain 💪",
+    "motivational_7": "Vous êtes sur la bonne voie !",
+    "motivational_30": "Quel couple complice ! 🔥",
+    "motivational_100": "Vous êtes inarrêtables ! 🏆",
+    "day_singular": "1 jour",
+    "day_plural": "{n} jours",
+    "positions_explored": "Positions explorées",
+    "games_played": "Parties jouées",
+    "time_together": "Temps ensemble",
+    "favorites_saved": "Favoris sauvegardés",
+    "categories_explored": "Catégories explorées",
+    "start_exploring_stats": "Commencez à explorer pour voir vos statistiques !",
+    "no_tried_yet": "Aucune position essayée",
+    "explore_catalog_hint": "Explorez le catalogue ou jouez au shuffle pour ajouter des positions !",
+    "keep_exploring": "Continuez à explorer pour débloquer !",
+    "progress_label": "Progression : {progress}",
+    "streak_days": "{n} jours"
+  },
+  "badge_list": {
+    "first_step": {
+      "name": "Premier Pas",
+      "desc": "Essayez votre première position"
+    },
+    "explorer": {
+      "name": "Explorateur",
+      "desc": "Essayez 5 positions différentes"
+    },
+    "initiator": {
+      "name": "Initiateur",
+      "desc": "Essayez 10 positions différentes"
+    },
+    "adventurer": {
+      "name": "Aventurier",
+      "desc": "Essayez 20 positions différentes"
+    },
+    "enthusiast": {
+      "name": "Passionné",
+      "desc": "Essayez 30 positions différentes"
+    },
+    "collector": {
+      "name": "Collectionneur",
+      "desc": "Essayez 50 positions différentes"
+    },
+    "master": {
+      "name": "Maître",
+      "desc": "Essayez 100 positions différentes"
+    },
+    "legend": {
+      "name": "Légende",
+      "desc": "Essayez 150 positions différentes"
+    },
+    "grand_master": {
+      "name": "Grand Maître",
+      "desc": "Essayez 200 positions différentes"
+    },
+    "first_spark": {
+      "name": "Première Étincelle",
+      "desc": "Sauvegardez votre première position favorite"
+    },
+    "romantic": {
+      "name": "Romantique",
+      "desc": "Sauvegardez 5 positions en favoris"
+    },
+    "big_heart": {
+      "name": "Grand Cœur",
+      "desc": "Sauvegardez 10 positions en favoris"
+    },
+    "heart_collector": {
+      "name": "Collectionneur de Cœurs",
+      "desc": "Sauvegardez 20 positions en favoris"
+    },
+    "third_day": {
+      "name": "Troisième Jour",
+      "desc": "Atteignez une série de 3 jours"
+    },
+    "dedicated": {
+      "name": "Dévoué",
+      "desc": "Atteignez une série de 7 jours"
+    },
+    "momentum": {
+      "name": "Momentum",
+      "desc": "Atteignez une série de 14 jours"
+    },
+    "champion": {
+      "name": "Champion",
+      "desc": "Atteignez une série de 30 jours"
+    },
+    "faithful": {
+      "name": "Fidèle",
+      "desc": "Atteignez une série de 60 jours"
+    },
+    "irresistible": {
+      "name": "Irrésistible",
+      "desc": "Atteignez une série de 100 jours"
+    },
+    "on_streak": {
+      "name": "En Série",
+      "desc": "Vous avez une série active d'au moins 3 jours"
+    },
+    "first_game": {
+      "name": "Premier Jeu",
+      "desc": "Complétez votre première session shuffle"
+    },
+    "player": {
+      "name": "Joueur",
+      "desc": "Complétez 5 sessions shuffle"
+    },
+    "soul_explorers": {
+      "name": "Explorateurs de l'Âme",
+      "desc": "Complétez 10 sessions shuffle"
+    },
+    "game_expert": {
+      "name": "Expert des Jeux",
+      "desc": "Complétez 25 sessions shuffle"
+    },
+    "professional": {
+      "name": "Professionnel",
+      "desc": "Complétez 50 sessions shuffle"
+    },
+    "world_explorer": {
+      "name": "Explorateur du Monde",
+      "desc": "Essayez des positions de 3 catégories différentes"
+    },
+    "versatile": {
+      "name": "Polyvalent",
+      "desc": "Essayez des positions de 5 catégories différentes"
+    },
+    "complete_artist": {
+      "name": "Artiste Complet",
+      "desc": "Essayez des positions de toutes les catégories"
+    },
+    "brave": {
+      "name": "Courageux",
+      "desc": "Essayez 5 positions de haute difficulté (4-5⭐)"
+    },
+    "acrobat": {
+      "name": "Acrobate",
+      "desc": "Essayez 15 positions de haute difficulté (4-5⭐)"
+    },
+    "first_hour": {
+      "name": "Première Heure",
+      "desc": "Passez 60 minutes ensemble dans l'app"
+    },
+    "time_lovers": {
+      "name": "Amoureux du Temps",
+      "desc": "Passez 5 heures ensemble dans l'app"
+    },
+    "deep_connection": {
+      "name": "Connexion Profonde",
+      "desc": "Passez 24 heures ensemble dans l'app"
+    },
+    "summit": {
+      "name": "Sommet",
+      "desc": "Essayez 250 positions différentes"
+    },
+    "olympian": {
+      "name": "Olympien",
+      "desc": "Essayez 300 positions différentes"
+    },
+    "great_collection": {
+      "name": "Grande Collection",
+      "desc": "Sauvegardez 30 positions en favoris"
+    },
+    "love_castle": {
+      "name": "Château d'Amour",
+      "desc": "Sauvegardez 50 positions en favoris"
+    },
+    "invincible": {
+      "name": "Invincible",
+      "desc": "Atteignez une série de 150 jours"
+    },
+    "infinite": {
+      "name": "Infini",
+      "desc": "Atteignez une série de 200 jours"
+    },
+    "year_together": {
+      "name": "Année Ensemble",
+      "desc": "Atteignez une série de 365 jours"
+    },
+    "great_player": {
+      "name": "Grand Joueur",
+      "desc": "Complétez 75 sessions shuffle"
+    },
+    "games_champion": {
+      "name": "Champion des Jeux",
+      "desc": "Complétez 100 sessions shuffle"
+    },
+    "games_master": {
+      "name": "Maître des Jeux",
+      "desc": "Complétez 150 sessions shuffle"
+    },
+    "games_legend": {
+      "name": "Légende des Jeux",
+      "desc": "Complétez 200 sessions shuffle"
+    },
+    "warrior": {
+      "name": "Guerrier",
+      "desc": "Essayez 25 positions de haute difficulté (4-5⭐)"
+    },
+    "eagle": {
+      "name": "Aigle",
+      "desc": "Essayez 30 positions de haute difficulté (4-5⭐)"
+    },
+    "extreme": {
+      "name": "Extrême",
+      "desc": "Essayez 3 positions de difficulté maximale (5⭐)"
+    },
+    "ultras": {
+      "name": "Ultras",
+      "desc": "Essayez 10 positions de difficulté maximale (5⭐)"
+    },
+    "ocean_of_time": {
+      "name": "Océan de Temps",
+      "desc": "Passez 10 heures ensemble dans l'app"
+    },
+    "endless_night": {
+      "name": "Nuit Sans Fin",
+      "desc": "Passez 48 heures ensemble dans l'app"
+    },
+    "a_journey": {
+      "name": "Un Voyage",
+      "desc": "Passez 100 heures ensemble dans l'app"
+    },
+    "romantic_heart": {
+      "name": "Cœur Romantique",
+      "desc": "Essayez 5 positions de la catégorie Romantique"
+    },
+    "expert_beginner": {
+      "name": "Expert Débutant",
+      "desc": "Essayez 5 positions de la catégorie Débutant"
+    },
+    "passionate_athlete": {
+      "name": "Athlète Passionné",
+      "desc": "Essayez 5 positions de la catégorie Athlétique"
+    },
+    "supported_couple": {
+      "name": "Couple Soutenu",
+      "desc": "Essayez 5 positions de la catégorie Soutenue"
+    },
+    "light_touch": {
+      "name": "Toucher Léger",
+      "desc": "Essayez 5 positions de la catégorie Douce"
+    },
+    "adventurous_spirit": {
+      "name": "Esprit Aventurier",
+      "desc": "Essayez 5 positions de la catégorie Aventureuse"
+    },
+    "bonds_found": {
+      "name": "Liens Retrouvés",
+      "desc": "Essayez 5 positions de la catégorie Reconnexion"
+    },
+    "extreme_speed": {
+      "name": "Vitesse Extrême",
+      "desc": "Essayez 5 positions de la catégorie Quickie"
+    },
+    "calm_relax": {
+      "name": "Calme et Détente",
+      "desc": "Essayez 5 positions à basse énergie"
+    },
+    "high_energy": {
+      "name": "Haute Énergie",
+      "desc": "Essayez 5 positions à haute énergie"
+    },
+    "take_time": {
+      "name": "Prenez le Temps",
+      "desc": "Essayez 3 positions de longue durée"
+    },
+    "full_focus": {
+      "name": "Focus Complet",
+      "desc": "Essayez des positions couvrant les 7 types de focus"
+    }
+  },
+  "truth_dare_ui": {
+    "title": "Action ou Vérité",
+    "subtitle_setup": "Découvrez vos secrets les plus intimes...",
+    "choose_intensity": "Choisissez l'intensité",
+    "intensity_soft": "Doux",
+    "intensity_spicy": "Piquant",
+    "intensity_extra": "Brûlant",
+    "desc_soft": "Romantique et joueur, pour briser la glace",
+    "desc_spicy": "Audacieux et provocant, montez la température",
+    "desc_extra": "Sans limites, seulement pour les plus téméraires",
+    "how_to_play": "Comment jouer",
+    "rule_1": "À tour de rôle, choisissez Action ou Vérité",
+    "rule_2": "Lisez la carte et... exécutez !",
+    "rule_3": "Pas de mensonges, pas d'excuses 😏",
+    "start_game": "COMMENCER LE JEU",
+    "player_n": "Joueur {n}",
+    "round_n": "Round {n}",
+    "what_choose": "Que choisissez-vous ?",
+    "tap_card": "Touchez une carte pour découvrir votre destin",
+    "truth": "VÉRITÉ",
+    "dare": "ACTION",
+    "truth_sub": "Avouez tout...",
+    "dare_sub": "Osez tout...",
+    "end_game": "Fin de partie",
+    "change": "Changer",
+    "done_next": "Fait ! Tour suivant"
+  },
+  "soundtrack_prompts": {
+    "first_impression": {
+      "title": "Première Impression",
+      "desc": "Une chanson qui vous rappelle la première rencontre"
+    },
+    "special_moment": {
+      "title": "Moment Spécial",
+      "desc": "La chanson d'un souvenir inoubliable ensemble"
+    },
+    "road_trip": {
+      "title": "Road Trip",
+      "desc": "Une chanson parfaite pour conduire ensemble"
+    },
+    "romantic_evening": {
+      "title": "Soirée Romantique",
+      "desc": "La bande-son idéale pour un dîner aux chandelles"
+    },
+    "energy": {
+      "title": "Énergie",
+      "desc": "Une chanson qui vous donne envie de danser"
+    },
+    "comfort": {
+      "title": "Réconfort",
+      "desc": "La chanson à écouter quand vous avez besoin de réconfort"
+    },
+    "passion": {
+      "title": "Passion",
+      "desc": "Une chanson qui enflamme la passion"
+    },
+    "nostalgia": {
+      "title": "Nostalgie",
+      "desc": "Une chanson qui vous ramène dans le temps"
+    },
+    "future_together": {
+      "title": "Futur Ensemble",
+      "desc": "Une chanson qui représente vos rêves"
+    },
+    "our_song": {
+      "title": "Notre Chanson",
+      "desc": "Si vous deviez choisir UNE chanson pour votre histoire"
+    }
   }
 }

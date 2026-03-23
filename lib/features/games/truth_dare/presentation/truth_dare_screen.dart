@@ -159,11 +159,11 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
   String _getIntensityLabel(GameIntensity intensity) {
     switch (intensity) {
       case GameIntensity.soft:
-        return 'Dolce';
+        return 'truth_dare_ui.intensity_soft'.tr();
       case GameIntensity.spicy:
-        return 'Piccante';
+        return 'truth_dare_ui.intensity_spicy'.tr();
       case GameIntensity.extraSpicy:
-        return 'Infuocato';
+        return 'truth_dare_ui.intensity_extra'.tr();
     }
   }
 
@@ -180,8 +180,8 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
         ),
         title: _gameStarted
             ? null
-            : const Text(
-                'Obbligo o Verità',
+            : Text(
+                'truth_dare_ui.title'.tr(),
                 style: TextStyle(
                   fontFamily: 'PlayfairDisplay',
                   fontSize: 22,
@@ -277,7 +277,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
 
               // Subtitle
               Text(
-                'Scoprite i vostri segreti più intimi...',
+                'truth_dare_ui.subtitle_setup'.tr(),
                 style: TextStyle(
                   fontFamily: 'DMSans',
                   fontSize: 15,
@@ -301,7 +301,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                   ),
                   const SizedBox(width: 8),
                   const Text(
-                    'Scegli l\'intensità',
+                    'truth_dare_ui.choose_intensity'.tr(),
                     style: TextStyle(
                       fontFamily: 'PlayfairDisplay',
                       fontSize: 18,
@@ -430,7 +430,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                             color: Colors.white.withOpacity(0.5), size: 16),
                         const SizedBox(width: 8),
                         Text(
-                          'Come si gioca',
+                          'truth_dare_ui.how_to_play'.tr(),
                           style: TextStyle(
                             fontFamily: 'DMSans',
                             fontSize: 14,
@@ -442,11 +442,11 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                       ],
                     ),
                     const SizedBox(height: 12),
-                    _buildRuleRow('1', 'A turno, scegli Obbligo o Verità'),
+                    _buildRuleRow('1', 'truth_dare_ui.rule_1'.tr()),
                     const SizedBox(height: 8),
-                    _buildRuleRow('2', 'Leggi la carta e... esegui!'),
+                    _buildRuleRow('2', 'truth_dare_ui.rule_2'.tr()),
                     const SizedBox(height: 8),
-                    _buildRuleRow('3', 'Niente bugie, niente scuse 😏'),
+                    _buildRuleRow('3', 'truth_dare_ui.rule_3'.tr()),
                   ],
                 ),
               ),
@@ -478,14 +478,14 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                       ),
                     ],
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.play_arrow_rounded,
                           color: Colors.white, size: 28),
                       SizedBox(width: 8),
                       Text(
-                        'INIZIA IL GIOCO',
+                        'truth_dare_ui.start_game'.tr(),
                         style: TextStyle(
                           fontFamily: 'DMSans',
                           fontSize: 18,
@@ -550,11 +550,11 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
   String _getIntensityDescription(GameIntensity intensity) {
     switch (intensity) {
       case GameIntensity.soft:
-        return 'Romantico e giocoso, per rompere il ghiaccio';
+        return 'truth_dare_ui.desc_soft'.tr();
       case GameIntensity.spicy:
-        return 'Audace e provocante, alzate la temperatura';
+        return 'truth_dare_ui.desc_spicy'.tr();
       case GameIntensity.extraSpicy:
-        return 'Senza limiti, solo per i più temerari';
+        return 'truth_dare_ui.desc_extra'.tr();
     }
   }
 
@@ -635,7 +635,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Giocatore $_currentPlayer',
+                    'truth_dare_ui.player_n'.tr(namedArgs: {'n': '$_currentPlayer'}),
                     style: TextStyle(
                       fontFamily: 'PlayfairDisplay',
                       fontSize: 18,
@@ -654,7 +654,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  'Round $_round',
+                  'truth_dare_ui.round_n'.tr(namedArgs: {'n': '$_round'}),
                   style: TextStyle(
                     fontFamily: 'DMSans',
                     fontSize: 13,
@@ -680,7 +680,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Cosa scegli?',
+                'truth_dare_ui.what_choose'.tr(),
                 style: TextStyle(
                   fontFamily: 'PlayfairDisplay',
                   fontSize: 28,
@@ -693,7 +693,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
               const SizedBox(height: 8),
 
               Text(
-                'Tocca una carta per scoprire il tuo destino',
+                'truth_dare_ui.tap_card'.tr(),
                 style: TextStyle(
                   fontFamily: 'DMSans',
                   fontSize: 14,
@@ -709,9 +709,9 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                   // VERITÀ card
                   Expanded(
                     child: _buildChoiceCard(
-                      label: 'VERITÀ',
+                      label: 'truth_dare_ui.truth'.tr(),
                       emoji: '💬',
-                      subtitle: 'Confessa tutto...',
+                      subtitle: 'truth_dare_ui.truth_sub'.tr(),
                       gradient: const [Color(0xFF6B2D5B), Color(0xFF8B4078)],
                       glowColor: const Color(0xFFE879F9),
                       onTap: () => _selectTruthOrDare(true),
@@ -723,9 +723,9 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                   // OBBLIGO card
                   Expanded(
                     child: _buildChoiceCard(
-                      label: 'OBBLIGO',
+                      label: 'truth_dare_ui.dare'.tr(),
                       emoji: '🎯',
-                      subtitle: 'Osa tutto...',
+                      subtitle: 'truth_dare_ui.dare_sub'.tr(),
                       gradient: const [Color(0xFFC62828), Color(0xFFE53935)],
                       glowColor: const Color(0xFFFF6B35),
                       onTap: () => _selectTruthOrDare(false),
@@ -742,7 +742,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                 icon: Icon(Icons.exit_to_app,
                     color: Colors.white.withOpacity(0.4), size: 18),
                 label: Text(
-                  'Termina partita',
+                  'truth_dare_ui.end_game'.tr(),
                   style: TextStyle(
                     fontFamily: 'DMSans',
                     fontSize: 14,
@@ -897,7 +897,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          isTruth ? 'VERITÀ' : 'OBBLIGO',
+                          isTruth ? 'truth_dare_ui.truth'.tr() : 'truth_dare_ui.dare'.tr(),
                           style: TextStyle(
                             fontFamily: 'PlayfairDisplay',
                             fontSize: 16,
@@ -994,7 +994,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                             color: Colors.white.withOpacity(0.6), size: 20),
                         const SizedBox(width: 6),
                         Text(
-                          'Cambia',
+                          'truth_dare_ui.change'.tr(),
                           style: TextStyle(
                             fontFamily: 'DMSans',
                             fontSize: 15,
@@ -1038,7 +1038,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                             color: Colors.white, size: 22),
                         SizedBox(width: 6),
                         Text(
-                          'Fatto! Prossimo turno',
+                          'truth_dare_ui.done_next'.tr(),
                           style: TextStyle(
                             fontFamily: 'DMSans',
                             fontSize: 15,

@@ -17,68 +17,28 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
   final TextEditingController _songController = TextEditingController();
   final TextEditingController _artistController = TextEditingController();
 
-  final List<Map<String, dynamic>> _prompts = [
-    {
-      'title': 'Prima Impressione',
-      'description': 'Una canzone che ti ricorda il primo incontro',
-      'emoji': '✨',
-      'color': const Color(0xFF8B5CF6),
-    },
-    {
-      'title': 'Momento Speciale',
-      'description': 'La canzone di un ricordo indimenticabile insieme',
-      'emoji': '💕',
-      'color': const Color(0xFFEC4899),
-    },
-    {
-      'title': 'Road Trip',
-      'description': 'Una canzone perfetta per guidare insieme',
-      'emoji': '🚗',
-      'color': const Color(0xFF06B6D4),
-    },
-    {
-      'title': 'Serata Romantica',
-      'description': 'La colonna sonora ideale per una cena a lume di candela',
-      'emoji': '🕯️',
-      'color': const Color(0xFFF59E0B),
-    },
-    {
-      'title': 'Energia',
-      'description': 'Una canzone che vi fa venire voglia di ballare',
-      'emoji': '💃',
-      'color': const Color(0xFF10B981),
-    },
-    {
-      'title': 'Comfort',
-      'description': 'La canzone da ascoltare quando avete bisogno di conforto',
-      'emoji': '🤗',
-      'color': const Color(0xFF6366F1),
-    },
-    {
-      'title': 'Passione',
-      'description': 'Una canzone che accende la passione',
-      'emoji': '🔥',
-      'color': const Color(0xFFEF4444),
-    },
-    {
-      'title': 'Nostalgia',
-      'description': 'Una canzone che vi fa tornare indietro nel tempo',
-      'emoji': '⏳',
-      'color': const Color(0xFF8B5CF6),
-    },
-    {
-      'title': 'Futuro Insieme',
-      'description': 'Una canzone che rappresenta i vostri sogni',
-      'emoji': '🌟',
-      'color': const Color(0xFFF97316),
-    },
-    {
-      'title': 'La Nostra Canzone',
-      'description': 'Se doveste scegliere UNA canzone per la vostra storia',
-      'emoji': '💑',
-      'color': const Color(0xFFEC4899),
-    },
+  static const List<Map<String, dynamic>> _promptMeta = [
+    {'key': 'first_impression', 'emoji': '✨', 'color': Color(0xFF8B5CF6)},
+    {'key': 'special_moment', 'emoji': '💕', 'color': Color(0xFFEC4899)},
+    {'key': 'road_trip', 'emoji': '🚗', 'color': Color(0xFF06B6D4)},
+    {'key': 'romantic_evening', 'emoji': '🕯️', 'color': Color(0xFFF59E0B)},
+    {'key': 'energy', 'emoji': '💃', 'color': Color(0xFF10B981)},
+    {'key': 'comfort', 'emoji': '🤗', 'color': Color(0xFF6366F1)},
+    {'key': 'passion', 'emoji': '🔥', 'color': Color(0xFFEF4444)},
+    {'key': 'nostalgia', 'emoji': '⏳', 'color': Color(0xFF8B5CF6)},
+    {'key': 'future_together', 'emoji': '🌟', 'color': Color(0xFFF97316)},
+    {'key': 'our_song', 'emoji': '💑', 'color': Color(0xFFEC4899)},
   ];
+
+  List<Map<String, dynamic>> get _prompts => _promptMeta.map((meta) {
+    final key = meta['key'] as String;
+    return {
+      'title': 'soundtrack_prompts.$key.title'.tr(),
+      'description': 'soundtrack_prompts.$key.desc'.tr(),
+      'emoji': meta['emoji'],
+      'color': meta['color'],
+    };
+  }).toList();
 
   @override
   void dispose() {

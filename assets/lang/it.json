@@ -1,6 +1,5 @@
 {
   "app_name": "Kamasutra & Couple Games",
-  
   "common": {
     "continue": "Continua",
     "cancel": "Annulla",
@@ -23,19 +22,16 @@
     "no_results": "Nessun risultato",
     "settings": "Impostazioni"
   },
-
   "energy": {
     "low": "Bassa",
     "medium": "Media",
     "high": "Alta"
   },
-
   "duration": {
     "brief": "Breve",
     "medium": "Media",
     "long": "Lunga"
   },
-
   "focus": {
     "intimacy": "Intimità",
     "variety": "Varietà",
@@ -45,13 +41,11 @@
     "passion": "Passione",
     "trust": "Fiducia"
   },
-
   "intensity": {
     "soft": "🌸 Soft",
     "spicy": "🔥 Piccante",
     "extraSpicy": "🌶️ Extra Piccante"
   },
-
   "age_gate": {
     "title": "Benvenuto",
     "subtitle": "Questa app contiene contenuti per adulti",
@@ -61,7 +55,6 @@
     "denied_message": "Devi avere almeno 18 anni per utilizzare questa app.",
     "legal_notice": "Continuando, confermi di avere l'età legale nel tuo paese."
   },
-
   "onboarding": {
     "welcome_title": "Bentornati, esploratori",
     "welcome_subtitle": "Pronti per una nuova avventura insieme?",
@@ -73,7 +66,6 @@
     "page3_subtitle": "Account protetto e dati sincronizzati su cloud cifrato. Solo voi due avete accesso alle vostre informazioni.",
     "get_started": "Inizia la serata"
   },
-
   "pin": {
     "enter_pin": "Inserisci PIN",
     "create_pin": "Crea un PIN",
@@ -83,7 +75,6 @@
     "use_biometric": "Usa Face ID / Touch ID",
     "forgot_pin": "PIN dimenticato?"
   },
-
   "nav": {
     "catalog": "Catalogo",
     "shuffle": "Casuale",
@@ -91,7 +82,6 @@
     "progress": "Progressi",
     "settings": "Altro"
   },
-
   "catalog": {
     "title": "Catalogo",
     "search_hint": "Cerca posizioni...",
@@ -108,7 +98,6 @@
     "category": "Categoria",
     "focus": "Focus"
   },
-
   "position": {
     "difficulty": "Difficoltà",
     "energy": "Energia",
@@ -122,7 +111,6 @@
     "try_this": "Prova questa",
     "similar_positions": "Posizioni simili"
   },
-
   "categories": {
     "romantic": "Romantico",
     "beginner": "Per iniziare",
@@ -133,7 +121,6 @@
     "reconnect": "Riconnessione",
     "quickie": "Veloce"
   },
-
   "shuffle": {
     "title": "Posizioni casuali",
     "subtitle": "Lasciati sorprendere",
@@ -157,7 +144,6 @@
     "save": "Salva",
     "tried": "Provata"
   },
-
   "games": {
     "title": "Giochi",
     "subtitle": "Scegliete la vostra avventura",
@@ -175,7 +161,6 @@
     "complete": "Completato!",
     "skip_card": "Salta (pausa)",
     "safe_word_hint": "Premi pausa per saltare senza penalità",
-    
     "goose_game": {
       "title": "Gioco dell'Oca",
       "description": "Un percorso di sfide e scoperte",
@@ -213,15 +198,15 @@
       "victory": "Vittoria! 🎊",
       "victory_message": "Avete completato il percorso insieme!",
       "spicy_goose_game_title": "Gioco dell'Oca Piccante",
-      "subtitle_description": "100 caselle \u2022 4 capi ciascuno \u2022 Scale, Buche e Penitenze \ud83d\udd25",
+      "subtitle_description": "100 caselle • 4 capi ciascuno • Scale, Buche e Penitenze 🔥",
       "player_names": "Nomi dei Giocatori",
       "player_label": "Giocatore {number}",
       "player_1_default": "Giocatore 1",
       "player_2_default": "Giocatore 2",
       "enter_name": "Inserisci un nome",
       "gender_label": "Genere:",
-      "gender_male": "\u2642 Maschio",
-      "gender_female": "\u2640 Femmina",
+      "gender_male": "♂ Maschio",
+      "gender_female": "♀ Femmina",
       "start_game": "INIZIA IL GIOCO",
       "rules": "Regole",
       "quick_rule_exit": "Per uscire dalla partenza: tira 4, 5 o 6",
@@ -233,34 +218,34 @@
       "quick_rule_six": "Fai 6: tira ancora (max 2 volte)",
       "quick_rules_title": "Regole Rapide",
       "tutorial_welcome_title": "Benvenuti!",
-      "tutorial_welcome_body": "Il Gioco dell'Oca Piccante è un gioco di coppia su 100 caselle, pieno di ricompense bollenti, penitenze hot e colpi di scena! Chi raggiunge la casella 100 vince e riceve una ricompensa speciale dal partner \ud83d\ude08",
+      "tutorial_welcome_body": "Il Gioco dell'Oca Piccante è un gioco di coppia su 100 caselle, pieno di ricompense bollenti, penitenze hot e colpi di scena! Chi raggiunge la casella 100 vince e riceve una ricompensa speciale dal partner 😈",
       "tutorial_clothing_title": "4 Capi Ciascuno",
-      "tutorial_clothing_body": "Ogni giocatore inizia con 4 capi di abbigliamento. Man mano che il gioco prosegue, li perderete... Se non avete più capi da togliere, scatta una penitenza piccante! \ud83d\udd25",
+      "tutorial_clothing_body": "Ogni giocatore inizia con 4 capi di abbigliamento. Man mano che il gioco prosegue, li perderete... Se non avete più capi da togliere, scatta una penitenza piccante! 🔥",
       "tutorial_exit_title": "Uscire dalla Partenza",
       "tutorial_exit_body": "Per uscire dalla casella 0 devi tirare 4, 5 o 6. Se fallisci per DUE turni consecutivi, il partner ti toglie un capo!\n\nQuando esci, tira di nuovo il dado per muoverti.",
       "tutorial_rule20_title": "La Regola del 20",
-      "tutorial_rule20_body": "Ogni volta che superi un multiplo di 20 (caselle 20, 40, 60, 80), il tuo avversario deve togliere un capo!\n\nAvanza velocemente per spogliare il partner \ud83d\ude0f",
+      "tutorial_rule20_body": "Ogni volta che superi un multiplo di 20 (caselle 20, 40, 60, 80), il tuo avversario deve togliere un capo!\n\nAvanza velocemente per spogliare il partner 😏",
       "tutorial_ladders_title": "Scale e Buche",
-      "tutorial_ladders_body": "\ud83e\ude9c SCALA: salta avanti a una casella più alta e ricevi una ricompensa dal partner!\n\n\ud83d\udd73\ufe0f BUCO: torni indietro a una casella più bassa e devi fare una penitenza per il partner!",
+      "tutorial_ladders_body": "🪜 SCALA: salta avanti a una casella più alta e ricevi una ricompensa dal partner!\n\n🕳️ BUCO: torni indietro a una casella più bassa e devi fare una penitenza per il partner!",
       "tutorial_penance_title": "Caselle Penitenza",
-      "tutorial_penance_body": "Sparse sul tabellone ci sono caselle Penitenza \ud83d\udd25\n\nSe ci finisci sopra, pesca una penitenza piccante e... eseguila! Niente scuse! \ud83d\ude08",
+      "tutorial_penance_body": "Sparse sul tabellone ci sono caselle Penitenza 🔥\n\nSe ci finisci sopra, pesca una penitenza piccante e... eseguila! Niente scuse! 😈",
       "tutorial_six_title": "Il 6 Fortunato",
-      "tutorial_six_body": "Se tiri un 6, tira di nuovo!\n\nPuoi farlo fino a 2 volte consecutive (quindi 3 tiri totali per turno). Approfitta per fare il salto più grande! \ud83d\ude80",
+      "tutorial_six_body": "Se tiri un 6, tira di nuovo!\n\nPuoi farlo fino a 2 volte consecutive (quindi 3 tiri totali per turno). Approfitta per fare il salto più grande! 🚀",
       "tutorial_timer_title": "Ricompense a Tempo",
-      "tutorial_timer_body": "Alcune ricompense e penitenze hanno un timer!\n\nQuando appare il conto alla rovescia, devi eseguire l'azione per tutto il tempo indicato. Il timer parte automaticamente. Pronti? \ud83d\ude09",
+      "tutorial_timer_body": "Alcune ricompense e penitenze hanno un timer!\n\nQuando appare il conto alla rovescia, devi eseguire l'azione per tutto il tempo indicato. Il timer parte automaticamente. Pronti? 😉",
       "tutorial_victory_title": "Vittoria!",
-      "tutorial_victory_body": "Chi raggiunge esattamente la casella 100 vince!\n\nSe il tuo tiro ti porta oltre 100, rimbalzi indietro. Il vincitore riceve una ricompensa speciale dal partner!\n\nBuon divertimento! \ud83c\udf89",
+      "tutorial_victory_body": "Chi raggiunge esattamente la casella 100 vince!\n\nSe il tuo tiro ti porta oltre 100, rimbalzi indietro. Il vincitore riceve una ricompensa speciale dal partner!\n\nBuon divertimento! 🎉",
       "skip_all": "Salta tutto",
-      "lets_start": "Iniziamo! \ud83c\udfb2",
-      "forward": "Avanti \u2192",
-      "rolled_six_again": "\ud83c\udfb2 Hai fatto 6! Tira ancora! ({count}/2)",
-      "rolled_six_extra": "\ud83c\udfb2 Hai fatto 6! Tira ancora ({count}/2)",
-      "player_exits": "{player} esce! \ud83d\ude80 Tira ancora per muoverti!",
+      "lets_start": "Iniziamo! 🎲",
+      "forward": "Avanti →",
+      "rolled_six_again": "🎲 Hai fatto 6! Tira ancora! ({count}/2)",
+      "rolled_six_extra": "🎲 Hai fatto 6! Tira ancora ({count}/2)",
+      "player_exits": "{player} esce! 🚀 Tira ancora per muoverti!",
       "failed_exit": "{player} non è uscito per 2 turni!",
       "need_456": "Serve 4, 5 o 6! ({remaining} tentativi rimasti)",
       "passed_square": "{player} ha superato la casella {square}!",
       "ladder_title": "SCALA!",
-      "square_move": "Casella {from} \u2192 {to} ({diff})",
+      "square_move": "Casella {from} → {to} ({diff})",
       "reward_description": "Ricevi una ricompensa dal partner:",
       "hole_title": "BUCO!",
       "penance_do": "Esegui una penitenza per il partner:",
@@ -269,15 +254,15 @@
       "execute_penance": "Esegui questa penitenza:",
       "naked_title": "NUDO!",
       "no_clothes": "{player} non ha più capi!",
-      "penance_instead": "Penitenza al posto di spogliarsi \ud83d\ude08",
+      "penance_instead": "Penitenza al posto di spogliarsi 😈",
       "player_wins": "{player} VINCE!",
-      "reached_100": "Hai raggiunto la casella 100! \ud83c\udf89",
-      "final_prize": "\ud83d\udd25 PREMIO FINALE \u2014 Il partner del perdente esegue:",
-      "game_title": "\ud83c\udfb2 Gioco dell'Oca",
-      "roll_to_exit": "\u26a0\ufe0f  Tira 4/5/6 per uscire dalla partenza",
-      "exited_roll_move": "\ud83d\ude80 Sei uscito! Tira per muoverti",
-      "your_turn": "\ud83c\udfaf Il tuo turno, tira il dado!",
-      "roll_dice": "TIRA \ud83c\udfb2",
+      "reached_100": "Hai raggiunto la casella 100! 🎉",
+      "final_prize": "🔥 PREMIO FINALE — Il partner del perdente esegue:",
+      "game_title": "🎲 Gioco dell'Oca",
+      "roll_to_exit": "⚠️  Tira 4/5/6 per uscire dalla partenza",
+      "exited_roll_move": "🚀 Sei uscito! Tira per muoverti",
+      "your_turn": "🎯 Il tuo turno, tira il dado!",
+      "roll_dice": "TIRA 🎲",
       "game_rules": "Regole del Gioco",
       "rule_ladder": "Scala: avanza e ricevi una ricompensa",
       "rule_hole": "Buco: torni indietro e fai una penitenza",
@@ -289,14 +274,13 @@
       "rule_six": "Fai 6 → tira ancora! Max 2 volte extra",
       "rule_no_clothes": "Nessun capo rimasto → penitenza invece",
       "rule_bounce": "Oltre 100 → rimbalzi indietro",
-      "time_up": "Tempo scaduto! \u2705",
-      "done_early": "\u2713 Fatto in anticipo",
-      "done_evil": "Fatto! \ud83d\ude08",
+      "time_up": "Tempo scaduto! ✅",
+      "done_early": "✓ Fatto in anticipo",
+      "done_evil": "Fatto! 😈",
       "remove_clothing": "TOGLI UN CAPO!",
-      "no_clothes_left": "\ud83d\udd25 Nessun capo rimasto!",
+      "no_clothes_left": "🔥 Nessun capo rimasto!",
       "remaining_clothes": "{count} rimasti"
     },
-    
     "truth_dare": {
       "title": "Obbligo o Verità",
       "subtitle": "Edizione Intimità",
@@ -307,7 +291,6 @@
       "double_dare": "Doppio Obbligo",
       "swap": "Scambio ruoli"
     },
-    
     "wheel": {
       "title": "Ruota della Fortuna",
       "subtitle": "Edizione Romantica",
@@ -348,7 +331,6 @@
         "wild_card": "Carta\nJolly"
       }
     },
-    
     "hot_cold": {
       "title": "Caldo & Freddo",
       "subtitle": "Guidati solo dalle parole",
@@ -358,9 +340,16 @@
       "boiling": "Bollente! 🌋",
       "mission_complete": "Missione compiuta!",
       "new_mission": "Nuova missione",
-      "blindfold_mode": "Modalità bendati"
+      "blindfold_mode": "Modalità bendati",
+      "freezing": "Gelato! 🥶",
+      "found_title": "Trovato! 🎯",
+      "hint_label": "Indizio",
+      "how_to_play": "Come si gioca 🔥❄️",
+      "rule_1": "Un partner sceglie una zona segreta del corpo",
+      "rule_2": "L'altro esplora con le dita, guidato da indicazioni",
+      "rule_3": "Più ti avvicini, più 'caldo' diventa!",
+      "rule_4": "Quando trovi la zona giusta... premio!"
     },
-    
     "love_notes": {
       "title": "Bigliettini d'Amore",
       "subtitle": "Scrivete dal cuore",
@@ -369,9 +358,13 @@
       "read_aloud": "Leggete ad alta voce",
       "save_to_box": "Salva nella scatola",
       "saved": "Salvato nei ricordi ❤️",
-      "your_notes": "I vostri bigliettini"
+      "your_notes": "I vostri bigliettini",
+      "rules_title": "Come si gioca 💌",
+      "rule_1": "Scrivete un messaggio segreto al partner",
+      "rule_2": "Non fate vedere cosa scrivete!",
+      "rule_3": "Alla fine leggeteli insieme ad alta voce",
+      "rule_4": "Conservate i preferiti come ricordo"
     },
-    
     "fantasy_builder": {
       "title": "Costruiamo una Fantasia",
       "subtitle": "Create insieme la vostra storia",
@@ -448,7 +441,6 @@
         "closing": "Create qualcosa di unico insieme! 💕"
       }
     },
-    
     "compliment_battle": {
       "title": "Gara di Complimenti",
       "subtitle": "Chi sa apprezzare di più?",
@@ -522,7 +514,6 @@
       "rule5": "Chi ha più punti alla fine vince!",
       "be_creative": "Siate creativi e sinceri! 💕"
     },
-    
     "question_quest": {
       "title": "Caccia alle Domande",
       "subtitle": "36 domande per (ri)innamorarsi",
@@ -615,7 +606,6 @@
       "q_deep_intimacy_2": "Cosa significa per te l'amore vero?",
       "q_deep_intimacy_3": "Qual è il momento in cui ti sei sentito completamente al sicuro con me?"
     },
-    
     "two_minutes": {
       "title": "Due Minuti",
       "subtitle": "Sfide intime a tempo",
@@ -692,7 +682,6 @@
         "total_connection_desc": "Sdraiatevi pelle contro pelle, sentite il calore reciproco."
       }
     },
-    
     "intimacy_map": {
       "title": "Mappa dell'Intimità",
       "subtitle": "Scoprite le zone di piacere reciproche",
@@ -764,7 +753,6 @@
       "instr5": "Confrontate le mappe alla fine!",
       "got_it": "Ho capito"
     },
-    
     "soundtrack": {
       "title": "La Nostra Colonna Sonora",
       "subtitle": "Le canzoni della vostra storia",
@@ -782,7 +770,6 @@
       "step_choose_song": "Scegliete la canzone perfetta",
       "step_final_playlist": "Create la playlist finale"
     },
-
     "mirror_challenge": {
       "title": "Sfida allo Specchio",
       "subtitle": "Connessione senza parole",
@@ -844,45 +831,8 @@
       "ch8_title": "Danza Sincronizzata",
       "ch8_desc": "Create una danza insieme, senza musica. Lasciatevi guidare dall'istinto.",
       "ch8_tip": "Non pensare, lasciati andare al flusso"
-    },
-
-    "hot_cold": {
-      "title": "Caldo & Freddo",
-      "subtitle": "Guidati solo dalle parole",
-      "cold": "Freddo ❄️",
-      "warm": "Tiepido",
-      "hot": "Caldo 🔥",
-      "boiling": "Bollente! 🌋",
-      "mission_complete": "Missione compiuta!",
-      "new_mission": "Nuova missione",
-      "blindfold_mode": "Modalità bendati",
-      "freezing": "Gelato! 🥶",
-      "found_title": "Trovato! 🎯",
-      "hint_label": "Indizio",
-      "how_to_play": "Come si gioca 🔥❄️",
-      "rule_1": "Un partner sceglie una zona segreta del corpo",
-      "rule_2": "L'altro esplora con le dita, guidato da indicazioni",
-      "rule_3": "Più ti avvicini, più 'caldo' diventa!",
-      "rule_4": "Quando trovi la zona giusta... premio!"
-    },
-
-    "love_notes": {
-      "title": "Bigliettini d'Amore",
-      "subtitle": "Scrivete dal cuore",
-      "prompt": "Spunto",
-      "write": "Scrivi...",
-      "read_aloud": "Leggete ad alta voce",
-      "save_to_box": "Salva nella scatola",
-      "saved": "Salvato nei ricordi ❤️",
-      "your_notes": "I vostri bigliettini",
-      "rules_title": "Come si gioca 💌",
-      "rule_1": "Scrivete un messaggio segreto al partner",
-      "rule_2": "Non fate vedere cosa scrivete!",
-      "rule_3": "Alla fine leggeteli insieme ad alta voce",
-      "rule_4": "Conservate i preferiti come ricordo"
     }
   },
-
   "progress": {
     "title": "Progressi",
     "badges": "Badge",
@@ -899,7 +849,6 @@
     "favorites_count": "Preferiti salvati",
     "badge_unlocked": "Nuovo traguardo sbloccato! 🎉"
   },
-
   "badges": {
     "explorer": {
       "name": "Esploratore",
@@ -946,7 +895,6 @@
       "description": "50 sfide completate"
     }
   },
-
   "settings": {
     "title": "Impostazioni",
     "privacy": "Privacy",
@@ -974,7 +922,6 @@
     "logout_and_disconnect": "Esci dall'account",
     "logout_disconnect_desc": "Disconnetti e torna al login"
   },
-
   "consent": {
     "check_in": "Tutto ok? Un buon momento per un check-in.",
     "all_good": "👍 Tutto bene",
@@ -985,7 +932,6 @@
     "resume": "Riprendi",
     "end_session": "Termina sessione"
   },
-
   "reactions": {
     "loved": "❤️ Adorato",
     "liked": "👍 Piaciuto",
@@ -993,13 +939,11 @@
     "skipped": "⏭️ Saltato",
     "too_hard": "😅 Troppo difficile"
   },
-
   "errors": {
     "generic": "Qualcosa è andato storto",
     "no_positions": "Nessuna posizione trovata con questi filtri",
     "try_different_filters": "Prova con filtri diversi"
   },
-
   "game_ui": {
     "player_1": "Giocatore 1",
     "player_2": "Giocatore 2",
@@ -1187,7 +1131,6 @@
     "create_unique_together": "Create qualcosa di unico insieme! 💕",
     "difficulty_response_time": "Difficoltà (tempo per rispondere)"
   },
-
   "settings_extra": {
     "change_password": "Cambia password",
     "change_password_desc": "Invieremo un'email a {email} con le istruzioni per reimpostare la password.",
@@ -1232,7 +1175,6 @@
     "wrong_password": "Password errata",
     "error_delete_account": "Errore: impossibile eliminare l'account"
   },
-
   "auth": {
     "email_label": "Email",
     "password_label": "Password",
@@ -1284,11 +1226,356 @@
     "req_number": "Un numero (0-9)",
     "req_special": "Un carattere speciale (!@#$%...)"
   },
-
   "progress_extra": {
     "positions_explored": "Posizioni esplorate",
     "games_played": "Partite giocate",
     "time_together": "Tempo insieme",
     "favorites_saved": "Preferiti salvati"
+  },
+  "progress_ui": {
+    "tried_tab": "Provate",
+    "current_streak": "Serie attuale",
+    "record": "🏅 Record",
+    "motivational_0": "Inizia oggi la vostra avventura!",
+    "motivational_1": "Ottimo inizio! Tornate domani 💪",
+    "motivational_7": "State andando alla grande!",
+    "motivational_30": "Che coppia affiatata! 🔥",
+    "motivational_100": "Siete inarrestabili! 🏆",
+    "day_singular": "1 giorno",
+    "day_plural": "{n} giorni",
+    "positions_explored": "Posizioni esplorate",
+    "games_played": "Partite giocate",
+    "time_together": "Tempo insieme",
+    "favorites_saved": "Preferiti salvati",
+    "categories_explored": "Categorie esplorate",
+    "start_exploring_stats": "Inizia a esplorare per vedere le tue statistiche!",
+    "no_tried_yet": "Nessuna posizione provata ancora",
+    "explore_catalog_hint": "Esplora il catalogo o gioca allo shuffle per aggiungere posizioni!",
+    "keep_exploring": "Continua a esplorare per sbloccare!",
+    "progress_label": "Progresso: {progress}",
+    "streak_days": "{n} giorni"
+  },
+  "badge_list": {
+    "first_step": {
+      "name": "Primo Passo",
+      "desc": "Prova la tua prima posizione"
+    },
+    "explorer": {
+      "name": "Esploratore",
+      "desc": "Prova 5 posizioni diverse"
+    },
+    "initiator": {
+      "name": "Iniziatore",
+      "desc": "Prova 10 posizioni diverse"
+    },
+    "adventurer": {
+      "name": "Avventuriero",
+      "desc": "Prova 20 posizioni diverse"
+    },
+    "enthusiast": {
+      "name": "Appassionato",
+      "desc": "Prova 30 posizioni diverse"
+    },
+    "collector": {
+      "name": "Collezionista",
+      "desc": "Prova 50 posizioni diverse"
+    },
+    "master": {
+      "name": "Maestro",
+      "desc": "Prova 100 posizioni diverse"
+    },
+    "legend": {
+      "name": "Leggenda",
+      "desc": "Prova 150 posizioni diverse"
+    },
+    "grand_master": {
+      "name": "Gran Maestro",
+      "desc": "Prova 200 posizioni diverse"
+    },
+    "first_spark": {
+      "name": "Prima Scintilla",
+      "desc": "Salva la tua prima posizione preferita"
+    },
+    "romantic": {
+      "name": "Romantico",
+      "desc": "Salva 5 posizioni nei preferiti"
+    },
+    "big_heart": {
+      "name": "Cuore Grande",
+      "desc": "Salva 10 posizioni nei preferiti"
+    },
+    "heart_collector": {
+      "name": "Collezionista di Cuori",
+      "desc": "Salva 20 posizioni nei preferiti"
+    },
+    "third_day": {
+      "name": "Terzo Giorno",
+      "desc": "Raggiungi una serie di 3 giorni"
+    },
+    "dedicated": {
+      "name": "Dedicato",
+      "desc": "Raggiungi una serie di 7 giorni"
+    },
+    "momentum": {
+      "name": "Momentum",
+      "desc": "Raggiungi una serie di 14 giorni"
+    },
+    "champion": {
+      "name": "Campione",
+      "desc": "Raggiungi una serie di 30 giorni"
+    },
+    "faithful": {
+      "name": "Fedele",
+      "desc": "Raggiungi una serie di 60 giorni"
+    },
+    "irresistible": {
+      "name": "Irresistibile",
+      "desc": "Raggiungi una serie di 100 giorni"
+    },
+    "on_streak": {
+      "name": "In Serie Ora",
+      "desc": "Hai una serie attiva di almeno 3 giorni"
+    },
+    "first_game": {
+      "name": "Primo Gioco",
+      "desc": "Completa la tua prima sessione shuffle"
+    },
+    "player": {
+      "name": "Giocatore",
+      "desc": "Completa 5 sessioni shuffle"
+    },
+    "soul_explorers": {
+      "name": "Esploratori dell'Anima",
+      "desc": "Completa 10 sessioni shuffle"
+    },
+    "game_expert": {
+      "name": "Esperto dei Giochi",
+      "desc": "Completa 25 sessioni shuffle"
+    },
+    "professional": {
+      "name": "Professionista",
+      "desc": "Completa 50 sessioni shuffle"
+    },
+    "world_explorer": {
+      "name": "Esploratore Mondiale",
+      "desc": "Prova posizioni di 3 categorie diverse"
+    },
+    "versatile": {
+      "name": "Versatile",
+      "desc": "Prova posizioni di 5 categorie diverse"
+    },
+    "complete_artist": {
+      "name": "Artista Completo",
+      "desc": "Prova posizioni di tutte le categorie"
+    },
+    "brave": {
+      "name": "Coraggioso",
+      "desc": "Prova 5 posizioni di difficoltà alta (4-5⭐)"
+    },
+    "acrobat": {
+      "name": "Acrobata",
+      "desc": "Prova 15 posizioni di difficoltà alta (4-5⭐)"
+    },
+    "first_hour": {
+      "name": "Prima Ora",
+      "desc": "Trascorri 60 minuti insieme nell'app"
+    },
+    "time_lovers": {
+      "name": "Amanti del Tempo",
+      "desc": "Trascorri 5 ore insieme nell'app"
+    },
+    "deep_connection": {
+      "name": "Connessione Profonda",
+      "desc": "Trascorri 24 ore insieme nell'app"
+    },
+    "summit": {
+      "name": "Sommità",
+      "desc": "Prova 250 posizioni diverse"
+    },
+    "olympian": {
+      "name": "Olimpionico",
+      "desc": "Prova 300 posizioni diverse"
+    },
+    "great_collection": {
+      "name": "Grande Collezione",
+      "desc": "Salva 30 posizioni nei preferiti"
+    },
+    "love_castle": {
+      "name": "Castello d'Amore",
+      "desc": "Salva 50 posizioni nei preferiti"
+    },
+    "invincible": {
+      "name": "Invincibile",
+      "desc": "Raggiungi una serie di 150 giorni"
+    },
+    "infinite": {
+      "name": "Infinito",
+      "desc": "Raggiungi una serie di 200 giorni"
+    },
+    "year_together": {
+      "name": "Anno Insieme",
+      "desc": "Raggiungi una serie di 365 giorni"
+    },
+    "great_player": {
+      "name": "Gran Giocatore",
+      "desc": "Completa 75 sessioni shuffle"
+    },
+    "games_champion": {
+      "name": "Campione dei Giochi",
+      "desc": "Completa 100 sessioni shuffle"
+    },
+    "games_master": {
+      "name": "Maestro dei Giochi",
+      "desc": "Completa 150 sessioni shuffle"
+    },
+    "games_legend": {
+      "name": "Leggenda dei Giochi",
+      "desc": "Completa 200 sessioni shuffle"
+    },
+    "warrior": {
+      "name": "Guerriero",
+      "desc": "Prova 25 posizioni di difficoltà alta (4-5⭐)"
+    },
+    "eagle": {
+      "name": "Aquila",
+      "desc": "Prova 30 posizioni di difficoltà alta (4-5⭐)"
+    },
+    "extreme": {
+      "name": "Estremo",
+      "desc": "Prova 3 posizioni di difficoltà massima (5⭐)"
+    },
+    "ultras": {
+      "name": "Ultras",
+      "desc": "Prova 10 posizioni di difficoltà massima (5⭐)"
+    },
+    "ocean_of_time": {
+      "name": "Oceano di Tempo",
+      "desc": "Trascorri 10 ore insieme nell'app"
+    },
+    "endless_night": {
+      "name": "Notte Senza Fine",
+      "desc": "Trascorri 48 ore insieme nell'app"
+    },
+    "a_journey": {
+      "name": "Un Viaggio",
+      "desc": "Trascorri 100 ore insieme nell'app"
+    },
+    "romantic_heart": {
+      "name": "Cuore Romantico",
+      "desc": "Prova 5 posizioni dalla categoria Romantica"
+    },
+    "expert_beginner": {
+      "name": "Esperto Principiante",
+      "desc": "Prova 5 posizioni dalla categoria Principiante"
+    },
+    "passionate_athlete": {
+      "name": "Atleta Passionale",
+      "desc": "Prova 5 posizioni dalla categoria Atletica"
+    },
+    "supported_couple": {
+      "name": "Coppia Sostenuta",
+      "desc": "Prova 5 posizioni dalla categoria Sorretta"
+    },
+    "light_touch": {
+      "name": "Tocco Leggero",
+      "desc": "Prova 5 posizioni dalla categoria Delicata"
+    },
+    "adventurous_spirit": {
+      "name": "Spirito Avventuroso",
+      "desc": "Prova 5 posizioni dalla categoria Avventurosa"
+    },
+    "bonds_found": {
+      "name": "Legami Ritrovati",
+      "desc": "Prova 5 posizioni dalla categoria Riconnessione"
+    },
+    "extreme_speed": {
+      "name": "Velocità Estrema",
+      "desc": "Prova 5 posizioni dalla categoria Quickie"
+    },
+    "calm_relax": {
+      "name": "Calma e Relax",
+      "desc": "Prova 5 posizioni a bassa energia"
+    },
+    "high_energy": {
+      "name": "Alta Energia",
+      "desc": "Prova 5 posizioni ad alta energia"
+    },
+    "take_time": {
+      "name": "Prenditi il Tempo",
+      "desc": "Prova 3 posizioni a lunga durata"
+    },
+    "full_focus": {
+      "name": "Focus Completo",
+      "desc": "Prova posizioni che coprono tutti i 7 tipi di focus"
+    }
+  },
+  "truth_dare_ui": {
+    "title": "Obbligo o Verità",
+    "subtitle_setup": "Scoprite i vostri segreti più intimi...",
+    "choose_intensity": "Scegli l'intensità",
+    "intensity_soft": "Dolce",
+    "intensity_spicy": "Piccante",
+    "intensity_extra": "Infuocato",
+    "desc_soft": "Romantico e giocoso, per rompere il ghiaccio",
+    "desc_spicy": "Audace e provocante, alzate la temperatura",
+    "desc_extra": "Senza limiti, solo per i più temerari",
+    "how_to_play": "Come si gioca",
+    "rule_1": "A turno, scegli Obbligo o Verità",
+    "rule_2": "Leggi la carta e... esegui!",
+    "rule_3": "Niente bugie, niente scuse 😏",
+    "start_game": "INIZIA IL GIOCO",
+    "player_n": "Giocatore {n}",
+    "round_n": "Round {n}",
+    "what_choose": "Cosa scegli?",
+    "tap_card": "Tocca una carta per scoprire il tuo destino",
+    "truth": "VERITÀ",
+    "dare": "OBBLIGO",
+    "truth_sub": "Confessa tutto...",
+    "dare_sub": "Osa tutto...",
+    "end_game": "Termina partita",
+    "change": "Cambia",
+    "done_next": "Fatto! Prossimo turno"
+  },
+  "soundtrack_prompts": {
+    "first_impression": {
+      "title": "Prima Impressione",
+      "desc": "Una canzone che ti ricorda il primo incontro"
+    },
+    "special_moment": {
+      "title": "Momento Speciale",
+      "desc": "La canzone di un ricordo indimenticabile insieme"
+    },
+    "road_trip": {
+      "title": "Road Trip",
+      "desc": "Una canzone perfetta per guidare insieme"
+    },
+    "romantic_evening": {
+      "title": "Serata Romantica",
+      "desc": "La colonna sonora ideale per una cena a lume di candela"
+    },
+    "energy": {
+      "title": "Energia",
+      "desc": "Una canzone che vi fa venire voglia di ballare"
+    },
+    "comfort": {
+      "title": "Comfort",
+      "desc": "La canzone da ascoltare quando avete bisogno di conforto"
+    },
+    "passion": {
+      "title": "Passione",
+      "desc": "Una canzone che accende la passione"
+    },
+    "nostalgia": {
+      "title": "Nostalgia",
+      "desc": "Una canzone che vi fa tornare indietro nel tempo"
+    },
+    "future_together": {
+      "title": "Futuro Insieme",
+      "desc": "Una canzone che rappresenta i vostri sogni"
+    },
+    "our_song": {
+      "title": "La Nostra Canzone",
+      "desc": "Se doveste scegliere UNA canzone per la vostra storia"
+    }
   }
 }
