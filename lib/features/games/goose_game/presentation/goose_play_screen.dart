@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -1738,7 +1739,7 @@ class _IsoBoardPainter extends CustomPainter {
           fontWeight: bold ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     )..layout();
     tp.paint(canvas,
         Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));

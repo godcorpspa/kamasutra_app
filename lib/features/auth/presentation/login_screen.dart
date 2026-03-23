@@ -578,9 +578,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _showResetPasswordDialog,
-                      child: const Text(
+                      child: Text(
                         'auth.forgot_password'.tr(),
-                        style: TextStyle(color: _fuchsiaLight),
+                        style: const TextStyle(color: _fuchsiaLight),
                       ),
                     ),
                   ),

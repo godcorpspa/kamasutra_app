@@ -300,9 +300,9 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                     size: 20,
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'truth_dare_ui.choose_intensity'.tr(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'PlayfairDisplay',
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -1031,12 +1031,12 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
                         ),
                       ],
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.check_rounded,
+                        const Icon(Icons.check_rounded,
                             color: Colors.white, size: 22),
-                        SizedBox(width: 6),
+                        const SizedBox(width: 6),
                         Text(
                           'truth_dare_ui.done_next'.tr(),
                           style: TextStyle(
