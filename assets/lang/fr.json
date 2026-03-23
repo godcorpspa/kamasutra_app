@@ -289,7 +289,147 @@
       "pass": "Passe",
       "passes_left": "{count} passes restants",
       "double_dare": "Double Action",
-      "swap": "Échange de rôles"
+      "swap": "Échange de rôles",
+      "cards": {
+        "fallback_truth": "Raconte quelque chose de pimenté...",
+        "fallback_dare": "Fais quelque chose d'audacieux !",
+        "truths": {
+          "soft": {
+            "0": "Quel est ton plus beau souvenir romantique ensemble ?",
+            "1": "Qu'est-ce qui t'a fait tomber amoureux/se de ton partenaire la première fois ?",
+            "2": "Quelle est la partie du corps de ton partenaire que tu préfères ?",
+            "3": "As-tu déjà rêvé de ton partenaire ? Raconte le plus beau rêve.",
+            "4": "Quel a été le baiser le plus inoubliable entre vous ?",
+            "5": "Qu'est-ce qui te fait sentir le plus aimé(e) par ton partenaire ?",
+            "6": "Y a-t-il un moment où ton cœur a battu très fort pour ton partenaire ?",
+            "7": "Quelle est la première chose que tu as remarquée chez ton partenaire quand vous vous êtes rencontrés ?",
+            "8": "As-tu déjà écrit un message romantique à ton partenaire que tu n'as jamais envoyé ?",
+            "9": "Quelle est la chanson qui te fait penser à ton partenaire ?",
+            "10": "Que voudrais-tu faire pour votre prochain anniversaire ?",
+            "11": "Quel est le plus beau compliment que ton partenaire t'a fait ?",
+            "12": "Y a-t-il quelque chose que ton partenaire fait inconsciemment et qui te rend fou/folle ?",
+            "13": "Quel est ton moment préféré de la journée avec ton partenaire ?",
+            "14": "Quand as-tu réalisé pour la première fois que tu étais amoureux/se ?",
+            "15": "Quel est le voyage de rêve que tu aimerais faire ensemble ?",
+            "16": "As-tu déjà pleuré de bonheur à cause de quelque chose que ton partenaire a fait ?",
+            "17": "Quel est le parfum de ton partenaire qui te rend fou/folle ?",
+            "18": "Qu'est-ce que tu aimes le plus dans la façon dont ton partenaire te serre dans ses bras ?",
+            "19": "Si tu devais décrire ton partenaire en 3 mots, lesquels seraient-ce ?"
+          },
+          "spicy": {
+            "0": "Quel est ton fantasme érotique secret que tu n'as jamais avoué ?",
+            "1": "Quelle est la chose la plus audacieuse que tu voudrais essayer au lit ?",
+            "2": "Où voudrais-tu faire l'amour que vous n'avez jamais essayé ?",
+            "3": "Qu'est-ce qui t'excite le plus quand ton partenaire te touche ?",
+            "4": "As-tu déjà fantasmé sur ton partenaire à un moment inapproprié ? Quand ?",
+            "5": "Quel vêtement de ton partenaire t'excite le plus ?",
+            "6": "Raconte la fois où tu as été le plus excité(e) avec ton partenaire.",
+            "7": "Quelle est ta position sexuelle préférée et pourquoi ?",
+            "8": "As-tu déjà simulé un orgasme ? Sois honnête !",
+            "9": "Que voudrais-tu que ton partenaire fasse plus souvent au lit ?",
+            "10": "Quel est ton point faible secret que ton partenaire ne connaît pas ?",
+            "11": "As-tu déjà pensé à ton partenaire en te touchant seul(e) ?",
+            "12": "Quel est le moment le plus embarrassant qui vous est arrivé pendant le sexe ?",
+            "13": "Quel type de porno t'excite le plus (si tu en regardes) ?",
+            "14": "As-tu déjà eu un fantasme impliquant ton partenaire et quelqu'un d'autre ?",
+            "15": "Quelle est la chose la plus sexy que ton partenaire ait faite sans s'en rendre compte ?",
+            "16": "À quelle fréquence penses-tu au sexe pendant la journée ?",
+            "17": "Y a-t-il un jouet érotique que tu voudrais essayer ?",
+            "18": "Quelle a été la meilleure expérience de sexe oral que tu as eue ?",
+            "19": "As-tu déjà eu un rêve érotique explicite avec ton partenaire ? Raconte."
+          },
+          "extra_spicy": {
+            "0": "Quel est le fantasme sexuel le plus extrême que tu aies jamais eu ?",
+            "1": "As-tu déjà voulu essayer le BDSM ? Quoi exactement ?",
+            "2": "Quelle est la chose la plus sale que tu voudrais dire à ton partenaire pendant le sexe ?",
+            "3": "As-tu déjà fantasmé sur le sexe anal ? Raconte.",
+            "4": "Quel est ton fantasme le plus interdit que tu n'as jamais osé avouer ?",
+            "5": "Si tu pouvais faire N'IMPORTE QUOI au lit sans être jugé(e), que ferais-tu ?",
+            "6": "As-tu déjà fantasmé sur un plan à trois ? Avec qui ?",
+            "7": "Quelle est la chose la plus extrême que tu aies faite sexuellement ?",
+            "8": "Décris en détail comment tu voudrais être dominé(e).",
+            "9": "Y a-t-il quelque chose de sexuel que tu considères tabou mais qui t'excite secrètement ?",
+            "10": "As-tu déjà voulu être attaché(e) ou attacher ton partenaire ?",
+            "11": "Quel est l'endroit le plus risqué où tu as voulu faire l'amour ?",
+            "12": "Raconte le fantasme érotique qui te fait le plus honte.",
+            "13": "As-tu déjà pensé à vous filmer pendant le sexe ?",
+            "14": "Quelle est la chose la plus sauvage que tu voudrais essayer avec ton partenaire ce soir ?",
+            "15": "Avoue : y a-t-il quelque chose que ton partenaire ne sait pas sur tes préférences sexuelles ?",
+            "16": "As-tu déjà fantasmé sur la soumission totale ? Raconte.",
+            "17": "Quel est ton fétiche le plus caché ?",
+            "18": "Décris l'orgasme le plus intense que tu as eu et ce qui l'a provoqué.",
+            "19": "Si tu avais zéro inhibitions pour une nuit, que ferais-tu exactement ?"
+          }
+        },
+        "dares": {
+          "soft": {
+            "0": "Donne un baiser passionné à ton partenaire pendant au moins 20 secondes",
+            "1": "Serre fort ton partenaire en lui chuchotant 3 choses que tu aimes chez lui/elle",
+            "2": "Embrasse le cou de ton partenaire doucement pendant 30 secondes",
+            "3": "Masse les mains de ton partenaire en le regardant dans les yeux",
+            "4": "Regarde ton partenaire dans les yeux pendant 1 minute sans rire ni parler",
+            "5": "Embrasse le front, le nez et les lèvres de ton partenaire lentement",
+            "6": "Caresse le visage de ton partenaire avec les doigts en fermant les yeux",
+            "7": "Chuchote à l'oreille de ton partenaire ce que tu aimes le plus de son corps",
+            "8": "Donne 10 bisous à ton partenaire sur 10 endroits différents du visage",
+            "9": "Danse lentement avec ton partenaire enlacés pendant une chanson entière",
+            "10": "Masse les épaules de ton partenaire pendant 2 minutes avec douceur",
+            "11": "Écris avec ton doigt 'Je t'aime' dans le dos de ton partenaire et fais-le deviner",
+            "12": "Embrasse chaque doigt de la main de ton partenaire un par un",
+            "13": "Raconte à ton partenaire ton plus beau souvenir ensemble en le regardant dans les yeux",
+            "14": "Fais un massage des pieds à ton partenaire pendant 1 minute",
+            "15": "Enlace ton partenaire par derrière et reste comme ça pendant 1 minute",
+            "16": "Donne un baiser papillon sur les paupières fermées de ton partenaire",
+            "17": "Caresse les cheveux de ton partenaire en lui chantant une chanson",
+            "18": "Embrasse le poignet de ton partenaire et chuchote 'tu es à moi'",
+            "19": "Tiens la main de ton partenaire pendant 2 minutes en la caressant sans parler"
+          },
+          "spicy": {
+            "0": "Embrasse le cou de ton partenaire pendant 1 minute en alternant baisers et souffles chauds",
+            "1": "Retire un vêtement à ton partenaire de manière provocante",
+            "2": "Fais un massage sensuel du dos à ton partenaire pendant 3 minutes",
+            "3": "Chuchote à l'oreille de ton partenaire la chose la plus sexy que tu veux lui faire",
+            "4": "Donne un baiser passionné à la française pendant 1 minute",
+            "5": "Mordille délicatement le lobe de l'oreille de ton partenaire",
+            "6": "Embrasse ton partenaire de la bouche au cou en descendant jusqu'à la poitrine",
+            "7": "Retire ton haut lentement en regardant ton partenaire dans les yeux",
+            "8": "Fais un lap dance d'1 minute à ton partenaire assis sur la chaise",
+            "9": "Caresse l'intérieur de la cuisse de ton partenaire du bout des doigts",
+            "10": "Embrasse l'épaule découverte de ton partenaire en alternant avec de légers mordillements",
+            "11": "Ton partenaire choisit où il veut être embrassé : exécute pendant 30 secondes",
+            "12": "Lèche le cou de ton partenaire de la clavicule à l'oreille",
+            "13": "Chuchote à ton partenaire 5 choses que tu veux lui faire ce soir",
+            "14": "Retire un vêtement à ton partenaire en utilisant seulement tes dents",
+            "15": "Masse les fesses de ton partenaire par-dessus les vêtements pendant 2 minutes",
+            "16": "Embrasse ton partenaire comme si c'était la dernière fois : mets-y toute la passion",
+            "17": "Frotte-toi contre ton partenaire comme dans une danse sensuelle pendant 1 minute",
+            "18": "Embrasse et suce le cou de ton partenaire en laissant une marque légère",
+            "19": "Fais un compliment explicite sur la sexualité de ton partenaire en le regardant dans les yeux"
+          },
+          "extra_spicy": {
+            "0": "Fais un strip-tease à ton partenaire : retire 3 vêtements lentement en dansant",
+            "1": "Embrasse ton partenaire partout sauf sur les lèvres pendant 2 minutes",
+            "2": "Montre à ton partenaire exactement comment tu aimes être touché(e)",
+            "3": "Fais du sexe oral à ton partenaire pendant 2 minutes",
+            "4": "Guide les mains de ton partenaire exactement où tu veux être touché(e)",
+            "5": "Embrasse et lèche le corps de ton partenaire de la bouche au bas-ventre",
+            "6": "Touche-toi devant ton partenaire pendant 1 minute en te laissant regarder",
+            "7": "Retire tout à ton partenaire sauf les sous-vêtements, en utilisant uniquement la bouche",
+            "8": "Fais un massage érotique à l'huile à ton partenaire pendant 5 minutes",
+            "9": "Attache (doucement) les mains de ton partenaire et embrasse-le partout pendant 3 minutes",
+            "10": "Mets-toi à genoux devant ton partenaire et fais ce qu'il te demande",
+            "11": "Chuchote ton fantasme le plus sale à l'oreille de ton partenaire puis réalise-le",
+            "12": "Fais un body shot : lèche un alcool sur le corps de ton partenaire",
+            "13": "Ton partenaire s'allonge : explore-le avec la bouche pendant 3 minutes partout",
+            "14": "Position 69 pendant 2 minutes : donnez-vous du plaisir oral mutuellement",
+            "15": "Bande les yeux de ton partenaire et stimule-le avec les mains et la bouche pendant 3 minutes",
+            "16": "Fais jouir ton partenaire en utilisant seulement tes mains en 5 minutes",
+            "17": "Fais un spectacle d'auto-plaisir pour ton partenaire en décrivant ce que tu ressens",
+            "18": "Choisis une position du Kamasutra et essayez-la pendant au moins 3 minutes",
+            "19": "Ton partenaire est complètement à ta merci pendant 5 minutes : fais ce que tu veux"
+          }
+        }
+      }
     },
     "wheel": {
       "title": "Roue de la Fortune",
@@ -348,7 +488,81 @@
       "rule_1": "Un partenaire choisit une zone secrète du corps",
       "rule_2": "L'autre explore avec les doigts, guidé par les indices",
       "rule_3": "Plus vous êtes proche, plus c'est 'chaud' !",
-      "rule_4": "Quand vous trouvez la bonne zone... récompense !"
+      "rule_4": "Quand vous trouvez la bonne zone... récompense !",
+      "zones": {
+        "0": {
+          "name": "Cou",
+          "emoji": "👔",
+          "hint": "Zone haute, très sensible"
+        },
+        "1": {
+          "name": "Épaules",
+          "emoji": "💪",
+          "hint": "Elles supportent tout"
+        },
+        "2": {
+          "name": "Dos",
+          "emoji": "🔙",
+          "hint": "Large et à explorer"
+        },
+        "3": {
+          "name": "Hanches",
+          "emoji": "〰️",
+          "hint": "Courbes douces"
+        },
+        "4": {
+          "name": "Intérieur de la cuisse",
+          "emoji": "🦵",
+          "hint": "Zone délicate"
+        },
+        "5": {
+          "name": "Pieds",
+          "emoji": "🦶",
+          "hint": "Base solide"
+        },
+        "6": {
+          "name": "Mains",
+          "emoji": "🤲",
+          "hint": "Outils d'amour"
+        },
+        "7": {
+          "name": "Oreille",
+          "emoji": "👂",
+          "hint": "Écoute les chuchotements"
+        },
+        "8": {
+          "name": "Poignet",
+          "emoji": "⌚",
+          "hint": "Sens les battements"
+        },
+        "9": {
+          "name": "Nuque",
+          "emoji": "🔝",
+          "hint": "Arrière de la tête"
+        }
+      },
+      "spicy_zones": {
+        "0": {
+          "name": "Intérieur des bras",
+          "emoji": "💫",
+          "hint": "Zone souvent oubliée"
+        },
+        "1": {
+          "name": "Derrière le genou",
+          "emoji": "🦿",
+          "hint": "Point caché"
+        },
+        "2": {
+          "name": "Bas-ventre",
+          "emoji": "✨",
+          "hint": "Sous le nombril"
+        },
+        "3": {
+          "name": "Décolleté",
+          "emoji": "💝",
+          "hint": "Zone du cœur"
+        }
+      }
     },
     "love_notes": {
       "title": "Mots d'Amour",

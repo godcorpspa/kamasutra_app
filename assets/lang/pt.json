@@ -279,7 +279,147 @@
       "pass": "Passo",
       "passes_left": "{count} passes restantes",
       "double_dare": "Desafio Duplo",
-      "swap": "Troca de papéis"
+      "swap": "Troca de papéis",
+      "cards": {
+        "fallback_truth": "Conte algo picante...",
+        "fallback_dare": "Faça algo ousado!",
+        "truths": {
+          "soft": {
+            "0": "Qual é a sua lembrança mais bonita e romântica juntos?",
+            "1": "O que te fez se apaixonar pelo seu parceiro pela primeira vez?",
+            "2": "Qual é a parte do corpo do seu parceiro que mais gosta?",
+            "3": "Já sonhou com seu parceiro? Conte o sonho mais bonito.",
+            "4": "Qual foi o beijo mais inesquecível entre vocês?",
+            "5": "O que te faz sentir mais amado(a) pelo seu parceiro?",
+            "6": "Existe um momento em que seu coração bateu muito forte pelo seu parceiro?",
+            "7": "Qual foi a primeira coisa que notou no seu parceiro quando se conheceram?",
+            "8": "Já escreveu uma mensagem romântica para seu parceiro que nunca enviou?",
+            "9": "Qual é a música que te faz pensar no seu parceiro?",
+            "10": "O que gostaria de fazer no próximo aniversário?",
+            "11": "Qual é o elogio mais bonito que seu parceiro já te fez?",
+            "12": "Existe algo que seu parceiro faz inconscientemente e que te enlouquece?",
+            "13": "Qual é seu momento favorito do dia com seu parceiro?",
+            "14": "Quando percebeu pela primeira vez que estava apaixonado(a)?",
+            "15": "Qual é a viagem dos sonhos que gostaria de fazer juntos?",
+            "16": "Já chorou de felicidade por algo que seu parceiro fez?",
+            "17": "Qual é o perfume do seu parceiro que te enlouquece?",
+            "18": "O que mais gosta na forma como seu parceiro te abraça?",
+            "19": "Se tivesse que descrever seu parceiro em 3 palavras, quais seriam?"
+          },
+          "spicy": {
+            "0": "Qual é sua fantasia erótica secreta que nunca confessou?",
+            "1": "Qual é a coisa mais ousada que gostaria de experimentar na cama?",
+            "2": "Onde gostaria de fazer amor que nunca experimentaram?",
+            "3": "O que mais te excita quando seu parceiro te toca?",
+            "4": "Já fantasiou com seu parceiro em um momento inapropriado? Quando?",
+            "5": "Qual peça de roupa do seu parceiro te excita mais?",
+            "6": "Conte a vez em que ficou mais excitado(a) com seu parceiro.",
+            "7": "Qual é sua posição sexual favorita e por quê?",
+            "8": "Já fingiu um orgasmo? Seja honesto(a)!",
+            "9": "O que gostaria que seu parceiro fizesse mais frequentemente na cama?",
+            "10": "Qual é seu ponto fraco secreto que seu parceiro não conhece?",
+            "11": "Já pensou no seu parceiro enquanto se tocava sozinho(a)?",
+            "12": "Qual é o momento mais constrangedor que aconteceu durante o sexo?",
+            "13": "Que tipo de pornô te excita mais (se assiste)?",
+            "14": "Já teve uma fantasia envolvendo seu parceiro e outra pessoa?",
+            "15": "Qual é a coisa mais sexy que seu parceiro fez sem perceber?",
+            "16": "Com que frequência pensa em sexo durante o dia?",
+            "17": "Existe algum brinquedo erótico que gostaria de experimentar?",
+            "18": "Qual foi a melhor experiência de sexo oral que já teve?",
+            "19": "Já teve um sonho erótico explícito com seu parceiro? Conte."
+          },
+          "extra_spicy": {
+            "0": "Qual é a fantasia sexual mais extrema que já teve?",
+            "1": "Já desejou experimentar BDSM? O quê exatamente?",
+            "2": "Qual é a coisa mais suja que gostaria de dizer ao seu parceiro durante o sexo?",
+            "3": "Já fantasiou sobre sexo anal? Conte.",
+            "4": "Qual é sua fantasia mais proibida que nunca ousou confessar?",
+            "5": "Se pudesse fazer QUALQUER coisa na cama sem julgamento, o que faria?",
+            "6": "Já fantasiou sobre um ménage à trois? Com quem?",
+            "7": "Qual é a coisa mais extrema que já fez sexualmente?",
+            "8": "Descreva em detalhes como gostaria de ser dominado(a).",
+            "9": "Existe algo sexual que considera tabu mas que te excita secretamente?",
+            "10": "Já desejou ser amarrado(a) ou amarrar seu parceiro?",
+            "11": "Qual é o lugar mais arriscado onde quis fazer sexo?",
+            "12": "Conte a fantasia erótica que mais te envergonha.",
+            "13": "Já pensou em se filmar durante o sexo?",
+            "14": "Qual é a coisa mais selvagem que gostaria de experimentar com seu parceiro esta noite?",
+            "15": "Confesse: existe algo que seu parceiro não sabe sobre suas preferências sexuais?",
+            "16": "Já fantasiou sobre submissão total? Conte.",
+            "17": "Qual é seu fetiche mais escondido?",
+            "18": "Descreva o orgasmo mais intenso que teve e o que o provocou.",
+            "19": "Se tivesse zero inibições por uma noite, o que faria exatamente?"
+          }
+        },
+        "dares": {
+          "soft": {
+            "0": "Dê um beijo apaixonado no seu parceiro por pelo menos 20 segundos",
+            "1": "Abrace forte seu parceiro sussurrando 3 coisas que ama nele/nela",
+            "2": "Beije o pescoço do seu parceiro docemente por 30 segundos",
+            "3": "Massageie as mãos do seu parceiro olhando nos olhos dele/dela",
+            "4": "Olhe nos olhos do seu parceiro por 1 minuto sem rir nem falar",
+            "5": "Beije a testa, o nariz e os lábios do seu parceiro lentamente",
+            "6": "Acaricie o rosto do seu parceiro com os dedos fechando os olhos",
+            "7": "Sussurre no ouvido do seu parceiro o que mais ama no corpo dele/dela",
+            "8": "Dê 10 beijos no seu parceiro em 10 pontos diferentes do rosto",
+            "9": "Dance lento com seu parceiro abraçados por uma música inteira",
+            "10": "Massageie os ombros do seu parceiro por 2 minutos com carinho",
+            "11": "Escreva com o dedo nas costas do seu parceiro 'Te amo' e faça adivinhar",
+            "12": "Beije cada dedo da mão do seu parceiro um por um",
+            "13": "Conte ao seu parceiro sua lembrança mais bonita juntos olhando nos olhos",
+            "14": "Faça uma massagem nos pés do seu parceiro por 1 minuto",
+            "15": "Abrace seu parceiro por trás e fique assim por 1 minuto",
+            "16": "Dê um beijo de borboleta nas pálpebras fechadas do seu parceiro",
+            "17": "Acaricie os cabelos do seu parceiro cantando uma música para ele/ela",
+            "18": "Beije o pulso do seu parceiro e sussurre 'você é meu/minha'",
+            "19": "Segure a mão do seu parceiro por 2 minutos acariciando sem falar"
+          },
+          "spicy": {
+            "0": "Beije o pescoço do seu parceiro por 1 minuto alternando beijos e respirações quentes",
+            "1": "Tire uma peça de roupa do seu parceiro de forma provocante",
+            "2": "Faça uma massagem sensual nas costas do seu parceiro por 3 minutos",
+            "3": "Sussurre no ouvido do seu parceiro a coisa mais sexy que quer fazer com ele/ela",
+            "4": "Dê um beijo apaixonado à francesa por 1 minuto",
+            "5": "Mordisque delicadamente o lóbulo da orelha do seu parceiro",
+            "6": "Beije seu parceiro da boca ao pescoço descendo até o peito",
+            "7": "Tire sua camiseta lentamente olhando seu parceiro nos olhos",
+            "8": "Faça um lap dance de 1 minuto para seu parceiro sentado na cadeira",
+            "9": "Acaricie a parte interna da coxa do seu parceiro com a ponta dos dedos",
+            "10": "Beije o ombro descoberto do seu parceiro alternando com mordidas suaves",
+            "11": "Seu parceiro escolhe onde quer ser beijado: execute por 30 segundos",
+            "12": "Lamba o pescoço do seu parceiro da clavícula até a orelha",
+            "13": "Sussurre 5 coisas que quer fazer com seu parceiro esta noite",
+            "14": "Tire uma peça de roupa do seu parceiro usando apenas os dentes",
+            "15": "Massageie os glúteos do seu parceiro por cima da roupa por 2 minutos",
+            "16": "Beije seu parceiro como se fosse a última vez: coloque toda a paixão",
+            "17": "Esfregue-se contra seu parceiro como em uma dança sensual por 1 minuto",
+            "18": "Beije e chupe o pescoço do seu parceiro deixando uma marca leve",
+            "19": "Faça um elogio explícito sobre a sexualidade do seu parceiro olhando nos olhos"
+          },
+          "extra_spicy": {
+            "0": "Faça um striptease para seu parceiro: tire 3 peças lentamente dançando",
+            "1": "Beije seu parceiro em todo lugar exceto nos lábios por 2 minutos",
+            "2": "Mostre ao seu parceiro exatamente como gosta de ser tocado(a)",
+            "3": "Faça sexo oral no seu parceiro por 2 minutos",
+            "4": "Guie as mãos do seu parceiro exatamente onde quer ser tocado(a)",
+            "5": "Beije e lamba o corpo do seu parceiro da boca até o baixo ventre",
+            "6": "Toque-se na frente do seu parceiro por 1 minuto deixando-se ver",
+            "7": "Tire tudo do seu parceiro deixando apenas a roupa íntima, usando só a boca",
+            "8": "Faça uma massagem erótica com óleo no seu parceiro por 5 minutos",
+            "9": "Amarre (suavemente) as mãos do seu parceiro e beije-o por todo lugar por 3 minutos",
+            "10": "Ajoelhe-se diante do seu parceiro e faça o que ele pedir",
+            "11": "Sussurre sua fantasia mais suja no ouvido do seu parceiro e depois realize-a",
+            "12": "Faça um body shot: lamba um licor do corpo do seu parceiro",
+            "13": "Seu parceiro se deita: explore-o com a boca por 3 minutos por todo lugar",
+            "14": "Posição 69 por 2 minutos: deem prazer oral um ao outro",
+            "15": "Vende os olhos do seu parceiro e estimule-o com mãos e boca por 3 minutos",
+            "16": "Faça seu parceiro gozar usando apenas as mãos em 5 minutos",
+            "17": "Faça um show de autoprazer para seu parceiro descrevendo o que sente",
+            "18": "Escolha uma posição do Kamasutra e experimentem por pelo menos 3 minutos",
+            "19": "Seu parceiro está completamente à sua mercê por 5 minutos: faça o que quiser"
+          }
+        }
+      }
     },
     "wheel": {
       "title": "Roda da Fortuna",
@@ -338,7 +478,81 @@
       "rule_1": "Um parceiro escolhe uma zona secreta do corpo",
       "rule_2": "O outro explora com os dedos, guiado por pistas",
       "rule_3": "Quanto mais perto, mais 'quente'!",
-      "rule_4": "Quando encontrar a zona certa... prêmio!"
+      "rule_4": "Quando encontrar a zona certa... prêmio!",
+      "zones": {
+        "0": {
+          "name": "Pescoço",
+          "emoji": "👔",
+          "hint": "Zona alta, muito sensível"
+        },
+        "1": {
+          "name": "Ombros",
+          "emoji": "💪",
+          "hint": "Sustentam tudo"
+        },
+        "2": {
+          "name": "Costas",
+          "emoji": "🔙",
+          "hint": "Ampla e para explorar"
+        },
+        "3": {
+          "name": "Quadris",
+          "emoji": "〰️",
+          "hint": "Curvas suaves"
+        },
+        "4": {
+          "name": "Interior da coxa",
+          "emoji": "🦵",
+          "hint": "Zona delicada"
+        },
+        "5": {
+          "name": "Pés",
+          "emoji": "🦶",
+          "hint": "Base sólida"
+        },
+        "6": {
+          "name": "Mãos",
+          "emoji": "🤲",
+          "hint": "Instrumentos de amor"
+        },
+        "7": {
+          "name": "Orelha",
+          "emoji": "👂",
+          "hint": "Ouça os sussurros"
+        },
+        "8": {
+          "name": "Pulso",
+          "emoji": "⌚",
+          "hint": "Sinta a pulsação"
+        },
+        "9": {
+          "name": "Nuca",
+          "emoji": "🔝",
+          "hint": "Parte de trás da cabeça"
+        }
+      },
+      "spicy_zones": {
+        "0": {
+          "name": "Interior dos braços",
+          "emoji": "💫",
+          "hint": "Zona frequentemente esquecida"
+        },
+        "1": {
+          "name": "Atrás do joelho",
+          "emoji": "🦿",
+          "hint": "Ponto escondido"
+        },
+        "2": {
+          "name": "Baixo ventre",
+          "emoji": "✨",
+          "hint": "Abaixo do umbigo"
+        },
+        "3": {
+          "name": "Decote",
+          "emoji": "💝",
+          "hint": "Zona do coração"
+        }
+      }
     },
     "love_notes": {
       "title": "Bilhetes de Amor",
