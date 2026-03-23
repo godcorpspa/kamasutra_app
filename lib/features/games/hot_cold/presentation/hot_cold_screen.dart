@@ -23,25 +23,17 @@ class _HotColdScreenState extends State<HotColdScreen> {
   int _timeRemaining = 60;
   double _temperature = 0.5; // 0 = freezing, 1 = burning
 
-  final List<Map<String, dynamic>> _zones = [
-    {'name': 'Collo', 'emoji': '👔', 'hint': 'Zona alta, molto sensibile'},
-    {'name': 'Spalle', 'emoji': '💪', 'hint': 'Supportano tutto'},
-    {'name': 'Schiena', 'emoji': '🔙', 'hint': 'Ampia e da esplorare'},
-    {'name': 'Fianchi', 'emoji': '〰️', 'hint': 'Curve morbide'},
-    {'name': 'Interno coscia', 'emoji': '🦵', 'hint': 'Zona delicata'},
-    {'name': 'Piedi', 'emoji': '🦶', 'hint': 'Base solida'},
-    {'name': 'Mani', 'emoji': '🤲', 'hint': 'Strumenti d\'amore'},
-    {'name': 'Orecchio', 'emoji': '👂', 'hint': 'Ascolta i sussurri'},
-    {'name': 'Polso', 'emoji': '⌚', 'hint': 'Senti il battito'},
-    {'name': 'Nuca', 'emoji': '🔝', 'hint': 'Retro della testa'},
-  ];
+  List<Map<String, dynamic>> get _zones => List.generate(10, (i) => {
+    'name': 'games.hot_cold.zones.$i.name'.tr(),
+    'emoji': 'games.hot_cold.zones.$i.emoji'.tr(),
+    'hint': 'games.hot_cold.zones.$i.hint'.tr(),
+  });
 
-  final List<Map<String, dynamic>> _spicyZones = [
-    {'name': 'Interno braccia', 'emoji': '💫', 'hint': 'Zona spesso dimenticata'},
-    {'name': 'Dietro ginocchio', 'emoji': '🦿', 'hint': 'Punto nascosto'},
-    {'name': 'Basso ventre', 'emoji': '✨', 'hint': 'Sotto l\'ombelico'},
-    {'name': 'Scollatura', 'emoji': '💝', 'hint': 'Zona del cuore'},
-  ];
+  List<Map<String, dynamic>> get _spicyZones => List.generate(4, (i) => {
+    'name': 'games.hot_cold.spicy_zones.$i.name'.tr(),
+    'emoji': 'games.hot_cold.spicy_zones.$i.emoji'.tr(),
+    'hint': 'games.hot_cold.spicy_zones.$i.hint'.tr(),
+  });
 
   @override
   void dispose() {
