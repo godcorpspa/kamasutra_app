@@ -469,7 +469,10 @@
         "sensual_touch": "Toucher\nSensuel",
         "forbidden_temptation": "Tentation\nInterdite",
         "wild_card": "Carte\nJoker"
-      }
+      },
+      "intensity_soft": "Doux",
+      "intensity_spicy": "Épicé",
+      "intensity_extra_hot": "Extra"
     },
     "hot_cold": {
       "title": "Chaud et Froid",

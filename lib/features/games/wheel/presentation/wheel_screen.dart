@@ -355,9 +355,9 @@ class _WheelScreenState extends State<WheelScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildIntensityChip('soft', '🌸', 'Soft', const Color(0xFFFFB6C1)),
-          _buildIntensityChip('spicy', '🌶️', 'Spicy', const Color(0xFFFF6B35)),
-          _buildIntensityChip('extra_spicy', '🔥', 'Extra', const Color(0xFFDC143C)),
+          _buildIntensityChip('soft', '🌸', 'games.wheel.intensity_soft'.tr(), const Color(0xFFFFB6C1)),
+          _buildIntensityChip('spicy', '🌶️', 'games.wheel.intensity_spicy'.tr(), const Color(0xFFFF6B35)),
+          _buildIntensityChip('extra_spicy', '🔥', 'games.wheel.intensity_extra_hot'.tr(), const Color(0xFFDC143C)),
         ],
       ),
     );
@@ -826,11 +826,11 @@ class _ResultDialogState extends State<_ResultDialog>
   String get _intensityLabel {
     switch (widget.intensity) {
       case 'soft':
-        return '🌸 Soft';
+        return '🌸 ${'games.wheel.intensity_soft'.tr()}';
       case 'spicy':
-        return '🌶️ Spicy';
+        return '🌶️ ${'games.wheel.intensity_spicy'.tr()}';
       case 'extra_spicy':
-        return '🔥 Extra Hot';
+        return '🔥 ${'games.wheel.intensity_extra_hot'.tr()}';
       default:
         return '';
     }

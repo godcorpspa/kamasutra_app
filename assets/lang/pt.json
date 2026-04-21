@@ -132,7 +132,17 @@
     "session_complete": "Sessão concluída!",
     "next_card": "Seguinte",
     "save_card": "Guardar",
-    "try_easy": "Versão fácil"
+    "try_easy": "Versão fácil",
+    "no_positions": "Nenhuma posição encontrada",
+    "no_favorites_desc": "Ainda não salvou posições nos favoritos.\nExplore o catálogo e toque ❤️ para adicionar!",
+    "no_filter_results_desc": "Nenhuma posição corresponde aos filtros selecionados.\nTente alterar os filtros.",
+    "preparing_cards": "Preparando as cartas...",
+    "explored_positions": "Você explorou {count} posições juntos!",
+    "again": "Novamente",
+    "tap_for_details": "Toque para mais detalhes",
+    "skip": "Pular",
+    "save": "Salvar",
+    "tried": "Tentada"
   },
   "games": {
     "title": "Jogos",
@@ -459,7 +469,10 @@
         "sensual_touch": "Toque\nSensual",
         "forbidden_temptation": "Tentação\nProibida",
         "wild_card": "Carta\nCoringa"
-      }
+      },
+      "intensity_soft": "Suave",
+      "intensity_spicy": "Picante",
+      "intensity_extra_hot": "Extra"
     },
     "hot_cold": {
       "title": "Quente e Frio",

@@ -469,7 +469,10 @@
         "sensual_touch": "Toque\nSensual",
         "forbidden_temptation": "Tentación\nProhibida",
         "wild_card": "Carta\nComodín"
-      }
+      },
+      "intensity_soft": "Suave",
+      "intensity_spicy": "Picante",
+      "intensity_extra_hot": "Extra"
     },
     "hot_cold": {
       "title": "Caliente y Frío",
