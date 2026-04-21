@@ -109,7 +109,8 @@
     "prerequisites": "Requisitos previos",
     "tags": "Etiquetas",
     "try_this": "Prueba esta",
-    "similar_positions": "Posiciones similares"
+    "similar_positions": "Posiciones similares",
+    "already_tried": "Posición ya probada ✅"
   },
   "categories": {
     "romantic": "Romántico",

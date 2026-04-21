@@ -109,7 +109,8 @@
     "prerequisites": "Prerequisites",
     "tags": "Tags",
     "try_this": "Try this",
-    "similar_positions": "Similar positions"
+    "similar_positions": "Similar positions",
+    "already_tried": "Position already tried ✅"
   },
   "categories": {
     "romantic": "Romantic",
