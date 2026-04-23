@@ -40,6 +40,70 @@ enum PositionDuration {
   long,
 }
 
+/// Maps the new card-generation schema (Italian keys, human labels) back to
+/// the legacy JSON shape the generated `_$PositionFromJson` understands.
+Map<String, dynamic> _adaptNewSchema(Map<String, dynamic> j) {
+  const categoryMap = {
+    'Romantico':     'romantic',
+    'Per iniziare':  'beginner',
+    'Atletico':      'athletic',
+    'Con supporto':  'supported',
+    'Basso impatto': 'lowImpact',
+    'Avventuroso':   'adventurous',
+    'Riconnessione': 'reconnect',
+    'Veloce':        'quickie',
+  };
+  const focusMap = {
+    'Intimità':    'intimacy',
+    'Varietà':     'variety',
+    'Connessione': 'connection',
+    'Relax':       'relax',
+    'Giocosità':   'playfulness',
+    'Passione':    'passion',
+    'Fiducia':     'trust',
+  };
+  const energyMap   = {'Bassa': 'low',   'Media': 'medium', 'Alta': 'high'};
+  const durationMap = {'Bassa': 'brief', 'Media': 'medium', 'Alta': 'long'};
+
+  final titolo = j['titolo'] as String;
+  final sottotitolo = j['sottotitolo'] as String?;
+  final checkinList = (j['checkin'] as List?)?.cast<String>() ?? const <String>[];
+  final prerequisiti = (j['prerequisiti'] as List?)?.cast<String>() ?? const <String>[];
+  final categorie = ((j['categoria'] as List?) ?? const [])
+      .map((c) => categoryMap[c as String] ?? 'beginner')
+      .toList();
+  final focus = ((j['focus'] as List?) ?? const [])
+      .map((f) => focusMap[f as String] ?? 'intimacy')
+      .toList();
+
+  return <String, dynamic>{
+    'id': j['id'],
+    'nameIt': titolo,
+    'nameEn': titolo,
+    'aliasIt': sottotitolo,
+    'aliasEn': sottotitolo,
+    'categories': categorie,
+    'difficulty': j['difficolta'],
+    'energy':   energyMap[j['energia'] as String?]   ?? 'medium',
+    'duration': durationMap[j['durata']  as String?] ?? 'medium',
+    'focus': focus,
+    'prerequisites': prerequisiti,
+    'cautionsIt':    j['warning'],
+    'cautionsEn':    j['warning'],
+    'easyVariantIt': j['versione_comoda'],
+    'easyVariantEn': j['versione_comoda'],
+    'setupIt':       j['preparazione'],
+    'setupEn':       j['preparazione'],
+    'checkinIt':     checkinList.isNotEmpty ? checkinList.first : null,
+    'checkinEn':     checkinList.isNotEmpty ? checkinList.first : null,
+    'tags': (j['tag'] as List?)?.cast<String>() ?? const <String>[],
+    'illustrationRef': (j['immagine'] as String?) ?? 'placeholder_position.svg',
+    'isFavorite': false,
+    'timesViewed': 0,
+    'lastViewed': null,
+  };
+}
+
 /// Position model
 @JsonSerializable()
 class Position extends Equatable {
@@ -184,7 +248,15 @@ class Position extends Equatable {
     );
   }
 
-  factory Position.fromJson(Map<String, dynamic> json) => _$PositionFromJson(json);
+  factory Position.fromJson(Map<String, dynamic> json) {
+    // New card-generation schema uses "titolo" (+ Italian enum labels).
+    // Translate it to the legacy shape before delegating to the generated
+    // parser so the rest of the app keeps working unchanged.
+    if (json.containsKey('titolo')) {
+      return _$PositionFromJson(_adaptNewSchema(json));
+    }
+    return _$PositionFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$PositionToJson(this);
 
   @override
