@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
@@ -46,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Validazione password avanzata
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Inserisci la password';
+      return 'auth.enter_password'.tr();
     }
     
     // Per il login, verifica solo che non sia vuota
@@ -58,27 +59,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     List<String> errors = [];
     
     if (value.length < 8) {
-      errors.add('almeno 8 caratteri');
+      errors.add('auth.min_8_chars'.tr());
     }
     
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      errors.add('una lettera maiuscola');
+      errors.add('auth.one_uppercase'.tr());
     }
     
     if (!value.contains(RegExp(r'[a-z]'))) {
-      errors.add('una lettera minuscola');
+      errors.add('auth.one_lowercase'.tr());
     }
     
     if (!value.contains(RegExp(r'[0-9]'))) {
-      errors.add('un numero');
+      errors.add('auth.one_number'.tr());
     }
     
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/`~]'))) {
-      errors.add('un carattere speciale (!@#\$%^&*...)');
+      errors.add('auth.one_special'.tr());
     }
-    
+
     if (errors.isNotEmpty) {
-      return 'La password deve contenere: ${errors.join(', ')}';
+      return 'auth.password_must_contain'.tr(namedArgs: {'errors': errors.join(', ')});
     }
     
     return null;
@@ -87,11 +88,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Validazione conferma password
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Conferma la password';
+      return 'auth.confirm_password'.tr();
     }
-    
+
     if (value != _passwordController.text) {
-      return 'Le password non corrispondono';
+      return 'auth.passwords_dont_match'.tr();
     }
     
     return null;
@@ -122,11 +123,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   String _getPasswordStrengthText(double strength) {
-    if (strength < 0.3) return 'Molto debole';
-    if (strength < 0.5) return 'Debole';
-    if (strength < 0.7) return 'Media';
-    if (strength < 0.9) return 'Forte';
-    return 'Molto forte';
+    if (strength < 0.3) return 'auth.very_weak'.tr();
+    if (strength < 0.5) return 'auth.weak'.tr();
+    if (strength < 0.7) return 'auth.medium_strength'.tr();
+    if (strength < 0.9) return 'auth.strong'.tr();
+    return 'auth.very_strong'.tr();
   }
 
   Future<void> _submit() async {
@@ -173,7 +174,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = errorMsg ?? 'Errore di connessione. Riprova.';
+          _errorMessage = errorMsg ?? 'auth.connection_error'.tr();
         });
       }
     }
@@ -229,7 +230,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Errore con Google Sign-In. Riprova.';
+          _errorMessage = 'auth.google_error'.tr();
         });
       }
     }
@@ -252,27 +253,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _getErrorMessage(String code) {
     switch (code) {
       case 'weak-password':
-        return 'La password è troppo debole';
+        return 'auth.error_weak_password'.tr();
       case 'email-already-in-use':
-        return 'Questa email è già registrata';
+        return 'auth.error_email_in_use'.tr();
       case 'invalid-email':
-        return 'Email non valida';
+        return 'auth.error_invalid_email'.tr();
       case 'user-not-found':
-        return 'Nessun account trovato con questa email';
+        return 'auth.error_user_not_found'.tr();
       case 'wrong-password':
-        return 'Password errata';
+        return 'auth.error_wrong_password'.tr();
       case 'user-disabled':
-        return 'Account disabilitato';
+        return 'auth.error_user_disabled'.tr();
       case 'too-many-requests':
-        return 'Troppi tentativi. Riprova tra qualche minuto';
+        return 'auth.error_too_many_requests'.tr();
       case 'invalid-credential':
-        return 'Email o password non corretti';
+        return 'auth.error_invalid_credential'.tr();
       case 'operation-not-allowed':
-        return 'Operazione non consentita';
+        return 'auth.error_not_allowed'.tr();
       case 'network-request-failed':
-        return 'Errore di rete. Controlla la connessione.';
+        return 'auth.error_network'.tr();
       default:
-        return 'Errore di autenticazione ($code)';
+        return 'auth.error_auth_generic'.tr(namedArgs: {'code': code});
     }
   }
 
@@ -283,12 +284,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         backgroundColor: _darkBackground,
-        title: const Text('Reset Password', style: TextStyle(color: _cream)),
+        title: Text('auth.reset_password'.tr(), style: const TextStyle(color: _cream)),
         content: TextField(
           controller: emailController,
           style: const TextStyle(color: _cream),
           decoration: InputDecoration(
-            labelText: 'Email',
+            labelText: 'auth.email_label'.tr(),
             labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: _purple),
@@ -301,7 +302,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('Annulla', style: TextStyle(color: _cream.withOpacity(0.7))),
+            child: Text('common.cancel'.tr(), style: TextStyle(color: _cream.withOpacity(0.7))),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: _purple),
@@ -313,8 +314,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 if (mounted) {
                   Navigator.pop(dialogContext);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Email di reset inviata! Controlla la tua casella.'),
+                    SnackBar(
+                      content: Text('auth.reset_email_sent'.tr()),
                       backgroundColor: _purple,
                     ),
                   );
@@ -330,7 +331,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 }
               }
             },
-            child: const Text('Invia'),
+            child: Text('auth.send_btn'.tr()),
           ),
         ],
       ),
@@ -372,7 +373,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  _isLogin ? 'Bentornato!' : 'Crea il tuo account',
+                  _isLogin ? 'auth.welcome_back'.tr() : 'auth.create_account'.tr(),
                   style: TextStyle(
                     fontSize: 16,
                     color: _cream.withOpacity(0.7),
@@ -412,7 +413,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   keyboardType: TextInputType.emailAddress,
                   style: const TextStyle(color: _cream),
                   decoration: InputDecoration(
-                    labelText: 'Email',
+                    labelText: 'auth.email_label'.tr(),
                     labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
                     prefixIcon: const Icon(Icons.email_outlined, color: _fuchsia),
                     enabledBorder: OutlineInputBorder(
@@ -435,10 +436,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Inserisci la tua email';
+                      return 'auth.enter_email'.tr();
                     }
                     if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'Email non valida';
+                      return 'auth.invalid_email'.tr();
                     }
                     return null;
                   },
@@ -455,7 +456,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     setState(() {});
                   },
                   decoration: InputDecoration(
-                    labelText: 'Password',
+                    labelText: 'auth.password_label'.tr(),
                     labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
                     prefixIcon: const Icon(Icons.lock_outlined, color: _fuchsia),
                     suffixIcon: IconButton(
@@ -534,7 +535,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     obscureText: _obscureConfirmPassword,
                     style: const TextStyle(color: _cream),
                     decoration: InputDecoration(
-                      labelText: 'Conferma Password',
+                      labelText: 'auth.confirm_password'.tr(),
                       labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
                       prefixIcon: const Icon(Icons.lock_outline, color: _fuchsia),
                       suffixIcon: IconButton(
@@ -577,9 +578,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _showResetPasswordDialog,
-                      child: const Text(
-                        'Password dimenticata?',
-                        style: TextStyle(color: _fuchsiaLight),
+                      child: Text(
+                        'auth.forgot_password'.tr(),
+                        style: const TextStyle(color: _fuchsiaLight),
                       ),
                     ),
                   ),
@@ -609,7 +610,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           )
                         : Text(
-                            _isLogin ? 'Accedi' : 'Registrati',
+                            _isLogin ? 'auth.login'.tr() : 'auth.register'.tr(),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -627,7 +628,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'oppure',
+                        'auth.or_divider'.tr(),
                         style: TextStyle(color: _cream.withOpacity(0.5)),
                       ),
                     ),
@@ -655,7 +656,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                     ),
-                    label: const Text('Continua con Google'),
+                    label: Text('auth.continue_google'.tr()),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: _cream,
                       side: const BorderSide(color: _fuchsiaLight),
@@ -673,7 +674,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      _isLogin ? 'Non hai un account?' : 'Hai già un account?',
+                      _isLogin ? 'auth.no_account'.tr() : 'auth.has_account'.tr(),
                       style: TextStyle(color: _cream.withOpacity(0.7)),
                     ),
                     TextButton(
@@ -685,7 +686,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         });
                       },
                       child: Text(
-                        _isLogin ? 'Registrati' : 'Accedi',
+                        _isLogin ? 'auth.register'.tr() : 'auth.login'.tr(),
                         style: const TextStyle(
                           color: _fuchsiaLight,
                           fontWeight: FontWeight.bold,
@@ -714,23 +715,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildRequirementRow(
-            'Minimo 8 caratteri',
+            'auth.req_min_chars'.tr(),
             password.length >= 8,
           ),
           _buildRequirementRow(
-            'Una lettera maiuscola (A-Z)',
+            'auth.req_uppercase'.tr(),
             password.contains(RegExp(r'[A-Z]')),
           ),
           _buildRequirementRow(
-            'Una lettera minuscola (a-z)',
+            'auth.req_lowercase'.tr(),
             password.contains(RegExp(r'[a-z]')),
           ),
           _buildRequirementRow(
-            'Un numero (0-9)',
+            'auth.req_number'.tr(),
             password.contains(RegExp(r'[0-9]')),
           ),
           _buildRequirementRow(
-            'Un carattere speciale (!@#\$%...)',
+            'auth.req_special'.tr(),
             password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/`~]')),
           ),
         ],

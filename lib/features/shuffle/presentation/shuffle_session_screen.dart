@@ -289,17 +289,15 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'Nessuna posizione trovata',
+              'shuffle.no_positions'.tr(),
               style: Theme.of(context).textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
               widget.filter.favoritesOnly == true
-                  ? 'Non hai ancora salvato posizioni tra i preferiti.\n'
-                    'Esplora il catalogo e tocca ❤️ per aggiungerne!'
-                  : 'Nessuna posizione corrisponde ai filtri selezionati.\n'
-                    'Prova a cambiare i filtri.',
+                  ? 'shuffle.no_favorites_desc'.tr()
+                  : 'shuffle.no_filter_results_desc'.tr(),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
@@ -312,7 +310,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             ElevatedButton.icon(
               onPressed: () => context.pop(),
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Torna indietro'),
+              label: Text('common.back'.tr()),
             ),
           ],
         ),
@@ -328,7 +326,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           const CircularProgressIndicator(),
           const SizedBox(height: AppSpacing.lg),
           Text(
-            'Preparo le carte...',
+            'shuffle.preparing_cards'.tr(),
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ],
@@ -356,7 +354,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Avete esplorato ${_positions.length} posizioni insieme!',
+              'shuffle.explored_positions'.tr(namedArgs: {'count': _positions.length.toString()}),
               style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
@@ -367,7 +365,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                 OutlinedButton.icon(
                   onPressed: () => context.pop(),
                   icon: const Icon(Icons.arrow_back),
-                  label: const Text('Esci'),
+                  label: Text('common.close'.tr()),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -380,7 +378,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                     _loadPositions();
                   },
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Ancora'),
+                  label: Text('shuffle.again'.tr()),
                 ),
               ],
             ),
@@ -545,7 +543,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                           // Tap hint
                           Center(
                             child: Text(
-                              'Tocca per dettagli',
+                              'shuffle.tap_for_details'.tr(),
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                               ),
@@ -671,7 +669,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             icon: Icons.close,
             color: Colors.grey,
             onPressed: () => _dismissCard('left'),
-            label: 'Salta',
+            label: 'shuffle.skip'.tr(),
           ),
           
           // Favorite
@@ -681,7 +679,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                 : Icons.favorite_border,
             color: AppColors.burgundy,
             onPressed: _toggleFavorite,
-            label: 'Salva',
+            label: 'shuffle.save'.tr(),
           ),
           
           // Like / Try this
@@ -689,7 +687,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             icon: Icons.check,
             color: AppColors.spicy,
             onPressed: () => _dismissCard('right'),
-            label: 'Provata',
+            label: 'shuffle.tried'.tr(),
           ),
         ],
       ),

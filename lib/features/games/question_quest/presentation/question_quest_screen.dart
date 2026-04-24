@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class QuestionQuestScreen extends StatefulWidget {
   const QuestionQuestScreen({super.key});
@@ -14,122 +15,122 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
   String _selectedCategory = 'all';
   String _selectedDepth = 'medium';
   bool _showingQuestion = false;
-  
+
   late AnimationController _cardController;
   late Animation<double> _cardAnimation;
 
-  final List<Map<String, String>> _categories = [
-    {'id': 'all', 'name': 'Tutte', 'emoji': '🎯'},
-    {'id': 'dreams', 'name': 'Sogni', 'emoji': '✨'},
-    {'id': 'memories', 'name': 'Ricordi', 'emoji': '📸'},
-    {'id': 'desires', 'name': 'Desideri', 'emoji': '💫'},
-    {'id': 'fears', 'name': 'Paure', 'emoji': '🌙'},
-    {'id': 'future', 'name': 'Futuro', 'emoji': '🔮'},
-    {'id': 'intimacy', 'name': 'Intimità', 'emoji': '💕'},
+  List<Map<String, String>> get _categories => [
+    {'id': 'all', 'name': 'games.question_quest.cat_all'.tr(), 'emoji': '🎯'},
+    {'id': 'dreams', 'name': 'games.question_quest.cat_dreams'.tr(), 'emoji': '✨'},
+    {'id': 'memories', 'name': 'games.question_quest.cat_memories'.tr(), 'emoji': '📸'},
+    {'id': 'desires', 'name': 'games.question_quest.cat_desires'.tr(), 'emoji': '💫'},
+    {'id': 'fears', 'name': 'games.question_quest.cat_fears'.tr(), 'emoji': '🌙'},
+    {'id': 'future', 'name': 'games.question_quest.cat_future'.tr(), 'emoji': '🔮'},
+    {'id': 'intimacy', 'name': 'games.question_quest.cat_intimacy'.tr(), 'emoji': '💕'},
   ];
 
-  final List<Map<String, String>> _depths = [
-    {'id': 'light', 'name': 'Leggero', 'emoji': '☀️', 'desc': 'Domande semplici per rompere il ghiaccio'},
-    {'id': 'medium', 'name': 'Profondo', 'emoji': '🌊', 'desc': 'Domande che richiedono riflessione'},
-    {'id': 'deep', 'name': 'Abisso', 'emoji': '🌌', 'desc': 'Domande che toccano l\'anima'},
+  List<Map<String, String>> get _depths => [
+    {'id': 'light', 'name': 'games.question_quest.depth_light'.tr(), 'emoji': '☀️', 'desc': 'games.question_quest.depth_light_desc'.tr()},
+    {'id': 'medium', 'name': 'games.question_quest.depth_medium'.tr(), 'emoji': '🌊', 'desc': 'games.question_quest.depth_medium_desc'.tr()},
+    {'id': 'deep', 'name': 'games.question_quest.depth_deep'.tr(), 'emoji': '🌌', 'desc': 'games.question_quest.depth_deep_desc'.tr()},
   ];
 
-  // Mock questions by category and depth
-  final Map<String, Map<String, List<String>>> _questions = {
+  // Questions by depth and category
+  Map<String, Map<String, List<String>>> get _questions => {
     'light': {
       'dreams': [
-        'Qual è il sogno più strano che ricordi?',
-        'Se potessi sognare qualsiasi cosa stanotte, cosa sceglieresti?',
-        'Hai mai fatto un sogno ricorrente?',
+        'games.question_quest.q_light_dreams_1'.tr(),
+        'games.question_quest.q_light_dreams_2'.tr(),
+        'games.question_quest.q_light_dreams_3'.tr(),
       ],
       'memories': [
-        'Qual è il tuo primo ricordo d\'infanzia?',
-        'Qual è stato il momento più divertente della tua vita?',
-        'Racconta il tuo ricordo preferito di noi due.',
+        'games.question_quest.q_light_memories_1'.tr(),
+        'games.question_quest.q_light_memories_2'.tr(),
+        'games.question_quest.q_light_memories_3'.tr(),
       ],
       'desires': [
-        'Qual è un piccolo piacere che ti rende felice?',
-        'Cosa vorresti fare questo weekend?',
-        'Qual è il tuo comfort food preferito?',
+        'games.question_quest.q_light_desires_1'.tr(),
+        'games.question_quest.q_light_desires_2'.tr(),
+        'games.question_quest.q_light_desires_3'.tr(),
       ],
       'fears': [
-        'Qual è la cosa più buffa di cui hai paura?',
-        'Hai paura del buio?',
-        'Qual è l\'ultima cosa che ti ha spaventato in un film?',
+        'games.question_quest.q_light_fears_1'.tr(),
+        'games.question_quest.q_light_fears_2'.tr(),
+        'games.question_quest.q_light_fears_3'.tr(),
       ],
       'future': [
-        'Dove ti vedi tra 5 anni?',
-        'Qual è il prossimo viaggio che vorresti fare?',
-        'Cosa vorresti imparare a fare?',
+        'games.question_quest.q_light_future_1'.tr(),
+        'games.question_quest.q_light_future_2'.tr(),
+        'games.question_quest.q_light_future_3'.tr(),
       ],
       'intimacy': [
-        'Qual è il tuo modo preferito di ricevere affetto?',
-        'Ti piacciono di più le coccole mattutine o serali?',
-        'Qual è il complimento più bello che ti ho fatto?',
+        'games.question_quest.q_light_intimacy_1'.tr(),
+        'games.question_quest.q_light_intimacy_2'.tr(),
+        'games.question_quest.q_light_intimacy_3'.tr(),
       ],
     },
     'medium': {
       'dreams': [
-        'Se potessi realizzare un sogno impossibile, quale sarebbe?',
-        'Qual è un sogno che hai abbandonato e perché?',
-        'Cosa significa per te "avere successo"?',
+        'games.question_quest.q_medium_dreams_1'.tr(),
+        'games.question_quest.q_medium_dreams_2'.tr(),
+        'games.question_quest.q_medium_dreams_3'.tr(),
       ],
       'memories': [
-        'Qual è il momento in cui ti sei sentito più orgoglioso di te stesso?',
-        'Racconta un momento difficile che ti ha reso più forte.',
-        'Qual è il ricordo più prezioso della tua famiglia?',
+        'games.question_quest.q_medium_memories_1'.tr(),
+        'games.question_quest.q_medium_memories_2'.tr(),
+        'games.question_quest.q_medium_memories_3'.tr(),
       ],
       'desires': [
-        'Cosa desideri di più in questo momento della tua vita?',
-        'C\'è qualcosa che non hai mai osato chiedermi?',
-        'Qual è il tuo desiderio segreto?',
+        'games.question_quest.q_medium_desires_1'.tr(),
+        'games.question_quest.q_medium_desires_2'.tr(),
+        'games.question_quest.q_medium_desires_3'.tr(),
       ],
       'fears': [
-        'Qual è la tua paura più grande riguardo al futuro?',
-        'C\'è qualcosa che eviti di fare per paura?',
-        'Qual è stata l\'ultima volta che hai affrontato una paura?',
+        'games.question_quest.q_medium_fears_1'.tr(),
+        'games.question_quest.q_medium_fears_2'.tr(),
+        'games.question_quest.q_medium_fears_3'.tr(),
       ],
       'future': [
-        'Come immagini la nostra vita tra 10 anni?',
-        'Qual è un obiettivo che vuoi assolutamente raggiungere?',
-        'Se potessi cambiare una cosa del tuo futuro, cosa sarebbe?',
+        'games.question_quest.q_medium_future_1'.tr(),
+        'games.question_quest.q_medium_future_2'.tr(),
+        'games.question_quest.q_medium_future_3'.tr(),
       ],
       'intimacy': [
-        'Cosa ti fa sentire più amato/a?',
-        'Qual è il momento in cui ti sei sentito più connesso a me?',
-        'C\'è qualcosa che vorresti migliorare nella nostra intimità?',
+        'games.question_quest.q_medium_intimacy_1'.tr(),
+        'games.question_quest.q_medium_intimacy_2'.tr(),
+        'games.question_quest.q_medium_intimacy_3'.tr(),
       ],
     },
     'deep': {
       'dreams': [
-        'Se oggi fosse l\'ultimo giorno, di cosa ti pentiresti?',
-        'Qual è il sogno che non hai mai detto a nessuno?',
-        'Cosa sacrificheresti per realizzare il tuo sogno più grande?',
+        'games.question_quest.q_deep_dreams_1'.tr(),
+        'games.question_quest.q_deep_dreams_2'.tr(),
+        'games.question_quest.q_deep_dreams_3'.tr(),
       ],
       'memories': [
-        'Qual è il momento che ti ha cambiato la vita per sempre?',
-        'C\'è un ricordo doloroso che ancora ti accompagna?',
-        'Qual è la lezione più importante che la vita ti ha insegnato?',
+        'games.question_quest.q_deep_memories_1'.tr(),
+        'games.question_quest.q_deep_memories_2'.tr(),
+        'games.question_quest.q_deep_memories_3'.tr(),
       ],
       'desires': [
-        'Qual è il desiderio più profondo del tuo cuore?',
-        'Cosa desideri veramente dalla nostra relazione?',
-        'Se potessi avere una risposta a qualsiasi domanda, quale faresti?',
+        'games.question_quest.q_deep_desires_1'.tr(),
+        'games.question_quest.q_deep_desires_2'.tr(),
+        'games.question_quest.q_deep_desires_3'.tr(),
       ],
       'fears': [
-        'Qual è la paura che ti tiene sveglio la notte?',
-        'Di cosa hai paura nella nostra relazione?',
-        'Qual è la verità che hai paura di affrontare?',
+        'games.question_quest.q_deep_fears_1'.tr(),
+        'games.question_quest.q_deep_fears_2'.tr(),
+        'games.question_quest.q_deep_fears_3'.tr(),
       ],
       'future': [
-        'Cosa vuoi che si ricordi di te quando non ci sarai più?',
-        'Qual è il tuo scopo nella vita?',
-        'Come vuoi invecchiare insieme?',
+        'games.question_quest.q_deep_future_1'.tr(),
+        'games.question_quest.q_deep_future_2'.tr(),
+        'games.question_quest.q_deep_future_3'.tr(),
       ],
       'intimacy': [
-        'Qual è la cosa più vulnerabile che puoi condividere con me?',
-        'Cosa significa per te l\'amore vero?',
-        'Qual è il momento in cui ti sei sentito completamente al sicuro con me?',
+        'games.question_quest.q_deep_intimacy_1'.tr(),
+        'games.question_quest.q_deep_intimacy_2'.tr(),
+        'games.question_quest.q_deep_intimacy_3'.tr(),
       ],
     },
   };
@@ -170,7 +171,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
 
   void _loadQuestions() {
     List<String> allQuestions = [];
-    
+
     if (_selectedCategory == 'all') {
       for (var category in _questions[_selectedDepth]!.values) {
         allQuestions.addAll(category);
@@ -178,7 +179,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
     } else {
       allQuestions = List.from(_questions[_selectedDepth]![_selectedCategory] ?? []);
     }
-    
+
     allQuestions.shuffle();
     _currentQuestions = allQuestions.take(10).toList();
   }
@@ -200,7 +201,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
         }
       });
     }
-    
+
     _nextQuestion();
   }
 
@@ -223,30 +224,30 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          '🎉 Viaggio Completato!',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'games.question_quest.journey_complete'.tr(),
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Avete esplorato l\'anima dell\'altro.',
-              style: TextStyle(color: Colors.white70),
+            Text(
+              'games.question_quest.explored_soul'.tr(),
+              style: const TextStyle(color: Colors.white70),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildScoreCard('Partner 1', _player1Score, const Color(0xFF8B5CF6)),
-                _buildScoreCard('Partner 2', _player2Score, const Color(0xFFEC4899)),
+                _buildScoreCard('games.question_quest.partner1'.tr(), _player1Score, const Color(0xFF8B5CF6)),
+                _buildScoreCard('games.question_quest.partner2'.tr(), _player2Score, const Color(0xFFEC4899)),
               ],
             ),
             const SizedBox(height: 16),
             Text(
-              'Domande risposte: ${_player1Score + _player2Score}/${_currentQuestions.length}',
+              'games.question_quest.questions_answered'.tr(args: [(_player1Score + _player2Score).toString(), _currentQuestions.length.toString()]),
               style: const TextStyle(color: Colors.white54),
             ),
           ],
@@ -259,7 +260,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                 _gameStarted = false;
               });
             },
-            child: const Text('Menu'),
+            child: Text('games.question_quest.menu'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -269,7 +270,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF6366F1),
             ),
-            child: const Text('Gioca Ancora'),
+            child: Text('games.question_quest.play_again'.tr()),
           ),
         ],
       ),
@@ -311,9 +312,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Question Quest',
-          style: TextStyle(
+        title: Text(
+          'games.question_quest.title'.tr(),
+          style: const TextStyle(
             fontFamily: 'PlayfairDisplay',
             fontWeight: FontWeight.bold,
           ),
@@ -352,10 +353,10 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
             ),
           ),
           const SizedBox(height: 16),
-          const Center(
+          Center(
             child: Text(
-              'Esplora l\'anima del tuo partner',
-              style: TextStyle(
+              'games.question_quest.subtitle'.tr(),
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
               ),
@@ -364,9 +365,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
           const SizedBox(height: 32),
 
           // Category Selection
-          const Text(
-            'Categoria',
-            style: TextStyle(
+          Text(
+            'games.question_quest.category_label'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -383,13 +384,13 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? const Color(0xFF6366F1) 
+                    color: isSelected
+                        ? const Color(0xFF6366F1)
                         : Colors.white.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: isSelected 
-                          ? const Color(0xFF6366F1) 
+                      color: isSelected
+                          ? const Color(0xFF6366F1)
                           : Colors.white.withOpacity(0.2),
                     ),
                   ),
@@ -407,9 +408,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
           const SizedBox(height: 32),
 
           // Depth Selection
-          const Text(
-            'Profondità',
-            style: TextStyle(
+          Text(
+            'games.question_quest.depth_label'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -425,13 +426,13 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isSelected 
-                      ? const Color(0xFF6366F1).withOpacity(0.2) 
+                  color: isSelected
+                      ? const Color(0xFF6366F1).withOpacity(0.2)
                       : Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: isSelected 
-                        ? const Color(0xFF6366F1) 
+                    color: isSelected
+                        ? const Color(0xFF6366F1)
                         : Colors.white.withOpacity(0.1),
                     width: isSelected ? 2 : 1,
                   ),
@@ -486,9 +487,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Inizia il Viaggio',
-                style: TextStyle(
+              child: Text(
+                'games.question_quest.start_journey'.tr(),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -510,21 +511,21 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Domanda ${_currentQuestionIndex + 1}/${_currentQuestions.length}',
+                'games.question_quest.question_of'.tr(args: [(_currentQuestionIndex + 1).toString(), _currentQuestions.length.toString()]),
                 style: const TextStyle(color: Colors.white70),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _currentPlayer == 1 
+                  color: _currentPlayer == 1
                       ? const Color(0xFF8B5CF6).withOpacity(0.3)
                       : const Color(0xFFEC4899).withOpacity(0.3),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'Partner $_currentPlayer risponde',
+                  'games.question_quest.partner_answers'.tr(args: [_currentPlayer.toString()]),
                   style: TextStyle(
-                    color: _currentPlayer == 1 
+                    color: _currentPlayer == 1
                         ? const Color(0xFF8B5CF6)
                         : const Color(0xFFEC4899),
                     fontWeight: FontWeight.bold,
@@ -539,7 +540,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
             backgroundColor: Colors.white.withOpacity(0.1),
             valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF6366F1)),
           ),
-          
+
           // Scores
           const SizedBox(height: 16),
           Row(
@@ -550,9 +551,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
               _buildMiniScore('P2', _player2Score, const Color(0xFFEC4899)),
             ],
           ),
-          
+
           const Spacer(),
-          
+
           // Question Card
           if (!_showingQuestion)
             GestureDetector(
@@ -575,27 +576,27 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                     ),
                   ],
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.touch_app,
                       size: 60,
                       color: Colors.white70,
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     Text(
-                      'Tocca per rivelare',
-                      style: TextStyle(
+                      'games.question_quest.tap_to_reveal'.tr(),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
-                      'la domanda',
-                      style: TextStyle(
+                      'games.question_quest.the_question'.tr(),
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
                       ),
@@ -646,9 +647,9 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                 );
               },
             ),
-          
+
           const Spacer(),
-          
+
           // Action Buttons
           if (_showingQuestion)
             Row(
@@ -657,7 +658,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                   child: OutlinedButton.icon(
                     onPressed: () => _answerQuestion(false),
                     icon: const Icon(Icons.skip_next),
-                    label: const Text('Salta'),
+                    label: Text('games.question_quest.skip'.tr()),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.white70,
                       side: BorderSide(color: Colors.white.withOpacity(0.3)),
@@ -674,7 +675,7 @@ class _QuestionQuestScreenState extends State<QuestionQuestScreen>
                   child: ElevatedButton.icon(
                     onPressed: () => _answerQuestion(true),
                     icon: const Icon(Icons.check),
-                    label: const Text('Ho Risposto'),
+                    label: Text('games.question_quest.answered'.tr()),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF6366F1),
                       padding: const EdgeInsets.symmetric(vertical: 14),

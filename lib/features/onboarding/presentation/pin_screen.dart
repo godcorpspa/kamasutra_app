@@ -205,7 +205,7 @@ class _PinScreenState extends State<PinScreen> {
               // Logout
               TextButton(
                 onPressed: _logout,
-                child: const Text('Esci dall\'account'),
+                child: Text('settings.logout_and_disconnect'.tr()),
               ),
               const SizedBox(height: 8),
             ],

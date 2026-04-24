@@ -62,7 +62,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
 
             // Account section
-            _buildSectionHeader('Dettagli Account'),
+            _buildSectionHeader('settings.account_details'.tr()),
             SliverToBoxAdapter(
               child: _buildAccountSection(),
             ),
@@ -121,6 +121,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     );
   }
 
+  String _getLanguageName(String code) {
+    switch (code) {
+      case 'it': return 'Italiano';
+      case 'en': return 'English';
+      case 'es': return 'Español';
+      case 'fr': return 'Français';
+      case 'pt': return 'Português';
+      default: return code;
+    }
+  }
+
   Widget _buildPrivacySection() {
     return Column(
       children: [
@@ -128,8 +139,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           icon: Icons.lock,
           title: 'settings.pin_lock'.tr(),
           subtitle: _isPinEnabled
-              ? 'PIN attivo'
-              : 'Proteggi l\'accesso con PIN',
+              ? 'settings.pin_active'.tr()
+              : 'settings.pin_protect'.tr(),
           value: _isPinEnabled,
           onChanged: (value) async {
             if (value) {
@@ -156,23 +167,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         // Email
         _buildListTile(
           icon: Icons.email_outlined,
-          title: 'Email',
+          title: 'settings_extra.email_label'.tr(),
           subtitle: email,
         ),
 
         // Change password (always visible)
         _buildListTile(
           icon: Icons.key_outlined,
-          title: 'Cambia password',
-          subtitle: 'Invia email per reimpostare la password',
+          title: 'settings_extra.change_password'.tr(),
+          subtitle: 'settings_extra.change_password_subtitle'.tr(),
           onTap: () => _showChangePasswordDialog(),
         ),
 
         // Delete account
         _buildListTile(
           icon: Icons.person_remove_outlined,
-          title: 'Elimina account',
-          subtitle: 'Cancella definitivamente il tuo account',
+          title: 'settings_extra.delete_account'.tr(),
+          subtitle: 'settings_extra.delete_account_subtitle'.tr(),
           onTap: () => _showDeleteAccountDialog(),
           isDestructive: true,
         ),
@@ -187,9 +198,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Cambia password'),
+        title: Text('settings_extra.change_password'.tr()),
         content: Text(
-          'Invieremo un\'email a ${user!.email} con le istruzioni per reimpostare la password.',
+          'settings_extra.change_password_desc'.tr(namedArgs: {'email': user!.email!}),
         ),
         actions: [
           TextButton(
@@ -205,7 +216,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Email inviata a ${user.email}'),
+                      content: Text('settings_extra.email_sent'.tr(namedArgs: {'email': user.email!})),
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -213,8 +224,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               } catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Errore nell\'invio dell\'email'),
+                    SnackBar(
+                      content: Text('settings_extra.send_email_error'.tr()),
                       backgroundColor: Colors.red,
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -222,7 +233,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 }
               }
             },
-            child: const Text('Invia email'),
+            child: Text('settings_extra.send_email'.tr()),
           ),
         ],
       ),
@@ -233,12 +244,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Elimina account'),
-        content: const Text(
-          'Sei sicuro di voler eliminare il tuo account?\n\n'
-          'Tutti i tuoi dati (preferenze, cronologia, badge, progressi) '
-          'verranno cancellati definitivamente.\n\n'
-          'Questa azione non può essere annullata.',
+        title: Text('settings_extra.delete_account'.tr()),
+        content: Text(
+          'settings_extra.delete_confirm_text'.tr(),
         ),
         actions: [
           TextButton(
@@ -251,7 +259,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               _performDeleteAccount();
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Elimina account'),
+            child: Text('settings_extra.delete_account'.tr()),
           ),
         ],
       ),
@@ -292,7 +300,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       } else {
         scaffoldMessenger.showSnackBar(
           SnackBar(
-            content: Text('Errore: ${e.message ?? 'impossibile eliminare l\'account'}'),
+            content: Text('settings_extra.error_delete_account'.tr()),
             backgroundColor: Colors.red,
             behavior: SnackBarBehavior.floating,
           ),
@@ -300,8 +308,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       }
     } catch (e) {
       scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text('Errore durante l\'eliminazione dell\'account'),
+        SnackBar(
+          content: Text('settings_extra.delete_error'.tr()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -320,9 +328,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       showDialog(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Conferma identità'),
-          content: const Text(
-            'Per motivi di sicurezza, devi accedere nuovamente con Google prima di eliminare l\'account.',
+          title: Text('settings_extra.confirm_identity'.tr()),
+          content: Text(
+            'settings_extra.reauth_google_desc'.tr(),
           ),
           actions: [
             TextButton(
@@ -335,7 +343,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 await _reauthWithGoogleAndDelete();
               },
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              child: const Text('Accedi con Google'),
+              child: Text('settings_extra.sign_in_google'.tr()),
             ),
           ],
         ),
@@ -346,19 +354,19 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       showDialog(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Conferma identità'),
+          title: Text('settings_extra.confirm_identity'.tr()),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Per motivi di sicurezza, inserisci la tua password per confermare l\'eliminazione.',
+              Text(
+                'settings_extra.reauth_email_desc'.tr(),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
+                decoration: InputDecoration(
+                  labelText: 'settings_extra.password_label'.tr(),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -380,7 +388,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 await _reauthWithPasswordAndDelete(password);
               },
               style: TextButton.styleFrom(foregroundColor: AppColors.error),
-              child: const Text('Conferma ed elimina'),
+              child: Text('settings_extra.confirm_delete'.tr()),
             ),
           ],
         ),
@@ -406,8 +414,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       await _performDeleteAccount();
     } catch (e) {
       scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text('Errore durante la riautenticazione'),
+        SnackBar(
+          content: Text('settings_extra.reauth_error'.tr()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -427,8 +435,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       await _performDeleteAccount();
     } on FirebaseAuthException catch (e) {
       final message = e.code == 'wrong-password'
-          ? 'Password errata'
-          : 'Errore: ${e.message ?? 'riautenticazione fallita'}';
+          ? 'settings_extra.wrong_password'.tr()
+          : 'settings_extra.error_delete_account'.tr();
       scaffoldMessenger.showSnackBar(
         SnackBar(
           content: Text(message),
@@ -438,8 +446,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       );
     } catch (e) {
       scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text('Errore durante la riautenticazione'),
+        SnackBar(
+          content: Text('settings_extra.reauth_error'.tr()),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
         ),
@@ -454,7 +462,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildListTile(
           icon: Icons.language,
           title: 'settings.language'.tr(),
-          subtitle: context.locale.languageCode == 'it' ? 'Italiano' : 'English',
+          subtitle: _getLanguageName(context.locale.languageCode),
           onTap: () => _showLanguageDialog(),
         ),
         
@@ -462,7 +470,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildSwitchTile(
           icon: Icons.volume_up,
           title: 'settings.sound_effects'.tr(),
-          subtitle: 'Effetti sonori durante i giochi',
+          subtitle: 'settings.sound_effects_desc'.tr(),
           value: _soundEffects,
           onChanged: (value) async {
             await PreferencesService.instance.setSoundEffectsEnabled(value);
@@ -479,7 +487,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildSwitchTile(
           icon: Icons.vibration,
           title: 'settings.haptic_feedback'.tr(),
-          subtitle: 'Vibrazioni tattili',
+          subtitle: 'settings.haptic_desc'.tr(),
           value: _hapticFeedback,
           onChanged: (value) async {
             await PreferencesService.instance.setHapticFeedbackEnabled(value);
@@ -498,14 +506,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildListTile(
           icon: Icons.history,
           title: 'settings.clear_history'.tr(),
-          subtitle: 'Elimina la cronologia delle esplorazioni',
+          subtitle: 'settings.clear_history_desc'.tr(),
           onTap: () => _showClearHistoryDialog(),
         ),
         
         _buildListTile(
           icon: Icons.delete_forever,
           title: 'settings.clear_all_data'.tr(),
-          subtitle: 'Ripristina tutte le impostazioni',
+          subtitle: 'settings.clear_all_data_desc'.tr(),
           onTap: () => _showClearAllDataDialog(),
           isDestructive: true,
         ),
@@ -518,8 +526,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       children: [
         _buildListTile(
           icon: Icons.logout,
-          title: 'Esci dall\'account',
-          subtitle: 'Disconnetti e torna al login',
+          title: 'settings.logout_and_disconnect'.tr(),
+          subtitle: 'settings.logout_disconnect_desc'.tr(),
           onTap: () => _showLogoutDialog(),
           isDestructive: true,
         ),
@@ -544,7 +552,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         _buildListTile(
           icon: Icons.email_outlined,
           title: 'settings.contact'.tr(),
-          subtitle: 'Segnala un bug o invia un suggerimento',
+          subtitle: 'settings_extra.contact_subtitle'.tr(),
           onTap: () => _showContactOptions(),
         ),
       ],
@@ -555,9 +563,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Esci dall\'account'),
-        content: const Text(
-          'Sei sicuro di voler uscire? Dovrai effettuare nuovamente l\'accesso.',
+        title: Text('settings_extra.logout'.tr()),
+        content: Text(
+          'settings_extra.logout_desc'.tr(),
         ),
         actions: [
           TextButton(
@@ -570,7 +578,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               await _performLogout();
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Esci'),
+            child: Text('settings_extra.logout_btn'.tr()),
           ),
         ],
       ),
@@ -595,8 +603,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       debugPrint('Errore logout: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Errore durante il logout'),
+          SnackBar(
+            content: Text('settings_extra.logout_error'.tr()),
             backgroundColor: Colors.red,
           ),
         );
@@ -721,6 +729,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   : null,
             ),
           ),
+          SimpleDialogOption(
+            onPressed: () {
+              context.setLocale(const Locale('es'));
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: ListTile(
+              leading: const Text('🇪🇸', style: TextStyle(fontSize: 24)),
+              title: const Text('Español'),
+              trailing: context.locale.languageCode == 'es'
+                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  : null,
+            ),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              context.setLocale(const Locale('fr'));
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: ListTile(
+              leading: const Text('🇫🇷', style: TextStyle(fontSize: 24)),
+              title: const Text('Français'),
+              trailing: context.locale.languageCode == 'fr'
+                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  : null,
+            ),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              context.setLocale(const Locale('pt'));
+              Navigator.pop(context);
+              setState(() {});
+            },
+            child: ListTile(
+              leading: const Text('🇵🇹', style: TextStyle(fontSize: 24)),
+              title: const Text('Português'),
+              trailing: context.locale.languageCode == 'pt'
+                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  : null,
+            ),
+          ),
         ],
       ),
     );
@@ -732,9 +782,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text('settings.clear_history'.tr()),
-        content: const Text(
-          'Sei sicuro di voler eliminare tutta la cronologia? '
-          'Questa azione non può essere annullata.',
+        content: Text(
+          'settings_extra.clear_history_confirm'.tr(),
         ),
         actions: [
           TextButton(
@@ -749,15 +798,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 await PreferencesService.instance.setTriedPositionIds([]);
                 await UserDataSyncService.instance.clearCloudHistory();
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Cronologia eliminata'),
+                  SnackBar(
+                    content: Text('settings_extra.history_deleted'.tr()),
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
               } catch (e) {
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Errore durante l\'eliminazione'),
+                  SnackBar(
+                    content: Text('settings_extra.delete_error_generic'.tr()),
                     backgroundColor: Colors.red,
                     behavior: SnackBarBehavior.floating,
                   ),
@@ -888,15 +937,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, AppSpacing.md),
                 child: Text(
-                  'Contattaci',
+                  'settings.contact'.tr(),
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               const Divider(height: 1),
               ListTile(
                 leading: const Icon(Icons.bug_report_outlined, color: AppColors.spicy),
-                title: const Text('Segnala un bug'),
-                subtitle: const Text('Hai trovato un problema? Faccelo sapere'),
+                title: Text('settings_extra.report_bug'.tr()),
+                subtitle: Text('settings_extra.report_bug_desc'.tr()),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
@@ -907,8 +956,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.lightbulb_outline, color: AppColors.gold),
-                title: const Text('Invia un suggerimento'),
-                subtitle: const Text('Hai un\'idea per migliorare l\'app?'),
+                title: Text('settings_extra.send_suggestion'.tr()),
+                subtitle: Text('settings_extra.send_suggestion_desc'.tr()),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
@@ -919,8 +968,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.star_outline, color: AppColors.burgundy),
-                title: const Text('Valuta l\'app'),
-                subtitle: const Text('Ti piace l\'app? Lascia una recensione'),
+                title: Text('settings_extra.rate_app'.tr()),
+                subtitle: Text('settings_extra.rate_app_desc'.tr()),
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
@@ -957,18 +1006,18 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         await launchUrl(uri);
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Scrivici a support@kamasutraapp.com'),
+          SnackBar(
+            content: Text('settings_extra.write_to_support'.tr()),
             behavior: SnackBarBehavior.floating,
-            duration: Duration(seconds: 4),
+            duration: const Duration(seconds: 4),
           ),
         );
       }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Scrivici a support@kamasutraapp.com'),
+          SnackBar(
+            content: Text('settings_extra.write_to_support'.tr()),
             behavior: SnackBarBehavior.floating,
             duration: Duration(seconds: 4),
           ),
@@ -1061,10 +1110,8 @@ Per domande sui termini, contattaci a: support@kamasutraapp.com''';
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: Text('settings.clear_all_data'.tr()),
-        content: const Text(
-          'Sei sicuro di voler eliminare tutti i dati? '
-          'Questo include preferenze, cronologia, badge e progressi. '
-          'L\'azione non può essere annullata.',
+        content: Text(
+          'settings_extra.clear_all_confirm'.tr(),
         ),
         actions: [
           TextButton(
@@ -1079,15 +1126,15 @@ Per domande sui termini, contattaci a: support@kamasutraapp.com''';
                 await UserDataSyncService.instance.clearCloudUserData();
                 _loadSettings();
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Tutti i dati eliminati'),
+                  SnackBar(
+                    content: Text('settings_extra.all_data_deleted'.tr()),
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
               } catch (e) {
                 scaffoldMessenger.showSnackBar(
-                  const SnackBar(
-                    content: Text('Errore durante l\'eliminazione'),
+                  SnackBar(
+                    content: Text('settings_extra.delete_error_generic'.tr()),
                     backgroundColor: Colors.red,
                     behavior: SnackBarBehavior.floating,
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class SoundtrackScreen extends StatefulWidget {
   const SoundtrackScreen({super.key});
@@ -11,73 +12,33 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
   bool _gameStarted = false;
   int _currentPlayer = 1;
   int _currentRound = 0;
-  
+
   final List<Map<String, dynamic>> _playlist = [];
   final TextEditingController _songController = TextEditingController();
   final TextEditingController _artistController = TextEditingController();
 
-  final List<Map<String, dynamic>> _prompts = [
-    {
-      'title': 'Prima Impressione',
-      'description': 'Una canzone che ti ricorda il primo incontro',
-      'emoji': '✨',
-      'color': const Color(0xFF8B5CF6),
-    },
-    {
-      'title': 'Momento Speciale',
-      'description': 'La canzone di un ricordo indimenticabile insieme',
-      'emoji': '💕',
-      'color': const Color(0xFFEC4899),
-    },
-    {
-      'title': 'Road Trip',
-      'description': 'Una canzone perfetta per guidare insieme',
-      'emoji': '🚗',
-      'color': const Color(0xFF06B6D4),
-    },
-    {
-      'title': 'Serata Romantica',
-      'description': 'La colonna sonora ideale per una cena a lume di candela',
-      'emoji': '🕯️',
-      'color': const Color(0xFFF59E0B),
-    },
-    {
-      'title': 'Energia',
-      'description': 'Una canzone che vi fa venire voglia di ballare',
-      'emoji': '💃',
-      'color': const Color(0xFF10B981),
-    },
-    {
-      'title': 'Comfort',
-      'description': 'La canzone da ascoltare quando avete bisogno di conforto',
-      'emoji': '🤗',
-      'color': const Color(0xFF6366F1),
-    },
-    {
-      'title': 'Passione',
-      'description': 'Una canzone che accende la passione',
-      'emoji': '🔥',
-      'color': const Color(0xFFEF4444),
-    },
-    {
-      'title': 'Nostalgia',
-      'description': 'Una canzone che vi fa tornare indietro nel tempo',
-      'emoji': '⏳',
-      'color': const Color(0xFF8B5CF6),
-    },
-    {
-      'title': 'Futuro Insieme',
-      'description': 'Una canzone che rappresenta i vostri sogni',
-      'emoji': '🌟',
-      'color': const Color(0xFFF97316),
-    },
-    {
-      'title': 'La Nostra Canzone',
-      'description': 'Se doveste scegliere UNA canzone per la vostra storia',
-      'emoji': '💑',
-      'color': const Color(0xFFEC4899),
-    },
+  static const List<Map<String, dynamic>> _promptMeta = [
+    {'key': 'first_impression', 'emoji': '✨', 'color': Color(0xFF8B5CF6)},
+    {'key': 'special_moment', 'emoji': '💕', 'color': Color(0xFFEC4899)},
+    {'key': 'road_trip', 'emoji': '🚗', 'color': Color(0xFF06B6D4)},
+    {'key': 'romantic_evening', 'emoji': '🕯️', 'color': Color(0xFFF59E0B)},
+    {'key': 'energy', 'emoji': '💃', 'color': Color(0xFF10B981)},
+    {'key': 'comfort', 'emoji': '🤗', 'color': Color(0xFF6366F1)},
+    {'key': 'passion', 'emoji': '🔥', 'color': Color(0xFFEF4444)},
+    {'key': 'nostalgia', 'emoji': '⏳', 'color': Color(0xFF8B5CF6)},
+    {'key': 'future_together', 'emoji': '🌟', 'color': Color(0xFFF97316)},
+    {'key': 'our_song', 'emoji': '💑', 'color': Color(0xFFEC4899)},
   ];
+
+  List<Map<String, dynamic>> get _prompts => _promptMeta.map((meta) {
+    final key = meta['key'] as String;
+    return {
+      'title': 'soundtrack_prompts.$key.title'.tr(),
+      'description': 'soundtrack_prompts.$key.desc'.tr(),
+      'emoji': meta['emoji'],
+      'color': meta['color'],
+    };
+  }).toList();
 
   @override
   void dispose() {
@@ -93,9 +54,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Colonna Sonora',
-          style: TextStyle(
+        title: Text(
+          'games.soundtrack.app_bar_title'.tr(),
+          style: const TextStyle(
             fontFamily: 'PlayfairDisplay',
             fontWeight: FontWeight.bold,
           ),
@@ -131,9 +92,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'La Vostra Colonna Sonora',
-            style: TextStyle(
+          Text(
+            'game_ui.your_soundtrack'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 26,
               fontWeight: FontWeight.bold,
@@ -143,7 +104,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Create insieme la playlist della vostra storia d\'amore',
+            'game_ui.create_love_playlist'.tr(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
               fontSize: 16,
@@ -162,9 +123,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Temi della Playlist',
-                  style: TextStyle(
+                Text(
+                  'game_ui.playlist_themes'.tr(),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -207,7 +168,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '...e altri ${_prompts.length - 5} temi!',
+                  'game_ui.and_more_themes'.tr(args: ['${_prompts.length - 5}']),
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
                     fontSize: 13,
@@ -228,9 +189,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Come Funziona',
-                  style: TextStyle(
+                Text(
+                  'game_ui.how_it_works'.tr(),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -239,19 +200,19 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                 const SizedBox(height: 16),
                 _buildHowItWorksStep(
                   Icons.music_note,
-                  'Riceverete un tema a turno',
+                  'games.soundtrack.step_receive_theme'.tr(),
                   const Color(0xFF8B5CF6),
                 ),
                 const SizedBox(height: 12),
                 _buildHowItWorksStep(
                   Icons.edit,
-                  'Scegliete una canzone per quel tema',
+                  'games.soundtrack.step_choose_song'.tr(),
                   const Color(0xFFEC4899),
                 ),
                 const SizedBox(height: 12),
                 _buildHowItWorksStep(
                   Icons.playlist_play,
-                  'Alla fine avrete la vostra playlist!',
+                  'games.soundtrack.step_final_playlist'.tr(),
                   const Color(0xFF10B981),
                 ),
               ],
@@ -271,9 +232,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Crea la Playlist',
-                style: TextStyle(
+              child: Text(
+                'game_ui.create_playlist'.tr(),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -325,7 +286,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Canzone ${_currentRound + 1} di ${_prompts.length}',
+                'game_ui.song_of'.tr(namedArgs: {'current': '${_currentRound + 1}', 'total': '${_prompts.length}'}),
                 style: const TextStyle(color: Colors.white70),
               ),
               Container(
@@ -337,7 +298,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  'Partner $_currentPlayer sceglie',
+                  'game_ui.player_chooses'.tr(namedArgs: {'player': '$_currentPlayer'}),
                   style: TextStyle(
                     color: _currentPlayer == 1
                         ? const Color(0xFF8B5CF6)
@@ -408,7 +369,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             controller: _songController,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              labelText: 'Titolo della canzone',
+              labelText: 'game_ui.song_title_label'.tr(),
               labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
               prefixIcon: const Icon(Icons.music_note, color: Colors.white54),
               filled: true,
@@ -428,7 +389,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
             controller: _artistController,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(
-              labelText: 'Artista',
+              labelText: 'game_ui.artist_label'.tr(),
               labelStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
               prefixIcon: const Icon(Icons.person, color: Colors.white54),
               filled: true,
@@ -459,7 +420,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Salta'),
+                  child: Text('game_ui.skip_action'.tr()),
                 ),
               ),
               const SizedBox(width: 16),
@@ -468,7 +429,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _addSong,
                   icon: const Icon(Icons.add),
-                  label: const Text('Aggiungi'),
+                  label: Text('game_ui.add_btn'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: prompt['color'] as Color,
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -488,8 +449,8 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
   void _addSong() {
     if (_songController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Inserisci il titolo della canzone'),
+        SnackBar(
+          content: Text('game_ui.enter_song_title'.tr()),
           backgroundColor: Colors.red,
         ),
       );
@@ -497,17 +458,17 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
     }
 
     final prompt = _prompts[_currentRound];
-    
+
     setState(() {
       _playlist.add({
         'song': _songController.text,
-        'artist': _artistController.text.isEmpty ? 'Sconosciuto' : _artistController.text,
+        'artist': _artistController.text.isEmpty ? 'game_ui.unknown_artist'.tr() : _artistController.text,
         'theme': prompt['title'],
         'emoji': prompt['emoji'],
         'color': prompt['color'],
         'addedBy': _currentPlayer,
       });
-      
+
       _songController.clear();
       _artistController.clear();
       _currentPlayer = _currentPlayer == 1 ? 2 : 1;
@@ -547,9 +508,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                 color: Colors.white,
               ),
               const SizedBox(height: 16),
-              const Text(
-                '🎵 La Vostra Playlist 🎵',
-                style: TextStyle(
+              Text(
+                'game_ui.your_playlist'.tr(),
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -557,7 +518,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                '${_playlist.length} canzoni',
+                'game_ui.songs_count'.tr(namedArgs: {'count': '${_playlist.length}'}),
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.7),
                 ),
@@ -580,7 +541,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Nessuna canzone aggiunta',
+                        'game_ui.no_songs_added'.tr(),
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontSize: 16,
@@ -681,7 +642,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text('Esci'),
+                  child: Text('game_ui.exit'.tr()),
                 ),
               ),
               const SizedBox(width: 16),
@@ -690,7 +651,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _restartGame,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Nuova Playlist'),
+                  label: Text('game_ui.new_playlist'.tr()),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF8B5CF6),
                     padding: const EdgeInsets.symmetric(vertical: 14),

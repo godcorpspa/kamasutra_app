@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../app/router.dart';
@@ -15,8 +16,8 @@ class GooseSetupScreen extends StatefulWidget {
 }
 
 class _GooseSetupScreenState extends State<GooseSetupScreen> {
-  final _player1Controller = TextEditingController(text: 'Giocatore 1');
-  final _player2Controller = TextEditingController(text: 'Giocatore 2');
+  late final TextEditingController _player1Controller;
+  late final TextEditingController _player2Controller;
   final _formKey = GlobalKey<FormState>();
   PlayerGender _player1Gender = PlayerGender.male;
   PlayerGender _player2Gender = PlayerGender.female;
@@ -24,6 +25,8 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
   @override
   void initState() {
     super.initState();
+    _player1Controller = TextEditingController(text: 'games.goose_game.player_1_default'.tr());
+    _player2Controller = TextEditingController(text: 'games.goose_game.player_2_default'.tr());
     WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial());
   }
 
@@ -48,10 +51,10 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
 
     final config = GooseGameConfig(
       player1Name: _player1Controller.text.trim().isEmpty
-          ? 'Giocatore 1'
+          ? 'games.goose_game.player_1_default'.tr()
           : _player1Controller.text.trim(),
       player2Name: _player2Controller.text.trim().isEmpty
-          ? 'Giocatore 2'
+          ? 'games.goose_game.player_2_default'.tr()
           : _player2Controller.text.trim(),
       player1Gender: _player1Gender,
       player2Gender: _player2Gender,
@@ -64,14 +67,14 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🎲 Gioco dell\'Oca Piccante'),
+        title: Text('games.goose_game.spicy_goose_game_title'.tr()),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           TextButton.icon(
             onPressed: _showTutorial,
             icon: const Icon(Icons.help_outline),
-            label: const Text('Regole'),
+            label: Text('games.goose_game.rules'.tr()),
           ),
         ],
       ),
@@ -105,7 +108,7 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
                     const Text('🎲', style: TextStyle(fontSize: 48)),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'Gioco dell\'Oca Piccante',
+                      'games.goose_game.spicy_goose_game_title'.tr(),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.burgundy,
@@ -114,7 +117,7 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      '100 caselle • 4 capi a testa • Scale, Buchi e Penitenze 🔥',
+                      'games.goose_game.subtitle_description'.tr(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(
                               context,
@@ -130,7 +133,7 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
 
               // Player names
               Text(
-                'Nomi dei Giocatori',
+                'games.goose_game.player_names'.tr(),
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -172,9 +175,9 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _startGame,
                   icon: const Text('🎲', style: TextStyle(fontSize: 20)),
-                  label: const Text(
-                    'INIZIA IL GIOCO',
-                    style: TextStyle(
+                  label: Text(
+                    'games.goose_game.start_game'.tr(),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 1,
@@ -201,13 +204,13 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
 
   Widget _buildQuickRules(BuildContext context) {
     final rules = [
-      ('🚀', 'Per uscire dalla partenza: tira 4, 5 o 6'),
-      ('👕', 'Iniziate con 4 capi ciascuno'),
-      ('👗', 'Ogni 20 caselle superate: l\'avversario toglie un capo'),
-      ('🪜', 'Scala: avanza + ricompensa dal partner'),
-      ('🕳️', 'Buco: torna indietro + penitenza'),
-      ('🔥', 'Casella Penitenza: azione piccante'),
-      ('🎲', '6 sul dado: tira ancora (max 2 volte)'),
+      ('🚀', 'games.goose_game.quick_rule_exit'.tr()),
+      ('👕', 'games.goose_game.quick_rule_clothing'.tr()),
+      ('👗', 'games.goose_game.quick_rule_every20'.tr()),
+      ('🪜', 'games.goose_game.quick_rule_ladder'.tr()),
+      ('🕳️', 'games.goose_game.quick_rule_hole'.tr()),
+      ('🔥', 'games.goose_game.quick_rule_penance'.tr()),
+      ('🎲', 'games.goose_game.quick_rule_six'.tr()),
     ];
 
     return Container(
@@ -223,7 +226,7 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Regole Veloci',
+            'games.goose_game.quick_rules_title'.tr(),
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -280,7 +283,7 @@ class _PlayerNameField extends StatelessWidget {
           controller: controller,
           maxLength: 20,
           decoration: InputDecoration(
-            labelText: '$emoji Giocatore $playerNumber',
+            labelText: '$emoji ${'games.goose_game.player_label'.tr(namedArgs: {'number': '$playerNumber'})}',
             prefixIcon: Container(
               margin: const EdgeInsets.all(8),
               width: 36,
@@ -310,7 +313,7 @@ class _PlayerNameField extends StatelessWidget {
             counterText: '',
           ),
           validator: (v) {
-            if (v == null || v.trim().isEmpty) return 'Inserisci un nome';
+            if (v == null || v.trim().isEmpty) return 'games.goose_game.enter_name'.tr();
             return null;
           },
         ),
@@ -318,17 +321,17 @@ class _PlayerNameField extends StatelessWidget {
         Row(
           children: [
             const SizedBox(width: 4),
-            Text('Sesso:', style: Theme.of(context).textTheme.bodySmall),
+            Text('games.goose_game.gender_label'.tr(), style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(width: AppSpacing.sm),
             _GenderChip(
-              label: '♂ Maschio',
+              label: 'games.goose_game.gender_male'.tr(),
               selected: gender == PlayerGender.male,
               color: color,
               onTap: () => onGenderChanged(PlayerGender.male),
             ),
             const SizedBox(width: AppSpacing.sm),
             _GenderChip(
-              label: '♀ Femmina',
+              label: 'games.goose_game.gender_female'.tr(),
               selected: gender == PlayerGender.female,
               color: color,
               onTap: () => onGenderChanged(PlayerGender.female),
@@ -394,82 +397,51 @@ class _TutorialDialogState extends State<_TutorialDialog> {
   int _page = 0;
   final PageController _pageController = PageController();
 
-  static const _pages = [
+  static List<_TutorialPage> get _pages => [
     _TutorialPage(
       emoji: '🎲',
-      title: 'Benvenuti!',
-      body:
-          'Il Gioco dell\'Oca Piccante è un gioco di coppia su 100 caselle, '
-          'pieno di ricompense bollenti, penitenze hot e colpi di scena! '
-          'Vince chi arriva alla casella 100 e ottiene una ricompensa speciale dal partner 😈',
+      title: 'games.goose_game.tutorial_welcome_title'.tr(),
+      body: 'games.goose_game.tutorial_welcome_body'.tr(),
     ),
     _TutorialPage(
       emoji: '👕',
-      title: '4 Capi a Testa',
-      body:
-          'Ogni giocatore inizia con 4 capi di abbigliamento. '
-          'Man mano che il gioco avanza, li perderete... '
-          'Se non avete più capi da togliere, scatta una penitenza piccante! 🔥',
+      title: 'games.goose_game.tutorial_clothing_title'.tr(),
+      body: 'games.goose_game.tutorial_clothing_body'.tr(),
     ),
     _TutorialPage(
       emoji: '🚀',
-      title: 'Uscire dalla Partenza',
-      body:
-          'Per lasciare la casella 0 devi tirare 4, 5 o 6. '
-          'Se non ci riesci per DUE turni consecutivi, il partner toglie un tuo capo!\n\n'
-          'Quando esci, tira di nuovo il dado per muoverti.',
+      title: 'games.goose_game.tutorial_exit_title'.tr(),
+      body: 'games.goose_game.tutorial_exit_body'.tr(),
     ),
     _TutorialPage(
       emoji: '👗',
-      title: 'Regola dei 20',
-      body:
-          'Ogni volta che superi un multiplo di 20 (caselle 20, 40, 60, 80), '
-          'il tuo avversario deve togliere un capo di abbigliamento!\n\n'
-          'Avanza veloce per spogliare il partner 😏',
+      title: 'games.goose_game.tutorial_rule20_title'.tr(),
+      body: 'games.goose_game.tutorial_rule20_body'.tr(),
     ),
     _TutorialPage(
       emoji: '🪜',
-      title: 'Scale e Buchi',
-      body:
-          '🪜 SCALA: salti in avanti a una casella più alta '
-          'e ricevi una ricompensa dal partner!\n\n'
-          '🕳️ BUCO: torni indietro a una casella più bassa '
-          'e devi fare una penitenza al partner!',
+      title: 'games.goose_game.tutorial_ladders_title'.tr(),
+      body: 'games.goose_game.tutorial_ladders_body'.tr(),
     ),
     _TutorialPage(
       emoji: '🔥',
-      title: 'Caselle Penitenza',
-      body:
-          'Sparse per la plancia ci sono le caselle Penitenza 🔥\n\n'
-          'Se ci atterri, pesca una penitenza piccante e... eseguila! '
-          'Nessuna scusa! 😈',
+      title: 'games.goose_game.tutorial_penance_title'.tr(),
+      body: 'games.goose_game.tutorial_penance_body'.tr(),
     ),
     _TutorialPage(
       emoji: '🎲',
-      title: 'Il 6 Fortunato',
-      body:
-          'Se tiri un 6, tira di nuovo il dado!\n\n'
-          'Puoi farlo al massimo 2 volte consecutive '
-          '(quindi 3 lanci in totale per un turno). '
-          'Approfittane per fare il salto più grande! 🚀',
+      title: 'games.goose_game.tutorial_six_title'.tr(),
+      body: 'games.goose_game.tutorial_six_body'.tr(),
     ),
     _TutorialPage(
       emoji: '⏱️',
-      title: 'Ricompense a Tempo',
-      body:
-          'Alcune ricompense e penitenze hanno un timer!\n\n'
-          'Quando appare il conto alla rovescia, '
-          'dovete eseguire l\'azione per tutto il tempo indicato. '
-          'Il timer parte automaticamente. Pronti? 😉',
+      title: 'games.goose_game.tutorial_timer_title'.tr(),
+      body: 'games.goose_game.tutorial_timer_body'.tr(),
     ),
     _TutorialPage(
       emoji: '🏆',
-      title: 'La Vittoria!',
-      body:
-          'Chi arriva esattamente alla casella 100 vince!\n\n'
-          'Se il tiro ti porta oltre il 100, rimbalzi indietro. '
-          'Il vincitore riceve una ricompensa speciale dal partner!\n\n'
-          'Buon gioco! 🎉',
+      title: 'games.goose_game.tutorial_victory_title'.tr(),
+      body: 'games.goose_game.tutorial_victory_body'.tr(),
     ),
   ];
 
@@ -550,7 +522,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                 TextButton(
                   onPressed: _skipAll,
                   child: Text(
-                    'Salta tutto',
+                    'games.goose_game.skip_all'.tr(),
                     style: TextStyle(
                       color: Theme.of(
                         context,
@@ -570,7 +542,7 @@ class _TutorialDialogState extends State<_TutorialDialog> {
                       vertical: AppSpacing.sm,
                     ),
                   ),
-                  child: Text(isLast ? 'Iniziamo! 🎲' : 'Avanti →'),
+                  child: Text(isLast ? 'games.goose_game.lets_start'.tr() : 'games.goose_game.forward'.tr()),
                 ),
               ],
             ),

@@ -87,7 +87,7 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
                       Expanded(
                         child: Text(
                           showFavoritesOnly
-                              ? 'Preferiti'
+                              ? 'catalog.favorites'.tr()
                               : 'catalog.title'.tr(),
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
