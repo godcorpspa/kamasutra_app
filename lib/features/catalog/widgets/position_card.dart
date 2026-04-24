@@ -86,7 +86,7 @@ class PositionCard extends StatelessWidget {
 
                   // Name
                   Text(
-                    position.name,
+                    position.getName(context.locale.languageCode),
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -95,10 +95,10 @@ class PositionCard extends StatelessWidget {
                   ),
 
                   // Alias if available
-                  if (position.alias != null && position.alias!.isNotEmpty) ...[
+                  if (position.getAlias(context.locale.languageCode) != null && position.getAlias(context.locale.languageCode)!.isNotEmpty) ...[
                     const SizedBox(height: 2),
                     Text(
-                      position.alias!,
+                      position.getAlias(context.locale.languageCode)!,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme

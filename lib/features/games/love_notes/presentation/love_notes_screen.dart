@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../../../../app/theme.dart';
 
 class LoveNotesScreen extends StatefulWidget {
@@ -18,43 +19,43 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
   final TextEditingController _noteController = TextEditingController();
   final List<Map<String, dynamic>> _savedNotes = [];
   String _category = 'romantic';
-  
-  final Map<String, List<String>> _prompts = {
+
+  final Map<String, List<String>> _promptKeys = {
     'romantic': [
-      'Scrivi cosa ami di più del tuo partner',
-      'Descrivi il vostro momento più bello insieme',
-      'Cosa vorresti fare insieme nel futuro?',
-      'Qual è la cosa più dolce che ha fatto per te?',
-      'Scrivi un ricordo che ti fa sorridere',
-      'Cosa ti ha fatto innamorare di lui/lei?',
-      'Descrivi come ti senti quando siete insieme',
-      'Qual è il vostro sogno condiviso?',
-      'Cosa apprezzi di più della vostra relazione?',
-      'Scrivi cosa vorresti dirgli/le ma non hai mai detto',
+      'games.love_notes.prompts.romantic_0',
+      'games.love_notes.prompts.romantic_1',
+      'games.love_notes.prompts.romantic_2',
+      'games.love_notes.prompts.romantic_3',
+      'games.love_notes.prompts.romantic_4',
+      'games.love_notes.prompts.romantic_5',
+      'games.love_notes.prompts.romantic_6',
+      'games.love_notes.prompts.romantic_7',
+      'games.love_notes.prompts.romantic_8',
+      'games.love_notes.prompts.romantic_9',
     ],
     'compliment': [
-      'Scrivi 3 cose che ammiri del partner',
-      'Descrivi la sua qualità più bella',
-      'Cosa ti piace del suo aspetto fisico?',
-      'Qual è il suo talento nascosto?',
-      'Cosa ti fa sentire fortunato/a ad averlo/a?',
-      'Descrivi il suo sorriso',
-      'Cosa ti attrae di più di lui/lei?',
-      'Qual è la cosa che fa meglio di chiunque altro?',
-      'Scrivi cosa ti piace del suo carattere',
-      'Descrivi come ti fa sentire speciale',
+      'games.love_notes.prompts.compliment_0',
+      'games.love_notes.prompts.compliment_1',
+      'games.love_notes.prompts.compliment_2',
+      'games.love_notes.prompts.compliment_3',
+      'games.love_notes.prompts.compliment_4',
+      'games.love_notes.prompts.compliment_5',
+      'games.love_notes.prompts.compliment_6',
+      'games.love_notes.prompts.compliment_7',
+      'games.love_notes.prompts.compliment_8',
+      'games.love_notes.prompts.compliment_9',
     ],
     'spicy': [
-      'Scrivi una fantasia che vorresti realizzare',
-      'Descrivi il momento più passionale insieme',
-      'Cosa ti piace di più dell\'intimità con il partner?',
-      'Scrivi cosa vorresti provare insieme',
-      'Qual è la cosa più sexy del tuo partner?',
-      'Descrivi come ti senti quando ti tocca',
-      'Cosa ti fa impazzire di lui/lei?',
-      'Scrivi un desiderio segreto',
-      'Descrivi la serata perfetta insieme',
-      'Cosa vorresti che facesse stasera?',
+      'games.love_notes.prompts.spicy_0',
+      'games.love_notes.prompts.spicy_1',
+      'games.love_notes.prompts.spicy_2',
+      'games.love_notes.prompts.spicy_3',
+      'games.love_notes.prompts.spicy_4',
+      'games.love_notes.prompts.spicy_5',
+      'games.love_notes.prompts.spicy_6',
+      'games.love_notes.prompts.spicy_7',
+      'games.love_notes.prompts.spicy_8',
+      'games.love_notes.prompts.spicy_9',
     ],
   };
 
@@ -75,15 +76,15 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
   }
 
   void _pickNewPrompt() {
-    final prompts = _prompts[_category]!;
-    _currentPrompt = prompts[Random().nextInt(prompts.length)];
+    final promptKeys = _promptKeys[_category]!;
+    _currentPrompt = promptKeys[Random().nextInt(promptKeys.length)].tr();
   }
 
   void _submitNote() {
     if (_noteController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Scrivi qualcosa prima di inviare! 💝'),
+        SnackBar(
+          content: Text('game_ui.write_first'.tr()),
           backgroundColor: AppColors.spicy,
         ),
       );
@@ -145,7 +146,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Header
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -157,7 +158,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Le vostre note d\'amore',
+                      'game_ui.your_love_notes'.tr(),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.bold,
@@ -165,7 +166,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Leggetele insieme ad alta voce 💕',
+                      'game_ui.read_together'.tr(),
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.textSecondary,
                       ),
@@ -173,7 +174,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   ],
                 ),
               ),
-              
+
               // Notes list
               Expanded(
                 child: ListView.builder(
@@ -184,9 +185,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                     final roundNotes = _savedNotes
                         .where((n) => n['round'] == roundIndex + 1)
                         .toList();
-                    
+
                     if (roundNotes.isEmpty) return const SizedBox();
-                    
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 16),
                       padding: const EdgeInsets.all(16),
@@ -206,21 +207,21 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          
+
                           // Player 1's note
                           if (roundNotes.any((n) => n['player'] == 1))
                             _buildNoteCard(
-                              'Giocatore 1',
+                              'game_ui.player_1'.tr(),
                               roundNotes.firstWhere((n) => n['player'] == 1)['note'],
                               AppColors.burgundy,
                             ),
-                          
+
                           const SizedBox(height: 8),
-                          
+
                           // Player 2's note
                           if (roundNotes.any((n) => n['player'] == 2))
                             _buildNoteCard(
-                              'Giocatore 2',
+                              'game_ui.player_2'.tr(),
                               roundNotes.firstWhere((n) => n['player'] == 2)['note'],
                               AppColors.spicy,
                             ),
@@ -230,7 +231,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   },
                 ),
               ),
-              
+
               // Action buttons
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -246,7 +247,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                           foregroundColor: AppColors.textSecondary,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Gioca ancora'),
+                        child: Text('game_ui.play_again'.tr()),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -261,7 +262,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        child: const Text('Fine'),
+                        child: Text('game_ui.end'.tr()),
                       ),
                     ),
                   ],
@@ -312,7 +313,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Love Notes'),
+        title: Text('games.love_notes.title'.tr()),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
@@ -343,7 +344,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Love Notes',
+                    'games.love_notes.title'.tr(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
@@ -351,7 +352,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Scrivetevi messaggi d\'amore segreti',
+                    'game_ui.write_secret_messages'.tr(),
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: AppColors.textSecondary,
                     ),
@@ -360,28 +361,28 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Category selection
             Text(
-              'Categoria',
+              'game_ui.category'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
-            _buildCategoryOption('romantic', '💕 Romantico', 'Dolcezza e sentimenti'),
+            _buildCategoryOption('romantic', 'game_ui.romantic_cat'.tr(), 'game_ui.romantic_desc'.tr()),
             const SizedBox(height: 8),
-            _buildCategoryOption('compliment', '✨ Complimenti', 'Elogi e ammirazione'),
+            _buildCategoryOption('compliment', 'game_ui.compliment_cat'.tr(), 'game_ui.compliment_desc'.tr()),
             const SizedBox(height: 8),
-            _buildCategoryOption('spicy', '🔥 Piccante', 'Desideri e passione'),
-            
+            _buildCategoryOption('spicy', 'game_ui.spicy_cat'.tr(), 'game_ui.spicy_desc'.tr()),
+
             const SizedBox(height: 24),
-            
+
             // Rounds selection
             Text(
-              'Numero di round',
+              'game_ui.number_of_rounds'.tr(),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -418,9 +419,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 );
               }).toList(),
             ),
-            
+
             const Spacer(),
-            
+
             // Start button
             SizedBox(
               width: double.infinity,
@@ -434,9 +435,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Inizia a scrivere',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                child: Text(
+                  'game_ui.start_writing'.tr(),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -503,7 +504,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Round $_roundNumber/$_totalRounds',
+                  'game_ui.round_of'.tr(namedArgs: {'current': '$_roundNumber', 'total': '$_totalRounds'}),
                   style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontWeight: FontWeight.bold,
@@ -512,13 +513,13 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
-                    color: _currentPlayer == 1 
-                        ? AppColors.burgundy.withOpacity(0.2) 
+                    color: _currentPlayer == 1
+                        ? AppColors.burgundy.withOpacity(0.2)
                         : AppColors.spicy.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    'Giocatore $_currentPlayer',
+                    'game_ui.player_turn'.tr(namedArgs: {'player': '$_currentPlayer'}),
                     style: TextStyle(
                       color: _currentPlayer == 1 ? AppColors.burgundy : AppColors.spicy,
                       fontWeight: FontWeight.bold,
@@ -527,9 +528,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Prompt card
             Container(
               width: double.infinity,
@@ -564,9 +565,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Note input
             Expanded(
               child: Container(
@@ -582,7 +583,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   textAlignVertical: TextAlignVertical.top,
                   style: const TextStyle(color: AppColors.textPrimary),
                   decoration: InputDecoration(
-                    hintText: 'Scrivi il tuo messaggio qui...\n\n(L\'altro giocatore non deve vedere!)',
+                    hintText: 'game_ui.write_message_hint'.tr(),
                     hintStyle: TextStyle(color: AppColors.textSecondary.withOpacity(0.5)),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.all(16),
@@ -590,9 +591,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Privacy reminder
             Container(
               padding: const EdgeInsets.all(12),
@@ -606,9 +607,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      _currentPlayer == 1 
-                          ? 'Giocatore 2, gira le spalle!' 
-                          : 'Giocatore 1, gira le spalle!',
+                      'game_ui.turn_away'.tr(namedArgs: {'player': _currentPlayer == 1 ? '2' : '1'}),
                       style: const TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w500,
@@ -618,9 +617,9 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Submit button
             SizedBox(
               width: double.infinity,
@@ -635,7 +634,7 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
                   ),
                 ),
                 child: Text(
-                  _currentPlayer == 1 ? 'Invia e passa a Giocatore 2' : 'Invia nota',
+                  _currentPlayer == 1 ? 'game_ui.send_pass'.tr(namedArgs: {'player': '2'}) : 'game_ui.send_note'.tr(),
                   style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -660,20 +659,20 @@ class _LoveNotesScreenState extends State<LoveNotesScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Come si gioca 💌',
+              'games.love_notes.rules_title'.tr(),
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
-            _buildRuleItem('1', 'Ogni round ha lo stesso tema per entrambi'),
-            _buildRuleItem('2', 'Scrivete a turno senza farvi vedere'),
-            _buildRuleItem('3', 'Alla fine, leggete insieme tutti i messaggi'),
-            _buildRuleItem('4', 'Scoprite cosa avete scritto l\'uno dell\'altra!'),
+            _buildRuleItem('1', 'games.love_notes.rule_1'.tr()),
+            _buildRuleItem('2', 'games.love_notes.rule_2'.tr()),
+            _buildRuleItem('3', 'games.love_notes.rule_3'.tr()),
+            _buildRuleItem('4', 'games.love_notes.rule_4'.tr()),
             const SizedBox(height: 16),
             Text(
-              'Siate sinceri e dolci! 💕',
+              'game_ui.be_sincere_sweet'.tr(),
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.textSecondary,
                 fontStyle: FontStyle.italic,

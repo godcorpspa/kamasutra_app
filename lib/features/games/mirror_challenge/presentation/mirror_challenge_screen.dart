@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class MirrorChallengeScreen extends StatefulWidget {
   const MirrorChallengeScreen({super.key});
@@ -24,54 +25,54 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
   late AnimationController _breathController;
   late Animation<double> _breathAnimation;
 
-  final List<Map<String, dynamic>> _challenges = [
+  List<Map<String, dynamic>> get _challenges => [
     {
-      'title': 'Mani Danzanti',
-      'description': 'Il leader muove le mani lentamente. Il partner rispecchia ogni movimento.',
+      'title': 'games.mirror_challenge.ch1_title'.tr(),
+      'description': 'games.mirror_challenge.ch1_desc'.tr(),
       'icon': Icons.pan_tool,
-      'tip': 'Iniziate con movimenti lenti e fluidi',
+      'tip': 'games.mirror_challenge.ch1_tip'.tr(),
     },
     {
-      'title': 'Espressioni Facciali',
-      'description': 'Cambiate espressioni lentamente. Il partner deve imitare ogni sfumatura.',
+      'title': 'games.mirror_challenge.ch2_title'.tr(),
+      'description': 'games.mirror_challenge.ch2_desc'.tr(),
       'icon': Icons.face,
-      'tip': 'Passate da un\'emozione all\'altra gradualmente',
+      'tip': 'games.mirror_challenge.ch2_tip'.tr(),
     },
     {
-      'title': 'Danza del Corpo',
-      'description': 'Movimenti dolci di tutto il corpo. Restate sincronizzati.',
+      'title': 'games.mirror_challenge.ch3_title'.tr(),
+      'description': 'games.mirror_challenge.ch3_desc'.tr(),
       'icon': Icons.accessibility_new,
-      'tip': 'Muovetevi come se foste sott\'acqua',
+      'tip': 'games.mirror_challenge.ch3_tip'.tr(),
     },
     {
-      'title': 'Respiro Sincronizzato',
-      'description': 'Il leader guida il ritmo del respiro con gesti delle mani.',
+      'title': 'games.mirror_challenge.ch4_title'.tr(),
+      'description': 'games.mirror_challenge.ch4_desc'.tr(),
       'icon': Icons.air,
-      'tip': 'Inspirate quando le mani salgono, espirate quando scendono',
+      'tip': 'games.mirror_challenge.ch4_tip'.tr(),
     },
     {
-      'title': 'Occhi Chiusi',
-      'description': 'Chiudete gli occhi. Toccatevi le mani e muovetevi insieme.',
+      'title': 'games.mirror_challenge.ch5_title'.tr(),
+      'description': 'games.mirror_challenge.ch5_desc'.tr(),
       'icon': Icons.visibility_off,
-      'tip': 'Fidatevi del tatto per restare sincronizzati',
+      'tip': 'games.mirror_challenge.ch5_tip'.tr(),
     },
     {
-      'title': 'Rallentatore',
-      'description': 'Ogni movimento al rallentatore estremo. Massima concentrazione.',
+      'title': 'games.mirror_challenge.ch6_title'.tr(),
+      'description': 'games.mirror_challenge.ch6_desc'.tr(),
       'icon': Icons.slow_motion_video,
-      'tip': 'Più lento è meglio. Sentite ogni micro-movimento.',
+      'tip': 'games.mirror_challenge.ch6_tip'.tr(),
     },
     {
-      'title': 'Scultura Vivente',
-      'description': 'Il leader crea pose. Il partner le replica esattamente.',
+      'title': 'games.mirror_challenge.ch7_title'.tr(),
+      'description': 'games.mirror_challenge.ch7_desc'.tr(),
       'icon': Icons.person,
-      'tip': 'Mantenete ogni posa per 5 secondi prima di passare alla successiva',
+      'tip': 'games.mirror_challenge.ch7_tip'.tr(),
     },
     {
-      'title': 'Avvicinamento',
-      'description': 'Partite distanti. Avvicinatevi lentamente mantenendo il rispecchiamento.',
+      'title': 'games.mirror_challenge.ch8_title'.tr(),
+      'description': 'games.mirror_challenge.ch8_desc'.tr(),
       'icon': Icons.people,
-      'tip': 'L\'obiettivo finale è toccarvi le punte delle dita',
+      'tip': 'games.mirror_challenge.ch8_tip'.tr(),
     },
   ];
 
@@ -151,25 +152,25 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          '✨ Round Completato!',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'games.mirror_challenge.round_complete_title'.tr(),
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Com\'è stata la connessione?',
+              'games.mirror_challenge.connection_how'.tr(),
               style: TextStyle(color: Colors.white.withOpacity(0.7)),
             ),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildFeedbackButton('😕', 'Difficile'),
-                _buildFeedbackButton('😊', 'Buono'),
-                _buildFeedbackButton('🤩', 'Perfetto'),
+                _buildFeedbackButton('😕', 'games.mirror_challenge.feedback_hard'.tr()),
+                _buildFeedbackButton('😊', 'games.mirror_challenge.feedback_good'.tr()),
+                _buildFeedbackButton('🤩', 'games.mirror_challenge.feedback_perfect'.tr()),
               ],
             ),
           ],
@@ -184,7 +185,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFD946EF),
               ),
-              child: const Text('Prossimo Round'),
+              child: Text('games.mirror_challenge.next_round'.tr()),
             ),
           ),
         ],
@@ -229,9 +230,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
       builder: (context) => AlertDialog(
         backgroundColor: const Color(0xFF1A1A2E),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          '🪞 Sessione Completata!',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'games.mirror_challenge.session_complete_title'.tr(),
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
         content: Column(
@@ -256,9 +257,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                     size: 48,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'Avete completato tutti i round!',
-                    style: TextStyle(
+                  Text(
+                    'games.mirror_challenge.all_rounds_complete'.tr(),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
@@ -266,7 +267,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'La connessione si costruisce un movimento alla volta.',
+                    'games.mirror_challenge.connection_builds'.tr(),
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.6),
                       fontSize: 14,
@@ -284,7 +285,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
               Navigator.pop(context);
               Navigator.pop(context);
             },
-            child: const Text('Esci'),
+            child: Text('games.mirror_challenge.exit'.tr()),
           ),
           ElevatedButton(
             onPressed: () {
@@ -294,7 +295,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFD946EF),
             ),
-            child: const Text('Gioca Ancora'),
+            child: Text('games.mirror_challenge.play_again'.tr()),
           ),
         ],
       ),
@@ -308,9 +309,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text(
-          'Sfida allo Specchio',
-          style: TextStyle(
+        title: Text(
+          'games.mirror_challenge.app_bar_title'.tr(),
+          style: const TextStyle(
             fontFamily: 'PlayfairDisplay',
             fontWeight: FontWeight.bold,
           ),
@@ -352,9 +353,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Sfida allo Specchio',
-            style: TextStyle(
+          Text(
+            'games.mirror_challenge.app_bar_title'.tr(),
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 28,
               fontWeight: FontWeight.bold,
@@ -363,7 +364,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'Muovetevi come se foste una sola persona',
+            'games.mirror_challenge.subtitle_desc'.tr(),
             style: TextStyle(
               color: Colors.white.withOpacity(0.7),
               fontSize: 16,
@@ -373,11 +374,11 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           const SizedBox(height: 32),
 
           // Difficulty selector
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Difficoltà',
-              style: TextStyle(
+              'games.mirror_challenge.difficulty'.tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -387,21 +388,21 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           const SizedBox(height: 12),
           Row(
             children: [
-              _buildDifficultyOption('easy', 'Facile', '30s', 30),
+              _buildDifficultyOption('easy', 'games.mirror_challenge.easy'.tr(), '30s', 30),
               const SizedBox(width: 12),
-              _buildDifficultyOption('medium', 'Medio', '60s', 60),
+              _buildDifficultyOption('medium', 'games.mirror_challenge.medium'.tr(), '60s', 60),
               const SizedBox(width: 12),
-              _buildDifficultyOption('hard', 'Difficile', '90s', 90),
+              _buildDifficultyOption('hard', 'games.mirror_challenge.hard'.tr(), '90s', 90),
             ],
           ),
           const SizedBox(height: 24),
 
           // Rounds selector
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              'Numero di Round',
-              style: TextStyle(
+              'games.mirror_challenge.number_of_rounds'.tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -430,9 +431,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Come Giocare',
-                  style: TextStyle(
+                Text(
+                  'games.mirror_challenge.how_to_play'.tr(),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -441,22 +442,22 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                 const SizedBox(height: 16),
                 _buildInstructionRow(
                   Icons.person,
-                  'Un partner guida i movimenti',
+                  'games.mirror_challenge.instruction_1'.tr(),
                 ),
                 const SizedBox(height: 12),
                 _buildInstructionRow(
                   Icons.people,
-                  'L\'altro li rispecchia come uno specchio',
+                  'games.mirror_challenge.instruction_2'.tr(),
                 ),
                 const SizedBox(height: 12),
                 _buildInstructionRow(
                   Icons.swap_horiz,
-                  'A ogni round ci si scambia i ruoli',
+                  'games.mirror_challenge.instruction_3'.tr(),
                 ),
                 const SizedBox(height: 12),
                 _buildInstructionRow(
                   Icons.favorite,
-                  'Restate connessi e sincronizzati',
+                  'games.mirror_challenge.instruction_4'.tr(),
                 ),
               ],
             ),
@@ -475,9 +476,9 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Inizia Sfida',
-                style: TextStyle(
+              child: Text(
+                'games.mirror_challenge.start_challenge'.tr(),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -598,7 +599,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
         children: [
           // Progress
           Text(
-            'Round ${_currentRound + 1} di $_totalRounds',
+            'games.mirror_challenge.round_of'.tr(namedArgs: {'current': '${_currentRound + 1}', 'total': '$_totalRounds'}),
             style: const TextStyle(color: Colors.white70),
           ),
           const SizedBox(height: 8),
@@ -620,7 +621,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Partner $_currentLeader guida',
+              'games.mirror_challenge.partner_leads'.tr(namedArgs: {'player': '$_currentLeader'}),
               style: TextStyle(
                 color: _currentLeader == 1
                     ? const Color(0xFF8B5CF6)
@@ -631,7 +632,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
             ),
           ),
           const SizedBox(height: 24),
-          
+
           // Challenge card
           Container(
             width: double.infinity,
@@ -724,7 +725,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
             child: ElevatedButton.icon(
               onPressed: _startRound,
               icon: const Icon(Icons.play_arrow),
-              label: Text('Inizia ($_roundDuration secondi)'),
+              label: Text('games.mirror_challenge.start_seconds'.tr(namedArgs: {'seconds': '$_roundDuration'})),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFD946EF),
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -758,7 +759,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            'Partner $_currentLeader guida',
+            'games.mirror_challenge.partner_guides'.tr(namedArgs: {'player': '$_currentLeader'}),
             style: TextStyle(
               color: _currentLeader == 1
                   ? const Color(0xFF8B5CF6)
@@ -800,7 +801,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                       ),
                     ),
                     Text(
-                      'secondi',
+                      'games.mirror_challenge.seconds'.tr(),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 16,
@@ -847,7 +848,7 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
           TextButton(
             onPressed: _endRound,
             child: Text(
-              'Termina Prima',
+              'games.mirror_challenge.end_early'.tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
               ),

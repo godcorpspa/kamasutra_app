@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:confetti/confetti.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../app/theme.dart';
 import '../../../../data/models/goose_game.dart';
@@ -346,7 +348,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       await _movePlayer(roll, firstMove: isFirst);
       if (roll == 6 && _consecutiveSixes < 2 && !_gameOver) {
         _consecutiveSixes++;
-        _showStatus('🎲 Hai fatto 6! Tira ancora! (${_consecutiveSixes}/2)',
+        _showStatus('games.goose_game.rolled_six_again'.tr(namedArgs: {'count': '$_consecutiveSixes'}),
             color: _kGold, emoji: '🎲');
       } else {
         _consecutiveSixes = 0;
@@ -360,7 +362,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     if (roll >= 4) {
       _waitingMovementRoll = true;
       if (_currentPlayer == 1) _p1FailedExits = 0; else _p2FailedExits = 0;
-      _showStatus('$name esce! 🚀 Tira ancora per muoverti!',
+      _showStatus('games.goose_game.player_exits'.tr(namedArgs: {'player': name}),
           color: _kGreen, emoji: '🚀');
     } else {
       if (_currentPlayer == 1) _p1FailedExits++; else _p2FailedExits++;
@@ -368,10 +370,10 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       if (failures >= 2) {
         if (_currentPlayer == 1) _p1FailedExits = 0; else _p2FailedExits = 0;
         await _removeClothingFrom(_currentPlayer,
-            reason: '$name non riesce ad uscire per 2 turni!');
+            reason: 'games.goose_game.failed_exit'.tr(namedArgs: {'player': name}));
         _switchPlayer();
       } else {
-        _showStatus('Serve 4, 5 o 6! (${2 - failures} tentativo rimasto)',
+        _showStatus('games.goose_game.need_456'.tr(namedArgs: {'remaining': '${2 - failures}'}),
             color: _kRed, emoji: '⚠️');
         _switchPlayer();
       }
@@ -385,7 +387,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
     if (newPos > total) {
       newPos = total - (newPos - total);
-      _showStatus('Rimbalzo! Torna alla casella $newPos 🔄',
+      _showStatus('games.goose_game.bounce_back'.tr(namedArgs: {'square': '$newPos'}),
           color: _kOrange, emoji: '🔄');
     }
 
@@ -408,7 +410,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           else _p2LastMilestone = m;
         });
         await _removeClothingFromOpponent(
-            reason: '${_playerName(_currentPlayer)} ha superato la casella $m!');
+            reason: 'games.goose_game.passed_square'.tr(namedArgs: {'player': _playerName(_currentPlayer), 'square': '$m'}));
         return;
       }
     }
@@ -424,9 +426,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       case GooseSquareType.ladder:
         final dest = sq.destination!;
         await _showContentDialog(_ContentDialogArgs(
-          emoji: '🪜', title: 'SCALA!',
-          subtitle: 'Casella $pos → $dest (+${dest - pos})',
-          description: 'Ricevi una ricompensa dal partner:',
+          emoji: '🪜', title: 'games.goose_game.ladder_title'.tr(),
+          subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '+${dest - pos}'}),
+          description: 'games.goose_game.reward_description'.tr(),
           content: _rand(kRewards), color: _kGreen,
         ));
         setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
@@ -434,18 +436,18 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       case GooseSquareType.hole:
         final dest = sq.destination!;
         await _showContentDialog(_ContentDialogArgs(
-          emoji: '🕳️', title: 'BUCO!',
-          subtitle: 'Casella $pos → $dest (${dest - pos})',
-          description: 'Fai una penitenza al partner:',
+          emoji: '🕳️', title: 'games.goose_game.hole_title'.tr(),
+          subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '${dest - pos}'}),
+          description: 'games.goose_game.penance_do'.tr(),
           content: _rand(kPenances), color: _kRed,
         ));
         setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
         break;
       case GooseSquareType.penance:
         await _showContentDialog(_ContentDialogArgs(
-          emoji: '🔥', title: 'PENITENZA!',
-          subtitle: 'Casella piccante!',
-          description: 'Esegui questa penitenza:',
+          emoji: '🔥', title: 'games.goose_game.penance_title'.tr(),
+          subtitle: 'games.goose_game.spicy_square'.tr(),
+          description: 'games.goose_game.execute_penance'.tr(),
           content: _rand(kPenances), color: _kOrange,
         ));
         break;
@@ -461,9 +463,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       await _showClothingModal(player, reason: reason);
     } else {
       await _showContentDialog(_ContentDialogArgs(
-        emoji: '🔥', title: 'NUDO/A!',
-        subtitle: '${_playerName(player)} non ha più capi!',
-        description: 'Penitenza invece di spogliarsi 😈',
+        emoji: '🔥', title: 'games.goose_game.naked_title'.tr(),
+        subtitle: 'games.goose_game.no_clothes'.tr(namedArgs: {'player': _playerName(player)}),
+        description: 'games.goose_game.penance_instead'.tr(),
         content: _rand(kPenances), color: _kRed,
       ));
     }
@@ -484,9 +486,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     _bgMusic.stop();
     setState(() => _gameOver = true);
     await _showContentDialog(_ContentDialogArgs(
-      emoji: '🏆', title: '${_playerName(_currentPlayer)} VINCE!',
-      subtitle: 'Hai raggiunto la casella 100! 🎉',
-      description: '🔥 PREMIO FINALE — Il partner del perdente esegue:',
+      emoji: '🏆', title: 'games.goose_game.player_wins'.tr(namedArgs: {'player': _playerName(_currentPlayer)}),
+      subtitle: 'games.goose_game.reached_100'.tr(),
+      description: 'games.goose_game.final_prize'.tr(),
       content: _rand(kFinalRewards), color: _kGold,
       onDismiss: () { Navigator.of(context).pop(); context.pop(); },
     ));
@@ -577,9 +579,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         shaderCallback: (b) => const LinearGradient(
           colors: [_kGold, _kP1],
         ).createShader(b),
-        child: const Text(
-          '🎲 Gioco dell\'Oca',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        child: Text(
+          'games.goose_game.game_title'.tr(),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       actions: [
@@ -815,13 +817,13 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
     String phase;
     if (!onBoard && !_waitingMovementRoll)
-      phase = '⚠️  Tira 4/5/6 per uscire dalla partenza';
+      phase = 'games.goose_game.roll_to_exit'.tr();
     else if (_waitingMovementRoll)
-      phase = '🚀 Sei uscito! Tira per muoverti';
+      phase = 'games.goose_game.exited_roll_move'.tr();
     else if (_consecutiveSixes > 0)
-      phase = '🎲 Hai fatto 6! Tira ancora (${_consecutiveSixes}/2)';
+      phase = 'games.goose_game.rolled_six_extra'.tr(namedArgs: {'count': '$_consecutiveSixes'});
     else
-      phase = '🎯 Il tuo turno, tira il dado!';
+      phase = 'games.goose_game.your_turn'.tr();
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 6),
@@ -934,7 +936,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
               : null,
         ),
         child: Text(
-          _isRolling ? '...' : 'TIRA 🎲',
+          _isRolling ? '...' : 'games.goose_game.roll_dice'.tr(),
           style: TextStyle(
             color: enabled ? Colors.white : Colors.white30,
             fontWeight: FontWeight.w900,
@@ -968,21 +970,21 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
                 decoration: BoxDecoration(color: Colors.white24,
                     borderRadius: BorderRadius.circular(2)),
               )),
-              const Text('Regole del Gioco',
-                  style: TextStyle(color: Colors.white,
+              Text('games.goose_game.game_rules'.tr(),
+                  style: const TextStyle(color: Colors.white,
                       fontSize: 20, fontWeight: FontWeight.bold)),
               const SizedBox(height: 14),
               ...[
-                (_kGreen,  '🪜', 'Scala: avanza e ricevi una ricompensa'),
-                (_kRed,    '🕳️', 'Buco: torni indietro e fai una penitenza'),
-                (_kOrange, '🔥', 'Penitenza: azione hot obbligatoria'),
-                (_kGold,   '🏆', 'Arrivo: casella 100 = vittoria!'),
-                (_kBlue,   '🚀', 'Esci dalla partenza con 4/5/6. 2 fail → partner spoglia'),
-                (_kBlue,   '🎲', 'Se esci, tira ancora per muoverti'),
-                (_kP2,     '👗', 'Ogni 20 caselle superate → avversario spoglia'),
-                (_kGold,   '6️⃣', 'Fai 6 → tira ancora! Max 2 volte extra'),
-                (_kRed,    '💀', 'Nessun capo rimasto → penitenza invece'),
-                (_kBlue,   '↩️', 'Oltre 100 → rimbalzi indietro'),
+                (_kGreen,  '🪜', 'games.goose_game.rule_ladder'.tr()),
+                (_kRed,    '🕳️', 'games.goose_game.rule_hole'.tr()),
+                (_kOrange, '🔥', 'games.goose_game.rule_penance'.tr()),
+                (_kGold,   '🏆', 'games.goose_game.rule_finish'.tr()),
+                (_kBlue,   '🚀', 'games.goose_game.rule_exit'.tr()),
+                (_kBlue,   '🎲', 'games.goose_game.rule_exit_roll'.tr()),
+                (_kP2,     '👗', 'games.goose_game.rule_milestone'.tr()),
+                (_kGold,   '6️⃣', 'games.goose_game.rule_six'.tr()),
+                (_kRed,    '💀', 'games.goose_game.rule_no_clothes'.tr()),
+                (_kBlue,   '↩️', 'games.goose_game.rule_bounce'.tr()),
               ].map((r) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Row(children: [
@@ -1737,7 +1739,7 @@ class _IsoBoardPainter extends CustomPainter {
           fontWeight: bold ? FontWeight.bold : FontWeight.normal,
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     )..layout();
     tp.paint(canvas,
         Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
@@ -1909,7 +1911,7 @@ class _ContentDialogState extends State<_ContentDialog>
                           color: _timerDone ? _kGreen : c, size: 22),
                       const SizedBox(width: 8),
                       Text(
-                        _timerDone ? 'Tempo scaduto! ✅' : _fmt(_remaining),
+                        _timerDone ? 'games.goose_game.time_up'.tr() : _fmt(_remaining),
                         style: TextStyle(
                           color: _timerDone ? _kGreen : c,
                           fontSize: 20, fontWeight: FontWeight.bold,
@@ -1944,7 +1946,7 @@ class _ContentDialogState extends State<_ContentDialog>
                           blurRadius: 14, spreadRadius: 1)],
                     ),
                     child: Text(
-                      hasT && !_timerDone ? '✓ Fatto in anticipo' : 'Fatto! 😈',
+                      hasT && !_timerDone ? 'games.goose_game.done_early'.tr() : 'games.goose_game.done_evil'.tr(),
                       style: const TextStyle(
                         color: Colors.white, fontSize: 16,
                         fontWeight: FontWeight.bold, letterSpacing: 0.8,
@@ -1993,7 +1995,7 @@ class _ClothingDialog extends StatelessWidget {
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Text('👗', style: const TextStyle(fontSize: 56)),
           const SizedBox(height: 10),
-          Text('TOGLI UN CAPO!',
+          Text('games.goose_game.remove_clothing'.tr(),
               style: TextStyle(
                 color: color, fontSize: 22, fontWeight: FontWeight.w900,
                 letterSpacing: 1.5,
@@ -2027,7 +2029,7 @@ class _ClothingDialog extends StatelessWidget {
                 )),
               ),
               const SizedBox(height: 4),
-              Text(remaining == 0 ? '🔥 Nessun capo rimasto!' : '$remaining rimasti',
+              Text(remaining == 0 ? 'games.goose_game.no_clothes_left'.tr() : 'games.goose_game.remaining_clothes'.tr(namedArgs: {'count': '$remaining'}),
                   style: TextStyle(
                       color: remaining == 0 ? _kRed : Colors.white54,
                       fontSize: 12)),
@@ -2044,8 +2046,8 @@ class _ClothingDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 12)],
               ),
-              child: const Text('Fatto! 😈',
-                  style: TextStyle(color: Colors.white,
+              child: Text('games.goose_game.done_evil'.tr(),
+                  style: const TextStyle(color: Colors.white,
                       fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center),
             ),

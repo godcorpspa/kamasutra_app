@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../app/theme.dart';
@@ -31,17 +32,17 @@ class _WheelScreenState extends State<WheelScreen>
   final List<String> _history = [];
 
   final List<WheelSegment> _segments = [
-    WheelSegment('Bacio\nProibito', '💋', const Color(0xFFE91E63), const Color(0xFFF48FB1)),
-    WheelSegment('Massaggio\nErotico', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
-    WheelSegment('Strip\nTease', '👙', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
-    WheelSegment('Posizione\nHot', '🔥', const Color(0xFFF44336), const Color(0xFFFF8A80)),
-    WheelSegment('Piacere\nOrale', '👅', const Color(0xFFAD1457), const Color(0xFFF06292)),
-    WheelSegment('Gioco\ndi Ruolo', '🎭', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
-    WheelSegment('Piacere\nReciproco', '🔄', const Color(0xFFC62828), const Color(0xFFEF9A9A)),
-    WheelSegment('Desiderio\nSegreto', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
-    WheelSegment('Tocco\nSensuale', '🤚', const Color(0xFFD81B60), const Color(0xFFF8BBD0)),
-    WheelSegment('Tentazione\nProibita', '😈', const Color(0xFF4A148C), const Color(0xFFAB47BC)),
-    WheelSegment('Carta\nJolly', '🃏', const Color(0xFF00897B), const Color(0xFF80CBC4)),
+    WheelSegment('forbidden_kiss', '💋', const Color(0xFFE91E63), const Color(0xFFF48FB1)),
+    WheelSegment('erotic_massage', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
+    WheelSegment('strip_tease', '👙', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
+    WheelSegment('hot_position', '🔥', const Color(0xFFF44336), const Color(0xFFFF8A80)),
+    WheelSegment('oral_pleasure', '👅', const Color(0xFFAD1457), const Color(0xFFF06292)),
+    WheelSegment('role_play', '🎭', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
+    WheelSegment('mutual_pleasure', '🔄', const Color(0xFFC62828), const Color(0xFFEF9A9A)),
+    WheelSegment('secret_desire', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
+    WheelSegment('sensual_touch', '🤚', const Color(0xFFD81B60), const Color(0xFFF8BBD0)),
+    WheelSegment('forbidden_temptation', '😈', const Color(0xFF4A148C), const Color(0xFFAB47BC)),
+    WheelSegment('wild_card', '🃏', const Color(0xFF00897B), const Color(0xFF80CBC4)),
   ];
 
   @override
@@ -146,7 +147,8 @@ class _WheelScreenState extends State<WheelScreen>
         _lastWinningIndex = targetSegment;
         _spinCount++;
         final seg = _segments[targetSegment];
-        _history.insert(0, '${seg.emoji} ${seg.name.replaceAll('\n', ' ')}');
+        final displayName = 'games.wheel.segments.${seg.key}'.tr();
+        _history.insert(0, '${seg.emoji} ${displayName.replaceAll('\n', ' ')}');
         if (_history.length > 10) _history.removeLast();
       });
       _showResultDialog(targetSegment);
@@ -193,8 +195,8 @@ class _WheelScreenState extends State<WheelScreen>
   }
 
   String _getActionForSegment(WheelSegment segment, String intensity) {
-    // Use full name (with \n) as key to avoid collisions (e.g. "Piacere\nOrale" vs "Piacere\nReciproco")
-    return WheelActions.getAction(segment.name, intensity);
+    final locale = context.locale.languageCode;
+    return WheelActions.getAction(segment.key, intensity, locale);
   }
 
   @override
@@ -206,7 +208,7 @@ class _WheelScreenState extends State<WheelScreen>
       backgroundColor: AppColors.background,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Ruota della Fortuna'),
+        title: Text('games.wheel.title'.tr()),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
@@ -215,7 +217,7 @@ class _WheelScreenState extends State<WheelScreen>
             IconButton(
               icon: const Icon(Icons.history_rounded),
               onPressed: _showHistory,
-              tooltip: 'Cronologia',
+              tooltip: 'games.wheel.history'.tr(),
             ),
           IconButton(
             icon: const Icon(Icons.help_outline_rounded),
@@ -247,7 +249,7 @@ class _WheelScreenState extends State<WheelScreen>
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
                   child: Text(
-                    'Giro #$_spinCount',
+                    'games.wheel.spin_number'.tr(namedArgs: {'count': '$_spinCount'}),
                     style: TextStyle(
                       color: AppColors.gold.withOpacity(0.6),
                       fontSize: 13,
@@ -304,6 +306,7 @@ class _WheelScreenState extends State<WheelScreen>
                                 size: Size(wheelSize, wheelSize),
                                 painter: WheelPainter(
                                   segments: _segments,
+                                  segmentNames: _segments.map((s) => s.displayName).toList(),
                                   highlightIndex: _lastWinningIndex,
                                   ledPhase: _isSpinning ? _ledController.value : 0,
                                   isSpinning: _isSpinning,
@@ -352,9 +355,9 @@ class _WheelScreenState extends State<WheelScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildIntensityChip('soft', '🌸', 'Soft', const Color(0xFFFFB6C1)),
-          _buildIntensityChip('spicy', '🌶️', 'Spicy', const Color(0xFFFF6B35)),
-          _buildIntensityChip('extra_spicy', '🔥', 'Extra', const Color(0xFFDC143C)),
+          _buildIntensityChip('soft', '🌸', 'games.wheel.intensity_soft'.tr(), const Color(0xFFFFB6C1)),
+          _buildIntensityChip('spicy', '🌶️', 'games.wheel.intensity_spicy'.tr(), const Color(0xFFFF6B35)),
+          _buildIntensityChip('extra_spicy', '🔥', 'games.wheel.intensity_extra_hot'.tr(), const Color(0xFFDC143C)),
         ],
       ),
     );
@@ -482,7 +485,7 @@ class _WheelScreenState extends State<WheelScreen>
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'GIRA',
+                            'games.wheel.spin_button'.tr(),
                             style: TextStyle(
                               color: const Color(0xFF3E2723),
                               fontWeight: FontWeight.w900,
@@ -526,8 +529,8 @@ class _WheelScreenState extends State<WheelScreen>
             const SizedBox(width: 10),
             Text(
               _isSpinning
-                  ? 'La ruota sta girando...'
-                  : 'Tocca il centro per girare!',
+                  ? 'games.wheel.spinning'.tr()
+                  : 'games.wheel.tap_to_spin'.tr(),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.8),
                 fontSize: 15,
@@ -573,7 +576,7 @@ class _WheelScreenState extends State<WheelScreen>
                   Icon(Icons.history_rounded, color: AppColors.gold, size: 22),
                   const SizedBox(width: 10),
                   Text(
-                    'Cronologia (${ _spinCount} giri)',
+                    'games.wheel.history_title'.tr(namedArgs: {'count': '$_spinCount'}),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
@@ -673,7 +676,7 @@ class _WheelScreenState extends State<WheelScreen>
                   ),
                   const SizedBox(width: 14),
                   Text(
-                    'Come si gioca',
+                    'games.wheel.how_to_play'.tr(),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -684,10 +687,10 @@ class _WheelScreenState extends State<WheelScreen>
                 ],
               ),
               const SizedBox(height: 20),
-              _buildRuleItem('Scegli l\'intensità: Soft, Spicy o Extra 🔥', Icons.tune_rounded),
-              _buildRuleItem('Tocca il centro della ruota per farla girare', Icons.touch_app_rounded),
-              _buildRuleItem('Esegui l\'azione indicata con il partner', Icons.favorite_rounded),
-              _buildRuleItem('Potete sempre saltare e rigirare la ruota', Icons.refresh_rounded),
+              _buildRuleItem('games.wheel.rule_1'.tr(), Icons.tune_rounded),
+              _buildRuleItem('games.wheel.rule_2'.tr(), Icons.touch_app_rounded),
+              _buildRuleItem('games.wheel.rule_3'.tr(), Icons.favorite_rounded),
+              _buildRuleItem('games.wheel.rule_4'.tr(), Icons.refresh_rounded),
               const SizedBox(height: 16),
               Container(
                 width: double.infinity,
@@ -708,7 +711,7 @@ class _WheelScreenState extends State<WheelScreen>
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Ricorda: il consenso viene prima di tutto!\nDivertitevi in sicurezza.',
+                        'games.wheel.consent_reminder'.tr(),
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.7),
                           fontStyle: FontStyle.italic,
@@ -823,11 +826,11 @@ class _ResultDialogState extends State<_ResultDialog>
   String get _intensityLabel {
     switch (widget.intensity) {
       case 'soft':
-        return '🌸 Soft';
+        return '🌸 ${'games.wheel.intensity_soft'.tr()}';
       case 'spicy':
-        return '🌶️ Spicy';
+        return '🌶️ ${'games.wheel.intensity_spicy'.tr()}';
       case 'extra_spicy':
-        return '🔥 Extra Hot';
+        return '🔥 ${'games.wheel.intensity_extra_hot'.tr()}';
       default:
         return '';
     }
@@ -835,7 +838,7 @@ class _ResultDialogState extends State<_ResultDialog>
 
   @override
   Widget build(BuildContext context) {
-    final displayName = widget.segment.name.replaceAll('\n', ' ');
+    final displayName = widget.segment.displayName.replaceAll('\n', ' ');
 
     return Center(
       child: Stack(
@@ -978,7 +981,7 @@ class _ResultDialogState extends State<_ResultDialog>
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
-                              'Giro #${widget.spinCount}',
+                              'games.wheel.spin_number'.tr(namedArgs: {'count': '${widget.spinCount}'}),
                               style: TextStyle(
                                 color: AppColors.gold.withOpacity(0.8),
                                 fontSize: 12,
@@ -1029,7 +1032,7 @@ class _ResultDialogState extends State<_ResultDialog>
                         child: OutlinedButton.icon(
                           onPressed: widget.onSpinAgain,
                           icon: const Icon(Icons.refresh_rounded, size: 18),
-                          label: const Text('Gira ancora'),
+                          label: Text('games.wheel.spin_again'.tr()),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white70,
                             side: BorderSide(
@@ -1046,7 +1049,7 @@ class _ResultDialogState extends State<_ResultDialog>
                         child: ElevatedButton.icon(
                           onPressed: widget.onDone,
                           icon: const Icon(Icons.check_rounded, size: 18),
-                          label: const Text('Fatto!'),
+                          label: Text('games.wheel.done'.tr()),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: widget.segment.color,
                             foregroundColor: Colors.white,
@@ -1143,12 +1146,14 @@ class _ParticlePainter extends CustomPainter {
 // Data model
 // ============================================
 class WheelSegment {
-  final String name;
+  final String key;
   final String emoji;
   final Color color;
   final Color colorSecondary;
 
-  WheelSegment(this.name, this.emoji, this.color, this.colorSecondary);
+  WheelSegment(this.key, this.emoji, this.color, this.colorSecondary);
+
+  String get displayName => 'games.wheel.segments.$key'.tr();
 }
 
 // ============================================
@@ -1156,12 +1161,14 @@ class WheelSegment {
 // ============================================
 class WheelPainter extends CustomPainter {
   final List<WheelSegment> segments;
+  final List<String> segmentNames;
   final int? highlightIndex;
   final double ledPhase;
   final bool isSpinning;
 
   WheelPainter({
     required this.segments,
+    required this.segmentNames,
     this.highlightIndex,
     this.ledPhase = 0,
     this.isSpinning = false,
@@ -1261,7 +1268,7 @@ class WheelPainter extends CustomPainter {
 
     final namePainter = TextPainter(
       text: TextSpan(
-        text: segments[index].name,
+        text: segmentNames[index],
         style: TextStyle(
           fontSize: nameFontSize,
           color: Colors.white.withOpacity(0.95),
@@ -1275,7 +1282,7 @@ class WheelPainter extends CustomPainter {
           ],
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
       textAlign: TextAlign.center,
     );
     namePainter.layout();
@@ -1298,7 +1305,7 @@ class WheelPainter extends CustomPainter {
         text: segments[index].emoji,
         style: TextStyle(fontSize: emojiFontSize),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     );
     emojiPainter.layout();
     emojiPainter.paint(
@@ -1414,7 +1421,8 @@ class WheelPainter extends CustomPainter {
   bool shouldRepaint(covariant WheelPainter oldDelegate) =>
       highlightIndex != oldDelegate.highlightIndex ||
       ledPhase != oldDelegate.ledPhase ||
-      isSpinning != oldDelegate.isSpinning;
+      isSpinning != oldDelegate.isSpinning ||
+      segmentNames != oldDelegate.segmentNames;
 }
 
 // ============================================

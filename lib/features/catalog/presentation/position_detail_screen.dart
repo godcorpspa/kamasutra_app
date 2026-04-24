@@ -161,17 +161,17 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                 children: [
                   // Title
                   Text(
-                    position.name,
+                    position.getName(locale),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ).animate().fadeIn().slideX(begin: -0.1),
 
                   // Alias
-                  if (position.alias != null && position.alias!.isNotEmpty) ...[
+                  if (position.getAlias(locale) != null && position.getAlias(locale)!.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      position.alias!,
+                      position.getAlias(locale)!,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                             color: Theme.of(context)
                                 .colorScheme
@@ -248,13 +248,13 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   ],
 
                   // Setup instructions
-                  if (position.setup != null && position.setup!.isNotEmpty) ...[
+                  if (position.getSetup(locale) != null && position.getSetup(locale)!.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
                     _buildSection(
                       context,
                       title: 'position.setup'.tr(),
                       child: Text(
-                        position.setup!,
+                        position.getSetup(locale)!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                               height: 1.6,
                             ),
@@ -293,7 +293,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   ],
 
                   // Cautions
-                  if (position.cautions != null && position.cautions!.isNotEmpty) ...[
+                  if (position.getCautions(locale) != null && position.getCautions(locale)!.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -314,7 +314,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: Text(
-                              position.cautions!,
+                              position.getCautions(locale)!,
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -324,8 +324,8 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   ],
 
                   // Easy variant
-                  if (position.easyVariant != null &&
-                      position.easyVariant!.isNotEmpty) ...[
+                  if (position.getEasyVariant(locale) != null &&
+                      position.getEasyVariant(locale)!.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -360,7 +360,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
-                            position.easyVariant!,
+                            position.getEasyVariant(locale)!,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
@@ -369,7 +369,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   ],
 
                   // Check-in prompt
-                  if (position.checkin != null && position.checkin!.isNotEmpty) ...[
+                  if (position.getCheckin(locale) != null && position.getCheckin(locale)!.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.md),
@@ -401,7 +401,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
-                            '"${position.checkin}"',
+                            '"${position.getCheckin(locale)}"',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   fontStyle: FontStyle.italic,
                                 ),
@@ -470,8 +470,8 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
             ),
             child: Text(
               PreferencesService.instance.isTriedPosition(widget.positionId)
-                  ? 'Posizione già provata ✅'
-                  : 'Prova posizione 🔥',
+                  ? 'position.already_tried'.tr()
+                  : 'position.try_this'.tr(),
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -565,7 +565,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                       ),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        p.name,
+                        p.getName(locale),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
