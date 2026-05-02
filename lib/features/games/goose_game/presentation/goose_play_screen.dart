@@ -1885,7 +1885,7 @@ class _ContentDialogState extends State<_ContentDialog>
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.white12),
                   ),
-                  child: Text(a.content.text,
+                  child: Text(a.content.text.tr(),
                     style: const TextStyle(
                       color: Colors.white, fontSize: 16,
                       fontWeight: FontWeight.w600, height: 1.45,
