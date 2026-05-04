@@ -1677,6 +1677,27 @@
         "rule_3": "Ajoutez des détails personnels",
         "rule_4": "À la fin, décidez quand le réaliser !",
         "closing": "Créez quelque chose d'unique ensemble ! 💕"
+      },
+      "random_pick": "Surprise",
+      "veto_used": "Veto utilisé",
+      "vetoed": "VETO",
+      "secret_theme": "Thème secret",
+      "previous_fantasies": "Fantasmes sauvegardés",
+      "fantasy_saved": "Fantasme sauvegardé dans vos souvenirs",
+      "exit_confirm": "Sortir maintenant ? Le fantasme sera perdu.",
+      "feature_random": "Choix aléatoire",
+      "feature_veto": "Veto bienveillant",
+      "feature_secret": "Thème secret",
+      "no_details_yet": "Aucun détail encore — ajoutez-en un ou continuez",
+      "themes": {
+        "theme_whispers": "Murmures",
+        "theme_mirror": "Miroir",
+        "theme_mystery": "Mystère",
+        "theme_moon": "Lune",
+        "theme_velvet": "Velours",
+        "theme_audacity": "Audace",
+        "theme_kiss": "Baiser",
+        "theme_eternity": "Éternité"
       }
     },
     "compliment_battle": {

@@ -1677,6 +1677,27 @@
         "rule_3": "Adicionem detalhes pessoais",
         "rule_4": "No final, decidam quando torná-la realidade!",
         "closing": "Criem algo único juntos! 💕"
+      },
+      "random_pick": "Surpresa",
+      "veto_used": "Veto usado",
+      "vetoed": "VETO",
+      "secret_theme": "Tema secreto",
+      "previous_fantasies": "Fantasias salvas",
+      "fantasy_saved": "Fantasia salva nas vossas memórias",
+      "exit_confirm": "Sair agora? A fantasia será perdida.",
+      "feature_random": "Escolha aleatória",
+      "feature_veto": "Veto gentil",
+      "feature_secret": "Tema secreto",
+      "no_details_yet": "Sem detalhes ainda — acrescente um ou avance",
+      "themes": {
+        "theme_whispers": "Sussurros",
+        "theme_mirror": "Espelho",
+        "theme_mystery": "Mistério",
+        "theme_moon": "Lua",
+        "theme_velvet": "Veludo",
+        "theme_audacity": "Audácia",
+        "theme_kiss": "Beijo",
+        "theme_eternity": "Eternidade"
       }
     },
     "compliment_battle": {

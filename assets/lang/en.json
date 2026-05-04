@@ -1677,6 +1677,27 @@
         "rule_3": "Add personal details",
         "rule_4": "At the end, decide when to make it real!",
         "closing": "Create something unique together! 💕"
+      },
+      "random_pick": "Surprise",
+      "veto_used": "Veto used",
+      "vetoed": "VETOED",
+      "secret_theme": "Secret theme",
+      "previous_fantasies": "Saved fantasies",
+      "fantasy_saved": "Fantasy saved to your memories",
+      "exit_confirm": "Leave now? Your fantasy will be lost.",
+      "feature_random": "Random pick",
+      "feature_veto": "Gentle veto",
+      "feature_secret": "Secret theme",
+      "no_details_yet": "No details yet — add one or skip ahead",
+      "themes": {
+        "theme_whispers": "Whispers",
+        "theme_mirror": "Mirror",
+        "theme_mystery": "Mystery",
+        "theme_moon": "Moon",
+        "theme_velvet": "Velvet",
+        "theme_audacity": "Audacity",
+        "theme_kiss": "Kiss",
+        "theme_eternity": "Eternity"
       }
     },
     "compliment_battle": {
