@@ -2170,6 +2170,21 @@
       "ch8_tip": "Ne réfléchissez pas, laissez-vous porter"
     }
   },
+  "games_hub": {
+    "filter_all": "Tous",
+    "filter_soft": "🌸 Soft",
+    "filter_spicy": "🔥 Spicy",
+    "filter_extra": "🌶️ Extra",
+    "filter_quick": "⚡ Rapides",
+    "section_passion": "Passion",
+    "section_connection": "Connexion",
+    "section_creative": "Créatifs",
+    "section_classic": "Classiques",
+    "featured": "✨ EN VEDETTE",
+    "new_badge": "NOUVEAU",
+    "no_games": "Aucun jeu ne correspond à ces filtres",
+    "show_all": "Tout afficher"
+  },
   "progress": {
     "title": "Progrès",
     "badges": "Badges",

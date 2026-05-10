@@ -2170,6 +2170,21 @@
       "ch8_tip": "No pienses, solo déjate llevar"
     }
   },
+  "games_hub": {
+    "filter_all": "Todos",
+    "filter_soft": "🌸 Soft",
+    "filter_spicy": "🔥 Spicy",
+    "filter_extra": "🌶️ Extra",
+    "filter_quick": "⚡ Rápidos",
+    "section_passion": "Pasión",
+    "section_connection": "Conexión",
+    "section_creative": "Creativos",
+    "section_classic": "Clásicos",
+    "featured": "✨ DESTACADO",
+    "new_badge": "NUEVO",
+    "no_games": "Ningún juego coincide con estos filtros",
+    "show_all": "Ver todos"
+  },
   "progress": {
     "title": "Progreso",
     "badges": "Insignias",

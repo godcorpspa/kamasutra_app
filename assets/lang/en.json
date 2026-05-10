@@ -2170,6 +2170,21 @@
       "ch8_tip": "Don't think, just go with the flow"
     }
   },
+  "games_hub": {
+    "filter_all": "All",
+    "filter_soft": "🌸 Soft",
+    "filter_spicy": "🔥 Spicy",
+    "filter_extra": "🌶️ Extra",
+    "filter_quick": "⚡ Quick",
+    "section_passion": "Passion",
+    "section_connection": "Connection",
+    "section_creative": "Creative",
+    "section_classic": "Classics",
+    "featured": "✨ FEATURED",
+    "new_badge": "NEW",
+    "no_games": "No games match these filters",
+    "show_all": "Show all"
+  },
   "progress": {
     "title": "Progress",
     "badges": "Badges",
