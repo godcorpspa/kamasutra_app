@@ -606,7 +606,7 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
   // ---------------------------------------------------------------------------
   Widget _buildSetupView() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.fromLTRB(24, kToolbarHeight, 24, 24),
       child: Column(
         children: [
           const SizedBox(height: 6),
@@ -1033,7 +1033,7 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
         );
       },
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+        padding: const EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 16),
         child: Column(
           children: [
             // Top: player + view toggle
@@ -1349,11 +1349,20 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
         builder: (context, constraints) {
           final availableW = constraints.maxWidth;
           final availableH = constraints.maxHeight;
-          // Compute body box size keeping aspect ratio
-          final bodyW = availableW * 0.75;
-          final bodyH = availableH * 0.95;
-          final boxW = bodyW;
-          final boxH = bodyH;
+          // Body silhouette has a roughly 1:2 (W:H) aspect ratio.
+          // Compute the largest box that fits and preserve it.
+          const bodyAspect = 0.5;
+          double boxW;
+          double boxH;
+          if (availableW / availableH > bodyAspect) {
+            // Height-constrained
+            boxH = availableH * 0.95;
+            boxW = boxH * bodyAspect;
+          } else {
+            // Width-constrained
+            boxW = availableW * 0.78;
+            boxH = boxW / bodyAspect;
+          }
           final boxLeft = (availableW - boxW) / 2;
           final boxTop = (availableH - boxH) / 2;
 
@@ -1696,7 +1705,8 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
         );
       },
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 30),
+        padding:
+            const EdgeInsets.fromLTRB(20, kToolbarHeight + 4, 20, 30),
         child: Column(
           children: [
             // Header
@@ -2020,14 +2030,26 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
     // Combined heatmap: show body and dots colored by intensity (love=red glow, etc.)
     return LayoutBuilder(
       builder: (context, constraints) {
-        final boxW = constraints.maxWidth * 0.85;
-        final boxH = constraints.maxHeight;
-        final boxLeft = (constraints.maxWidth - boxW) / 2;
+        // Body silhouette has a roughly 1:2 aspect ratio — preserve it.
+        const bodyAspect = 0.5;
+        final availableW = constraints.maxWidth;
+        final availableH = constraints.maxHeight;
+        double boxW;
+        double boxH;
+        if (availableW / availableH > bodyAspect) {
+          boxH = availableH;
+          boxW = boxH * bodyAspect;
+        } else {
+          boxW = availableW * 0.85;
+          boxH = boxW / bodyAspect;
+        }
+        final boxLeft = (availableW - boxW) / 2;
+        final boxTop = (availableH - boxH) / 2;
         return Stack(
           children: [
             Positioned(
               left: boxLeft,
-              top: 0,
+              top: boxTop,
               width: boxW,
               height: boxH,
               child: CustomPaint(
@@ -2054,7 +2076,7 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
                   (p1 ?? p2)!['color'] as Color;
               return Positioned(
                 left: boxLeft + boxW * x - 14,
-                top: boxH * y - 14,
+                top: boxTop + boxH * y - 14,
                 child: Container(
                   width: 28,
                   height: 28,

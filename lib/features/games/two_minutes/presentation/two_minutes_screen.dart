@@ -661,7 +661,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   // ---------------------------------------------------------------------------
   Widget _buildSetupView() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      padding: const EdgeInsets.fromLTRB(24, kToolbarHeight, 24, 24),
       child: Column(
         children: [
           const SizedBox(height: 6),
@@ -1180,7 +1180,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   Widget _buildPreChallengeView() {
     final challenge = _currentChallenges[_currentChallengeIndex];
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 16),
       child: Column(
         children: [
           _buildProgressBar(),
@@ -1560,7 +1560,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
     final isUrgent = _remainingSeconds <= 5 && !_isPaused;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+      padding: const EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 16),
       child: Column(
         children: [
           _buildProgressBar(),
@@ -1590,118 +1590,136 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
 
           const SizedBox(height: 6),
 
-          // BIG breathing/timer ring
+          // BIG breathing/timer ring — responsive size that fits the box
           Expanded(
             child: Center(
-              child: AnimatedBuilder(
-                animation: Listenable.merge(
-                    [_breatheAnim, _glowAnim]),
-                builder: (context, _) {
-                  final scale = challenge.isBreathing && !_isPaused
-                      ? _breatheAnim.value
-                      : 1.0;
-                  return SizedBox(
-                    width: 280,
-                    height: 280,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Outer halo
-                        Container(
-                          width: 280,
-                          height: 280,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: RadialGradient(
-                              colors: [
-                                (isUrgent
-                                        ? const Color(0xFFE53935)
-                                        : challenge.color)
-                                    .withOpacity(
-                                        0.32 + 0.18 * _glowAnim.value),
-                                challenge.color.withOpacity(0.1),
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                        ),
-                        // Breathing ring (if breathing challenge)
-                        Transform.scale(
-                          scale: scale,
-                          child: Container(
-                            width: 220,
-                            height: 220,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: RadialGradient(
-                                colors: [
-                                  challenge.color.withOpacity(0.25),
-                                  challenge.color.withOpacity(0.06),
-                                ],
-                              ),
-                              border: Border.all(
-                                color: challenge.color.withOpacity(0.5),
-                                width: 1,
-                              ),
-                            ),
-                          ),
-                        ),
-                        // Progress ring
-                        SizedBox(
-                          width: 240,
-                          height: 240,
-                          child: CustomPaint(
-                            painter: _RingProgressPainter(
-                              progress: progress,
-                              color: isUrgent
-                                  ? const Color(0xFFE53935)
-                                  : challenge.color,
-                              pulse: isUrgent ? _glowAnim.value : 0.0,
-                            ),
-                          ),
-                        ),
-                        // Center number
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Choose the largest square that fits, capped at 280
+                  final maxSize = min(
+                    constraints.maxWidth,
+                    constraints.maxHeight,
+                  );
+                  final ringSize = maxSize.clamp(180.0, 280.0).toDouble();
+                  final innerSize = ringSize * 0.78;
+                  final progressSize = ringSize * 0.85;
+                  return AnimatedBuilder(
+                    animation:
+                        Listenable.merge([_breatheAnim, _glowAnim]),
+                    builder: (context, _) {
+                      final scale = challenge.isBreathing && !_isPaused
+                          ? _breatheAnim.value
+                          : 1.0;
+                      return SizedBox(
+                        width: ringSize,
+                        height: ringSize,
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Text(
-                              _formatTime(_remainingSeconds),
-                              style: TextStyle(
-                                fontFamily: 'PlayfairDisplay',
-                                fontSize: isUrgent ? 60 : 54,
-                                fontWeight: FontWeight.w700,
-                                color: isUrgent
-                                    ? const Color(0xFFFF6B6B)
-                                    : Colors.white,
-                                decoration: TextDecoration.none,
-                                shadows: isUrgent
-                                    ? const [
-                                        Shadow(
-                                            color: Color(0xFFE53935),
-                                            blurRadius: 20),
-                                      ]
-                                    : null,
+                            // Outer halo
+                            Container(
+                              width: ringSize,
+                              height: ringSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: RadialGradient(
+                                  colors: [
+                                    (isUrgent
+                                            ? const Color(0xFFE53935)
+                                            : challenge.color)
+                                        .withOpacity(
+                                            0.32 + 0.18 * _glowAnim.value),
+                                    challenge.color.withOpacity(0.1),
+                                    Colors.transparent,
+                                  ],
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              _isPaused
-                                  ? 'games.two_minutes.paused'.tr()
-                                  : challenge.isBreathing
-                                      ? _breathePhaseLabel()
-                                      : 'games.two_minutes.remaining'.tr(),
-                              style: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 12,
-                                color: Colors.white.withOpacity(0.55),
-                                letterSpacing: 1.5,
-                                decoration: TextDecoration.none,
+                            // Breathing ring (if breathing challenge)
+                            Transform.scale(
+                              scale: scale,
+                              child: Container(
+                                width: innerSize,
+                                height: innerSize,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: RadialGradient(
+                                    colors: [
+                                      challenge.color.withOpacity(0.25),
+                                      challenge.color.withOpacity(0.06),
+                                    ],
+                                  ),
+                                  border: Border.all(
+                                    color:
+                                        challenge.color.withOpacity(0.5),
+                                    width: 1,
+                                  ),
+                                ),
                               ),
+                            ),
+                            // Progress ring
+                            SizedBox(
+                              width: progressSize,
+                              height: progressSize,
+                              child: CustomPaint(
+                                painter: _RingProgressPainter(
+                                  progress: progress,
+                                  color: isUrgent
+                                      ? const Color(0xFFE53935)
+                                      : challenge.color,
+                                  pulse:
+                                      isUrgent ? _glowAnim.value : 0.0,
+                                ),
+                              ),
+                            ),
+                            // Center number
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  _formatTime(_remainingSeconds),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: 'PlayfairDisplay',
+                                    fontSize:
+                                        isUrgent ? ringSize * 0.22 : ringSize * 0.2,
+                                    fontWeight: FontWeight.w700,
+                                    color: isUrgent
+                                        ? const Color(0xFFFF6B6B)
+                                        : Colors.white,
+                                    decoration: TextDecoration.none,
+                                    shadows: isUrgent
+                                        ? const [
+                                            Shadow(
+                                                color: Color(0xFFE53935),
+                                                blurRadius: 20),
+                                          ]
+                                        : null,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  _isPaused
+                                      ? 'games.two_minutes.paused'.tr()
+                                      : challenge.isBreathing
+                                          ? _breathePhaseLabel()
+                                          : 'games.two_minutes.remaining'
+                                              .tr(),
+                                  style: TextStyle(
+                                    fontFamily: 'DMSans',
+                                    fontSize: 12,
+                                    color: Colors.white.withOpacity(0.55),
+                                    letterSpacing: 1.5,
+                                    decoration: TextDecoration.none,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 },
               ),
