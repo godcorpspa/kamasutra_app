@@ -49,6 +49,17 @@ class _SoundtrackScreenState extends State<SoundtrackScreen>
 
   final Random _random = Random();
 
+  static const List<_ReactionButton> _reactionButtons = [
+    _ReactionButton(
+        reactionId: 'love', emoji: '💕', color: Color(0xFFE53935)),
+    _ReactionButton(
+        reactionId: 'fire', emoji: '🔥', color: Color(0xFFFF6B35)),
+    _ReactionButton(
+        reactionId: 'nice', emoji: '👍', color: Color(0xFF7DD3FC)),
+    _ReactionButton(
+        reactionId: 'meh', emoji: '🤔', color: Color(0xFF9CA3AF)),
+  ];
+
   // ---------------------------------------------------------------------------
   // Prompt catalog
   // ---------------------------------------------------------------------------
@@ -1149,36 +1160,18 @@ class _SoundtrackScreenState extends State<SoundtrackScreen>
           const Spacer(),
           // Reactions row
           Row(
-            children: const [
-              _ReactionButton(
-                  reactionId: 'love',
-                  emoji: '💕',
-                  color: Color(0xFFE53935)),
-              SizedBox(width: 10),
-              _ReactionButton(
-                  reactionId: 'fire',
-                  emoji: '🔥',
-                  color: Color(0xFFFF6B35)),
-              SizedBox(width: 10),
-              _ReactionButton(
-                  reactionId: 'nice',
-                  emoji: '👍',
-                  color: Color(0xFF7DD3FC)),
-              SizedBox(width: 10),
-              _ReactionButton(
-                  reactionId: 'meh',
-                  emoji: '🤔',
-                  color: Color(0xFF9CA3AF)),
-            ]
-                .map<Widget>((w) => w is _ReactionButton
-                    ? Expanded(
-                        child: GestureDetector(
-                          onTap: () => _registerReaction(w.reactionId),
-                          child: _buildReactionButton(w),
-                        ),
-                      )
-                    : w)
-                .toList(),
+            children: [
+              for (int i = 0; i < _reactionButtons.length; i++) ...[
+                if (i > 0) const SizedBox(width: 10),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () =>
+                        _registerReaction(_reactionButtons[i].reactionId),
+                    child: _buildReactionButton(_reactionButtons[i]),
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 8),
           TextButton.icon(
@@ -2286,7 +2279,7 @@ class _VinylPainter extends CustomPainter {
           fontWeight: FontWeight.bold,
         ),
       ),
-      textDirection: TextDirection.ltr,
+      textDirection: ui.TextDirection.ltr,
     );
     tp.layout();
     tp.paint(canvas,
@@ -2401,7 +2394,7 @@ class _NotesFieldPainter extends CustomPainter {
             fontSize: 8 + n.size * 6,
           ),
         ),
-        textDirection: TextDirection.ltr,
+        textDirection: ui.TextDirection.ltr,
       );
       tp.layout();
       tp.paint(canvas, Offset(x, y));
