@@ -278,10 +278,6 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   @override
   Widget build(BuildContext context) {
     final filtered = _filtered();
-    final byCategory = <_GameCategory, List<_GameCardData>>{};
-    for (final g in filtered) {
-      byCategory.putIfAbsent(g.category, () => []).add(g);
-    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -334,13 +330,15 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
                   SliverToBoxAdapter(child: _buildHeader()),
                   SliverToBoxAdapter(child: _buildFilterChips()),
                   SliverToBoxAdapter(child: _buildFeaturedBanner()),
-                  if (byCategory.isEmpty)
+                  if (filtered.isEmpty)
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: _emptyState(),
                     )
-                  else
-                    ..._buildCategorySections(byCategory),
+                  else ...[
+                    SliverToBoxAdapter(child: _buildGridLabel(filtered.length)),
+                    _buildGrid(filtered),
+                  ],
                   const SliverToBoxAdapter(child: SizedBox(height: 100)),
                 ],
               ),
@@ -350,6 +348,63 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
       ),
     );
   }
+
+  Widget _buildGridLabel(int count) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+      child: Row(
+        children: [
+          const Icon(Icons.style_outlined,
+              color: Color(0xFFE879F9), size: 18),
+          const SizedBox(width: 8),
+          Text(
+            'games_hub.all_games'.tr(),
+            style: const TextStyle(
+              fontFamily: 'PlayfairDisplay',
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+              letterSpacing: 0.4,
+              decoration: TextDecoration.none,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: BoxDecoration(
+              color: const Color(0xFFE879F9).withOpacity(0.18),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '$count',
+              style: const TextStyle(
+                fontFamily: 'DMSans',
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFFE879F9),
+                decoration: TextDecoration.none,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Container(
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withOpacity(0.15),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   // ---------------------------------------------------------------------------
   // Header
@@ -686,64 +741,8 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   }
 
   // ---------------------------------------------------------------------------
-  // Category sections
+  // Grid
   // ---------------------------------------------------------------------------
-  List<Widget> _buildCategorySections(
-      Map<_GameCategory, List<_GameCardData>> byCategory) {
-    // Order categories deliberately
-    const order = [
-      _GameCategory.passion,
-      _GameCategory.connection,
-      _GameCategory.creative,
-      _GameCategory.classic,
-    ];
-    final sections = <Widget>[];
-    for (final cat in order) {
-      final games = byCategory[cat];
-      if (games == null || games.isEmpty) continue;
-      sections.add(SliverToBoxAdapter(child: _buildSectionHeader(cat)));
-      sections.add(_buildGrid(games));
-    }
-    return sections;
-  }
-
-  Widget _buildSectionHeader(_GameCategory cat) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-      child: Row(
-        children: [
-          Text(cat.emoji, style: const TextStyle(fontSize: 18)),
-          const SizedBox(width: 8),
-          Text(
-            cat.labelKey.tr(),
-            style: const TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 19,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 0.4,
-              decoration: TextDecoration.none,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Container(
-              height: 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildGrid(List<_GameCardData> games) {
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
@@ -1061,34 +1060,6 @@ enum _GameCategory {
   connection,
   creative,
   classic,
-}
-
-extension on _GameCategory {
-  String get emoji {
-    switch (this) {
-      case _GameCategory.passion:
-        return '🔥';
-      case _GameCategory.connection:
-        return '💕';
-      case _GameCategory.creative:
-        return '✨';
-      case _GameCategory.classic:
-        return '🎲';
-    }
-  }
-
-  String get labelKey {
-    switch (this) {
-      case _GameCategory.passion:
-        return 'games_hub.section_passion';
-      case _GameCategory.connection:
-        return 'games_hub.section_connection';
-      case _GameCategory.creative:
-        return 'games_hub.section_creative';
-      case _GameCategory.classic:
-        return 'games_hub.section_classic';
-    }
-  }
 }
 
 class _GameCardData {
