@@ -2652,6 +2652,15 @@
     "req_lowercase": "Une lettre minuscule (a-z)",
     "req_number": "Un chiffre (0-9)",
     "req_special": "Un caractère spécial (!@#$%...)"
+  ,
+    "verify_email_title": "Vérifie ton e-mail",
+    "verify_email_body": "Nous avons envoyé un lien à {email}. Clique dessus pour activer ton compte.",
+    "verify_check_now": "J'ai vérifié, continuer",
+    "verify_resend": "Renvoyer l'e-mail",
+    "verify_resend_in": "Renvoyer dans {seconds}s",
+    "verify_not_yet": "Ton e-mail n'est pas encore vérifié. Réessaie dans quelques secondes.",
+    "verify_email_resent": "E-mail de vérification renvoyé.",
+    "verify_cancel": "Annuler l'inscription"
   },
   "progress_extra": {
     "positions_explored": "Positions explorées",

@@ -2652,6 +2652,15 @@
     "req_lowercase": "One lowercase letter (a-z)",
     "req_number": "One number (0-9)",
     "req_special": "One special character (!@#$%...)"
+  ,
+    "verify_email_title": "Verify your email",
+    "verify_email_body": "We sent a link to {email}. Tap it to activate your account.",
+    "verify_check_now": "I verified, continue",
+    "verify_resend": "Resend email",
+    "verify_resend_in": "Resend in {seconds}s",
+    "verify_not_yet": "Your email isn't verified yet. Try again in a few seconds.",
+    "verify_email_resent": "Verification email sent again.",
+    "verify_cancel": "Cancel registration"
   },
   "progress_extra": {
     "positions_explored": "Positions explored",

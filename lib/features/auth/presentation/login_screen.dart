@@ -140,6 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
 
     String? errorMsg;
+    var registeredFreshAccount = false;
 
     try {
       if (_isLogin) {
@@ -152,6 +153,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
+        // Send the verification email immediately; the dedicated screen will
+        // wait for the user to follow the link before granting app access.
+        // Failure here is non-fatal — the user can hit "Resend" on that
+        // screen.
+        try {
+          await _auth.currentUser?.sendEmailVerification();
+        } on FirebaseAuthException catch (e) {
+          debugPrint('sendEmailVerification failed: ${e.code}');
+        }
+        registeredFreshAccount = true;
       }
     } on FirebaseAuthException catch (e) {
       errorMsg = _getErrorMessage(e.code);
@@ -162,14 +173,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
 
     final currentUser = _auth.currentUser;
-    
+
     if (currentUser != null) {
       debugPrint('✅ Utente autenticato: ${currentUser.email}');
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
-        _navigateAfterAuth();
+        if (registeredFreshAccount) {
+          // New account: gate access on email verification. Existing accounts
+          // (sign-in) are routed normally so unverified legacy users are NOT
+          // locked out of the app.
+          context.go(AppRoutes.emailVerification);
+        } else {
+          _navigateAfterAuth();
+        }
       }
     } else {
       if (mounted) {

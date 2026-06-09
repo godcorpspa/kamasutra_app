@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../data/models/goose_game.dart';
 import '../data/models/position.dart';
 import '../features/auth/presentation/login_screen.dart';
+import '../features/auth/presentation/email_verification_screen.dart';
 import '../features/onboarding/presentation/age_gate_screen.dart';
 import '../features/onboarding/presentation/pin_screen.dart';
 import '../features/onboarding/presentation/onboarding_screen.dart';
@@ -36,6 +37,7 @@ import '../data/services/preferences_service.dart';
 class AppRoutes {
   // Auth
   static const String login = '/login';
+  static const String emailVerification = '/verify-email';
   
   // Onboarding
   static const String ageGate = '/age-gate';
@@ -155,7 +157,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
-      
+      GoRoute(
+        path: AppRoutes.emailVerification,
+        builder: (context, state) => const EmailVerificationScreen(),
+      ),
+
       // Onboarding routes
       GoRoute(
         path: AppRoutes.ageGate,
