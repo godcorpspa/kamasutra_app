@@ -6,10 +6,16 @@ so every test sits next to the unit under test:
 ```
 test/
 ├── data/
+│   ├── models/
+│   │   └── position_filter_apply_test.dart     # Catalog filter matching
 │   ├── providers/
 │   │   └── position_filter_notifier_test.dart  # Riverpod StateNotifier logic
 │   └── services/
 │       └── pin_hasher_test.dart                # PIN hashing + legacy migration
+├── features/
+│   └── games/
+│       └── compliment_battle/
+│           └── compliment_scoring_test.dart    # Scoring formula + multipliers
 └── shared/
     └── widgets/
         └── game_scaffold_test.dart             # Shared game shell (smoke)
