@@ -7,6 +7,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../shared/widgets/offline_mode_badge.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -382,6 +383,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 
                 const SizedBox(height: 40),
+
+                // Offline indicator — visible only when Firebase is unavailable
+                // (login can't work without it).
+                const OfflineModeBadge(),
 
                 // Messaggio errore
                 if (_errorMessage != null)

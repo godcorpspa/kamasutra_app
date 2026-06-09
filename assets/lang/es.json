@@ -20,7 +20,8 @@
     "filter": "Filtrar",
     "clear_filters": "Borrar filtros",
     "no_results": "Sin resultados",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "offline_mode": "Modo sin conexión — inicio de sesión y sincronización no disponibles"
   },
   "energy": {
     "low": "Baja",

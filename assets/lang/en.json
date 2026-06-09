@@ -20,7 +20,8 @@
     "filter": "Filter",
     "clear_filters": "Clear filters",
     "no_results": "No results",
-    "settings": "Settings"
+    "settings": "Settings",
+    "offline_mode": "Offline mode — login and cloud sync unavailable"
   },
   "energy": {
     "low": "Low",

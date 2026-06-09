@@ -20,7 +20,8 @@
     "filter": "Filtrer",
     "clear_filters": "Effacer les filtres",
     "no_results": "Aucun résultat",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "offline_mode": "Mode hors ligne — connexion et synchronisation indisponibles"
   },
   "energy": {
     "low": "Basse",

@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'app/app.dart';
+import 'data/providers/firebase_status_provider.dart';
 import 'data/services/preferences_service.dart';
 import 'data/services/user_data_sync_service.dart';
 import 'data/services/audio_service.dart';
@@ -21,15 +22,24 @@ void main() async {
   // Initialize audio service
   AudioService.instance.initialize();
 
-  // Initialize Firebase
+  // Initialize Firebase. Fail-loud, not fail-silent: if this fails the app
+  // still runs, but login and cloud sync are OFF — record that fact so the UI
+  // can show an explicit offline indicator (see firebaseAvailableProvider).
+  bool firebaseAvailable = false;
   try {
     await Firebase.initializeApp();
+    firebaseAvailable = true;
     debugPrint('✅ Firebase inizializzato');
 
     // Start cloud sync (best-effort)
     UserDataSyncService.instance.start();
-  } catch (e) {
-    debugPrint('⚠️ Firebase non disponibile: $e');
+  } catch (e, stackTrace) {
+    firebaseAvailable = false;
+    debugPrint(
+      '⚠️ Firebase NON disponibile — la app gira in modalità offline: '
+      'login e sync cloud sono DISATTIVATI. Causa: $e',
+    );
+    debugPrintStack(stackTrace: stackTrace);
   }
   
   // Set preferred orientations
@@ -59,8 +69,11 @@ void main() async {
       ],
       path: 'assets/lang',
       fallbackLocale: const Locale('it'),
-      child: const ProviderScope(
-        child: KamasutraApp(),
+      child: ProviderScope(
+        overrides: [
+          firebaseAvailableProvider.overrideWithValue(firebaseAvailable),
+        ],
+        child: const KamasutraApp(),
       ),
     ),
   );

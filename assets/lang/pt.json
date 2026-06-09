@@ -20,7 +20,8 @@
     "filter": "Filtrar",
     "clear_filters": "Limpar filtros",
     "no_results": "Sem resultados",
-    "settings": "Definições"
+    "settings": "Definições",
+    "offline_mode": "Modo offline — login e sincronização na nuvem indisponíveis"
   },
   "energy": {
     "low": "Baixa",
