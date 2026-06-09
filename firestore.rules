@@ -6,11 +6,16 @@ rules_version = '2';
 //   users/{uid}                      -> profile (email, displayName, timestamps)
 //     data/{settings|favorites|progress}
 //     positions/{positionId}
-//     history/{autoId}               -> intimate data (notes, reaction)
+//     history/{autoId}               -> intimate event log (NO free-text notes)
 //     sessions/{sessionId}
 //
 // Principle: a signed-in user may only ever read or write documents under
 // their OWN users/{uid} subtree. Everything else is denied by default.
+//
+// IMPORTANT: subcollections are listed EXPLICITLY rather than via a
+// `match /{document=**}` catch-all, because Firestore Rules OR every
+// matching rule — a catch-all would silently overrule the no-notes guard
+// on /history.
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -19,12 +24,37 @@ service cloud.firestore {
       return request.auth != null && request.auth.uid == uid;
     }
 
+    // Helper: the write does not try to include the free-text 'notes' field.
+    function noNotes() {
+      return !(request.resource.data.keys().hasAny(['notes']));
+    }
+
     match /users/{uid} {
+      // The user profile document itself.
       allow read, write: if isOwner(uid);
 
-      // All nested data (data/*, positions/*, history/*, sessions/*).
-      match /{document=**} {
+      // settings, favorites, progress
+      match /data/{docId} {
         allow read, write: if isOwner(uid);
+      }
+
+      // per-position state (views, lastViewed, isFavorite)
+      match /positions/{positionId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // session metadata
+      match /sessions/{sessionId} {
+        allow read, write: if isOwner(uid);
+      }
+
+      // History: free-text intimate notes stay on the device.
+      // We allow deletes (e.g. clearCloudHistory / clearCloudUserData) and
+      // updates that strip the legacy 'notes' field, but reject any write
+      // that re-introduces it.
+      match /history/{entryId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid) && noNotes();
       }
     }
 

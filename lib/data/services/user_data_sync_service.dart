@@ -140,11 +140,16 @@ class UserDataSyncService {
     final uid = _uid;
     if (uid == null) return;
 
+    // PRIVACY: 'notes' is the most sensitive field in the database (free-text
+    // intimate content written by the user). We deliberately do NOT mirror it
+    // to Firestore — it stays in local storage only. A DB leak, a compromised
+    // Firebase admin or a legal compulsion against the cloud provider can
+    // never reveal note content. The `notes` parameter is kept on the public
+    // API so callers don't have to change shape; it is simply ignored here.
     try {
       await _historyCol(uid).add({
         'positionId': positionId,
         'reaction': reaction,
-        if (notes != null) 'notes': notes,
         'viewedAt': Timestamp.fromDate(viewedAt),
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -279,11 +284,41 @@ class UserDataSyncService {
     try {
       await _ensureUserProfile(user);
       await _migrateLocalToCloudIfNeeded(user);
+      await _purgeLegacyCloudNotesIfNeeded(user);
       await _pullCloudToLocal(user);
     } catch (e) {
       debugPrint('⚠️ Initial sync error: $e');
     } finally {
       _completeInitialSyncIfPending();
+    }
+  }
+
+  /// Strips any `notes` field that an older version of the app may have
+  /// mirrored to Firestore in plaintext. Runs once per account (the success
+  /// flag is stored in local prefs) and is best-effort: failures here do not
+  /// block startup.
+  Future<void> _purgeLegacyCloudNotesIfNeeded(User user) async {
+    final prefs = PreferencesService.instance;
+    final flag = 'notes_legacy_purged_${user.uid}';
+    if (prefs.getBool(flag) == true) return;
+
+    try {
+      // Paginate so the batch never exceeds Firestore's 500-write cap.
+      while (true) {
+        final snap = await _historyCol(user.uid).limit(450).get();
+        final docs = snap.docs.where((d) => d.data().containsKey('notes'));
+        if (docs.isEmpty) break;
+
+        final batch = _db.batch();
+        for (final d in docs) {
+          batch.update(d.reference, {'notes': FieldValue.delete()});
+        }
+        await batch.commit();
+        if (snap.docs.length < 450) break;
+      }
+      await prefs.setBool(flag, true);
+    } catch (e) {
+      debugPrint('⚠️ purgeLegacyCloudNotes failed: $e');
     }
   }
 
@@ -430,11 +465,12 @@ class UserDataSyncService {
         final batch = _db.batch();
         var writes = 0;
 
+        // PRIVACY: see syncHistoryEntry — the free-text 'notes' field is
+        // intentionally NOT mirrored to the cloud.
         for (final h in trimmed) {
           if (writes >= 450) break;
           final positionId = (h['positionId'] ?? '').toString();
           final reaction = (h['reaction'] ?? '').toString();
-          final notes = h['notes']?.toString();
           final viewedAtStr = (h['viewedAt'] ?? '').toString();
 
           DateTime? viewedAt;
@@ -445,7 +481,6 @@ class UserDataSyncService {
           batch.set(ref, {
             'positionId': positionId,
             'reaction': reaction,
-            if (notes != null && notes.isNotEmpty) 'notes': notes,
             'viewedAt': Timestamp.fromDate(viewedAt),
             'createdAt': FieldValue.serverTimestamp(),
           });
@@ -612,6 +647,9 @@ class UserDataSyncService {
           snap = await _historyCol(uid).orderBy('createdAt', descending: true).limit(500).get();
         }
 
+        // PRIVACY: ignore any legacy 'notes' field that may have been mirrored
+        // before this version — we no longer trust cloud-stored note content
+        // and we never re-write it locally from the cloud.
         final entries = <Map<String, dynamic>>[];
         for (final d in snap.docs) {
           final data = d.data();
@@ -622,7 +660,6 @@ class UserDataSyncService {
             'positionId': (data['positionId'] ?? '').toString(),
             'viewedAt': (viewedAt ?? DateTime.now()).toIso8601String(),
             'reaction': (data['reaction'] ?? '').toString(),
-            if (data.containsKey('notes')) 'notes': data['notes'],
           });
         }
 
