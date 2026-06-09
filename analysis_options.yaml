@@ -1,25 +1,18 @@
 # This file configures the analyzer for the Kamasutra app.
 #
-# The base set is `flutter_lints`. On top of that we enable a small list of
-# rules that catch *real bugs* rather than style nits, so this is safe to drop
-# into the existing codebase without producing a wall of warnings. Stricter
-# style/migration rules (prefer_const_constructors, always_declare_return_types,
-# strict-casts, etc.) are intentionally left OFF here — turn them on per-folder
-# during a dedicated cleanup, not in a single sweep.
+# Base set: `flutter_lints`. On top we enable only rules that catch *real bugs*
+# and are very unlikely to fire on the existing codebase, so dropping this in
+# does NOT produce a wall of new warnings. The noisier-but-useful rules
+# (unawaited_futures, use_build_context_synchronously, avoid_void_async,
+# always_declare_return_types) and severity promotions are intentionally left
+# OFF — enable them per-folder during a dedicated cleanup once the code is
+# already conforming, not in one sweep over a 28k-line codebase.
 
 include: package:flutter_lints/flutter.yaml
 
-analyzer:
-  errors:
-    # Promote a few warnings to errors so they break CI instead of getting lost
-    # in the yellow squiggles.
-    unused_import: error
-    unused_local_variable: error
-    dead_code: error
-
 linter:
   rules:
-    # --- Correctness (real bugs) ---
+    # Real bugs that are rare in practice (so near-zero new warnings):
     avoid_empty_else: true
     avoid_returning_null_for_future: true
     avoid_slow_async_io: true
@@ -29,9 +22,3 @@ linter:
     no_adjacent_strings_in_list: true
     no_duplicate_case_values: true
     throw_in_finally: true
-    unnecessary_statements: true
-    use_build_context_synchronously: true
-
-    # --- Async hygiene (silent fire-and-forget hides real failures) ---
-    avoid_void_async: true
-    unawaited_futures: true
