@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../shared/widgets/game_scaffold.dart';
+
 class IntimacyMapScreen extends StatefulWidget {
   const IntimacyMapScreen({super.key});
 
@@ -423,96 +425,63 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
   // ---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        // Material 3 tints the AppBar background with surfaceTintColor on
-        // scroll and applies elevation overlay; both make the bar appear
-        // opaque even when backgroundColor is transparent. Disable them so
-        // the bar truly blends with the cosmic background as designed.
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
-          onPressed: () {
-            if (_showingReveal) {
-              setState(() => _showingReveal = false);
-            } else if (_gameStarted) {
-              _confirmExit();
-            } else {
-              context.pop();
-            }
+    return GameScaffold(
+      onBack: () {
+        if (_showingReveal) {
+          setState(() => _showingReveal = false);
+        } else if (_gameStarted) {
+          _confirmExit();
+        } else {
+          context.pop();
+        }
+      },
+      title: !_gameStarted
+          ? Text(
+              'games.intimacy_map.title'.tr(),
+              style: const TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                decoration: TextDecoration.none,
+              ),
+            )
+          : null,
+      onHelp: _showInstructions,
+      background: [
+        // Cosmic background
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color(0xFF0F0729),
+                Color(0xFF1A0A4A),
+                Color(0xFF0A0F2C),
+                Color(0xFF050818),
+              ],
+            ),
+          ),
+        ),
+        AnimatedBuilder(
+          animation: _bgController,
+          builder: (context, _) {
+            return CustomPaint(
+              size: Size.infinite,
+              painter: _ParticlesPainter(
+                particles: _particles,
+                progress: _bgController.value,
+              ),
+            );
           },
         ),
-        title: !_gameStarted
-            ? Text(
-                'games.intimacy_map.title'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              )
-            : null,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: Colors.white70),
-            onPressed: _showInstructions,
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          // Cosmic background
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F0729),
-                  Color(0xFF1A0A4A),
-                  Color(0xFF0A0F2C),
-                  Color(0xFF050818),
-                ],
-              ),
-            ),
-          ),
-          AnimatedBuilder(
-            animation: _bgController,
-            builder: (context, _) {
-              return CustomPaint(
-                size: Size.infinite,
-                painter: _ParticlesPainter(
-                  particles: _particles,
-                  progress: _bgController.value,
-                ),
-              );
-            },
-          ),
-          SafeArea(
-            // Defensive width clamp: the body can never be laid out wider than
-            // the physical screen — even if an ancestor hands down oversized or
-            // unbounded width constraints — which would otherwise crop content
-            // and push it off the right edge. Height is left untouched so the
-            // Expanded-based views keep filling the available space.
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.sizeOf(context).width,
-              ),
-              child: !_gameStarted
-                  ? _buildSetupView()
-                  : _showingReveal
-                      ? _buildRevealView()
-                      : _buildMapView(),
-            ),
-          ),
-        ],
-      ),
+      ],
+      body: !_gameStarted
+          ? _buildSetupView()
+          : _showingReveal
+              ? _buildRevealView()
+              : _buildMapView(),
     );
   }
 

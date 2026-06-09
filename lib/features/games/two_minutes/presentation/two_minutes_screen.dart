@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../shared/widgets/game_scaffold.dart';
+
 class TwoMinutesScreen extends StatefulWidget {
   const TwoMinutesScreen({super.key});
 
@@ -458,118 +460,87 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
   @override
   Widget build(BuildContext context) {
     final isUrgent = _challengeActive && _remainingSeconds <= 5 && !_isPaused;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        // Material 3 tints the AppBar background with surfaceTintColor on
-        // scroll and applies elevation overlay; both make the bar appear
-        // opaque even when backgroundColor is transparent. Disable them so
-        // the bar truly blends with the warm background as designed.
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
-          onPressed: () {
-            if (_gameStarted) {
-              _confirmExit();
-            } else {
-              context.pop();
-            }
-          },
-        ),
-        title: !_gameStarted
-            ? Text(
-                'games.two_minutes.title'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              )
-            : null,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: Colors.white70),
-            onPressed: _showRules,
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          // Warm sunset/candlelight gradient background
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 600),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: isUrgent
-                    ? const [
-                        Color(0xFF3D0F1A),
-                        Color(0xFF5C1B1B),
-                        Color(0xFF1A0A2E),
-                      ]
-                    : const [
-                        Color(0xFF2A0E2C),
-                        Color(0xFF3D1A2D),
-                        Color(0xFF4A1D40),
-                        Color(0xFF1A0A2E),
-                      ],
+    return GameScaffold(
+      onBack: () {
+        if (_gameStarted) {
+          _confirmExit();
+        } else {
+          context.pop();
+        }
+      },
+      title: !_gameStarted
+          ? Text(
+              'games.two_minutes.title'.tr(),
+              style: const TextStyle(
+                fontFamily: 'PlayfairDisplay',
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                decoration: TextDecoration.none,
               ),
+            )
+          : null,
+      onHelp: _showRules,
+      background: [
+        // Warm sunset/candlelight gradient background
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 600),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isUrgent
+                  ? const [
+                      Color(0xFF3D0F1A),
+                      Color(0xFF5C1B1B),
+                      Color(0xFF1A0A2E),
+                    ]
+                  : const [
+                      Color(0xFF2A0E2C),
+                      Color(0xFF3D1A2D),
+                      Color(0xFF4A1D40),
+                      Color(0xFF1A0A2E),
+                    ],
             ),
           ),
-          // Drifting embers
-          AnimatedBuilder(
-            animation: _bgEmbers,
+        ),
+        // Drifting embers
+        AnimatedBuilder(
+          animation: _bgEmbers,
+          builder: (context, _) {
+            return CustomPaint(
+              size: Size.infinite,
+              painter: _EmbersPainter(
+                embers: _embers,
+                progress: _bgEmbers.value,
+                intensity: _gameStarted ? 1.0 : 0.7,
+              ),
+            );
+          },
+        ),
+      ],
+      overlays: [
+        IgnorePointer(
+          child: AnimatedBuilder(
+            animation: _celebrate,
             builder: (context, _) {
+              if (_celebrate.value == 0) return const SizedBox.shrink();
               return CustomPaint(
                 size: Size.infinite,
-                painter: _EmbersPainter(
-                  embers: _embers,
-                  progress: _bgEmbers.value,
-                  intensity: _gameStarted ? 1.0 : 0.7,
+                painter: _ConfettiPainter(
+                  confetti: _confetti,
+                  progress: _celebrate.value,
                 ),
               );
             },
           ),
-          SafeArea(
-            // Defensive width clamp: the body can never be laid out wider than
-            // the physical screen — even if an ancestor hands down oversized or
-            // unbounded width constraints — which would otherwise crop content
-            // and push it off the right edge. Height is left untouched so the
-            // Expanded-based views keep filling the available space.
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.sizeOf(context).width,
-              ),
-              child: !_gameStarted
-                  ? _buildSetupView()
-                  : _challengeActive
-                      ? _buildChallengeView()
-                      : _buildPreChallengeView(),
-            ),
-          ),
-          IgnorePointer(
-            child: AnimatedBuilder(
-              animation: _celebrate,
-              builder: (context, _) {
-                if (_celebrate.value == 0) return const SizedBox.shrink();
-                return CustomPaint(
-                  size: Size.infinite,
-                  painter: _ConfettiPainter(
-                    confetti: _confetti,
-                    progress: _celebrate.value,
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
+      body: !_gameStarted
+          ? _buildSetupView()
+          : _challengeActive
+              ? _buildChallengeView()
+              : _buildPreChallengeView(),
     );
   }
 
