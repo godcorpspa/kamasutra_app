@@ -427,6 +427,12 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        // Material 3 tints the AppBar background with surfaceTintColor on
+        // scroll and applies elevation overlay; both make the bar appear
+        // opaque even when backgroundColor is transparent. Disable them so
+        // the bar truly blends with the cosmic background as designed.
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
