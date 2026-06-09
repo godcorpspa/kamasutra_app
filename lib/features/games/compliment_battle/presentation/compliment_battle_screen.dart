@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../domain/compliment_scoring.dart';
+
 class ComplimentBattleScreen extends StatefulWidget {
   const ComplimentBattleScreen({super.key});
 
@@ -348,45 +350,17 @@ class _ComplimentBattleScreenState extends State<ComplimentBattleScreen>
   void _judgeCompliment(int judgment) {
     HapticFeedback.heavyImpact();
 
-    // base points by judgment
-    int points = 0;
-    if (judgment == 2) {
-      points = 12;
-    } else if (judgment == 1) {
-      points = 6;
-    } else {
-      points = 0;
-    }
-
-    // time bonus (only if non-zero judgment)
-    if (judgment > 0) {
-      points += (_timeRemaining / 4).ceil();
-      _totalCompliments++;
-    }
-
-    // streak handling
     final currentStreak =
         _currentPlayer == 1 ? _player1Streak : _player2Streak;
-    int newStreak;
-    int displayPoints = points;
-    if (judgment > 0) {
-      newStreak = currentStreak + 1;
-      // streak multiplier: 3+ streak → 1.5x, 5+ → 2x
-      double multiplier = 1.0;
-      if (newStreak >= 5) {
-        multiplier = 2.0;
-      } else if (newStreak >= 3) {
-        multiplier = 1.5;
-      }
-      displayPoints = (points * multiplier).round();
-    } else {
-      newStreak = 0;
-    }
-
-    // bonus round 2x
-    if (_bonusRound && judgment > 0) {
-      displayPoints *= 2;
-    }
+    final result = ComplimentScoring.judge(
+      judgment: judgment,
+      timeRemaining: _timeRemaining,
+      currentStreak: currentStreak,
+      bonusRound: _bonusRound,
+    );
+    final displayPoints = result.points;
+    final newStreak = result.newStreak;
+    if (result.complimentRegistered) _totalCompliments++;
 
     setState(() {
       if (_currentPlayer == 1) {
