@@ -1367,6 +1367,10 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
           final boxTop = (availableH - boxH) / 2;
 
           return Stack(
+            // Let edge touch-points (e.g. hands at x=0.10) and the partner
+            // mini-dot (drawn at a negative offset) paint outside the box
+            // instead of being clipped.
+            clipBehavior: Clip.none,
             children: [
               // Silhouette
               Positioned(

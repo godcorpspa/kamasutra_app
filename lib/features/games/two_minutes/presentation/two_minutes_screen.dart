@@ -1595,12 +1595,15 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
             child: Center(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  // Choose the largest square that fits, capped at 280
+                  // Largest square that fits the available box, capped at 280.
+                  // We must NOT force a lower bound larger than the available
+                  // space, otherwise the ring overflows into the description /
+                  // controls on short screens (RenderFlex overflow + clipping).
                   final maxSize = min(
                     constraints.maxWidth,
                     constraints.maxHeight,
                   );
-                  final ringSize = maxSize.clamp(180.0, 280.0).toDouble();
+                  final ringSize = min(maxSize, 280.0);
                   final innerSize = ringSize * 0.78;
                   final progressSize = ringSize * 0.85;
                   return AnimatedBuilder(
