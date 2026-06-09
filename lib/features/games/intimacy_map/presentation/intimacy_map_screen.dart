@@ -489,11 +489,21 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
             },
           ),
           SafeArea(
-            child: !_gameStarted
-                ? _buildSetupView()
-                : _showingReveal
-                    ? _buildRevealView()
-                    : _buildMapView(),
+            // Defensive width clamp: the body can never be laid out wider than
+            // the physical screen — even if an ancestor hands down oversized or
+            // unbounded width constraints — which would otherwise crop content
+            // and push it off the right edge. Height is left untouched so the
+            // Expanded-based views keep filling the available space.
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width,
+              ),
+              child: !_gameStarted
+                  ? _buildSetupView()
+                  : _showingReveal
+                      ? _buildRevealView()
+                      : _buildMapView(),
+            ),
           ),
         ],
       ),
