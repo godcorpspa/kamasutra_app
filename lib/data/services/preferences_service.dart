@@ -103,6 +103,17 @@ class PreferencesService {
     }
   }
 
+  // Per-device random salt for the PIN hash (scoped per user). Generated once
+  // and reused, so a stolen prefs file can't be matched against a precomputed
+  // rainbow table shared across all installs (the old hard-coded salt could).
+  String get _pinSaltKey {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    return uid != null ? 'pin_salt_$uid' : 'pin_salt_anonymous';
+  }
+
+  String? get pinSalt => getString(_pinSaltKey);
+  Future<void> setPinSalt(String value) => setString(_pinSaltKey, value);
+
   // Biometric is scoped per Firebase user to avoid leaking across accounts
   String get _biometricKey {
     final uid = FirebaseAuth.instance.currentUser?.uid;

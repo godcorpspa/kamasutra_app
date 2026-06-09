@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
+import 'dart:math';
 import 'package:crypto/crypto.dart';
 
 import '../../../app/theme.dart';
@@ -64,8 +65,8 @@ class _PinScreenState extends State<PinScreen> {
       if (_isConfirming) {
         // Confirm PIN matches
         if (_enteredPin == _firstPin) {
-          // Save PIN hash
-          final hash = _hashPin(_enteredPin);
+          // Save PIN hash (per-device salt + PBKDF2)
+          final hash = await _hashPin(_enteredPin);
           await PreferencesService.instance.setPinHash(hash);
           await PreferencesService.instance.setPinEnabled(true);
           UserDataSyncService.instance.syncSettingsPatch({'pin_enabled': true});
@@ -89,10 +90,9 @@ class _PinScreenState extends State<PinScreen> {
       }
     } else {
       // Verify existing PIN
-      final storedHash = PreferencesService.instance.pinHash;
-      final enteredHash = _hashPin(_enteredPin);
+      final ok = await _verifyAgainstStored(_enteredPin);
 
-      if (storedHash == enteredHash) {
+      if (ok) {
         _onAuthenticationSuccess();
       } else {
         setState(() {
@@ -104,9 +104,104 @@ class _PinScreenState extends State<PinScreen> {
     }
   }
 
-  String _hashPin(String pin) {
-    final bytes = utf8.encode(pin + 'kamasutra_salt_2024');
-    return sha256.convert(bytes).toString();
+  // Legacy salt — kept only to verify (and then migrate) PINs created before
+  // the per-device salt + PBKDF2 scheme was introduced.
+  static const String _legacySalt = 'kamasutra_salt_2024';
+
+  // Number of PBKDF2 iterations. A 4-digit PIN has a tiny keyspace, so this
+  // only slows offline guessing; the real protection is keeping the device
+  // out of an attacker's hands. Hardware-backed storage is a follow-up.
+  static const int _pbkdf2Iterations = 100000;
+
+  /// Verifies [pin] against the stored hash, transparently upgrading a
+  /// legacy (global-salt sha256) hash to the new scheme on first success so
+  /// existing users are never locked out.
+  Future<bool> _verifyAgainstStored(String pin) async {
+    final stored = PreferencesService.instance.pinHash;
+    if (stored == null) return false;
+
+    if (stored.startsWith('v2:')) {
+      final salt = await _ensureDeviceSalt();
+      return _constantTimeEquals(stored, await _hashPin(pin, salt: salt));
+    }
+
+    // Legacy hash: sha256(pin + global salt).
+    final legacy =
+        sha256.convert(utf8.encode(pin + _legacySalt)).toString();
+    if (_constantTimeEquals(stored, legacy)) {
+      // Migrate to the new scheme.
+      await PreferencesService.instance.setPinHash(await _hashPin(pin));
+      return true;
+    }
+    return false;
+  }
+
+  /// Hashes [pin] with PBKDF2-HMAC-SHA256 and a per-device salt. Returns a
+  /// versioned, base64-encoded digest (`v2:...`).
+  Future<String> _hashPin(String pin, {String? salt}) async {
+    final saltB64 = salt ?? await _ensureDeviceSalt();
+    final dk = _pbkdf2(
+      utf8.encode(pin),
+      base64Decode(saltB64),
+      _pbkdf2Iterations,
+      32,
+    );
+    return 'v2:${base64Encode(dk)}';
+  }
+
+  /// Reads the per-device salt, creating a cryptographically-random one the
+  /// first time.
+  Future<String> _ensureDeviceSalt() async {
+    final prefs = PreferencesService.instance;
+    final existing = prefs.pinSalt;
+    if (existing != null && existing.isNotEmpty) return existing;
+
+    final rnd = Random.secure();
+    final bytes = List<int>.generate(16, (_) => rnd.nextInt(256));
+    final saltB64 = base64Encode(bytes);
+    await prefs.setPinSalt(saltB64);
+    return saltB64;
+  }
+
+  /// Standard PBKDF2-HMAC-SHA256.
+  List<int> _pbkdf2(
+    List<int> password,
+    List<int> salt,
+    int iterations,
+    int keyLength,
+  ) {
+    final prf = Hmac(sha256, password);
+    final numBlocks = (keyLength / 32).ceil();
+    final derived = <int>[];
+
+    for (var block = 1; block <= numBlocks; block++) {
+      final blockIndex = [
+        (block >> 24) & 0xff,
+        (block >> 16) & 0xff,
+        (block >> 8) & 0xff,
+        block & 0xff,
+      ];
+      var u = prf.convert([...salt, ...blockIndex]).bytes;
+      final t = List<int>.from(u);
+      for (var i = 1; i < iterations; i++) {
+        u = prf.convert(u).bytes;
+        for (var j = 0; j < t.length; j++) {
+          t[j] ^= u[j];
+        }
+      }
+      derived.addAll(t);
+    }
+    return derived.sublist(0, keyLength);
+  }
+
+  /// Length-constant comparison to avoid leaking via timing.
+  bool _constantTimeEquals(String a, String b) {
+    if (a.length != b.length) return false;
+    var diff = 0;
+    for (var i = 0; i < a.length; i++) {
+      diff |= a.codeUnitAt(i) ^ b.codeUnitAt(i);
+    }
+    return diff == 0;
   }
 
   void _onAuthenticationSuccess() {
