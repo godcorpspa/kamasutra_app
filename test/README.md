@@ -9,7 +9,8 @@ test/
 │   ├── models/
 │   │   └── position_filter_apply_test.dart     # Catalog filter matching
 │   ├── providers/
-│   │   └── position_filter_notifier_test.dart  # Riverpod StateNotifier logic
+│   │   ├── position_filter_notifier_test.dart  # Riverpod StateNotifier logic
+│   │   └── shuffle_session_test.dart           # Shuffle navigation value object
 │   └── services/
 │       └── pin_hasher_test.dart                # PIN hashing + legacy migration
 ├── features/
