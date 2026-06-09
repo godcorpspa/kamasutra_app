@@ -574,6 +574,11 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
+      // Material 3 paints an opaque surfaceTint band over a
+      // transparent AppBar on scroll; disable it so the bar blends
+      // with the game background as designed.
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
       elevation: 0,
       title: ShaderMask(
         shaderCallback: (b) => const LinearGradient(

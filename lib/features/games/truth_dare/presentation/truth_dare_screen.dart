@@ -173,6 +173,11 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        // Material 3 paints an opaque surfaceTint band over a
+        // transparent AppBar on scroll; disable it so the bar blends
+        // with the game background as designed.
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),

@@ -69,6 +69,11 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
       appBar: AppBar(
         title: Text('games.goose_game.spicy_goose_game_title'.tr()),
         backgroundColor: Colors.transparent,
+        // Material 3 paints an opaque surfaceTint band over a
+        // transparent AppBar on scroll; disable it so the bar blends
+        // with the game background as designed.
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
         elevation: 0,
         actions: [
           TextButton.icon(
