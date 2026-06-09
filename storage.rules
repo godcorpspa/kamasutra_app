@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Firebase Storage rules for Kamasutra & Couple Games.
+//
+// The app does not currently use Firebase Storage (no firebase_storage
+// dependency). These rules lock the bucket down: a signed-in user may only
+// access files under their own users/{uid}/ prefix, and every other path is
+// denied. If/when Storage is introduced, scope new paths the same way.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /users/{uid}/{allPaths=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // Default deny.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

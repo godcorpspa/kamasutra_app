@@ -1,0 +1,36 @@
+rules_version = '2';
+
+// Firestore security rules for Kamasutra & Couple Games.
+//
+// Data model (see lib/data/services/user_data_sync_service.dart):
+//   users/{uid}                      -> profile (email, displayName, timestamps)
+//     data/{settings|favorites|progress}
+//     positions/{positionId}
+//     history/{autoId}               -> intimate data (notes, reaction)
+//     sessions/{sessionId}
+//
+// Principle: a signed-in user may only ever read or write documents under
+// their OWN users/{uid} subtree. Everything else is denied by default.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: request is authenticated and owns the targeted uid.
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /users/{uid} {
+      allow read, write: if isOwner(uid);
+
+      // All nested data (data/*, positions/*, history/*, sessions/*).
+      match /{document=**} {
+        allow read, write: if isOwner(uid);
+      }
+    }
+
+    // Deny everything not explicitly matched above.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

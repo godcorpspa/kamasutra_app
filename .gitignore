@@ -43,3 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase config / secrets — must NOT be committed.
+# Obtain these from the Firebase console (or your CI secret store) per machine.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+.firebaserc
+**/*.keystore
+**/*.jks
+key.properties

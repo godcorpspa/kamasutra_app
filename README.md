@@ -1,16 +1,37 @@
-# kamasutra_app_new
+# Kamasutra & Couple Games
 
-A new Flutter project.
+A Flutter app of intimate couple games and a position catalog, with optional
+Firebase-backed login and multi-device cloud sync.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+```bash
+flutter pub get
+flutter run
+```
 
-A few resources to get you started if this is your first Flutter project:
+## Firebase setup (required for login / cloud sync)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Firebase config files contain project credentials and are **not** committed to
+the repository. Each developer / CI environment must provide them locally:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- `android/app/google-services.json` — from Firebase console → Project settings
+  → your Android app.
+- `ios/Runner/GoogleService-Info.plist` — same, for the iOS app.
+
+Without these files the app still runs, but login and cloud sync are disabled
+(Firebase initialization fails open — see `lib/main.dart`).
+
+### Security rules
+
+Firestore and Storage rules live in `firestore.rules` and `storage.rules`.
+They restrict every read/write to the authenticated owner's `users/{uid}`
+subtree. Deploy them with:
+
+```bash
+firebase deploy --only firestore:rules,storage
+```
+
+> ⚠️ If a Firebase API key was ever committed to git history, rotate it in the
+> Firebase console (Project settings → General → Web API key / regenerate) and
+> purge it from history before publishing the repository.
