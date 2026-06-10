@@ -13,13 +13,10 @@ test/
 │   │   └── shuffle_session_test.dart           # Shuffle navigation value object
 │   └── services/
 │       └── pin_hasher_test.dart                # PIN hashing + legacy migration
-├── features/
-│   └── games/
-│       └── compliment_battle/
-│           └── compliment_scoring_test.dart    # Scoring formula + multipliers
-└── shared/
-    └── widgets/
-        └── game_scaffold_test.dart             # Shared game shell (smoke)
+└── features/
+    └── games/
+        └── compliment_battle/
+            └── compliment_scoring_test.dart    # Scoring formula + multipliers
 ```
 
 ## Running

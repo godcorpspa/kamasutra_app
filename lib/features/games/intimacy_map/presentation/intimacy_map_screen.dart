@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../shared/widgets/game_scaffold.dart';
 
 class IntimacyMapScreen extends StatefulWidget {
   const IntimacyMapScreen({super.key});
@@ -425,63 +424,84 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
   // ---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
-    return GameScaffold(
-      onBack: () {
-        if (_showingReveal) {
-          setState(() => _showingReveal = false);
-        } else if (_gameStarted) {
-          _confirmExit();
-        } else {
-          context.pop();
-        }
-      },
-      title: !_gameStarted
-          ? Text(
-              'games.intimacy_map.title'.tr(),
-              style: const TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                decoration: TextDecoration.none,
-              ),
-            )
-          : null,
-      onHelp: _showInstructions,
-      background: [
-        // Cosmic background
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color(0xFF0F0729),
-                Color(0xFF1A0A4A),
-                Color(0xFF0A0F2C),
-                Color(0xFF050818),
-              ],
-            ),
-          ),
-        ),
-        AnimatedBuilder(
-          animation: _bgController,
-          builder: (context, _) {
-            return CustomPaint(
-              size: Size.infinite,
-              painter: _ParticlesPainter(
-                particles: _particles,
-                progress: _bgController.value,
-              ),
-            );
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        // Material 3 paints an opaque surfaceTint band over a transparent
+        // AppBar on scroll; disable it so the bar blends with the game
+        // background as designed.
+        surfaceTintColor: Colors.transparent,
+        scrolledUnderElevation: 0,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
+          onPressed: () {
+            if (_showingReveal) {
+              setState(() => _showingReveal = false);
+            } else if (_gameStarted) {
+              _confirmExit();
+            } else {
+              context.pop();
+            }
           },
         ),
-      ],
-      body: !_gameStarted
-          ? _buildSetupView()
-          : _showingReveal
-              ? _buildRevealView()
-              : _buildMapView(),
+        title: !_gameStarted
+            ? Text(
+                'games.intimacy_map.title'.tr(),
+                style: const TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  decoration: TextDecoration.none,
+                ),
+              )
+            : null,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline, color: Colors.white70),
+            onPressed: _showInstructions,
+          ),
+        ],
+      ),
+      body: Stack(
+        children: [
+          // Cosmic background
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF0F0729),
+                  Color(0xFF1A0A4A),
+                  Color(0xFF0A0F2C),
+                  Color(0xFF050818),
+                ],
+              ),
+            ),
+          ),
+          AnimatedBuilder(
+            animation: _bgController,
+            builder: (context, _) {
+              return CustomPaint(
+                size: Size.infinite,
+                painter: _ParticlesPainter(
+                  particles: _particles,
+                  progress: _bgController.value,
+                ),
+              );
+            },
+          ),
+          // Main content
+          !_gameStarted
+              ? _buildSetupView()
+              : _showingReveal
+                  ? _buildRevealView()
+                  : _buildMapView(),
+        ],
+      ),
     );
   }
 
