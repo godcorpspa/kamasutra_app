@@ -496,14 +496,17 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen>
           ),
           // Main content
           SafeArea(
-            // Defensive width clamp: the body can never be laid out wider
-            // than the physical screen — even if an ancestor hands down
-            // oversized or unbounded width constraints — which would
-            // otherwise crop content and push it off the right edge.
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.sizeOf(context).width,
-              ),
+            // Force tight horizontal constraints down the body subtree.
+            // Stack defaults to StackFit.loose, which lets the inner
+            // SingleChildScrollView / Column shrink-wrap to the widest child
+            // — then the Column's centered children render off-axis from the
+            // screen, and tap targets land where the layout *thinks* the
+            // widgets are rather than where the user sees them. A
+            // double-infinity SizedBox is the smallest fix: bounded by the
+            // SafeArea (= screen width), it makes the body always exactly
+            // screen-wide.
+            child: SizedBox(
+              width: double.infinity,
               child: !_gameStarted
                   ? _buildSetupView()
                   : _showingReveal
