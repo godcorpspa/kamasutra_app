@@ -21,7 +21,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // Getter, non campo: FirebaseAuth.instance lancia in modalità locale
+  // (Firebase non inizializzato) e non deve far crashare il build().
+  FirebaseAuth get _auth => FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   
   bool _isLoading = false;

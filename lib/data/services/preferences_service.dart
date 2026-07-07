@@ -80,14 +80,25 @@ class PreferencesService {
 
   // ============ PIN & SECURITY ============
 
-  // PIN keys are scoped per Firebase user to avoid leaking across accounts
+  // PIN keys are scoped per Firebase user to avoid leaking across accounts.
+  // FirebaseAuth.instance THROWS when Firebase never initialised (local-only
+  // mode) and these getters run on every router redirect, so the uid lookup
+  // must be guarded: without Firebase everything scopes to "anonymous".
+  String? get _currentUid {
+    try {
+      return FirebaseAuth.instance.currentUser?.uid;
+    } catch (_) {
+      return null;
+    }
+  }
+
   String get _pinEnabledKey {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _currentUid;
     return uid != null ? 'pin_enabled_$uid' : 'pin_enabled_anonymous';
   }
 
   String get _pinHashKey {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _currentUid;
     return uid != null ? 'pin_hash_$uid' : 'pin_hash_anonymous';
   }
 
@@ -107,7 +118,7 @@ class PreferencesService {
   // and reused, so a stolen prefs file can't be matched against a precomputed
   // rainbow table shared across all installs (the old hard-coded salt could).
   String get _pinSaltKey {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _currentUid;
     return uid != null ? 'pin_salt_$uid' : 'pin_salt_anonymous';
   }
 
@@ -116,7 +127,7 @@ class PreferencesService {
 
   // Biometric is scoped per Firebase user to avoid leaking across accounts
   String get _biometricKey {
-    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final uid = _currentUid;
     return uid != null ? 'biometric_enabled_$uid' : 'biometric_enabled_anonymous';
   }
 

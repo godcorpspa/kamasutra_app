@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../data/services/auth_service.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/services/user_data_sync_service.dart';
 import '../../../data/services/audio_service.dart';
@@ -159,7 +160,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildAccountSection() {
-    final user = FirebaseAuth.instance.currentUser;
+    // safeCurrentUser: la schermata è raggiungibile anche in modalità locale
+    // (Firebase non inizializzato), dove FirebaseAuth.instance lancerebbe.
+    final user = AuthService.safeCurrentUser;
     final email = user?.email ?? '—';
 
     return Column(
@@ -192,7 +195,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showChangePasswordDialog() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = AuthService.safeCurrentUser;
     if (user?.email == null) return;
 
     showDialog(
@@ -267,7 +270,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Future<void> _performDeleteAccount() async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = AuthService.safeCurrentUser;
     if (user == null) return;
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -318,7 +321,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showReauthDialog() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = AuthService.safeCurrentUser;
     if (user == null) return;
 
     final isGoogleUser = user.providerData.any((p) => p.providerId == 'google.com');
@@ -409,7 +412,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         idToken: googleAuth.idToken,
       );
 
-      final user = FirebaseAuth.instance.currentUser!;
+      final user = AuthService.safeCurrentUser;
+      if (user == null) return;
       await user.reauthenticateWithCredential(credential);
       await _performDeleteAccount();
     } catch (e) {
@@ -426,9 +430,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Future<void> _reauthWithPasswordAndDelete(String password) async {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
-      final user = FirebaseAuth.instance.currentUser!;
+      final user = AuthService.safeCurrentUser;
+      if (user?.email == null) return;
       final credential = EmailAuthProvider.credential(
-        email: user.email!,
+        email: user!.email!,
         password: password,
       );
       await user.reauthenticateWithCredential(credential);

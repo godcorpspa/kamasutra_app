@@ -3,7 +3,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // Getter (non campo): FirebaseAuth.instance LANCIA se Firebase.initializeApp
+  // è fallita (modalità locale, vedi main.dart), quindi non va mai toccato
+  // alla costruzione del singleton.
+  FirebaseAuth get _auth => FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // Singleton
@@ -11,11 +14,32 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService._internal();
 
+  /// Utente corrente senza mai lanciare: in modalità locale (Firebase non
+  /// inizializzato) ritorna semplicemente null. Da usare in ogni code path
+  /// raggiungibile anche offline (router, settings, preferenze).
+  static User? get safeCurrentUser {
+    try {
+      return FirebaseAuth.instance.currentUser;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Come [FirebaseAuth.authStateChanges], ma in modalità locale emette un
+  /// singolo null invece di lanciare.
+  static Stream<User?> safeAuthStateChanges() {
+    try {
+      return FirebaseAuth.instance.authStateChanges();
+    } catch (_) {
+      return Stream<User?>.value(null);
+    }
+  }
+
   // Stream dello stato utente
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<User?> get authStateChanges => safeAuthStateChanges();
 
   // Utente corrente
-  User? get currentUser => _auth.currentUser;
+  User? get currentUser => safeCurrentUser;
 
   // Verifica se loggato
   bool get isLoggedIn => currentUser != null;
