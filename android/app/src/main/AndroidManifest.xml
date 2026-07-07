@@ -1,7 +1,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for Firebase Auth / Firestore / Google Sign-In. Debug and
+         profile builds inherit it from their own manifests, but RELEASE
+         builds only see this file: without this line the released app has
+         no network access at all. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- allowBackup=false: local data (SharedPreferences) holds the intimate
+         history notes and the PIN hash. Auto Backup would silently copy them
+         to the user's Google Drive, breaking the "notes never leave the
+         device" guarantee, so this app opts out of backup entirely. -->
     <application
         android:label="Kamasutra"
         android:name="${applicationName}"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
