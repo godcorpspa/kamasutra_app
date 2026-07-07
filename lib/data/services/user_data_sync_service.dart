@@ -303,18 +303,23 @@ class UserDataSyncService {
     if (prefs.getBool(flag) == true) return;
 
     try {
+      // orderBy('notes') restituisce SOLO i documenti che hanno quel campo,
+      // quindi ogni pagina contiene esattamente i prossimi doc da pulire e
+      // il loop termina quando non ne restano. (La vecchia versione leggeva
+      // sempre la stessa prima pagina senza cursore: se le note stavano
+      // oltre il documento 450 non venivano MAI rimosse, ma il flag di
+      // completamento veniva settato comunque.)
       // Paginate so the batch never exceeds Firestore's 500-write cap.
       while (true) {
-        final snap = await _historyCol(user.uid).limit(450).get();
-        final docs = snap.docs.where((d) => d.data().containsKey('notes'));
-        if (docs.isEmpty) break;
+        final snap =
+            await _historyCol(user.uid).orderBy('notes').limit(450).get();
+        if (snap.docs.isEmpty) break;
 
         final batch = _db.batch();
-        for (final d in docs) {
+        for (final d in snap.docs) {
           batch.update(d.reference, {'notes': FieldValue.delete()});
         }
         await batch.commit();
-        if (snap.docs.length < 450) break;
       }
       await prefs.setBool(flag, true);
     } catch (e) {
