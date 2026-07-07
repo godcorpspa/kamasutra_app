@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import '../data/models/goose_game.dart';
+import '../data/providers/firebase_status_provider.dart';
+import '../data/services/auth_service.dart';
 import '../data/models/position.dart';
 import '../features/auth/presentation/login_screen.dart';
 import '../features/auth/presentation/email_verification_screen.dart';
@@ -79,75 +80,70 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Router provider
 final routerProvider = Provider<GoRouter>((ref) {
+  // Quando Firebase non è disponibile (init fallita in main.dart) l'app gira
+  // in modalità SOLO LOCALE: non esiste un login da imporre, quindi l'utente
+  // salta la schermata di login ed entra direttamente nel flusso locale
+  // (age gate → PIN → onboarding → catalogo).
+  final firebaseAvailable = ref.watch(firebaseAvailableProvider);
+
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.login,
     debugLogDiagnostics: true,
-    
-    // Redirect logic
-    redirect: (context, state) async {
+
+    // Redirect logic: un'unica pipeline con le tappe in ordine di priorità
+    // (login → verifica email → age gate → PIN → onboarding → app).
+    redirect: (context, state) {
       final prefs = PreferencesService.instance;
-      
-      // Verifica autenticazione Firebase
-      final isLoggedIn = FirebaseAuth.instance.currentUser != null;
-      
+
+      final isLoggedIn =
+          firebaseAvailable && AuthService.safeCurrentUser != null;
+      // Può usare l'app: utente loggato, oppure modalità solo locale.
+      final canUseApp = isLoggedIn || !firebaseAvailable;
+
       final isAgeVerified = prefs.isAgeVerified;
       final hasCompletedOnboarding = prefs.hasCompletedOnboarding;
-      final isPinEnabled = prefs.isPinEnabled;
       final isAuthenticated = prefs.isSessionAuthenticated;
       // Authentication is required if PIN is enabled
-      final requiresAuth = isPinEnabled;
+      final requiresAuth = prefs.isPinEnabled;
 
-      final isOnLogin = state.matchedLocation == AppRoutes.login;
-      final isOnAgeGate = state.matchedLocation == AppRoutes.ageGate;
-      final isOnOnboarding = state.matchedLocation == AppRoutes.onboarding;
-      final isOnPin = state.matchedLocation == AppRoutes.pin;
+      final location = state.matchedLocation;
+      final isOnLogin = location == AppRoutes.login;
+      final isOnVerifyEmail = location == AppRoutes.emailVerification;
+      final isOnAgeGate = location == AppRoutes.ageGate;
+      final isOnOnboarding = location == AppRoutes.onboarding;
 
-      // Non loggato -> vai al login
-      if (!isLoggedIn && !isOnLogin) {
-        return AppRoutes.login;
+      // Gate di verifica email: ci si arriva subito dopo una registrazione
+      // fresca. La schermata gestisce da sé tutte le uscite (verificato →
+      // avanti, annulla → cancella account e torna al login), quindi il
+      // router NON deve mai redirigere altrove chi ci si trova: farlo
+      // permetteva ai nuovi account di saltare la verifica (l'age gate
+      // scattava prima e portava dritti nell'app).
+      if (isOnVerifyEmail) {
+        return isLoggedIn ? null : AppRoutes.login;
       }
 
-      // Loggato ma sulla pagina login -> procedi
-      if (isLoggedIn && isOnLogin) {
-        if (!isAgeVerified) {
-          return AppRoutes.ageGate;
-        }
-        if (requiresAuth && !isAuthenticated) {
-          return AppRoutes.pin;
-        }
-        if (!hasCompletedOnboarding) {
-          return AppRoutes.onboarding;
-        }
+      // Non loggato (e il login è possibile) -> vai al login.
+      if (!canUseApp) {
+        return isOnLogin ? null : AppRoutes.login;
+      }
+
+      // Da qui in poi l'utente può usare l'app: percorri le tappe in ordine.
+      if (!isAgeVerified) {
+        return isOnAgeGate ? null : AppRoutes.ageGate;
+      }
+      if (requiresAuth && !isAuthenticated) {
+        return location == AppRoutes.pin ? null : AppRoutes.pin;
+      }
+      if (!hasCompletedOnboarding) {
+        return isOnOnboarding ? null : AppRoutes.onboarding;
+      }
+
+      // Onboarding completo: le schermate d'ingresso non sono più valide.
+      if (isOnLogin || isOnAgeGate || isOnOnboarding) {
         return AppRoutes.catalog;
       }
 
-      // Non age verified -> age gate (solo se loggato)
-      if (isLoggedIn && !isAgeVerified && !isOnAgeGate && !isOnLogin) {
-        return AppRoutes.ageGate;
-      }
-
-      // Age verified but on age gate -> move on
-      if (isAgeVerified && isOnAgeGate) {
-        if (requiresAuth && !isAuthenticated) {
-          return AppRoutes.pin;
-        }
-        if (!hasCompletedOnboarding) {
-          return AppRoutes.onboarding;
-        }
-        return AppRoutes.catalog;
-      }
-
-      // PIN/biometric required but not authenticated
-      if (requiresAuth && !isAuthenticated && !isOnPin && !isOnAgeGate && !isOnLogin) {
-        return AppRoutes.pin;
-      }
-
-      // Onboarding not completed
-      if (!hasCompletedOnboarding && !isOnOnboarding && !isOnAgeGate && !isOnPin && !isOnLogin) {
-        return AppRoutes.onboarding;
-      }
-      
       return null;
     },
     
