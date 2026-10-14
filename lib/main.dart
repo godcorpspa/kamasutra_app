@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +13,15 @@ import 'data/services/audio_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
+  // Bundled fonts are SIL OFL 1.1: their license must ship with the app.
+  LicenseRegistry.addLicense(() async* {
+    for (final family in const ['PlayfairDisplay', 'DMSans']) {
+      final text = await rootBundle.loadString('assets/fonts/OFL-$family.txt');
+      yield LicenseEntryWithLineBreaks([family], text);
+    }
+  });
+
   // Initialize localization
   await EasyLocalization.ensureInitialized();
   

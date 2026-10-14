@@ -42,19 +42,25 @@ final _games = <String, Widget Function()>{
   'mirror_challenge': () => const MirrorChallengeScreen(),
 };
 
-/// Font files declared in pubspec.yaml, per family.
-const _appFonts = <String, List<String>>{
-  'DMSans': [
-    'assets/fonts/DMSans-Regular.ttf',
-    'assets/fonts/DMSans-Medium.ttf',
-    'assets/fonts/DMSans-Bold.ttf',
-  ],
-  'PlayfairDisplay': [
-    'assets/fonts/PlayfairDisplay-Regular.ttf',
-    'assets/fonts/PlayfairDisplay-Bold.ttf',
-    'assets/fonts/PlayfairDisplay-Italic.ttf',
-  ],
-};
+/// Font files declared in pubspec.yaml, per family — read from the pubspec
+/// itself so the test always loads exactly what the app bundles.
+Map<String, List<String>> _appFonts() {
+  final families = <String, List<String>>{};
+  String? current;
+  for (final line in File('pubspec.yaml').readAsLinesSync()) {
+    final family = RegExp(r'^\s*- family:\s*(\S+)').firstMatch(line);
+    if (family != null) {
+      current = family.group(1)!;
+      families[current] = [];
+      continue;
+    }
+    final asset = RegExp(r'^\s*- asset:\s*(\S+)').firstMatch(line);
+    if (asset != null && current != null) {
+      families[current]!.add(asset.group(1)!);
+    }
+  }
+  return families;
+}
 
 /// True when [bytes] start with a TrueType/OpenType signature.
 bool _isFont(Uint8List bytes) {
@@ -103,7 +109,7 @@ void main() {
           File('${material.path}/Roboto-$name.ttf').readAsBytesSync(),
     ];
     await _loadFont('Roboto', roboto);
-    for (final entry in _appFonts.entries) {
+    for (final entry in _appFonts().entries) {
       final valid = [
         for (final path in entry.value)
           if (_isFont(File(path).readAsBytesSync())) File(path).readAsBytesSync(),

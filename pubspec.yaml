@@ -73,21 +73,43 @@ flutter:
     - assets/audio/
     - assets/lang/
     - assets/positions/
+    - assets/fonts/OFL-PlayfairDisplay.txt
+    - assets/fonts/OFL-DMSans.txt
 
+  # Fonts are licensed under the SIL OFL 1.1 (see assets/fonts/OFL-*.txt,
+  # registered with LicenseRegistry in main.dart).
   fonts:
     - family: PlayfairDisplay
       fonts:
         - asset: assets/fonts/PlayfairDisplay-Regular.ttf
-        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
-          weight: 700
         - asset: assets/fonts/PlayfairDisplay-Italic.ttf
           style: italic
+        - asset: assets/fonts/PlayfairDisplay-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/PlayfairDisplay-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/PlayfairDisplay-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/PlayfairDisplay-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/PlayfairDisplay-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/PlayfairDisplay-BoldItalic.ttf
+          weight: 700
+          style: italic
+    # DM Sans 18pt is the optical size cut designed for UI/body text.
     - family: DMSans
       fonts:
-        - asset: assets/fonts/DMSans-Regular.ttf
-        - asset: assets/fonts/DMSans-Medium.ttf
+        - asset: assets/fonts/DMSans_18pt-Regular.ttf
+        - asset: assets/fonts/DMSans_18pt-Italic.ttf
+          style: italic
+        - asset: assets/fonts/DMSans_18pt-Medium.ttf
           weight: 500
-        - asset: assets/fonts/DMSans-Bold.ttf
+        - asset: assets/fonts/DMSans_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/DMSans_18pt-Bold.ttf
           weight: 700
 
 flutter_launcher_icons:
