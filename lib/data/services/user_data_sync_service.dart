@@ -18,7 +18,13 @@ class UserDataSyncService {
 
   static final UserDataSyncService instance = UserDataSyncService._internal();
 
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  // Getter, not a field: FirebaseFirestore.instance THROWS when Firebase
+  // never initialised (local-only mode, see main.dart). As a field it ran on
+  // the first `UserDataSyncService.instance` access — which the catalog,
+  // age gate, onboarding, PIN and settings screens all do — so local-only
+  // mode crashed on those paths. Every method bails out on `_uid == null`
+  // before touching `_db`, and `_uid` is only set once Firebase is up.
+  FirebaseFirestore get _db => FirebaseFirestore.instance;
   StreamSubscription<User?>? _authSub;
 
   String? _uid;

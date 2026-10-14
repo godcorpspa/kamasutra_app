@@ -4,7 +4,9 @@ import '../services/auth_service.dart';
 
 /// Repository per gestire i dati utente su Firestore
 class UserRepository {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  // Getter, not a field: FirebaseFirestore.instance throws in local-only mode
+  // (Firebase not initialised), so it must not run at construction time.
+  FirebaseFirestore get _firestore => FirebaseFirestore.instance;
   final AuthService _authService = AuthService();
 
   // Singleton
