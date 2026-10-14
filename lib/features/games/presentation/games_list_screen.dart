@@ -1,6 +1,3 @@
-import 'dart:math';
-import 'dart:ui' as ui;
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,10 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
+import '../../../app/theme.dart';
 import '../../../data/models/game.dart';
+import '../../../shared/utils/display_text.dart';
+import '../../../shared/widgets/brand.dart';
 
-/// Games hub — premium cosmic look with categories, filters and a
-/// rotating featured game.
+/// Games hub — an editorial index of the couple games: a featured game that
+/// rotates daily, intensity filters and a numbered grid of dark cards, each
+/// lit by a soft glow of its own muted jewel tone.
 class GamesListScreen extends ConsumerStatefulWidget {
   const GamesListScreen({super.key});
 
@@ -20,17 +21,9 @@ class GamesListScreen extends ConsumerStatefulWidget {
 }
 
 class _GamesListScreenState extends ConsumerState<GamesListScreen>
-    with TickerProviderStateMixin {
-  late final AnimationController _bgController;
-  late final AnimationController _glowController;
-  late final AnimationController _shimmerController;
+    with SingleTickerProviderStateMixin {
   late final AnimationController _entryController;
-
-  late Animation<double> _glowAnim;
-  late Animation<double> _entryAnim;
-
-  final List<_Particle> _particles =
-      List.generate(50, (i) => _Particle(Random(i * 13 + 9)));
+  late final Animation<double> _entryAnim;
 
   // 'all' / 'soft' / 'spicy' / 'extra' / 'quick'
   String _activeFilter = 'all';
@@ -38,25 +31,9 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   @override
   void initState() {
     super.initState();
-    _bgController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 22),
-    )..repeat();
-
-    _glowController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat(reverse: true);
-    _glowAnim = CurvedAnimation(parent: _glowController, curve: Curves.easeInOut);
-
-    _shimmerController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat();
-
     _entryController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 800),
+      duration: const Duration(milliseconds: 700),
     );
     _entryAnim =
         CurvedAnimation(parent: _entryController, curve: Curves.easeOutCubic);
@@ -65,9 +42,6 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
 
   @override
   void dispose() {
-    _bgController.dispose();
-    _glowController.dispose();
-    _shimmerController.dispose();
     _entryController.dispose();
     super.dispose();
   }
@@ -75,183 +49,158 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   // ---------------------------------------------------------------------------
   // Game catalog
   // ---------------------------------------------------------------------------
-  List<_GameCardData> get _allGames => const [
-        _GameCardData(
-          route: AppRoutes.gooseGameSetup,
-          nameKey: 'games.goose_game.title',
-          emoji: '🎲',
-          gradient: [Color(0xFF722F37), Color(0xFFE53935)],
-          glowColor: Color(0xFFE53935),
-          players: '2',
-          duration: '20-45',
-          intensities: [
-            GameIntensity.soft,
-            GameIntensity.spicy,
-            GameIntensity.extraSpicy,
-          ],
-          category: _GameCategory.classic,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.truthDare,
-          nameKey: 'games.truth_dare.title',
-          emoji: '🎭',
-          gradient: [Color(0xFF6B2D5B), Color(0xFFE53935)],
-          glowColor: Color(0xFFE879F9),
-          players: '2',
-          duration: '15-30',
-          intensities: [
-            GameIntensity.soft,
-            GameIntensity.spicy,
-            GameIntensity.extraSpicy,
-          ],
-          category: _GameCategory.passion,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.wheel,
-          nameKey: 'games.wheel.title',
-          emoji: '🎡',
-          gradient: [Color(0xFFB8860B), Color(0xFFFFD166)],
-          glowColor: Color(0xFFFFD166),
-          players: '2',
-          duration: '10-20',
-          intensities: [GameIntensity.soft, GameIntensity.spicy],
-          category: _GameCategory.passion,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.hotCold,
-          nameKey: 'games.hot_cold.title',
-          emoji: '🌡️',
-          gradient: [Color(0xFF1E90FF), Color(0xFFE53935)],
-          glowColor: Color(0xFFFF6B35),
-          players: '2',
-          duration: '15-25',
-          intensities: [GameIntensity.spicy, GameIntensity.extraSpicy],
-          category: _GameCategory.passion,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.loveNotes,
-          nameKey: 'games.love_notes.title',
-          emoji: '💌',
-          gradient: [Color(0xFFFF8FB1), Color(0xFFE53935)],
-          glowColor: Color(0xFFFF8FB1),
-          players: '2',
-          duration: '10-15',
-          intensities: [GameIntensity.soft],
-          category: _GameCategory.creative,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.fantasyBuilder,
-          nameKey: 'games.fantasy_builder.title',
-          emoji: '✨',
-          gradient: [Color(0xFF6B2D5B), Color(0xFFD946EF)],
-          glowColor: Color(0xFFD946EF),
-          players: '2',
-          duration: '15-30',
-          intensities: [
-            GameIntensity.soft,
-            GameIntensity.spicy,
-            GameIntensity.extraSpicy,
-          ],
-          category: _GameCategory.creative,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.complimentBattle,
-          nameKey: 'games.compliment_battle.title',
-          emoji: '🏆',
-          gradient: [Color(0xFFE53935), Color(0xFFFFD166)],
-          glowColor: Color(0xFFFFD166),
-          players: '2',
-          duration: '5-10',
-          intensities: [GameIntensity.soft],
-          category: _GameCategory.classic,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.questionQuest,
-          nameKey: 'games.question_quest.title',
-          emoji: '🌌',
-          gradient: [Color(0xFF1A0A4A), Color(0xFFB388FF)],
-          glowColor: Color(0xFFB388FF),
-          players: '2',
-          duration: '20-40',
-          intensities: [GameIntensity.soft, GameIntensity.spicy],
-          category: _GameCategory.connection,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.twoMinutes,
-          nameKey: 'games.two_minutes.title',
-          emoji: '⏱️',
-          gradient: [Color(0xFFFF8C42), Color(0xFFFFD166)],
-          glowColor: Color(0xFFFF6B35),
-          players: '2',
-          duration: '10-20',
-          intensities: [
-            GameIntensity.soft,
-            GameIntensity.spicy,
-            GameIntensity.extraSpicy,
-          ],
-          category: _GameCategory.connection,
-          isImproved: true,
-        ),
-        _GameCardData(
-          route: AppRoutes.intimacyMap,
-          nameKey: 'games.intimacy_map.title',
-          emoji: '🗺️',
-          gradient: [Color(0xFF5C8984), Color(0xFF7DD3FC)],
-          glowColor: Color(0xFF7DD3FC),
-          players: '2',
-          duration: '15-25',
-          intensities: [GameIntensity.soft, GameIntensity.spicy],
-          category: _GameCategory.connection,
-        ),
-        _GameCardData(
-          route: AppRoutes.soundtrack,
-          nameKey: 'games.soundtrack.title',
-          emoji: '🎵',
-          gradient: [Color(0xFF6B2D5B), Color(0xFF9B5DE5)],
-          glowColor: Color(0xFF9B5DE5),
-          players: '2',
-          duration: '10-20',
-          intensities: [GameIntensity.soft],
-          category: _GameCategory.creative,
-        ),
-        _GameCardData(
-          route: AppRoutes.mirrorChallenge,
-          nameKey: 'games.mirror_challenge.title',
-          emoji: '🪞',
-          gradient: [Color(0xFFE07A5F), Color(0xFFFF8FB1)],
-          glowColor: Color(0xFFE07A5F),
-          players: '2',
-          duration: '5-15',
-          intensities: [GameIntensity.soft, GameIntensity.spicy],
-          category: _GameCategory.connection,
-        ),
-      ];
+  static const List<_GameCardData> _allGames = [
+    _GameCardData(
+      route: AppRoutes.gooseGameSetup,
+      nameKey: 'games.goose_game.title',
+      icon: Icons.casino_outlined,
+      tint: AppColors.jewelSand,
+      players: '2',
+      duration: '20-45',
+      intensities: [
+        GameIntensity.soft,
+        GameIntensity.spicy,
+        GameIntensity.extraSpicy,
+      ],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.truthDare,
+      nameKey: 'games.truth_dare.title',
+      icon: Icons.theater_comedy_outlined,
+      tint: AppColors.jewelGarnet,
+      players: '2',
+      duration: '15-30',
+      intensities: [
+        GameIntensity.soft,
+        GameIntensity.spicy,
+        GameIntensity.extraSpicy,
+      ],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.wheel,
+      nameKey: 'games.wheel.title',
+      icon: Icons.donut_large,
+      tint: AppColors.jewelAmber,
+      players: '2',
+      duration: '10-20',
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.hotCold,
+      nameKey: 'games.hot_cold.title',
+      icon: Icons.thermostat,
+      tint: AppColors.jewelEmber,
+      players: '2',
+      duration: '15-25',
+      intensities: [GameIntensity.spicy, GameIntensity.extraSpicy],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.loveNotes,
+      nameKey: 'games.love_notes.title',
+      icon: Icons.mail_outline,
+      tint: AppColors.jewelRose,
+      players: '2',
+      duration: '10-15',
+      intensities: [GameIntensity.soft],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.fantasyBuilder,
+      nameKey: 'games.fantasy_builder.title',
+      icon: Icons.auto_awesome_outlined,
+      tint: AppColors.jewelLilac,
+      players: '2',
+      duration: '15-30',
+      intensities: [
+        GameIntensity.soft,
+        GameIntensity.spicy,
+        GameIntensity.extraSpicy,
+      ],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.complimentBattle,
+      nameKey: 'games.compliment_battle.title',
+      icon: Icons.workspace_premium_outlined,
+      tint: AppColors.jewelAmber,
+      players: '2',
+      duration: '5-10',
+      intensities: [GameIntensity.soft],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.questionQuest,
+      nameKey: 'games.question_quest.title',
+      icon: Icons.forum_outlined,
+      tint: AppColors.jewelDusk,
+      players: '2',
+      duration: '20-40',
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.twoMinutes,
+      nameKey: 'games.two_minutes.title',
+      icon: Icons.hourglass_empty,
+      tint: AppColors.jewelEmber,
+      players: '2',
+      duration: '10-20',
+      intensities: [
+        GameIntensity.soft,
+        GameIntensity.spicy,
+        GameIntensity.extraSpicy,
+      ],
+      isImproved: true,
+    ),
+    _GameCardData(
+      route: AppRoutes.intimacyMap,
+      nameKey: 'games.intimacy_map.title',
+      icon: Icons.map_outlined,
+      tint: AppColors.jewelTeal,
+      players: '2',
+      duration: '15-25',
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
+    ),
+    _GameCardData(
+      route: AppRoutes.soundtrack,
+      nameKey: 'games.soundtrack.title',
+      icon: Icons.music_note_outlined,
+      tint: AppColors.jewelLilac,
+      players: '2',
+      duration: '10-20',
+      intensities: [GameIntensity.soft],
+    ),
+    _GameCardData(
+      route: AppRoutes.mirrorChallenge,
+      nameKey: 'games.mirror_challenge.title',
+      icon: Icons.flip,
+      tint: AppColors.jewelRose,
+      players: '2',
+      duration: '5-15',
+      intensities: [GameIntensity.soft, GameIntensity.spicy],
+    ),
+  ];
 
   List<_GameCardData> _filtered() {
-    final games = _allGames;
     switch (_activeFilter) {
       case 'soft':
-        return games
+        return _allGames
             .where((g) => g.intensities.contains(GameIntensity.soft))
             .toList();
       case 'spicy':
-        return games
+        return _allGames
             .where((g) => g.intensities.contains(GameIntensity.spicy))
             .toList();
       case 'extra':
-        return games
+        return _allGames
             .where((g) => g.intensities.contains(GameIntensity.extraSpicy))
             .toList();
       case 'quick':
-        return games.where((g) {
+        return _allGames.where((g) {
           // duration like "10-20" → take min
           final m = RegExp(r'\d+').firstMatch(g.duration);
           if (m == null) return false;
@@ -259,7 +208,7 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
         }).toList();
       case 'all':
       default:
-        return games;
+        return _allGames;
     }
   }
 
@@ -280,50 +229,13 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
     final filtered = _filtered();
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      body: Stack(
-        children: [
-          // Cosmic background
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF1A0532),
-                  Color(0xFF2D1B5C),
-                  Color(0xFF1A0A2E),
-                  Color(0xFF0A0F2C),
-                ],
-              ),
-            ),
-          ),
-          // Floating particles
-          AnimatedBuilder(
-            animation: _bgController,
-            builder: (context, _) {
-              return CustomPaint(
-                size: Size.infinite,
-                painter: _ParticleFieldPainter(
-                  particles: _particles,
-                  progress: _bgController.value,
-                ),
-              );
-            },
-          ),
-          // Content
-          SafeArea(
-            child: AnimatedBuilder(
-              animation: _entryAnim,
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _entryAnim.value,
-                  child: Transform.translate(
-                    offset: Offset(0, 24 * (1 - _entryAnim.value)),
-                    child: child,
-                  ),
-                );
-              },
+      body: VelvetBackground(
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: _entryAnim,
+            child: SlideTransition(
+              position: Tween(begin: const Offset(0, 0.03), end: Offset.zero)
+                  .animate(_entryAnim),
               child: CustomScrollView(
                 physics: const BouncingScrollPhysics(),
                 slivers: [
@@ -336,164 +248,41 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
                       child: _emptyState(),
                     )
                   else ...[
-                    SliverToBoxAdapter(child: _buildGridLabel(filtered.length)),
+                    SliverToBoxAdapter(
+                        child: _buildGridLabel(filtered.length)),
                     _buildGrid(filtered),
                   ],
-                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
                 ],
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }
-
-  Widget _buildGridLabel(int count) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
-      child: Row(
-        children: [
-          const Icon(Icons.style_outlined,
-              color: Color(0xFFE879F9), size: 18),
-          const SizedBox(width: 8),
-          Text(
-            'games_hub.all_games'.tr(),
-            style: const TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 0.4,
-              decoration: TextDecoration.none,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE879F9).withOpacity(0.18),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Text(
-              '$count',
-              style: const TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFFE879F9),
-                decoration: TextDecoration.none,
-              ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Container(
-              height: 1,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.white.withOpacity(0.15),
-                    Colors.transparent,
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
 
   // ---------------------------------------------------------------------------
   // Header
   // ---------------------------------------------------------------------------
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 18),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Animated icon
-          AnimatedBuilder(
-            animation: _glowAnim,
-            builder: (context, _) {
-              return Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFD946EF), Color(0xFFFFD166)],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFD946EF)
-                          .withOpacity(0.4 + 0.25 * _glowAnim.value),
-                      blurRadius: 22,
-                      spreadRadius: 1,
-                    ),
-                  ],
-                ),
-                child: const Center(
-                  child: Text('🎮', style: TextStyle(fontSize: 26)),
-                ),
-              );
-            },
+          Text(
+            'games.title'.tr(),
+            style: Theme.of(context).textTheme.displaySmall,
           ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'games.title'.tr(),
-                  style: const TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                    fontSize: 32,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: 0.5,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-                Text(
-                  'games.subtitle'.tr(),
-                  style: TextStyle(
-                    fontFamily: 'DMSans',
-                    fontSize: 13,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.white.withOpacity(0.6),
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Counter pill
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.style,
-                    color: Color(0xFFFFD166), size: 14),
-                const SizedBox(width: 4),
-                Text(
-                  '${_allGames.length}',
-                  style: const TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              ],
+          const SizedBox(height: 6),
+          Text(
+            'games.subtitle'.tr(),
+            style: const TextStyle(
+              fontFamily: AppTypography.displayFont,
+              fontStyle: FontStyle.italic,
+              fontSize: 18,
+              color: AppColors.mist,
             ),
           ),
         ],
@@ -505,72 +294,54 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   // Filter chips
   // ---------------------------------------------------------------------------
   Widget _buildFilterChips() {
-    final filters = [
-      _Filter('all', 'games_hub.filter_all', null),
-      _Filter('soft', 'games_hub.filter_soft', const Color(0xFFFF8FB1)),
-      _Filter('spicy', 'games_hub.filter_spicy', const Color(0xFFFF6B35)),
-      _Filter('extra', 'games_hub.filter_extra', const Color(0xFFE53935)),
-      _Filter('quick', 'games_hub.filter_quick', const Color(0xFFFFD166)),
+    const filters = [
+      ('all', 'games_hub.filter_all'),
+      ('soft', 'games_hub.filter_soft'),
+      ('spicy', 'games_hub.filter_spicy'),
+      ('extra', 'games_hub.filter_extra'),
+      ('quick', 'games_hub.filter_quick'),
     ];
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 4, 0, 14),
-      child: SingleChildScrollView(
+    return SizedBox(
+      height: 40,
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: filters.map((f) => _filterChip(f)).toList(),
-        ),
-      ),
-    );
-  }
-
-  Widget _filterChip(_Filter f) {
-    final isActive = _activeFilter == f.id;
-    final color = f.color ?? const Color(0xFFE879F9);
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          setState(() => _activeFilter = f.id);
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-          decoration: BoxDecoration(
-            gradient: isActive
-                ? LinearGradient(
-                    colors: [color, color.withOpacity(0.7)],
-                  )
-                : null,
-            color: isActive ? null : Colors.white.withOpacity(0.06),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isActive ? color : Colors.white.withOpacity(0.1),
-              width: isActive ? 1.5 : 1,
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        itemCount: filters.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        itemBuilder: (context, i) {
+          final (id, labelKey) = filters[i];
+          final isActive = _activeFilter == id;
+          return Material(
+            color: isActive ? AppColors.champagne : Colors.transparent,
+            shape: StadiumBorder(
+              side: BorderSide(
+                color: isActive ? AppColors.champagne : AppColors.outline,
+              ),
             ),
-            boxShadow: isActive
-                ? [
-                    BoxShadow(
-                      color: color.withOpacity(0.4),
-                      blurRadius: 14,
+            child: InkWell(
+              customBorder: const StadiumBorder(),
+              onTap: () {
+                HapticFeedback.selectionClick();
+                setState(() => _activeFilter = id);
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                child: Center(
+                  child: Text(
+                    plainLabel(labelKey.tr()),
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.2,
+                      color: isActive ? AppColors.onAccent : AppColors.ivory,
                     ),
-                  ]
-                : null,
-          ),
-          child: Text(
-            f.labelKey.tr(),
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: isActive ? Colors.white : Colors.white.withOpacity(0.7),
-              letterSpacing: 0.3,
-              decoration: TextDecoration.none,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -579,162 +350,95 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   // Featured banner
   // ---------------------------------------------------------------------------
   Widget _buildFeaturedBanner() {
-    if (_activeFilter != 'all') return const SizedBox.shrink();
+    if (_activeFilter != 'all') return const SizedBox(height: 20);
     final game = _featured;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.mediumImpact();
-          context.push(game.route);
-        },
-        child: AnimatedBuilder(
-          animation: Listenable.merge([_shimmerController, _glowAnim]),
-          builder: (context, _) {
-            return Container(
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    game.gradient[0].withOpacity(0.9),
-                    game.gradient[1].withOpacity(0.7),
-                    game.gradient[0].withOpacity(0.9),
-                  ],
-                  stops: [0.0, _shimmerController.value, 1.0],
-                ),
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                    color: Colors.white.withOpacity(0.2), width: 1.2),
-                boxShadow: [
-                  BoxShadow(
-                    color: game.glowColor
-                        .withOpacity(0.4 + 0.2 * _glowAnim.value),
-                    blurRadius: 28,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  // Big emoji disc
-                  Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          Colors.white.withOpacity(0.4),
-                          Colors.white.withOpacity(0.1),
-                        ],
-                      ),
-                      border: Border.all(
-                          color: Colors.white.withOpacity(0.4), width: 1.5),
-                    ),
-                    child: Center(
-                      child: Text(game.emoji,
-                          style: const TextStyle(fontSize: 40)),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            'games_hub.featured'.tr(),
-                            style: const TextStyle(
-                              fontFamily: 'DMSans',
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              letterSpacing: 1.5,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          game.nameKey.tr(),
-                          style: const TextStyle(
-                            fontFamily: 'PlayfairDisplay',
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            letterSpacing: 0.3,
-                            decoration: TextDecoration.none,
-                            shadows: [
-                              Shadow(color: Color(0x66000000), blurRadius: 6),
-                            ],
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            _miniBadge(Icons.people, '${game.players}p'),
-                            const SizedBox(width: 6),
-                            _miniBadge(Icons.timer, '${game.duration} min'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.2),
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                  ),
-                ],
-              ),
-            );
+      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+      child: Material(
+        color: AppColors.inkRaised,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(28),
+          side: const BorderSide(color: AppColors.hairline),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.mediumImpact();
+            context.push(game.route);
           },
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: const Alignment(1.0, -1.0),
+                radius: 1.3,
+                colors: [game.tint.withOpacity(0.24), Colors.transparent],
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        plainLabel('games_hub.featured'.tr()).toUpperCase(),
+                        style: AppTypography.eyebrow
+                            .copyWith(color: AppColors.champagne),
+                      ),
+                      const Spacer(),
+                      _GameGlyph(game: game, size: 52),
+                    ],
+                  ),
+                  const SizedBox(height: 18),
+                  Text(
+                    game.nameKey.tr(),
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: 18),
+                  Row(
+                    children: [
+                      Expanded(child: _MetaLine(game: game)),
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.champagne,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          color: AppColors.onAccent,
+                          size: 22,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _miniBadge(IconData icon, String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
-        borderRadius: BorderRadius.circular(10),
-      ),
+  Widget _buildGridLabel(int count) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 14),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: Colors.white, size: 11),
-          const SizedBox(width: 4),
           Text(
-            label,
-            style: const TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              decoration: TextDecoration.none,
-            ),
+            plainLabel('games_hub.all_games'.tr()).toUpperCase(),
+            style: AppTypography.eyebrow,
           ),
+          const SizedBox(width: 8),
+          Text(
+            '$count',
+            style: AppTypography.eyebrow.copyWith(color: AppColors.champagne),
+          ),
+          const SizedBox(width: 12),
+          const Expanded(child: Divider()),
         ],
       ),
     );
@@ -745,18 +449,18 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
   // ---------------------------------------------------------------------------
   Widget _buildGrid(List<_GameCardData> games) {
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 22),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 0.82,
+          childAspectRatio: 0.86,
         ),
         delegate: SliverChildBuilderDelegate(
           (context, index) => _GameCard(
             data: games[index],
-            glowAnim: _glowAnim,
+            number: _allGames.indexOf(games[index]) + 1,
             onTap: () {
               HapticFeedback.lightImpact();
               context.push(games[index].route);
@@ -777,44 +481,20 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('🔍', style: TextStyle(fontSize: 56)),
-          const SizedBox(height: 12),
+          const Icon(Icons.search_off, size: 40, color: AppColors.smoke),
+          const SizedBox(height: 16),
           Text(
             'games_hub.no_games'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Colors.white,
-              decoration: TextDecoration.none,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          GestureDetector(
-            onTap: () {
+          OutlinedButton(
+            onPressed: () {
               HapticFeedback.selectionClick();
               setState(() => _activeFilter = 'all');
             },
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
-              ),
-              child: Text(
-                'games_hub.show_all'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'DMSans',
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ),
+            child: Text('games_hub.show_all'.tr()),
           ),
         ],
       ),
@@ -827,12 +507,12 @@ class _GamesListScreenState extends ConsumerState<GamesListScreen>
 // =============================================================================
 class _GameCard extends StatefulWidget {
   final _GameCardData data;
-  final Animation<double> glowAnim;
+  final int number;
   final VoidCallback onTap;
 
   const _GameCard({
     required this.data,
-    required this.glowAnim,
+    required this.number,
     required this.onTap,
   });
 
@@ -845,209 +525,146 @@ class _GameCardState extends State<_GameCard> {
 
   @override
   Widget build(BuildContext context) {
+    final data = widget.data;
     return GestureDetector(
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
       onTap: widget.onTap,
       child: AnimatedScale(
-        scale: _pressed ? 0.96 : 1.0,
+        scale: _pressed ? 0.97 : 1.0,
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOut,
-        child: AnimatedBuilder(
-          animation: widget.glowAnim,
-          builder: (context, _) {
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: widget.data.gradient,
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: widget.data.glowColor.withOpacity(0.4),
-                  width: 1.2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: widget.data.glowColor
-                        .withOpacity(0.35 + 0.15 * widget.glowAnim.value),
-                    blurRadius: 22,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-              ),
-              child: Stack(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.xl),
+            border: Border.all(color: AppColors.hairline),
+            gradient: RadialGradient(
+              center: const Alignment(-1.0, -1.0),
+              radius: 1.2,
+              colors: [data.tint.withOpacity(0.10), AppColors.inkRaised],
+            ),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Decorative emoji bg (very faded, big)
-                  Positioned(
-                    right: -10,
-                    bottom: -16,
-                    child: Opacity(
-                      opacity: 0.12,
-                      child: Text(
-                        widget.data.emoji,
-                        style: const TextStyle(fontSize: 110),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Top row: emoji disc + improved badge
-                        Row(
-                          children: [
-                            Container(
-                              width: 42,
-                              height: 42,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.18),
-                                border: Border.all(
-                                    color: Colors.white.withOpacity(0.3)),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  widget.data.emoji,
-                                  style: const TextStyle(fontSize: 22),
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            if (widget.data.isImproved)
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.22),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text('✨',
-                                        style: TextStyle(fontSize: 9)),
-                                    const SizedBox(width: 3),
-                                    Text(
-                                      'games_hub.new_badge'.tr(),
-                                      style: const TextStyle(
-                                        fontFamily: 'DMSans',
-                                        color: Colors.white,
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w800,
-                                        letterSpacing: 0.6,
-                                        decoration: TextDecoration.none,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                        const Spacer(),
-                        // Title
-                        Text(
-                          widget.data.nameKey.tr(),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontFamily: 'PlayfairDisplay',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
-                            height: 1.2,
-                            decoration: TextDecoration.none,
-                            shadows: [
-                              Shadow(color: Color(0x66000000), blurRadius: 4),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        // Info row
-                        Row(
-                          children: [
-                            Icon(Icons.people,
-                                size: 11,
-                                color: Colors.white.withOpacity(0.85)),
-                            const SizedBox(width: 3),
-                            Text(
-                              widget.data.players,
-                              style: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white.withOpacity(0.85),
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(Icons.timer,
-                                size: 11,
-                                color: Colors.white.withOpacity(0.85)),
-                            const SizedBox(width: 3),
-                            Text(
-                              '${widget.data.duration}\'',
-                              style: TextStyle(
-                                fontFamily: 'DMSans',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white.withOpacity(0.85),
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 6),
-                        // Intensity dots
-                        Row(
-                          children: [
-                            for (final intensity
-                                in widget.data.intensities)
-                              Container(
-                                width: 7,
-                                height: 7,
-                                margin: const EdgeInsets.only(right: 4),
-                                decoration: BoxDecoration(
-                                  color: _intensityColor(intensity),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.6),
-                                    width: 1,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: _intensityColor(intensity)
-                                          .withOpacity(0.6),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ],
+                  _GameGlyph(game: data, size: 42),
+                  const Spacer(),
+                  Text(
+                    widget.number.toString().padLeft(2, '0'),
+                    style: const TextStyle(
+                      fontFamily: AppTypography.displayFont,
+                      fontFeatures: AppTypography.lining,
+                      fontStyle: FontStyle.italic,
+                      fontSize: 15,
+                      color: AppColors.smoke,
                     ),
                   ),
                 ],
               ),
-            );
-          },
+              const Spacer(),
+              Text(
+                data.nameKey.tr(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontFamily: AppTypography.displayFont,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  height: 1.2,
+                  color: AppColors.ivory,
+                ),
+              ),
+              const SizedBox(height: 10),
+              _MetaLine(game: data, compact: true),
+            ],
+          ),
         ),
       ),
     );
   }
+}
 
-  Color _intensityColor(GameIntensity intensity) {
+/// The game's line icon inside a hairline ring in its tint.
+class _GameGlyph extends StatelessWidget {
+  final _GameCardData game;
+  final double size;
+
+  const _GameGlyph({required this.game, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: game.tint.withOpacity(0.5)),
+      ),
+      child: Icon(game.icon, color: game.tint, size: size * 0.46),
+    );
+  }
+}
+
+/// "2 · 20–45′" plus intensity dots.
+class _MetaLine extends StatelessWidget {
+  final _GameCardData game;
+  final bool compact;
+
+  const _MetaLine({required this.game, this.compact = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final style = TextStyle(
+      fontSize: compact ? 11.5 : 13,
+      fontWeight: FontWeight.w500,
+      color: AppColors.mist,
+    );
+    final iconSize = compact ? 13.0 : 15.0;
+    return Row(
+      children: [
+        Icon(Icons.people_outline, size: iconSize, color: AppColors.smoke),
+        const SizedBox(width: 4),
+        Text(game.players, style: style),
+        const SizedBox(width: 10),
+        Icon(Icons.schedule, size: iconSize, color: AppColors.smoke),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            compact
+                ? "${game.duration.replaceAll('-', '–')}'"
+                : '${game.duration.replaceAll('-', '–')} min',
+            style: style,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        for (final intensity in game.intensities)
+          Container(
+            width: 6,
+            height: 6,
+            margin: const EdgeInsets.only(left: 4),
+            decoration: BoxDecoration(
+              color: _intensityColor(intensity),
+              shape: BoxShape.circle,
+            ),
+          ),
+      ],
+    );
+  }
+
+  static Color _intensityColor(GameIntensity intensity) {
     switch (intensity) {
       case GameIntensity.soft:
-        return const Color(0xFFFF8FB1);
+        return AppColors.soft;
       case GameIntensity.spicy:
-        return const Color(0xFFFF6B35);
+        return AppColors.spicy;
       case GameIntensity.extraSpicy:
-        return const Color(0xFFE53935);
+        return AppColors.extraSpicy;
     }
   }
 }
@@ -1055,119 +672,24 @@ class _GameCardState extends State<_GameCard> {
 // =============================================================================
 // Data
 // =============================================================================
-enum _GameCategory {
-  passion,
-  connection,
-  creative,
-  classic,
-}
-
 class _GameCardData {
   final String route;
   final String nameKey;
-  final String emoji;
-  final List<Color> gradient;
-  final Color glowColor;
+  final IconData icon;
+  final Color tint;
   final String players;
   final String duration;
   final List<GameIntensity> intensities;
-  final _GameCategory category;
   final bool isImproved;
 
   const _GameCardData({
     required this.route,
     required this.nameKey,
-    required this.emoji,
-    required this.gradient,
-    required this.glowColor,
+    required this.icon,
+    required this.tint,
     required this.players,
     required this.duration,
     required this.intensities,
-    required this.category,
     this.isImproved = false,
   });
-}
-
-class _Filter {
-  final String id;
-  final String labelKey;
-  final Color? color;
-  const _Filter(this.id, this.labelKey, this.color);
-}
-
-// =============================================================================
-// Painter — floating colorful particles + nebula
-// =============================================================================
-class _Particle {
-  final double x;
-  final double size;
-  final double speed;
-  final double phase;
-  final int colorIdx;
-
-  _Particle(Random r)
-      : x = r.nextDouble(),
-        size = 1.5 + r.nextDouble() * 3,
-        speed = 0.2 + r.nextDouble() * 0.45,
-        phase = r.nextDouble(),
-        colorIdx = r.nextInt(4);
-}
-
-class _ParticleFieldPainter extends CustomPainter {
-  final List<_Particle> particles;
-  final double progress;
-
-  _ParticleFieldPainter({required this.particles, required this.progress});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Nebula orbs
-    for (int i = 0; i < 4; i++) {
-      final phase = (progress + i * 0.27) % 1.0;
-      final cx = size.width * (0.2 + 0.6 * (i / 4)) +
-          sin(phase * 2 * pi) * 30;
-      final cy = size.height * (0.2 + 0.6 * ((i + 1) / 5)) +
-          cos(phase * 2 * pi) * 30;
-      final paint = Paint()
-        ..shader = ui.Gradient.radial(
-          Offset(cx, cy),
-          120,
-          [
-            const [
-              Color(0xFFD946EF),
-              Color(0xFFFFD166),
-              Color(0xFFB388FF),
-              Color(0xFFFF6B35),
-            ][i % 4]
-                .withOpacity(0.08),
-            Colors.transparent,
-          ],
-        );
-      canvas.drawCircle(Offset(cx, cy), 120, paint);
-    }
-
-    // Particles drifting upward
-    final paint = Paint();
-    final colors = [
-      const Color(0xFFFFD166),
-      const Color(0xFFE879F9),
-      const Color(0xFFFFFFFF),
-      const Color(0xFFFF6B35),
-    ];
-    for (final p in particles) {
-      final phase = (p.phase + progress * p.speed) % 1.0;
-      final x = p.x * size.width + sin(phase * 2 * pi + p.phase * 4) * 22;
-      final y = (1 - phase) * size.height;
-      final opacity =
-          (0.15 + 0.35 * (1 - (phase - 0.5).abs() * 2)).clamp(0.0, 0.5);
-      paint.color = colors[p.colorIdx].withOpacity(opacity);
-      canvas.drawCircle(Offset(x, y), p.size, paint);
-      paint.color = colors[p.colorIdx].withOpacity(opacity * 0.3);
-      canvas.drawCircle(Offset(x, y), p.size * 1.8, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ParticleFieldPainter old) =>
-      old.progress != progress;
 }

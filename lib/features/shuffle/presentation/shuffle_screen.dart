@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
+import '../../catalog/widgets/category_style.dart';
+import '../../catalog/widgets/filter_options.dart';
 import '../../../app/router.dart';
 import '../../../data/models/position.dart';
 
@@ -98,13 +100,16 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   children: [
                     Text(
                       'shuffle.title'.tr(),
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: Theme.of(context).textTheme.displaySmall,
                     ),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
                       'shuffle.subtitle'.tr(),
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      style: const TextStyle(
+                        fontFamily: AppTypography.displayFont,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 18,
+                        color: AppColors.mist,
                       ),
                     ),
                   ],
@@ -129,7 +134,7 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   children: [
                     Text(
                       'catalog.filter_by'.tr(),
-                      style: Theme.of(context).textTheme.titleMedium,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     if (_hasActiveFilters)
                       TextButton(
@@ -192,8 +197,8 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Numero di carte',
-            style: Theme.of(context).textTheme.titleSmall,
+            'shuffle.card_count'.tr().toUpperCase(),
+            style: AppTypography.eyebrow,
           ),
           const SizedBox(height: AppSpacing.md),
           Row(
@@ -208,45 +213,31 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    width: 48,
-                    height: 48,
+                    width: 54,
+                    height: 54,
                     decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: isSelected
-                          ? Theme.of(context).colorScheme.primary
-                          : Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(14),
+                          ? AppColors.champagne
+                          : Colors.transparent,
                       border: Border.all(
                         color: isSelected
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withOpacity(0.3),
-                        width: isSelected ? 2 : 1,
+                            ? AppColors.champagne
+                            : AppColors.outline,
                       ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primary
-                                    .withOpacity(0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ]
-                          : null,
                     ),
                     child: Center(
                       child: Text(
                         '$count',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              color: isSelected
-                                  ? Colors.white
-                                  : Theme.of(context).colorScheme.onSurface,
-                              fontWeight:
-                                  isSelected ? FontWeight.bold : FontWeight.w500,
-                            ),
+                        style: TextStyle(
+                          fontFamily: AppTypography.displayFont,
+                          fontFeatures: AppTypography.lining,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: isSelected
+                              ? AppColors.onAccent
+                              : AppColors.ivory,
+                        ),
                       ),
                     ),
                   ),
@@ -261,11 +252,11 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
 
   Widget _buildFavoritesToggle() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       child: SwitchListTile(
         title: Text('catalog.favorites'.tr()),
         subtitle: Text(
-          _favoritesOnly 
+          _favoritesOnly
             ? 'Solo dalle tue scoperte salvate'
             : 'Includi tutte le posizioni',
           style: Theme.of(context).textTheme.bodySmall,
@@ -277,144 +268,24 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
         },
         secondary: Icon(
           _favoritesOnly ? Icons.favorite : Icons.favorite_border,
-          color: _favoritesOnly ? AppColors.burgundy : null,
+          color: _favoritesOnly ? AppColors.rose : AppColors.mist,
         ),
       ),
     );
   }
 
-  // ─── emoji helpers ──────────────────────────────────────────────────────────
-
-  String _categoryEmoji(PositionCategory c) {
-    switch (c) {
-      case PositionCategory.romantic:    return '🌹';
-      case PositionCategory.beginner:    return '🌿';
-      case PositionCategory.athletic:    return '🏋️';
-      case PositionCategory.supported:   return '🤝';
-      case PositionCategory.lowImpact:   return '🦋';
-      case PositionCategory.adventurous: return '🗺️';
-      case PositionCategory.reconnect:   return '🔗';
-      case PositionCategory.quickie:     return '⚡';
-    }
-  }
-
-  String _energyEmoji(EnergyLevel e) {
-    switch (e) {
-      case EnergyLevel.low:    return '🍃';
-      case EnergyLevel.medium: return '🔥';
-      case EnergyLevel.high:   return '💥';
-    }
-  }
-
-  String _durationEmoji(PositionDuration d) {
-    switch (d) {
-      case PositionDuration.brief:  return '⏱️';
-      case PositionDuration.medium: return '🕐';
-      case PositionDuration.long:   return '🌙';
-    }
-  }
-
-  String _focusEmoji(PositionFocus f) {
-    switch (f) {
-      case PositionFocus.intimacy:    return '💕';
-      case PositionFocus.variety:     return '🎨';
-      case PositionFocus.connection:  return '🔮';
-      case PositionFocus.relax:       return '🧘';
-      case PositionFocus.playfulness: return '🎉';
-      case PositionFocus.passion:     return '❤️‍🔥';
-      case PositionFocus.trust:       return '🤲';
-    }
-  }
-
-  Color _energyColor(EnergyLevel e) {
-    switch (e) {
-      case EnergyLevel.low:    return AppColors.soft;
-      case EnergyLevel.medium: return AppColors.spicy;
-      case EnergyLevel.high:   return AppColors.extraSpicy;
-    }
-  }
-
-  // ─── chip builders ──────────────────────────────────────────────────────────
-
-  Widget _filterChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required Color accentColor,
-  }) {
-    final theme = Theme.of(context);
-    return FilterChip(
-      label: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected ? accentColor : theme.colorScheme.onSurface.withOpacity(0.85),
-          ),
-        ),
-      ),
-      selected: isSelected,
-      showCheckmark: false,
-      onSelected: (_) { HapticFeedback.selectionClick(); onTap(); },
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-      backgroundColor: theme.colorScheme.surface,
-      selectedColor: accentColor.withOpacity(0.12),
-      side: isSelected
-          ? BorderSide(color: accentColor, width: 1.5)
-          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
-    );
-  }
-
-  Widget _choiceChip({
-    required String label,
-    required bool isSelected,
-    required VoidCallback onTap,
-    required Color accentColor,
-  }) {
-    final theme = Theme.of(context);
-    return ChoiceChip(
-      label: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected ? accentColor : theme.colorScheme.onSurface.withOpacity(0.85),
-          ),
-        ),
-      ),
-      selected: isSelected,
-      showCheckmark: false,
-      onSelected: (_) { HapticFeedback.selectionClick(); onTap(); },
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      backgroundColor: theme.colorScheme.surface,
-      selectedColor: accentColor.withOpacity(0.12),
-      side: isSelected
-          ? BorderSide(color: accentColor, width: 1.5)
-          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
-    );
-  }
-
-  Widget _sectionHeader(String title, IconData icon) {
+  Widget _sectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.sm),
-      child: Row(
-        children: [
-          Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-          ),
-        ],
-      ),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.md),
+      child: FilterSectionLabel(title),
     );
   }
+
+  Widget _padded(Widget child) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: child,
+      );
 
   // ─── filter sections ────────────────────────────────────────────────────────
 
@@ -422,33 +293,21 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader('catalog.category'.tr(), Icons.grid_view_rounded),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: LayoutBuilder(
-            builder: (_, constraints) {
-              final w = (constraints.maxWidth - AppSpacing.sm) / 2;
-              return Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: PositionCategory.values.map((category) {
-                  final isSelected = _selectedCategories.contains(category);
-                  return SizedBox(
-                    width: w,
-                    child: _filterChip(
-                      label: '${_categoryEmoji(category)}  ${'categories.${category.name}'.tr()}',
-                      isSelected: isSelected,
-                      accentColor: AppColors.burgundy,
-                      onTap: () => setState(() {
-                        isSelected ? _selectedCategories.remove(category) : _selectedCategories.add(category);
-                      }),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-        ),
+        _sectionHeader('catalog.category'.tr()),
+        _padded(OptionGrid(chips: [
+          for (final category in PositionCategory.values)
+            OptionChip(
+              icon: category.icon,
+              tint: category.tint,
+              label: 'categories.${category.name}'.tr(),
+              isSelected: _selectedCategories.contains(category),
+              onTap: () => setState(() {
+                _selectedCategories.contains(category)
+                    ? _selectedCategories.remove(category)
+                    : _selectedCategories.add(category);
+              }),
+            ),
+        ])),
       ],
     );
   }
@@ -457,51 +316,11 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader('catalog.difficulty'.tr(), Icons.star_outline_rounded),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '⭐ ${_difficultyRange.start.round()}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.gold,
-                ),
-              ),
-              Text(
-                '${_difficultyRange.end.round()} ⭐',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.gold,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-          child: SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: AppColors.gold,
-              thumbColor: AppColors.gold,
-              inactiveTrackColor: AppColors.gold.withOpacity(0.2),
-              overlayColor: AppColors.gold.withOpacity(0.1),
-            ),
-            child: RangeSlider(
-              values: _difficultyRange,
-              min: 1,
-              max: 5,
-              divisions: 4,
-              labels: RangeLabels(
-                _difficultyRange.start.round().toString(),
-                _difficultyRange.end.round().toString(),
-              ),
-              onChanged: (values) => setState(() => _difficultyRange = values),
-            ),
-          ),
-        ),
+        _sectionHeader('catalog.difficulty'.tr()),
+        _padded(DifficultyRangeField(
+          values: _difficultyRange,
+          onChanged: (values) => setState(() => _difficultyRange = values),
+        )),
       ],
     );
   }
@@ -510,30 +329,18 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader('catalog.energy'.tr(), Icons.bolt_rounded),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: Row(
-            children: EnergyLevel.values.asMap().entries.map((entry) {
-              final i = entry.key;
-              final energy = entry.value;
-              final isSelected = _selectedEnergy == energy;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: i < EnergyLevel.values.length - 1 ? AppSpacing.sm : 0),
-                  child: _choiceChip(
-                    label: '${_energyEmoji(energy)}  ${'energy.${energy.name}'.tr()}',
-                    isSelected: isSelected,
-                    accentColor: _energyColor(energy),
-                    onTap: () => setState(() {
-                      _selectedEnergy = isSelected ? null : energy;
-                    }),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
+        _sectionHeader('catalog.energy'.tr()),
+        _padded(OptionRow(chips: [
+          for (final energy in EnergyLevel.values)
+            OptionChip(
+              icon: energy.icon,
+              label: 'energy.${energy.name}'.tr(),
+              isSelected: _selectedEnergy == energy,
+              onTap: () => setState(() {
+                _selectedEnergy = _selectedEnergy == energy ? null : energy;
+              }),
+            ),
+        ])),
       ],
     );
   }
@@ -542,30 +349,19 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader('catalog.duration'.tr(), Icons.timer_outlined),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: Row(
-            children: PositionDuration.values.asMap().entries.map((entry) {
-              final i = entry.key;
-              final duration = entry.value;
-              final isSelected = _selectedDuration == duration;
-              return Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: i < PositionDuration.values.length - 1 ? AppSpacing.sm : 0),
-                  child: _choiceChip(
-                    label: '${_durationEmoji(duration)}  ${'duration.${duration.name}'.tr()}',
-                    isSelected: isSelected,
-                    accentColor: AppColors.gold,
-                    onTap: () => setState(() {
-                      _selectedDuration = isSelected ? null : duration;
-                    }),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
+        _sectionHeader('catalog.duration'.tr()),
+        _padded(OptionRow(chips: [
+          for (final duration in PositionDuration.values)
+            OptionChip(
+              icon: duration.icon,
+              label: 'duration.${duration.name}'.tr(),
+              isSelected: _selectedDuration == duration,
+              onTap: () => setState(() {
+                _selectedDuration =
+                    _selectedDuration == duration ? null : duration;
+              }),
+            ),
+        ])),
       ],
     );
   }
@@ -574,51 +370,34 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionHeader('catalog.focus'.tr(), Icons.psychology_outlined),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: LayoutBuilder(
-            builder: (_, constraints) {
-              final w = (constraints.maxWidth - AppSpacing.sm) / 2;
-              return Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: PositionFocus.values.map((focus) {
-                  final isSelected = _selectedFocus.contains(focus);
-                  return SizedBox(
-                    width: w,
-                    child: _filterChip(
-                      label: '${_focusEmoji(focus)}  ${'focus.${focus.name}'.tr()}',
-                      isSelected: isSelected,
-                      accentColor: AppColors.navy,
-                      onTap: () => setState(() {
-                        isSelected ? _selectedFocus.remove(focus) : _selectedFocus.add(focus);
-                      }),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-        ),
+        _sectionHeader('catalog.focus'.tr()),
+        _padded(OptionGrid(chips: [
+          for (final focus in PositionFocus.values)
+            OptionChip(
+              icon: focus.icon,
+              label: 'focus.${focus.name}'.tr(),
+              isSelected: _selectedFocus.contains(focus),
+              onTap: () => setState(() {
+                _selectedFocus.contains(focus)
+                    ? _selectedFocus.remove(focus)
+                    : _selectedFocus.add(focus);
+              }),
+            ),
+        ])),
       ],
     );
   }
 
   Widget _buildStartButton() {
     return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md),
+      decoration: const BoxDecoration(
+        color: AppColors.ink,
+        border: Border(top: BorderSide(color: AppColors.hairline)),
       ),
       child: SafeArea(
+        top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -626,28 +405,17 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
               Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                 child: Text(
-                  'shuffle.filters_active'.tr(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                  'shuffle.filters_active'.tr().toUpperCase(),
+                  style: AppTypography.eyebrow
+                      .copyWith(color: AppColors.champagne),
                 ),
               ),
             SizedBox(
               width: double.infinity,
+              height: 54,
               child: ElevatedButton(
                 onPressed: _startSession,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                ),
-                child: Text(
-                  'shuffle.start_session'.tr(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                child: Text('shuffle.start_session'.tr()),
               ),
             ),
           ],

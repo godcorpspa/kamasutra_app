@@ -57,7 +57,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Text(
                   'settings.title'.tr(),
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
               ),
             ),
@@ -107,16 +107,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           AppSpacing.lg,
-          AppSpacing.lg,
+          AppSpacing.xl,
           AppSpacing.lg,
           AppSpacing.sm,
         ),
         child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: AppColors.burgundy,
-            fontWeight: FontWeight.bold,
-          ),
+          title.toUpperCase(),
+          style: AppTypography.eyebrow,
         ),
       ),
     );
@@ -625,21 +622,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     required ValueChanged<bool> onChanged,
   }) {
     return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: AppColors.burgundy.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-        ),
-        child: Icon(
-          icon,
-          color: AppColors.burgundy,
-          size: 20,
-        ),
-      ),
+      leading: _TileIcon(icon: icon),
       title: Text(title),
-      subtitle: subtitle != null ? Text(subtitle) : null,
+      subtitle: subtitle != null
+          ? Text(subtitle, style: Theme.of(context).textTheme.bodySmall)
+          : null,
       trailing: Switch(
         value: value,
         onChanged: (newValue) {
@@ -658,19 +645,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     bool isDestructive = false,
   }) {
     return ListTile(
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: (isDestructive ? AppColors.error : AppColors.burgundy).withOpacity(0.1),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-        ),
-        child: Icon(
-          icon,
-          color: isDestructive ? AppColors.error : AppColors.burgundy,
-          size: 20,
-        ),
-      ),
+      leading: _TileIcon(icon: icon, isDestructive: isDestructive),
       title: Text(
         title,
         style: TextStyle(
@@ -681,15 +656,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ? Text(
               subtitle,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: isDestructive ? AppColors.error.withOpacity(0.7) : null,
+                color: isDestructive
+                    ? AppColors.error.withOpacity(0.7)
+                    : AppColors.mist,
               ),
             )
           : null,
       trailing: onTap != null
-          ? Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            )
+          ? const Icon(Icons.chevron_right, color: AppColors.smoke, size: 20)
           : null,
       onTap: onTap != null
           ? () {
@@ -716,7 +690,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               leading: const Text('🇮🇹', style: TextStyle(fontSize: 24)),
               title: const Text('Italiano'),
               trailing: context.locale.languageCode == 'it'
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  ? const Icon(Icons.check, color: AppColors.champagne)
                   : null,
             ),
           ),
@@ -730,7 +704,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
               title: const Text('English'),
               trailing: context.locale.languageCode == 'en'
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  ? const Icon(Icons.check, color: AppColors.champagne)
                   : null,
             ),
           ),
@@ -744,7 +718,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               leading: const Text('🇪🇸', style: TextStyle(fontSize: 24)),
               title: const Text('Español'),
               trailing: context.locale.languageCode == 'es'
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  ? const Icon(Icons.check, color: AppColors.champagne)
                   : null,
             ),
           ),
@@ -758,7 +732,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               leading: const Text('🇫🇷', style: TextStyle(fontSize: 24)),
               title: const Text('Français'),
               trailing: context.locale.languageCode == 'fr'
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  ? const Icon(Icons.check, color: AppColors.champagne)
                   : null,
             ),
           ),
@@ -772,7 +746,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               leading: const Text('🇵🇹', style: TextStyle(fontSize: 24)),
               title: const Text('Português'),
               trailing: context.locale.languageCode == 'pt'
-                  ? const Icon(Icons.check, color: AppColors.burgundy)
+                  ? const Icon(Icons.check, color: AppColors.champagne)
                   : null,
             ),
           ),
@@ -948,7 +922,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
               const Divider(height: 1),
               ListTile(
-                leading: const Icon(Icons.bug_report_outlined, color: AppColors.spicy),
+                leading: const Icon(Icons.bug_report_outlined, color: AppColors.mist),
                 title: Text('settings_extra.report_bug'.tr()),
                 subtitle: Text('settings_extra.report_bug_desc'.tr()),
                 onTap: () {
@@ -960,7 +934,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.lightbulb_outline, color: AppColors.gold),
+                leading: const Icon(Icons.lightbulb_outline, color: AppColors.mist),
                 title: Text('settings_extra.send_suggestion'.tr()),
                 subtitle: Text('settings_extra.send_suggestion_desc'.tr()),
                 onTap: () {
@@ -972,7 +946,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.star_outline, color: AppColors.burgundy),
+                leading: const Icon(Icons.star_outline, color: AppColors.mist),
                 title: Text('settings_extra.rate_app'.tr()),
                 subtitle: Text('settings_extra.rate_app_desc'.tr()),
                 onTap: () {
@@ -989,7 +963,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 child: Text(
                   'support@kamasutraapp.com',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    color: AppColors.smoke,
                   ),
                 ),
               ),
@@ -1151,6 +1125,32 @@ Per domande sui termini, contattaci a: support@kamasutraapp.com''';
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Line icon in a hairline ring — the leading glyph of every settings row.
+class _TileIcon extends StatelessWidget {
+  final IconData icon;
+  final bool isDestructive;
+
+  const _TileIcon({required this.icon, this.isDestructive = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = isDestructive ? AppColors.error : AppColors.mist;
+    return Container(
+      width: 40,
+      height: 40,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: isDestructive
+              ? AppColors.error.withOpacity(0.35)
+              : AppColors.hairline,
+        ),
+      ),
+      child: Icon(icon, color: color, size: 19),
     );
   }
 }

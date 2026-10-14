@@ -1,13 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 
 import '../../../app/theme.dart';
+import '../../../shared/utils/display_text.dart';
+import '../../../shared/widgets/brand.dart';
+import '../../catalog/widgets/category_style.dart';
+import '../../catalog/widgets/position_illustration.dart';
 import '../../../app/router.dart';
 import '../../../data/models/position.dart';
 import '../../../data/models/game.dart';
@@ -256,9 +259,9 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
               numberOfParticles: 20,
               gravity: 0.1,
               colors: const [
-                AppColors.burgundy,
-                AppColors.gold,
-                AppColors.blush,
+                AppColors.champagne,
+                AppColors.rose,
+                AppColors.ivory,
               ],
             ),
           ),
@@ -275,16 +278,16 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: 96,
+              height: 96,
               decoration: BoxDecoration(
-                color: AppColors.burgundy.withOpacity(0.1),
                 shape: BoxShape.circle,
+                border: Border.all(color: AppColors.outline),
               ),
               child: const Icon(
                 Icons.favorite_border,
-                size: 48,
-                color: AppColors.burgundy,
+                size: 36,
+                color: AppColors.rose,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -299,10 +302,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                   ? 'shuffle.no_favorites_desc'.tr()
                   : 'shuffle.no_filter_results_desc'.tr(),
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.6),
+                    color: AppColors.mist,
                   ),
               textAlign: TextAlign.center,
             ),
@@ -341,11 +341,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.celebration,
-              size: 80,
-              color: AppColors.gold,
-            ),
+            const BrandMark(size: 56),
             const SizedBox(height: AppSpacing.lg),
             Text(
               'shuffle.session_complete'.tr(),
@@ -426,12 +422,12 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
                 if (_dragOffset.dx > 50)
                   Positioned(
                     left: 40,
-                    child: _buildSwipeIndicator(Icons.favorite, AppColors.burgundy),
+                    child: _buildSwipeIndicator(Icons.check, AppColors.champagne),
                   ),
                 if (_dragOffset.dx < -50)
                   Positioned(
                     right: 40,
-                    child: _buildSwipeIndicator(Icons.skip_next, Colors.grey),
+                    child: _buildSwipeIndicator(Icons.close, AppColors.smoke),
                   ),
               ],
             ),
@@ -445,108 +441,93 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
   }
 
   Widget _buildCard(Position position, {bool isBackground = false}) {
+    final lang = Localizations.localeOf(context).languageCode;
+    final alias = position.getAlias(lang);
+    final category = position.categories.first;
     return Container(
       width: MediaQuery.of(context).size.width * 0.85,
-      height: MediaQuery.of(context).size.height * 0.55,
+      height: MediaQuery.of(context).size.height * 0.56,
       decoration: BoxDecoration(
-        color: isBackground 
-            ? Theme.of(context).colorScheme.surface.withOpacity(0.5)
-            : Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        boxShadow: isBackground ? null : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
+        color: isBackground ? AppColors.inkRaised.withOpacity(0.6) : AppColors.inkRaised,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: AppColors.hairline),
+        boxShadow: isBackground
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.35),
+                  blurRadius: 30,
+                  offset: const Offset(0, 14),
+                ),
+              ],
       ),
-      child: isBackground 
-          ? null 
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.xl),
+      child: isBackground
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // SVG Illustration
                   Expanded(
                     flex: 3,
-                    child: Container(
-                      color: AppColors.burgundy.withOpacity(0.1),
-                      child: Padding(
-                        padding: const EdgeInsets.all(AppSpacing.lg),
-                        child: SvgPicture.asset(
-                          'assets/images/positions/${position.illustrationRef}',
-                          fit: BoxFit.contain,
-                          placeholderBuilder: (_) => Center(
-                            child: Icon(
-                              Icons.image,
-                              size: 80,
-                              color: AppColors.burgundy.withOpacity(0.3),
-                            ),
-                          ),
-                        ),
-                      ),
+                    child: PositionIllustration(
+                      position: position,
+                      borderRadius: BorderRadius.circular(20),
+                      monogramSize: 88,
                     ),
                   ),
-                  
-                  // Info section
                   Expanded(
                     flex: 2,
                     child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
+                      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            position.getName(Localizations.localeOf(context).languageCode),
-                            style: Theme.of(context).textTheme.headlineSmall,
+                            'categories.${category.name}'.tr().toUpperCase(),
+                            style: AppTypography.eyebrow
+                                .copyWith(color: category.tint, fontSize: 10),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            position.getName(lang),
+                            style: Theme.of(context).textTheme.headlineMedium,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          if (position.getAlias(Localizations.localeOf(context).languageCode) != null) ...[
-                            const SizedBox(height: 4),
+                          if (alias != null && alias.isNotEmpty) ...[
+                            const SizedBox(height: 2),
                             Text(
-                              position.getAlias(Localizations.localeOf(context).languageCode)!,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              alias,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontFamily: AppTypography.displayFont,
                                 fontStyle: FontStyle.italic,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                                fontSize: 16,
+                                color: AppColors.mist,
                               ),
                             ),
                           ],
                           const SizedBox(height: AppSpacing.md),
-                          
-                          // Tags
-                          Wrap(
-                            spacing: AppSpacing.xs,
-                            runSpacing: AppSpacing.xs,
+                          Row(
                             children: [
-                              _buildTag(_getDifficultyLabel(position.difficulty)),
-                              _buildIconTag(
-                                _getEnergyIcon(position.energy),
-                                'energy.${position.energy.name}'.tr(),
-                                _getEnergyColor(position.energy),
-                              ),
-                              _buildIconTag(
-                                Icons.timer_outlined,
-                                'duration.${position.duration.name}'.tr(),
-                                AppColors.gold,
-                              ),
+                              DifficultyMeter(
+                                  difficulty: position.difficulty, barWidth: 7),
+                              const SizedBox(width: AppSpacing.md),
+                              _buildFact(position.energy.icon,
+                                  'energy.${position.energy.name}'.tr()),
+                              const SizedBox(width: AppSpacing.md),
+                              _buildFact(position.duration.icon,
+                                  'duration.${position.duration.name}'.tr()),
                             ],
                           ),
-                          
                           const Spacer(),
-                          
-                          // Tap hint
                           Center(
                             child: Text(
-                              'shuffle.tap_for_details'.tr(),
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                              ),
+                              plainLabel('shuffle.tap_for_details'.tr())
+                                  .toUpperCase(),
+                              style: AppTypography.eyebrow.copyWith(fontSize: 10),
                             ),
                           ),
                         ],
@@ -559,96 +540,29 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
     );
   }
 
-  Widget _buildTag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Text(
-        text,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      ),
+  Widget _buildFact(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 15, color: AppColors.smoke),
+        const SizedBox(width: 4),
+        Text(text, style: const TextStyle(fontSize: 12.5, color: AppColors.mist)),
+      ],
     );
-  }
-
-  Widget _buildIconTag(IconData icon, String text, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 13, color: color),
-          const SizedBox(width: 3),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  IconData _getEnergyIcon(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return Icons.battery_3_bar;
-      case EnergyLevel.medium:
-        return Icons.battery_5_bar;
-      case EnergyLevel.high:
-        return Icons.battery_full;
-    }
-  }
-
-  Color _getEnergyColor(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return AppColors.soft;
-      case EnergyLevel.medium:
-        return AppColors.spicy;
-      case EnergyLevel.high:
-        return AppColors.extraSpicy;
-    }
-  }
-
-  String _getDifficultyLabel(int difficulty) {
-    switch (difficulty) {
-      case 1: return '⭐';
-      case 2: return '⭐⭐';
-      case 3: return '⭐⭐⭐';
-      case 4: return '⭐⭐⭐⭐';
-      case 5: return '⭐⭐⭐⭐⭐';
-      default: return '⭐⭐⭐';
-    }
   }
 
   Widget _buildSwipeIndicator(IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.9),
+        color: AppColors.ink.withOpacity(0.7),
         shape: BoxShape.circle,
+        border: Border.all(color: color),
       ),
       child: Icon(
         icon,
-        color: Colors.white,
-        size: 32,
+        color: color,
+        size: 30,
       ),
     );
   }
@@ -667,7 +581,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           // Skip
           _ActionButton(
             icon: Icons.close,
-            color: Colors.grey,
+            color: AppColors.mist,
             onPressed: () => _dismissCard('left'),
             label: 'shuffle.skip'.tr(),
           ),
@@ -677,7 +591,7 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
             icon: (_currentIndex < _positions.length && _positions[_currentIndex].isFavorite)
                 ? Icons.favorite
                 : Icons.favorite_border,
-            color: AppColors.burgundy,
+            color: AppColors.rose,
             onPressed: _toggleFavorite,
             label: 'shuffle.save'.tr(),
           ),
@@ -685,7 +599,8 @@ class _ShuffleSessionScreenState extends ConsumerState<ShuffleSessionScreen>
           // Like / Try this
           _ActionButton(
             icon: Icons.check,
-            color: AppColors.spicy,
+            color: AppColors.champagne,
+            filled: true,
             onPressed: () => _dismissCard('right'),
             label: 'shuffle.tried'.tr(),
           ),
@@ -700,43 +615,48 @@ class _ActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onPressed;
   final String label;
+  final bool filled;
 
   const _ActionButton({
     required this.icon,
     required this.color,
     required this.onPressed,
-    required this.label
+    required this.label,
+    this.filled = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    const size = 64.0;
-    const iconSize = 32.0;
-    
+    const size = 62.0;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
+        SizedBox(
           width: size,
           height: size,
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: color.withOpacity(0.5),
-              width: 2,
+          child: Material(
+            color: filled ? color : Colors.transparent,
+            shape: CircleBorder(
+              side: BorderSide(color: filled ? color : AppColors.outline),
+            ),
+            child: InkWell(
+              customBorder: const CircleBorder(),
+              onTap: onPressed,
+              child: Icon(
+                icon,
+                color: filled ? AppColors.onAccent : color,
+                size: 26,
+              ),
             ),
           ),
-          child: IconButton(
-            onPressed: onPressed,
-            icon: Icon(icon, color: color, size: iconSize),
-          ),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 8),
         Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: color,
+          plainLabel(label).toUpperCase(),
+          style: AppTypography.eyebrow.copyWith(
+            fontSize: 10,
+            color: filled ? color : AppColors.mist,
           ),
         ),
       ],

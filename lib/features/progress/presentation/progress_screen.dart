@@ -7,6 +7,9 @@ import '../../../data/repositories/position_repository.dart';
 import '../../../data/providers/providers.dart';
 import '../../../data/models/position.dart';
 import '../../../app/theme.dart';
+import '../../../shared/utils/display_text.dart';
+import '../../catalog/widgets/category_style.dart';
+import '../../catalog/widgets/position_illustration.dart';
 
 /// Progress screen showing badges, streaks, and statistics
 class ProgressScreen extends ConsumerStatefulWidget {
@@ -49,9 +52,9 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                 children: [
                   Text(
                     'progress.title'.tr(),
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    style: Theme.of(context).textTheme.displaySmall,
                   ),
-                  const SizedBox(height: AppSpacing.sm),
+                  const SizedBox(height: AppSpacing.lg),
                   _buildStreakCard(),
                 ],
               ),
@@ -110,101 +113,85 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     // Singolare / plurale
     String giorni(int n) => n == 1 ? 'progress_ui.day_singular'.tr() : 'progress_ui.day_plural'.tr(namedArgs: {'n': '$n'});
 
+    final valueStyle = Theme.of(context).textTheme.headlineMedium;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.burgundy,
-            AppColors.burgundy.withOpacity(0.7),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
+        color: AppColors.inkRaised,
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        border: Border.all(color: AppColors.hairline),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              // Icona fuoco
-              Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: Center(
-                  child: Text(
-                    streak == 0 ? '💤' : '🔥',
-                    style: const TextStyle(fontSize: 28),
+          IntrinsicHeight(
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                        color: AppColors.champagne.withOpacity(0.5)),
+                  ),
+                  child: Icon(
+                    streak == 0
+                        ? Icons.bedtime_outlined
+                        : Icons.local_fire_department_outlined,
+                    color: AppColors.champagne,
+                    size: 24,
                   ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.md),
+                const SizedBox(width: AppSpacing.md),
 
-              // Serie attuale
-              Expanded(
-                child: Column(
+                // Serie attuale
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        plainLabel('progress_ui.current_streak'.tr())
+                            .toUpperCase(),
+                        style: AppTypography.eyebrow.copyWith(fontSize: 10),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(giorni(streak), style: valueStyle),
+                    ],
+                  ),
+                ),
+
+                const VerticalDivider(width: 32, color: AppColors.hairline),
+
+                // Serie più lunga
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'progress_ui.current_streak'.tr(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
+                      plainLabel('progress_ui.record'.tr()).toUpperCase(),
+                      style: AppTypography.eyebrow.copyWith(fontSize: 10),
                     ),
-                    const SizedBox(height: 2),
-                    Text(
-                      giorni(streak),
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Serie più lunga
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.md,
-                  vertical: AppSpacing.sm,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'progress_ui.record'.tr(),
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.white.withOpacity(0.7),
-                          ),
-                    ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     Text(
                       giorni(longest),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: AppColors.champagne,
                           ),
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           // Messaggio motivazionale
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
           Text(
-            motivationalMessage,
+            plainLabel(motivationalMessage),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.gold.withOpacity(0.9),
+                  fontStyle: FontStyle.italic,
                 ),
           ),
         ],
@@ -268,63 +255,54 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     final badges = [
       // ── ESPLORAZIONE ──
       _BadgeData(
-        emoji: '🌱',
         name: 'badge_list.first_step.name'.tr(),
         description: 'badge_list.first_step.desc'.tr(),
         isUnlocked: triedCount >= 1,
         progress: '${triedCount.clamp(0, 1)}/1',
       ),
       _BadgeData(
-        emoji: '🧭',
         name: 'badge_list.explorer.name'.tr(),
         description: 'badge_list.explorer.desc'.tr(),
         isUnlocked: triedCount >= 5,
         progress: '${triedCount.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '💫',
         name: 'badge_list.initiator.name'.tr(),
         description: 'badge_list.initiator.desc'.tr(),
         isUnlocked: triedCount >= 10,
         progress: '${triedCount.clamp(0, 10)}/10',
       ),
       _BadgeData(
-        emoji: '⛰️',
         name: 'badge_list.adventurer.name'.tr(),
         description: 'badge_list.adventurer.desc'.tr(),
         isUnlocked: triedCount >= 20,
         progress: '${triedCount.clamp(0, 20)}/20',
       ),
       _BadgeData(
-        emoji: '🌺',
         name: 'badge_list.enthusiast.name'.tr(),
         description: 'badge_list.enthusiast.desc'.tr(),
         isUnlocked: triedCount >= 30,
         progress: '${triedCount.clamp(0, 30)}/30',
       ),
       _BadgeData(
-        emoji: '📚',
         name: 'badge_list.collector.name'.tr(),
         description: 'badge_list.collector.desc'.tr(),
         isUnlocked: triedCount >= 50,
         progress: '${triedCount.clamp(0, 50)}/50',
       ),
       _BadgeData(
-        emoji: '💎',
         name: 'badge_list.master.name'.tr(),
         description: 'badge_list.master.desc'.tr(),
         isUnlocked: triedCount >= 100,
         progress: '${triedCount.clamp(0, 100)}/100',
       ),
       _BadgeData(
-        emoji: '🌟',
         name: 'badge_list.legend.name'.tr(),
         description: 'badge_list.legend.desc'.tr(),
         isUnlocked: triedCount >= 150,
         progress: '${triedCount.clamp(0, 150)}/150',
       ),
       _BadgeData(
-        emoji: '👑',
         name: 'badge_list.grand_master.name'.tr(),
         description: 'badge_list.grand_master.desc'.tr(),
         isUnlocked: triedCount >= 200,
@@ -333,28 +311,24 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── PREFERITI ──
       _BadgeData(
-        emoji: '❤️',
         name: 'badge_list.first_spark.name'.tr(),
         description: 'badge_list.first_spark.desc'.tr(),
         isUnlocked: favoritesCount >= 1,
         progress: '${favoritesCount.clamp(0, 1)}/1',
       ),
       _BadgeData(
-        emoji: '💕',
         name: 'badge_list.romantic.name'.tr(),
         description: 'badge_list.romantic.desc'.tr(),
         isUnlocked: favoritesCount >= 5,
         progress: '${favoritesCount.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '💝',
         name: 'badge_list.big_heart.name'.tr(),
         description: 'badge_list.big_heart.desc'.tr(),
         isUnlocked: favoritesCount >= 10,
         progress: '${favoritesCount.clamp(0, 10)}/10',
       ),
       _BadgeData(
-        emoji: '💖',
         name: 'badge_list.heart_collector.name'.tr(),
         description: 'badge_list.heart_collector.desc'.tr(),
         isUnlocked: favoritesCount >= 20,
@@ -363,49 +337,42 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── SERIE ──
       _BadgeData(
-        emoji: '📅',
         name: 'badge_list.third_day.name'.tr(),
         description: 'badge_list.third_day.desc'.tr(),
         isUnlocked: streak >= 3,
         progress: '${streak.clamp(0, 3)}/3',
       ),
       _BadgeData(
-        emoji: '🔥',
         name: 'badge_list.dedicated.name'.tr(),
         description: 'badge_list.dedicated.desc'.tr(),
         isUnlocked: streak >= 7,
         progress: '${streak.clamp(0, 7)}/7',
       ),
       _BadgeData(
-        emoji: '⚡',
         name: 'badge_list.momentum.name'.tr(),
         description: 'badge_list.momentum.desc'.tr(),
         isUnlocked: streak >= 14,
         progress: '${streak.clamp(0, 14)}/14',
       ),
       _BadgeData(
-        emoji: '🏆',
         name: 'badge_list.champion.name'.tr(),
         description: 'badge_list.champion.desc'.tr(),
         isUnlocked: streak >= 30,
         progress: '${streak.clamp(0, 30)}/30',
       ),
       _BadgeData(
-        emoji: '🌙',
         name: 'badge_list.faithful.name'.tr(),
         description: 'badge_list.faithful.desc'.tr(),
         isUnlocked: streak >= 60,
         progress: '${streak.clamp(0, 60)}/60',
       ),
       _BadgeData(
-        emoji: '☀️',
         name: 'badge_list.irresistible.name'.tr(),
         description: 'badge_list.irresistible.desc'.tr(),
         isUnlocked: streak >= 100,
         progress: '${streak.clamp(0, 100)}/100',
       ),
       _BadgeData(
-        emoji: '✨',
         name: 'badge_list.on_streak.name'.tr(),
         description: 'badge_list.on_streak.desc'.tr(),
         isUnlocked: currentStreak >= 3,
@@ -414,35 +381,30 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── GIOCHI ──
       _BadgeData(
-        emoji: '🎮',
         name: 'badge_list.first_game.name'.tr(),
         description: 'badge_list.first_game.desc'.tr(),
         isUnlocked: gamesPlayed >= 1,
         progress: '${gamesPlayed.clamp(0, 1)}/1',
       ),
       _BadgeData(
-        emoji: '🃏',
         name: 'badge_list.player.name'.tr(),
         description: 'badge_list.player.desc'.tr(),
         isUnlocked: gamesPlayed >= 5,
         progress: '${gamesPlayed.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '💞',
         name: 'badge_list.soul_explorers.name'.tr(),
         description: 'badge_list.soul_explorers.desc'.tr(),
         isUnlocked: gamesPlayed >= 10,
         progress: '${gamesPlayed.clamp(0, 10)}/10',
       ),
       _BadgeData(
-        emoji: '🎯',
         name: 'badge_list.game_expert.name'.tr(),
         description: 'badge_list.game_expert.desc'.tr(),
         isUnlocked: gamesPlayed >= 25,
         progress: '${gamesPlayed.clamp(0, 25)}/25',
       ),
       _BadgeData(
-        emoji: '🏅',
         name: 'badge_list.professional.name'.tr(),
         description: 'badge_list.professional.desc'.tr(),
         isUnlocked: gamesPlayed >= 50,
@@ -451,21 +413,18 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── CATEGORIE ──
       _BadgeData(
-        emoji: '🌍',
         name: 'badge_list.world_explorer.name'.tr(),
         description: 'badge_list.world_explorer.desc'.tr(),
         isUnlocked: uniqueCategories.length >= 3,
         progress: '${uniqueCategories.length.clamp(0, 3)}/3',
       ),
       _BadgeData(
-        emoji: '🌈',
         name: 'badge_list.versatile.name'.tr(),
         description: 'badge_list.versatile.desc'.tr(),
         isUnlocked: uniqueCategories.length >= 5,
         progress: '${uniqueCategories.length.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🎨',
         name: 'badge_list.complete_artist.name'.tr(),
         description: 'badge_list.complete_artist.desc'.tr(),
         isUnlocked: uniqueCategories.length >= totalCategories,
@@ -474,14 +433,12 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── SFIDA ──
       _BadgeData(
-        emoji: '💪',
         name: 'badge_list.brave.name'.tr(),
         description: 'badge_list.brave.desc'.tr(),
         isUnlocked: highDiffCount >= 5,
         progress: '${highDiffCount.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🦸',
         name: 'badge_list.acrobat.name'.tr(),
         description: 'badge_list.acrobat.desc'.tr(),
         isUnlocked: highDiffCount >= 15,
@@ -490,21 +447,18 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── TEMPO INSIEME ──
       _BadgeData(
-        emoji: '⏱️',
         name: 'badge_list.first_hour.name'.tr(),
         description: 'badge_list.first_hour.desc'.tr(),
         isUnlocked: timeMins >= 60,
         progress: '${timeMins.clamp(0, 60)}/60 min',
       ),
       _BadgeData(
-        emoji: '🕐',
         name: 'badge_list.time_lovers.name'.tr(),
         description: 'badge_list.time_lovers.desc'.tr(),
         isUnlocked: timeMins >= 300,
         progress: '${timeMins.clamp(0, 300)}/300 min',
       ),
       _BadgeData(
-        emoji: '🌅',
         name: 'badge_list.deep_connection.name'.tr(),
         description: 'badge_list.deep_connection.desc'.tr(),
         isUnlocked: timeMins >= 1440,
@@ -513,14 +467,12 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── ESPLORAZIONE AVANZATA ──
       _BadgeData(
-        emoji: '🌠',
         name: 'badge_list.summit.name'.tr(),
         description: 'badge_list.summit.desc'.tr(),
         isUnlocked: triedCount >= 250,
         progress: '${triedCount.clamp(0, 250)}/250',
       ),
       _BadgeData(
-        emoji: '🎆',
         name: 'badge_list.olympian.name'.tr(),
         description: 'badge_list.olympian.desc'.tr(),
         isUnlocked: triedCount >= 300,
@@ -529,14 +481,12 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── PREFERITI AVANZATI ──
       _BadgeData(
-        emoji: '💟',
         name: 'badge_list.great_collection.name'.tr(),
         description: 'badge_list.great_collection.desc'.tr(),
         isUnlocked: favoritesCount >= 30,
         progress: '${favoritesCount.clamp(0, 30)}/30',
       ),
       _BadgeData(
-        emoji: '🏰',
         name: 'badge_list.love_castle.name'.tr(),
         description: 'badge_list.love_castle.desc'.tr(),
         isUnlocked: favoritesCount >= 50,
@@ -545,21 +495,18 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── SERIE AVANZATE ──
       _BadgeData(
-        emoji: '🌞',
         name: 'badge_list.invincible.name'.tr(),
         description: 'badge_list.invincible.desc'.tr(),
         isUnlocked: streak >= 150,
         progress: '${streak.clamp(0, 150)}/150',
       ),
       _BadgeData(
-        emoji: '🌌',
         name: 'badge_list.infinite.name'.tr(),
         description: 'badge_list.infinite.desc'.tr(),
         isUnlocked: streak >= 200,
         progress: '${streak.clamp(0, 200)}/200',
       ),
       _BadgeData(
-        emoji: '📆',
         name: 'badge_list.year_together.name'.tr(),
         description: 'badge_list.year_together.desc'.tr(),
         isUnlocked: streak >= 365,
@@ -568,28 +515,24 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── GIOCHI AVANZATI ──
       _BadgeData(
-        emoji: '🎲',
         name: 'badge_list.great_player.name'.tr(),
         description: 'badge_list.great_player.desc'.tr(),
         isUnlocked: gamesPlayed >= 75,
         progress: '${gamesPlayed.clamp(0, 75)}/75',
       ),
       _BadgeData(
-        emoji: '🥇',
         name: 'badge_list.games_champion.name'.tr(),
         description: 'badge_list.games_champion.desc'.tr(),
         isUnlocked: gamesPlayed >= 100,
         progress: '${gamesPlayed.clamp(0, 100)}/100',
       ),
       _BadgeData(
-        emoji: '🎪',
         name: 'badge_list.games_master.name'.tr(),
         description: 'badge_list.games_master.desc'.tr(),
         isUnlocked: gamesPlayed >= 150,
         progress: '${gamesPlayed.clamp(0, 150)}/150',
       ),
       _BadgeData(
-        emoji: '🎉',
         name: 'badge_list.games_legend.name'.tr(),
         description: 'badge_list.games_legend.desc'.tr(),
         isUnlocked: gamesPlayed >= 200,
@@ -598,28 +541,24 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── SFIDA AVANZATA ──
       _BadgeData(
-        emoji: '⚔️',
         name: 'badge_list.warrior.name'.tr(),
         description: 'badge_list.warrior.desc'.tr(),
         isUnlocked: highDiffCount >= 25,
         progress: '${highDiffCount.clamp(0, 25)}/25',
       ),
       _BadgeData(
-        emoji: '🦅',
         name: 'badge_list.eagle.name'.tr(),
         description: 'badge_list.eagle.desc'.tr(),
         isUnlocked: highDiffCount >= 30,
         progress: '${highDiffCount.clamp(0, 30)}/30',
       ),
       _BadgeData(
-        emoji: '🎭',
         name: 'badge_list.extreme.name'.tr(),
         description: 'badge_list.extreme.desc'.tr(),
         isUnlocked: veryHighDiffCount >= 3,
         progress: '${veryHighDiffCount.clamp(0, 3)}/3',
       ),
       _BadgeData(
-        emoji: '🦁',
         name: 'badge_list.ultras.name'.tr(),
         description: 'badge_list.ultras.desc'.tr(),
         isUnlocked: veryHighDiffCount >= 10,
@@ -628,21 +567,18 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── TEMPO INSIEME AVANZATO ──
       _BadgeData(
-        emoji: '🌊',
         name: 'badge_list.ocean_of_time.name'.tr(),
         description: 'badge_list.ocean_of_time.desc'.tr(),
         isUnlocked: timeMins >= 600,
         progress: '${timeMins.clamp(0, 600)}/600 min',
       ),
       _BadgeData(
-        emoji: '🌃',
         name: 'badge_list.endless_night.name'.tr(),
         description: 'badge_list.endless_night.desc'.tr(),
         isUnlocked: timeMins >= 2880,
         progress: '${timeMins.clamp(0, 2880)}/2880 min',
       ),
       _BadgeData(
-        emoji: '☄️',
         name: 'badge_list.a_journey.name'.tr(),
         description: 'badge_list.a_journey.desc'.tr(),
         isUnlocked: timeMins >= 6000,
@@ -651,56 +587,48 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── CATEGORIE SPECIFICHE ──
       _BadgeData(
-        emoji: '🌹',
         name: 'badge_list.romantic_heart.name'.tr(),
         description: 'badge_list.romantic_heart.desc'.tr(),
         isUnlocked: (categoryTriedCount['romantic'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['romantic'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🌿',
         name: 'badge_list.expert_beginner.name'.tr(),
         description: 'badge_list.expert_beginner.desc'.tr(),
         isUnlocked: (categoryTriedCount['beginner'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['beginner'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🏋️',
         name: 'badge_list.passionate_athlete.name'.tr(),
         description: 'badge_list.passionate_athlete.desc'.tr(),
         isUnlocked: (categoryTriedCount['athletic'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['athletic'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🤝',
         name: 'badge_list.supported_couple.name'.tr(),
         description: 'badge_list.supported_couple.desc'.tr(),
         isUnlocked: (categoryTriedCount['supported'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['supported'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🦋',
         name: 'badge_list.light_touch.name'.tr(),
         description: 'badge_list.light_touch.desc'.tr(),
         isUnlocked: (categoryTriedCount['lowImpact'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['lowImpact'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🗺️',
         name: 'badge_list.adventurous_spirit.name'.tr(),
         description: 'badge_list.adventurous_spirit.desc'.tr(),
         isUnlocked: (categoryTriedCount['adventurous'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['adventurous'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🔗',
         name: 'badge_list.bonds_found.name'.tr(),
         description: 'badge_list.bonds_found.desc'.tr(),
         isUnlocked: (categoryTriedCount['reconnect'] ?? 0) >= 5,
         progress: '${(categoryTriedCount['reconnect'] ?? 0).clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '⚡',
         name: 'badge_list.extreme_speed.name'.tr(),
         description: 'badge_list.extreme_speed.desc'.tr(),
         isUnlocked: (categoryTriedCount['quickie'] ?? 0) >= 5,
@@ -709,28 +637,24 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
       // ── DIVERSITÀ ──
       _BadgeData(
-        emoji: '🌬️',
         name: 'badge_list.calm_relax.name'.tr(),
         description: 'badge_list.calm_relax.desc'.tr(),
         isUnlocked: lowEnergyCount >= 5,
         progress: '${lowEnergyCount.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '💥',
         name: 'badge_list.high_energy.name'.tr(),
         description: 'badge_list.high_energy.desc'.tr(),
         isUnlocked: highEnergyCount >= 5,
         progress: '${highEnergyCount.clamp(0, 5)}/5',
       ),
       _BadgeData(
-        emoji: '🐢',
         name: 'badge_list.take_time.name'.tr(),
         description: 'badge_list.take_time.desc'.tr(),
         isUnlocked: longDurationCount >= 3,
         progress: '${longDurationCount.clamp(0, 3)}/3',
       ),
       _BadgeData(
-        emoji: '🔭',
         name: 'badge_list.full_focus.name'.tr(),
         description: 'badge_list.full_focus.desc'.tr(),
         isUnlocked: triedFocusTypes.length >= totalFocusTypes,
@@ -742,9 +666,9 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
       padding: const EdgeInsets.all(AppSpacing.lg),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        mainAxisSpacing: AppSpacing.md,
+        mainAxisSpacing: AppSpacing.lg,
         crossAxisSpacing: AppSpacing.md,
-        childAspectRatio: 0.8,
+        childAspectRatio: 0.78,
       ),
       itemCount: badges.length,
       itemBuilder: (context, index) {
@@ -761,38 +685,26 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
-            title: Row(
-              children: [
-                Text(
-                  badge.isUnlocked ? badge.emoji : '🔒',
-                  style: const TextStyle(fontSize: 28),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    badge.name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              ],
-            ),
+            icon: _BadgeSeal(badge: badge, size: 72),
+            title: Text(badge.name, textAlign: TextAlign.center),
             content: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(badge.description),
-                const SizedBox(height: 8),
+                Text(badge.description, textAlign: TextAlign.center),
+                const SizedBox(height: 12),
                 Text(
-                  'progress_ui.progress_label'.tr(namedArgs: {'progress': badge.progress}),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.gold,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  'progress_ui.progress_label'
+                      .tr(namedArgs: {'progress': badge.progress}),
+                  style: const TextStyle(
+                    color: AppColors.champagne,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 if (!badge.isUnlocked) ...[
                   const SizedBox(height: 8),
                   Text(
                     'progress_ui.keep_exploring'.tr(),
+                    textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontStyle: FontStyle.italic,
                         ),
@@ -809,44 +721,23 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
           ),
         );
       },
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: badge.isUnlocked
-              ? Theme.of(context).colorScheme.surface
-              : Theme.of(context).colorScheme.surface.withOpacity(0.4),
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(
-            color: badge.isUnlocked
-                ? AppColors.gold.withOpacity(0.5)
-                : Theme.of(context).colorScheme.outline.withOpacity(0.2),
+      child: Column(
+        children: [
+          _BadgeSeal(badge: badge, size: 72),
+          const SizedBox(height: 10),
+          Text(
+            badge.name,
+            style: TextStyle(
+              fontSize: 12,
+              height: 1.25,
+              fontWeight: FontWeight.w600,
+              color: badge.isUnlocked ? AppColors.ivory : AppColors.smoke,
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              badge.isUnlocked ? badge.emoji : '🔒',
-              style: const TextStyle(fontSize: 36),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              badge.name,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: badge.isUnlocked
-                        ? null
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.4),
-                  ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -885,36 +776,35 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
       child: Column(
         children: [
           _buildStatRow(
-            icon: Icons.explore,
+            icon: Icons.explore_outlined,
             label: 'progress_ui.positions_explored'.tr(),
             value: '$triedCount',
-            color: AppColors.burgundy,
           ),
           _buildStatRow(
-            icon: Icons.casino,
+            icon: Icons.casino_outlined,
             label: 'progress_ui.games_played'.tr(),
             value: '$gamesPlayed',
-            color: AppColors.gold,
           ),
           _buildStatRow(
-            icon: Icons.timer,
+            icon: Icons.schedule,
             label: 'progress_ui.time_together'.tr(),
             value: timeTogether,
-            color: AppColors.navy,
           ),
           _buildStatRow(
-            icon: Icons.favorite,
+            icon: Icons.favorite_border,
             label: 'progress_ui.favorites_saved'.tr(),
             value: '$favoritesCount',
-            color: AppColors.blush,
           ),
           
           const SizedBox(height: AppSpacing.xl),
           
           // Categorie esplorate
-          Text(
-            'progress_ui.categories_explored'.tr(),
-            style: Theme.of(context).textTheme.titleMedium,
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'progress_ui.categories_explored'.tr().toUpperCase(),
+              style: AppTypography.eyebrow,
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
 
@@ -924,10 +814,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
               child: Text(
                 'progress_ui.start_exploring_stats'.tr(),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5),
+                      color: AppColors.smoke,
                     ),
                 textAlign: TextAlign.center,
               ),
@@ -940,7 +827,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
               return _buildCategoryProgress(
                 'categories.${entry.key}'.tr(),
                 percentage,
-                AppColors.burgundy,
+                AppColors.champagne,
               );
             }),
         ],
@@ -952,43 +839,26 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
     required IconData icon,
     required String label,
     required String value,
-    required Color color,
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Icon(icon, color: color),
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            ),
-            Text(
-              value,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.hairline)),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.mist, size: 20),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: AppColors.champagne,
+                ),
+          ),
+        ],
       ),
     );
   }
@@ -1017,9 +887,9 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: color.withOpacity(0.1),
+              backgroundColor: AppColors.inkHighest,
               valueColor: AlwaysStoppedAnimation(color),
-              minHeight: 6,
+              minHeight: 3,
             ),
           ),
         ],
@@ -1043,10 +913,10 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.explore_outlined,
-                size: 64,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                size: 44,
+                color: AppColors.smoke,
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
@@ -1084,15 +954,22 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         final position = repo.getById(positionId);
 
         return Container(
-          margin: const EdgeInsets.only(bottom: AppSpacing.sm),
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(AppRadius.md),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: const BoxDecoration(
+            border: Border(bottom: BorderSide(color: AppColors.hairline)),
           ),
           child: Row(
             children: [
-              const Text('✅', style: TextStyle(fontSize: 24)),
+              SizedBox.square(
+                dimension: 52,
+                child: position != null
+                    ? PositionIllustration(
+                        position: position,
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        monogramSize: 24,
+                      )
+                    : const Icon(Icons.check, color: AppColors.champagne),
+              ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -1100,7 +977,11 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                   children: [
                     Text(
                       position?.getName(locale) ?? positionId,
-                      style: Theme.of(context).textTheme.titleSmall,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.displayFont,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     if (position?.getAlias(locale) != null)
                       Text(
@@ -1117,21 +998,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                 ),
               ),
               if (position != null)
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(5, (i) {
-                    return Icon(
-                      Icons.star,
-                      size: 12,
-                      color: i < position.difficulty
-                          ? AppColors.gold
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.2),
-                    );
-                  }),
-                ),
+                DifficultyMeter(difficulty: position.difficulty, barWidth: 6),
             ],
           ),
         );
@@ -1145,17 +1012,65 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 // ============================================================
 
 class _BadgeData {
-  final String emoji;
   final String name;
   final String description;
   final bool isUnlocked;
   final String progress;
 
   const _BadgeData({
-    required this.emoji,
     required this.name,
     required this.description,
     required this.isUnlocked,
     required this.progress,
   });
+}
+
+/// A badge drawn as a seal: the badge's initial in Playfair italic inside a
+/// double ring — champagne when unlocked, a muted lock when not.
+class _BadgeSeal extends StatelessWidget {
+  final _BadgeData badge;
+  final double size;
+
+  const _BadgeSeal({required this.badge, required this.size});
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = badge.isUnlocked;
+    final ring = unlocked ? AppColors.champagne : AppColors.outline;
+    final name = badge.name.trim();
+    return Container(
+      width: size,
+      height: size,
+      padding: EdgeInsets.all(size * 0.07),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: ring.withOpacity(unlocked ? 0.5 : 1)),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: unlocked
+              ? AppColors.champagne.withOpacity(0.08)
+              : Colors.transparent,
+          border: Border.all(color: ring),
+        ),
+        child: Center(
+          child: unlocked
+              ? Text(
+                  name.isEmpty ? '·' : name.characters.first.toUpperCase(),
+                  style: TextStyle(
+                    fontFamily: AppTypography.displayFont,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                    fontSize: size * 0.4,
+                    height: 1,
+                    color: AppColors.champagne,
+                  ),
+                )
+              : Icon(Icons.lock_outline,
+                  size: size * 0.28, color: AppColors.smoke),
+        ),
+      ),
+    );
+  }
 }
