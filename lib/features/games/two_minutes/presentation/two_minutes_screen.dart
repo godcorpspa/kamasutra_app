@@ -2477,6 +2477,10 @@ class _CandlePainter extends CustomPainter {
           Color(0xFFFFD166),
           Color(0xFFB8860B),
         ],
+        // ui.Gradient requires explicit stops for != 2 colors; without them
+        // it throws mid-paint, leaving the canvas translated and shifting
+        // everything painted afterwards off-screen.
+        const [0.0, 0.5, 1.0],
       );
     canvas.drawRRect(
       RRect.fromRectAndRadius(bodyRect, const Radius.circular(4)),
@@ -2715,6 +2719,7 @@ class _ConnectionMeterPainter extends CustomPainter {
             Color(0xFFFF8C42),
             Color(0xFFFFD166),
           ],
+          const [0.0, 0.5, 1.0],
         );
       canvas.drawRRect(fillRect, fillPaint);
     }

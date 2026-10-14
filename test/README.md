@@ -15,6 +15,7 @@ test/
 │       └── pin_hasher_test.dart                # PIN hashing + legacy migration
 └── features/
     └── games/
+        ├── game_layout_test.dart               # Games render on-screen at phone sizes
         └── compliment_battle/
             └── compliment_scoring_test.dart    # Scoring formula + multipliers
 ```
@@ -29,6 +30,13 @@ Single file:
 
 ```bash
 flutter test test/data/services/pin_hasher_test.dart
+```
+
+Game layout test with a PNG per case written to `build/game_layout/`:
+
+```bash
+flutter test test/features/games/game_layout_test.dart \
+  --dart-define=GAME_LAYOUT_SCREENSHOTS=1
 ```
 
 ## Conventions

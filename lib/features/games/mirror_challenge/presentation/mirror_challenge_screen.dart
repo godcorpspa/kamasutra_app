@@ -2632,6 +2632,8 @@ class _MeterPainter extends CustomPainter {
             Color(0xFFD946EF),
             Color(0xFFFFD166),
           ],
+          // Required for != 2 colors, otherwise ui.Gradient throws mid-paint.
+          const [0.0, 0.5, 1.0],
         );
       canvas.drawRRect(fillRect, fill);
     }

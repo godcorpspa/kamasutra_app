@@ -2618,6 +2618,10 @@ class _MiniSilhouettePainter extends CustomPainter {
           Color(0xFFE879F9),
           Color(0xFFB388FF),
         ],
+        // ui.Gradient requires explicit stops for != 2 colors; without them
+        // it throws mid-paint, leaving the canvas translated and shifting
+        // everything painted afterwards off-screen.
+        const [0.0, 0.5, 1.0],
       );
     canvas.drawPath(fullPath, bodyPaint);
 

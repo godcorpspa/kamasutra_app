@@ -2456,6 +2456,8 @@ class _ConnectionMeterPainter extends CustomPainter {
             Color(0xFFB388FF),
             Color(0xFFE879F9),
           ],
+          // Required for != 2 colors, otherwise ui.Gradient throws mid-paint.
+          const [0.0, 0.5, 1.0],
         );
       canvas.drawRRect(fillRect, fillPaint);
     }
