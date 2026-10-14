@@ -6,7 +6,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../../../app/router.dart';
+import '../../../app/theme.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../shared/widgets/brand.dart';
 import '../../../shared/widgets/offline_mode_badge.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -31,13 +33,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   String? _errorMessage;
-
-  // Colori tema
-  static const Color _darkBackground = Color(0xFF1A0A1F);
-  static const Color _purple = Color(0xFF6B2D5B);
-  static const Color _fuchsia = Color(0xFFD946EF);
-  static const Color _fuchsiaLight = Color(0xFFE879F9);
-  static const Color _cream = Color(0xFFFFF8F0);
 
   @override
   void dispose() {
@@ -118,11 +113,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Color _getPasswordStrengthColor(double strength) {
-    if (strength < 0.3) return Colors.red;
-    if (strength < 0.5) return Colors.orange;
-    if (strength < 0.7) return Colors.yellow;
-    if (strength < 0.9) return Colors.lightGreen;
-    return Colors.green;
+    if (strength < 0.5) return AppColors.error;
+    if (strength < 0.7) return AppColors.jewelAmber;
+    return AppColors.jewelSage;
   }
 
   String _getPasswordStrengthText(double strength) {
@@ -300,33 +293,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _showResetPasswordDialog() {
     final emailController = TextEditingController(text: _emailController.text);
-    
+
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        backgroundColor: _darkBackground,
-        title: Text('auth.reset_password'.tr(), style: const TextStyle(color: _cream)),
+        title: Text('auth.reset_password'.tr()),
         content: TextField(
           controller: emailController,
-          style: const TextStyle(color: _cream),
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             labelText: 'auth.email_label'.tr(),
-            labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: _purple),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: _fuchsia),
-            ),
+            prefixIcon: const Icon(Icons.mail_outline, size: 20),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: Text('common.cancel'.tr(), style: TextStyle(color: _cream.withOpacity(0.7))),
+            style: TextButton.styleFrom(foregroundColor: AppColors.mist),
+            child: Text('common.cancel'.tr()),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: _purple),
+          TextButton(
             onPressed: () async {
               try {
                 await _auth.sendPasswordResetEmail(
@@ -335,19 +321,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 if (mounted) {
                   Navigator.pop(dialogContext);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('auth.reset_email_sent'.tr()),
-                      backgroundColor: _purple,
-                    ),
+                    SnackBar(content: Text('auth.reset_email_sent'.tr())),
                   );
                 }
               } on FirebaseAuthException catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(_getErrorMessage(e.code)),
-                      backgroundColor: Colors.red,
-                    ),
+                    SnackBar(content: Text(_getErrorMessage(e.code))),
                   );
                 }
               }
@@ -362,367 +342,267 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final passwordStrength = _getPasswordStrength(_passwordController.text);
-    
+    final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
-      backgroundColor: _darkBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 40),
-                
-                // Logo/Titolo
-                const Text(
-                  '💑',
-                  style: TextStyle(fontSize: 64),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Kamasutra App',
-                  style: TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: _fuchsiaLight,
+      body: VelvetBackground(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(28, 0, 28, 24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 56),
+                  const BrandLockup(markSize: 44),
+                  const SizedBox(height: 44),
+                  Text(
+                    _isLogin
+                        ? 'auth.welcome_back'.tr()
+                        : 'auth.create_account'.tr(),
+                    style: textTheme.headlineSmall,
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  _isLogin ? 'auth.welcome_back'.tr() : 'auth.create_account'.tr(),
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: _cream.withOpacity(0.7),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                
-                const SizedBox(height: 40),
+                  const SizedBox(height: 28),
 
-                // Offline indicator — visible only when Firebase is unavailable
-                // (login can't work without it).
-                const OfflineModeBadge(),
+                  // Offline indicator — visible only when Firebase is
+                  // unavailable (login can't work without it).
+                  const OfflineModeBadge(),
 
-                // Messaggio errore
-                if (_errorMessage != null)
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.red.withOpacity(0.5)),
+                  if (_errorMessage != null)
+                    Container(
+                      padding: const EdgeInsets.all(14),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
+                        border: Border.all(
+                            color: AppColors.error.withOpacity(0.35)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.error_outline,
+                              color: AppColors.error, size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              _errorMessage!,
+                              style: const TextStyle(color: AppColors.error),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Row(
+
+                  // Email
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    autofillHints: const [AutofillHints.email],
+                    decoration: InputDecoration(
+                      labelText: 'auth.email_label'.tr(),
+                      prefixIcon: const Icon(Icons.mail_outline, size: 20),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'auth.enter_email'.tr();
+                      }
+                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                          .hasMatch(value)) {
+                        return 'auth.invalid_email'.tr();
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Password
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: _obscurePassword,
+                    autofillHints: const [AutofillHints.password],
+                    onChanged: (value) {
+                      // Aggiorna l'indicatore di forza password
+                      setState(() {});
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'auth.password_label'.tr(),
+                      prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                      errorMaxLines: 3,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                          size: 20,
+                        ),
+                        onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword),
+                      ),
+                    ),
+                    validator: _validatePassword,
+                  ),
+
+                  // Indicatore forza password (solo in registrazione)
+                  if (!_isLogin && _passwordController.text.isNotEmpty) ...[
+                    const SizedBox(height: 12),
+                    Row(
                       children: [
-                        const Icon(Icons.error_outline, color: Colors.red, size: 20),
-                        const SizedBox(width: 8),
                         Expanded(
-                          child: Text(
-                            _errorMessage!,
-                            style: const TextStyle(color: Colors.red),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value: passwordStrength,
+                              minHeight: 3,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                _getPasswordStrengthColor(passwordStrength),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          _getPasswordStrengthText(passwordStrength),
+                          style: TextStyle(
+                            color: _getPasswordStrengthColor(passwordStrength),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    _buildPasswordRequirements(),
+                  ],
 
-                // Email
-                TextFormField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: _cream),
-                  decoration: InputDecoration(
-                    labelText: 'auth.email_label'.tr(),
-                    labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
-                    prefixIcon: const Icon(Icons.email_outlined, color: _fuchsia),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: _purple),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: _fuchsia, width: 2),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.red),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.red, width: 2),
-                    ),
-                    errorStyle: const TextStyle(color: Colors.red),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'auth.enter_email'.tr();
-                    }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                      return 'auth.invalid_email'.tr();
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                  const SizedBox(height: 14),
 
-                // Password
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: _obscurePassword,
-                  style: const TextStyle(color: _cream),
-                  onChanged: (value) {
-                    // Aggiorna l'indicatore di forza password
-                    setState(() {});
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'auth.password_label'.tr(),
-                    labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
-                    prefixIcon: const Icon(Icons.lock_outlined, color: _fuchsia),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                        color: _fuchsia.withOpacity(0.7),
+                  // Conferma Password (solo in registrazione)
+                  if (!_isLogin) ...[
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: _obscureConfirmPassword,
+                      decoration: InputDecoration(
+                        labelText: 'auth.confirm_password'.tr(),
+                        prefixIcon: const Icon(Icons.lock_outline, size: 20),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            size: 20,
+                          ),
+                          onPressed: () => setState(() =>
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                      validator: _validateConfirmPassword,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: _purple),
+                    const SizedBox(height: 8),
+                  ],
+
+                  // Password dimenticata (solo in login)
+                  if (_isLogin)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: _showResetPasswordDialog,
+                        child: Text('auth.forgot_password'.tr()),
+                      ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: _fuchsia, width: 2),
+
+                  const SizedBox(height: 20),
+
+                  // Pulsante principale
+                  SizedBox(
+                    height: 54,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _submit,
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 22,
+                              width: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.champagne,
+                              ),
+                            )
+                          : Text(_isLogin
+                              ? 'auth.login'.tr()
+                              : 'auth.register'.tr()),
                     ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.red),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: const BorderSide(color: Colors.red, width: 2),
-                    ),
-                    errorStyle: const TextStyle(color: Colors.red),
-                    errorMaxLines: 3,
                   ),
-                  validator: _validatePassword,
-                ),
-                
-                // Indicatore forza password (solo in registrazione)
-                if (!_isLogin && _passwordController.text.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+
+                  const SizedBox(height: 28),
+
                   Row(
                     children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: passwordStrength,
-                            backgroundColor: Colors.grey.withOpacity(0.3),
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              _getPasswordStrengthColor(passwordStrength),
-                            ),
-                            minHeight: 6,
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'auth.or_divider'.tr().toUpperCase(),
+                          style: AppTypography.eyebrow,
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // Google Sign In
+                  SizedBox(
+                    height: 54,
+                    child: OutlinedButton.icon(
+                      onPressed: _isLoading ? null : _loginWithGoogle,
+                      icon: Image.network(
+                        'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
+                        height: 20,
+                        width: 20,
+                        errorBuilder: (_, __, ___) => const Text(
+                          'G',
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.ivory,
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      label: Text('auth.continue_google'.tr()),
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Switch login/registrazione
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
                       Text(
-                        _getPasswordStrengthText(passwordStrength),
-                        style: TextStyle(
-                          color: _getPasswordStrengthColor(passwordStrength),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
+                        _isLogin
+                            ? 'auth.no_account'.tr()
+                            : 'auth.has_account'.tr(),
+                        style: const TextStyle(color: AppColors.mist),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _isLogin = !_isLogin;
+                            _errorMessage = null;
+                            _confirmPasswordController.clear();
+                          });
+                        },
+                        child: Text(
+                          _isLogin ? 'auth.register'.tr() : 'auth.login'.tr(),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  // Requisiti password
-                  _buildPasswordRequirements(),
                 ],
-                
-                const SizedBox(height: 16),
-
-                // Conferma Password (solo in registrazione)
-                if (!_isLogin) ...[
-                  TextFormField(
-                    controller: _confirmPasswordController,
-                    obscureText: _obscureConfirmPassword,
-                    style: const TextStyle(color: _cream),
-                    decoration: InputDecoration(
-                      labelText: 'auth.confirm_password'.tr(),
-                      labelStyle: TextStyle(color: _cream.withOpacity(0.7)),
-                      prefixIcon: const Icon(Icons.lock_outline, color: _fuchsia),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                          color: _fuchsia.withOpacity(0.7),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureConfirmPassword = !_obscureConfirmPassword;
-                          });
-                        },
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: _purple),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: _fuchsia, width: 2),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.red),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
-                      ),
-                      errorStyle: const TextStyle(color: Colors.red),
-                    ),
-                    validator: _validateConfirmPassword,
-                  ),
-                  const SizedBox(height: 8),
-                ],
-
-                // Password dimenticata (solo in login)
-                if (_isLogin)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: _showResetPasswordDialog,
-                      child: Text(
-                        'auth.forgot_password'.tr(),
-                        style: const TextStyle(color: _fuchsiaLight),
-                      ),
-                    ),
-                  ),
-
-                const SizedBox(height: 24),
-
-                // Pulsante principale
-                SizedBox(
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _purple,
-                      foregroundColor: _cream,
-                      disabledBackgroundColor: _purple.withOpacity(0.5),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: _cream,
-                            ),
-                          )
-                        : Text(
-                            _isLogin ? 'auth.login'.tr() : 'auth.register'.tr(),
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Divider
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: _cream.withOpacity(0.2))),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'auth.or_divider'.tr(),
-                        style: TextStyle(color: _cream.withOpacity(0.5)),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: _cream.withOpacity(0.2))),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Google Sign In
-                SizedBox(
-                  height: 56,
-                  child: OutlinedButton.icon(
-                    onPressed: _isLoading ? null : _loginWithGoogle,
-                    icon: Image.network(
-                      'https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg',
-                      height: 24,
-                      width: 24,
-                      errorBuilder: (_, __, ___) => const Text(
-                        'G',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                    label: Text('auth.continue_google'.tr()),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: _cream,
-                      side: const BorderSide(color: _fuchsiaLight),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Switch login/registrazione
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _isLogin ? 'auth.no_account'.tr() : 'auth.has_account'.tr(),
-                      style: TextStyle(color: _cream.withOpacity(0.7)),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _isLogin = !_isLogin;
-                          _errorMessage = null;
-                          _confirmPasswordController.clear();
-                        });
-                      },
-                      child: Text(
-                        _isLogin ? 'auth.register'.tr() : 'auth.login'.tr(),
-                        style: const TextStyle(
-                          color: _fuchsiaLight,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
           ),
         ),
@@ -733,7 +613,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   // Widget per mostrare i requisiti della password
   Widget _buildPasswordRequirements() {
     final password = _passwordController.text;
-    
+
     return Padding(
       padding: const EdgeInsets.only(left: 4),
       child: Column(
@@ -765,6 +645,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildRequirementRow(String text, bool isMet) {
+    final color = isMet ? AppColors.jewelSage : AppColors.smoke;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -772,16 +653,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Icon(
             isMet ? Icons.check_circle : Icons.circle_outlined,
             size: 14,
-            color: isMet ? Colors.green : _cream.withOpacity(0.4),
+            color: color,
           ),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 11,
-              color: isMet ? Colors.green : _cream.withOpacity(0.5),
-            ),
-          ),
+          Text(text, style: TextStyle(fontSize: 11.5, color: color)),
         ],
       ),
     );

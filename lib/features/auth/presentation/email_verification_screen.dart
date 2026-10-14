@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
+import '../../../app/theme.dart';
+import '../../../shared/widgets/brand.dart';
 import '../../../data/services/preferences_service.dart';
 
 /// Email-verification gate shown immediately after a fresh
@@ -28,12 +30,6 @@ class EmailVerificationScreen extends StatefulWidget {
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
-  static const _darkBackground = Color(0xFF1A0A1F);
-  static const _purple = Color(0xFF6B2D5B);
-  static const _fuchsia = Color(0xFFD946EF);
-  static const _fuchsiaLight = Color(0xFFE879F9);
-  static const _cream = Color(0xFFFFF8E7);
-
   static const Duration _pollInterval = Duration(seconds: 4);
   static const Duration _resendCooldown = Duration(seconds: 60);
 
@@ -156,103 +152,103 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     final canResend = _cooldownSecondsLeft <= 0;
 
     return Scaffold(
-      backgroundColor: _darkBackground,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 40),
-              const Text(
-                '📩',
-                style: TextStyle(fontSize: 64),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'auth.verify_email_title'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: _fuchsiaLight,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'auth.verify_email_body'.tr(namedArgs: {'email': email}),
-                style: TextStyle(color: _cream.withOpacity(0.85), fontSize: 15),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-
-              if (_errorMessage != null)
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.red.withOpacity(0.4)),
+      body: VelvetBackground(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(28, 24, 28, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 48),
+                Center(
+                  child: Container(
+                    width: 88,
+                    height: 88,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: AppColors.champagne.withOpacity(0.5)),
+                    ),
+                    child: const Icon(Icons.mark_email_unread_outlined,
+                        size: 36, color: AppColors.champagne),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.red, size: 20),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.red),
+                ),
+                const SizedBox(height: 28),
+                Text(
+                  'auth.verify_email_title'.tr(),
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  'auth.verify_email_body'.tr(namedArgs: {'email': email}),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: AppColors.mist),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+
+                if (_errorMessage != null)
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(AppRadius.lg),
+                      border: Border.all(
+                          color: AppColors.error.withOpacity(0.35)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.error_outline,
+                            color: AppColors.error, size: 20),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            _errorMessage!,
+                            style: const TextStyle(color: AppColors.error),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
+                  ),
+
+                SizedBox(
+                  height: 54,
+                  child: ElevatedButton(
+                    onPressed: _isChecking
+                        ? null
+                        : () => _checkVerified(fromUserTap: true),
+                    child: _isChecking
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('auth.verify_check_now'.tr()),
                   ),
                 ),
-
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _fuchsia,
-                  foregroundColor: _cream,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                const SizedBox(height: 12),
+                SizedBox(
+                  height: 54,
+                  child: OutlinedButton(
+                    onPressed: canResend ? _resend : null,
+                    child: Text(canResend
+                        ? 'auth.verify_resend'.tr()
+                        : 'auth.verify_resend_in'.tr(
+                            namedArgs: {'seconds': '$_cooldownSecondsLeft'})),
+                  ),
                 ),
-                onPressed:
-                    _isChecking ? null : () => _checkVerified(fromUserTap: true),
-                child: _isChecking
-                    ? const SizedBox(
-                        height: 18,
-                        width: 18,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: _cream),
-                      )
-                    : Text('auth.verify_check_now'.tr()),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: canResend ? _fuchsiaLight : _cream.withOpacity(0.4),
-                  side: BorderSide(
-                      color: canResend ? _purple : _cream.withOpacity(0.2)),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                const Spacer(),
+                TextButton(
+                  onPressed: _cancelAndDeleteAccount,
+                  style: TextButton.styleFrom(foregroundColor: AppColors.mist),
+                  child: Text('auth.verify_cancel'.tr()),
                 ),
-                onPressed: canResend ? _resend : null,
-                child: Text(canResend
-                    ? 'auth.verify_resend'.tr()
-                    : 'auth.verify_resend_in'
-                        .tr(namedArgs: {'seconds': '$_cooldownSecondsLeft'})),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: _cancelAndDeleteAccount,
-                child: Text(
-                  'auth.verify_cancel'.tr(),
-                  style: TextStyle(color: _cream.withOpacity(0.7)),
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
+              ],
+            ),
           ),
         ),
       ),

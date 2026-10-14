@@ -10,6 +10,7 @@ import '../../../app/router.dart';
 import '../../../data/services/pin_hasher.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/services/user_data_sync_service.dart';
+import '../../../shared/widgets/brand.dart';
 
 /// PIN entry/creation screen
 class PinScreen extends StatefulWidget {
@@ -166,17 +167,21 @@ class _PinScreenState extends State<PinScreen> {
         : 'pin.enter_pin'.tr();
 
     return Scaffold(
-      body: SafeArea(
+      body: VelvetBackground(
+        child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
             children: [
               const Spacer(flex: 2),
 
+              const BrandMark(size: 34),
+              const SizedBox(height: 28),
+
               // Title
               Text(
                 title,
-                style: Theme.of(context).textTheme.headlineMedium,
+                style: Theme.of(context).textTheme.headlineSmall,
                 textAlign: TextAlign.center,
               ),
 
@@ -187,20 +192,23 @@ class _PinScreenState extends State<PinScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (index) {
                   final isFilled = index < _enteredPin.length;
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 12),
-                    width: 20,
-                    height: 20,
+                  return AnimatedContainer(
+                    duration: AppDurations.fast,
+                    margin: const EdgeInsets.symmetric(horizontal: 11),
+                    width: 12,
+                    height: 12,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: isFilled
-                          ? Theme.of(context).colorScheme.primary
+                          ? AppColors.champagne
                           : Colors.transparent,
                       border: Border.all(
                         color: _error != null
                             ? AppColors.error
-                            : Theme.of(context).colorScheme.primary,
-                        width: 2,
+                            : isFilled
+                                ? AppColors.champagne
+                                : AppColors.outline,
+                        width: 1.2,
                       ),
                     ),
                   );
@@ -230,12 +238,14 @@ class _PinScreenState extends State<PinScreen> {
               // Logout
               TextButton(
                 onPressed: _logout,
+                style: TextButton.styleFrom(foregroundColor: AppColors.mist),
                 child: Text('settings.logout_and_disconnect'.tr()),
               ),
               const SizedBox(height: 8),
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -270,18 +280,19 @@ class _PinScreenState extends State<PinScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const SizedBox(width: 80), // Empty space
+            const SizedBox(width: 76), // Empty space
             _NumberButton(
               number: 0,
               onPressed: () => _onNumberPressed(0),
             ),
             SizedBox(
-              width: 80,
-              height: 80,
+              width: 76,
+              height: 76,
               child: IconButton(
                 onPressed: _onBackspace,
-                icon: const Icon(Icons.backspace_outlined),
-                iconSize: 28,
+                icon: const Icon(Icons.backspace_outlined,
+                    color: AppColors.mist),
+                iconSize: 24,
               ),
             ),
           ],
@@ -303,21 +314,25 @@ class _NumberButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 80,
-      height: 80,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          shape: const CircleBorder(),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          foregroundColor: Theme.of(context).colorScheme.onSurface,
-          elevation: 0,
-        ),
-        child: Text(
-          number.toString(),
-          style: const TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.w300,
+      width: 76,
+      height: 76,
+      child: Material(
+        color: Colors.transparent,
+        shape: const CircleBorder(side: BorderSide(color: AppColors.hairline)),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: Center(
+            child: Text(
+              number.toString(),
+              style: const TextStyle(
+                fontFamily: AppTypography.displayFont,
+                fontFeatures: AppTypography.lining,
+                fontSize: 30,
+                fontWeight: FontWeight.w400,
+                color: AppColors.ivory,
+              ),
+            ),
           ),
         ),
       ),

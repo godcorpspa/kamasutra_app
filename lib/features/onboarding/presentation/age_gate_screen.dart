@@ -7,6 +7,7 @@ import '../../../app/theme.dart';
 import '../../../app/router.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/services/user_data_sync_service.dart';
+import '../../../shared/widgets/brand.dart';
 
 /// Age verification gate screen
 class AgeGateScreen extends StatelessWidget {
@@ -15,7 +16,8 @@ class AgeGateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: VelvetBackground(
+        child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(32),
           child: Column(
@@ -23,21 +25,8 @@ class AgeGateScreen extends StatelessWidget {
             children: [
               const Spacer(),
               
-              // Logo/Icon
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: AppColors.burgundy.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.favorite_outline,
-                  size: 50,
-                  color: AppColors.burgundy,
-                ),
-              ),
-              
+              const BrandMark(size: 48),
+
               const SizedBox(height: 40),
               
               // Title
@@ -53,7 +42,7 @@ class AgeGateScreen extends StatelessWidget {
               Text(
                 'age_gate.subtitle'.tr(),
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: AppColors.mist,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -63,7 +52,10 @@ class AgeGateScreen extends StatelessWidget {
               // Question
               Text(
                 'age_gate.question'.tr(),
-                style: Theme.of(context).textTheme.titleLarge,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                ),
                 textAlign: TextAlign.center,
               ),
               
@@ -75,7 +67,7 @@ class AgeGateScreen extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () => _onConfirm(context),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    minimumSize: const Size.fromHeight(54),
                   ),
                   child: Text('age_gate.confirm'.tr()),
                 ),
@@ -89,7 +81,7 @@ class AgeGateScreen extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () => _onDeny(context),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    minimumSize: const Size.fromHeight(54),
                   ),
                   child: Text('age_gate.deny'.tr()),
                 ),
@@ -101,13 +93,14 @@ class AgeGateScreen extends StatelessWidget {
               Text(
                 'age_gate.legal_notice'.tr(),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: AppColors.smoke,
                 ),
                 textAlign: TextAlign.center,
               ),
             ],
           ),
         ),
+      ),
       ),
     );
   }
@@ -143,9 +136,6 @@ class AgeGateScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-        ),
         title: Text('age_gate.title'.tr()),
         content: Text('age_gate.denied_message'.tr()),
         actions: [
