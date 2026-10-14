@@ -2636,6 +2636,7 @@
     "forgot_password": "Esqueceu a senha?",
     "connection_error": "Erro de conexão. Tente novamente.",
     "google_error": "Erro com Google Sign-In. Tente novamente.",
+    "error_code": "código: {code}",
     "error_weak_password": "A senha é muito fraca",
     "error_email_in_use": "Este email já está registrado",
     "error_invalid_email": "Email inválido",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -199,6 +200,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       _isLoading = true;
       _errorMessage = null;
     });
+    String? errorCode;
 
     try {
       await _googleSignIn.signOut();
@@ -225,9 +227,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await _auth.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       debugPrint('FirebaseAuthException Google: ${e.code}');
+      errorCode = e.code;
     } catch (e) {
       debugPrint('Errore Google Sign-In: $e');
       debugPrint('Tipo errore: ${e.runtimeType}');
+      errorCode = _googleErrorCode(e);
     }
 
     final currentUser = _auth.currentUser;
@@ -244,10 +248,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'auth.google_error'.tr();
+          // The technical code is what identifies the cause (e.g. 10 = the
+          // app's SHA-1 is not registered in Firebase), so always show it.
+          _errorMessage = errorCode == null
+              ? 'auth.google_error'.tr()
+              : '${'auth.google_error'.tr()} (${'auth.error_code'.tr(namedArgs: {'code': errorCode})})';
         });
       }
     }
+  }
+
+  /// Extracts a short, reportable code from a Google Sign-In failure.
+  ///
+  /// On Android the plugin wraps the Play Services status in the message,
+  /// e.g. `ApiException: 10:` — 10 is DEVELOPER_ERROR (SHA-1 / OAuth client
+  /// not configured in Firebase), 12500 is SIGN_IN_FAILED, 7 NETWORK_ERROR.
+  static String _googleErrorCode(Object error) {
+    if (error is PlatformException) {
+      final status =
+          RegExp(r'ApiException: (\d+)').firstMatch(error.message ?? '');
+      return status != null ? '${error.code} ${status.group(1)}' : error.code;
+    }
+    return error.runtimeType.toString();
   }
 
   void _navigateAfterAuth() {

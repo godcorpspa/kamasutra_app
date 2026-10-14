@@ -2636,6 +2636,7 @@
     "forgot_password": "Mot de passe oublié ?",
     "connection_error": "Erreur de connexion. Réessayez.",
     "google_error": "Erreur avec Google Sign-In. Réessayez.",
+    "error_code": "code : {code}",
     "error_weak_password": "Le mot de passe est trop faible",
     "error_email_in_use": "Cet email est déjà enregistré",
     "error_invalid_email": "Email invalide",
