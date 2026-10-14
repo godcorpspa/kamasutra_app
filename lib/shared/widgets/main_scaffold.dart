@@ -43,35 +43,32 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   }
 
   Widget _buildBottomNav(BuildContext context) {
-    final theme = Theme.of(context);
-    
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.bottomNavigationBarTheme.backgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
+    // Floating bar: inset from the screen edges, hairline border, no shadow.
+    return ColoredBox(
+      color: AppColors.ink,
       child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        top: false,
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          decoration: BoxDecoration(
+            color: AppColors.inkRaised,
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(color: AppColors.hairline),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _NavItem(
-                icon: Icons.menu_book_outlined,
-                activeIcon: Icons.menu_book,
+                icon: Icons.auto_stories_outlined,
+                activeIcon: Icons.auto_stories,
                 label: 'nav.catalog'.tr(),
                 isSelected: _currentIndex == 0,
                 onTap: () => _onItemTapped(0),
               ),
               _NavItem(
-                icon: Icons.shuffle_outlined,
-                activeIcon: Icons.shuffle,
+                icon: Icons.style_outlined,
+                activeIcon: Icons.style,
                 label: 'nav.shuffle'.tr(),
                 isSelected: _currentIndex == 1,
                 onTap: () => _onItemTapped(1),
@@ -84,14 +81,14 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
                 onTap: () => _onItemTapped(2),
               ),
               _NavItem(
-                icon: Icons.emoji_events_outlined,
-                activeIcon: Icons.emoji_events,
+                icon: Icons.insights_outlined,
+                activeIcon: Icons.insights,
                 label: 'nav.progress'.tr(),
                 isSelected: _currentIndex == 3,
                 onTap: () => _onItemTapped(3),
               ),
               _NavItem(
-                icon: Icons.more_horiz_outlined,
+                icon: Icons.more_horiz,
                 activeIcon: Icons.more_horiz,
                 label: 'nav.settings'.tr(),
                 isSelected: _currentIndex == 4,
@@ -138,41 +135,53 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = isSelected
-        ? theme.colorScheme.primary
-        : theme.bottomNavigationBarTheme.unselectedItemColor;
+    final color = isSelected ? AppColors.champagne : AppColors.smoke;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: AppDurations.fast,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? theme.colorScheme.primary.withOpacity(0.1)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSelected ? activeIcon : icon,
-              color: color,
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: color,
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AnimatedSwitcher(
+                duration: AppDurations.fast,
+                child: Icon(
+                  isSelected ? activeIcon : icon,
+                  key: ValueKey(isSelected),
+                  color: color,
+                  size: 22,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: AppTypography.bodyFont,
+                  fontSize: 10.5,
+                  letterSpacing: 0.3,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected ? AppColors.ivory : AppColors.smoke,
+                ),
+              ),
+              const SizedBox(height: 4),
+              // Active indicator: a small champagne dot.
+              AnimatedContainer(
+                duration: AppDurations.normal,
+                curve: Curves.easeOutCubic,
+                width: isSelected ? 4 : 0,
+                height: 4,
+                decoration: const BoxDecoration(
+                  color: AppColors.champagne,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -189,12 +198,12 @@ class SafeWordButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton.small(
       heroTag: 'safe_word',
-      backgroundColor: AppColors.burgundy.withOpacity(0.9),
+      backgroundColor: AppColors.inkHighest,
       onPressed: onPressed,
       tooltip: 'consent.safe_word'.tr(),
       child: const Icon(
         Icons.pause_circle_outline,
-        color: AppColors.cream,
+        color: AppColors.champagne,
       ),
     );
   }
@@ -256,7 +265,7 @@ class PausedOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.9),
+      color: AppColors.ink.withOpacity(0.94),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(32),
@@ -264,9 +273,9 @@ class PausedOverlay extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
-                Icons.pause_circle_filled,
-                size: 80,
-                color: AppColors.blush,
+                Icons.pause_circle_outline,
+                size: 72,
+                color: AppColors.champagne,
               ),
               const SizedBox(height: 24),
               Text(
@@ -280,7 +289,7 @@ class PausedOverlay extends StatelessWidget {
                 'consent.paused_message'.tr(),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.grey400,
+                  color: AppColors.mist,
                 ),
               ),
               const SizedBox(height: 40),
@@ -296,7 +305,7 @@ class PausedOverlay extends StatelessWidget {
                 onPressed: onEndSession,
                 child: Text(
                   'consent.end_session'.tr(),
-                  style: const TextStyle(color: AppColors.grey500),
+                  style: const TextStyle(color: AppColors.smoke),
                 ),
               ),
             ],
