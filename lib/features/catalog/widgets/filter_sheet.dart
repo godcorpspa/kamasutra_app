@@ -5,6 +5,8 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
 import '../../../data/providers/providers.dart';
+import 'category_style.dart';
+import 'filter_options.dart';
 
 /// Bottom sheet for filtering positions
 class FilterSheet extends ConsumerStatefulWidget {
@@ -58,123 +60,6 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
     });
   }
 
-  // ─── emoji helpers ─────────────────────────────────────────────────────────
-
-  String _categoryEmoji(PositionCategory c) {
-    switch (c) {
-      case PositionCategory.romantic:    return '🌹';
-      case PositionCategory.beginner:    return '🌿';
-      case PositionCategory.athletic:    return '🏋️';
-      case PositionCategory.supported:   return '🤝';
-      case PositionCategory.lowImpact:   return '🦋';
-      case PositionCategory.adventurous: return '🗺️';
-      case PositionCategory.reconnect:   return '🔗';
-      case PositionCategory.quickie:     return '⚡';
-    }
-  }
-
-  String _energyEmoji(EnergyLevel e) {
-    switch (e) {
-      case EnergyLevel.low:    return '🍃';
-      case EnergyLevel.medium: return '🔥';
-      case EnergyLevel.high:   return '💥';
-    }
-  }
-
-  String _durationEmoji(PositionDuration d) {
-    switch (d) {
-      case PositionDuration.brief:  return '⏱️';
-      case PositionDuration.medium: return '🕐';
-      case PositionDuration.long:   return '🌙';
-    }
-  }
-
-  String _focusEmoji(PositionFocus f) {
-    switch (f) {
-      case PositionFocus.intimacy:     return '💕';
-      case PositionFocus.variety:      return '🎨';
-      case PositionFocus.connection:   return '🔮';
-      case PositionFocus.relax:        return '🧘';
-      case PositionFocus.playfulness:  return '🎉';
-      case PositionFocus.passion:      return '❤️‍🔥';
-      case PositionFocus.trust:        return '🤲';
-    }
-  }
-
-  // ─── chip builders ─────────────────────────────────────────────────────────
-
-  Widget _filterChip({
-    required String label,
-    required bool isSelected,
-    required ValueChanged<bool> onSelected,
-    required Color accentColor,
-  }) {
-    final theme = Theme.of(context);
-    return FilterChip(
-      label: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected
-                ? accentColor
-                : theme.colorScheme.onSurface.withOpacity(0.85),
-          ),
-        ),
-      ),
-      selected: isSelected,
-      showCheckmark: false,
-      onSelected: onSelected,
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-      backgroundColor: theme.colorScheme.surface,
-      selectedColor: accentColor.withOpacity(0.12),
-      side: isSelected
-          ? BorderSide(color: accentColor, width: 1.5)
-          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-    );
-  }
-
-  Widget _choiceChip({
-    required String label,
-    required bool isSelected,
-    required ValueChanged<bool> onSelected,
-    required Color accentColor,
-  }) {
-    final theme = Theme.of(context);
-    return ChoiceChip(
-      label: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-            color: isSelected
-                ? accentColor
-                : theme.colorScheme.onSurface.withOpacity(0.85),
-          ),
-        ),
-      ),
-      selected: isSelected,
-      showCheckmark: false,
-      onSelected: onSelected,
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-      backgroundColor: theme.colorScheme.surface,
-      selectedColor: accentColor.withOpacity(0.12),
-      side: isSelected
-          ? BorderSide(color: accentColor, width: 1.5)
-          : BorderSide(color: theme.colorScheme.outline.withOpacity(0.25)),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-    );
-  }
-
   // ─── build ─────────────────────────────────────────────────────────────────
 
   @override
@@ -185,33 +70,33 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
       maxChildSize: 0.95,
       builder: (context, scrollController) {
         return Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            borderRadius: const BorderRadius.vertical(
-              top: Radius.circular(AppRadius.xl),
-            ),
+          decoration: const BoxDecoration(
+            color: AppColors.inkHigh,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border(top: BorderSide(color: AppColors.hairline)),
           ),
           child: Column(
             children: [
               // Handle
               Container(
-                margin: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                width: 40,
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                width: 36,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  color: AppColors.outline,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
 
               // Header
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, 0, AppSpacing.sm, AppSpacing.sm),
                 child: Row(
                   children: [
                     Text(
                       'catalog.filter_by'.tr(),
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const Spacer(),
                     TextButton(
@@ -230,158 +115,80 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
                   controller: scrollController,
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   children: [
-                    // ── Categorie ──────────────────────────────────────────
-                    _buildSectionHeader('catalog.category'.tr(), Icons.grid_view_rounded),
+                    FilterSectionLabel('catalog.category'.tr()),
                     const SizedBox(height: AppSpacing.md),
-                    LayoutBuilder(
-                      builder: (_, constraints) {
-                        final w = (constraints.maxWidth - AppSpacing.sm) / 2;
-                        return Wrap(
-                          spacing: AppSpacing.sm,
-                          runSpacing: AppSpacing.sm,
-                          children: PositionCategory.values.map((category) {
-                            final isSelected = _selectedCategories.contains(category);
-                            return SizedBox(
-                              width: w,
-                              child: _filterChip(
-                                label: '${_categoryEmoji(category)}  ${'categories.${category.name}'.tr()}',
-                                isSelected: isSelected,
-                                accentColor: AppColors.burgundy,
-                                onSelected: (v) => setState(() {
-                                  v ? _selectedCategories.add(category) : _selectedCategories.remove(category);
-                                }),
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      },
-                    ),
+                    OptionGrid(chips: [
+                      for (final category in PositionCategory.values)
+                        OptionChip(
+                          icon: category.icon,
+                          tint: category.tint,
+                          label: 'categories.${category.name}'.tr(),
+                          isSelected: _selectedCategories.contains(category),
+                          onTap: () => setState(() {
+                            _selectedCategories.contains(category)
+                                ? _selectedCategories.remove(category)
+                                : _selectedCategories.add(category);
+                          }),
+                        ),
+                    ]),
 
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // ── Difficoltà ─────────────────────────────────────────
-                    _buildSectionHeader('catalog.difficulty'.tr(), Icons.star_outline_rounded),
+                    const SizedBox(height: AppSpacing.xl),
+                    FilterSectionLabel('catalog.difficulty'.tr()),
                     const SizedBox(height: AppSpacing.sm),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '⭐ ${_difficultyRange.start.round()}',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.gold,
-                          ),
-                        ),
-                        Text(
-                          '${_difficultyRange.end.round()} ⭐',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.gold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SliderTheme(
-                      data: SliderTheme.of(context).copyWith(
-                        activeTrackColor: AppColors.gold,
-                        thumbColor: AppColors.gold,
-                        inactiveTrackColor: AppColors.gold.withOpacity(0.2),
-                        overlayColor: AppColors.gold.withOpacity(0.1),
-                      ),
-                      child: RangeSlider(
-                        values: _difficultyRange,
-                        min: 1,
-                        max: 5,
-                        divisions: 4,
-                        labels: RangeLabels(
-                          '${_difficultyRange.start.round()}',
-                          '${_difficultyRange.end.round()}',
-                        ),
-                        onChanged: (values) => setState(() => _difficultyRange = values),
-                      ),
+                    DifficultyRangeField(
+                      values: _difficultyRange,
+                      onChanged: (values) =>
+                          setState(() => _difficultyRange = values),
                     ),
 
                     const SizedBox(height: AppSpacing.lg),
-
-                    // ── Energia ────────────────────────────────────────────
-                    _buildSectionHeader('catalog.energy'.tr(), Icons.bolt_rounded),
+                    FilterSectionLabel('catalog.energy'.tr()),
                     const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: EnergyLevel.values.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final energy = entry.value;
-                        final isSelected = _selectedEnergy == energy;
-                        final color = _getEnergyColor(energy);
-                        return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(right: i < EnergyLevel.values.length - 1 ? AppSpacing.sm : 0),
-                            child: _choiceChip(
-                              label: '${_energyEmoji(energy)}  ${'energy.${energy.name}'.tr()}',
-                              isSelected: isSelected,
-                              accentColor: color,
-                              onSelected: (v) => setState(() {
-                                _selectedEnergy = v ? energy : null;
-                              }),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                    OptionRow(chips: [
+                      for (final energy in EnergyLevel.values)
+                        OptionChip(
+                          icon: energy.icon,
+                          label: 'energy.${energy.name}'.tr(),
+                          isSelected: _selectedEnergy == energy,
+                          onTap: () => setState(() {
+                            _selectedEnergy =
+                                _selectedEnergy == energy ? null : energy;
+                          }),
+                        ),
+                    ]),
 
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // ── Durata ─────────────────────────────────────────────
-                    _buildSectionHeader('catalog.duration'.tr(), Icons.timer_outlined),
+                    const SizedBox(height: AppSpacing.xl),
+                    FilterSectionLabel('catalog.duration'.tr()),
                     const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: PositionDuration.values.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final duration = entry.value;
-                        final isSelected = _selectedDuration == duration;
-                        return Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.only(right: i < PositionDuration.values.length - 1 ? AppSpacing.sm : 0),
-                            child: _choiceChip(
-                              label: '${_durationEmoji(duration)}  ${'duration.${duration.name}'.tr()}',
-                              isSelected: isSelected,
-                              accentColor: AppColors.gold,
-                              onSelected: (v) => setState(() {
-                                _selectedDuration = v ? duration : null;
-                              }),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
+                    OptionRow(chips: [
+                      for (final duration in PositionDuration.values)
+                        OptionChip(
+                          icon: duration.icon,
+                          label: 'duration.${duration.name}'.tr(),
+                          isSelected: _selectedDuration == duration,
+                          onTap: () => setState(() {
+                            _selectedDuration =
+                                _selectedDuration == duration ? null : duration;
+                          }),
+                        ),
+                    ]),
 
-                    const SizedBox(height: AppSpacing.lg),
-
-                    // ── Focus ──────────────────────────────────────────────
-                    _buildSectionHeader('catalog.focus'.tr(), Icons.psychology_outlined),
+                    const SizedBox(height: AppSpacing.xl),
+                    FilterSectionLabel('catalog.focus'.tr()),
                     const SizedBox(height: AppSpacing.md),
-                    LayoutBuilder(
-                      builder: (_, constraints) {
-                        final w = (constraints.maxWidth - AppSpacing.sm) / 2;
-                        return Wrap(
-                          spacing: AppSpacing.sm,
-                          runSpacing: AppSpacing.sm,
-                          children: PositionFocus.values.map((focus) {
-                            final isSelected = _selectedFocus.contains(focus);
-                            return SizedBox(
-                              width: w,
-                              child: _filterChip(
-                                label: '${_focusEmoji(focus)}  ${'focus.${focus.name}'.tr()}',
-                                isSelected: isSelected,
-                                accentColor: AppColors.navy,
-                                onSelected: (v) => setState(() {
-                                  v ? _selectedFocus.add(focus) : _selectedFocus.remove(focus);
-                                }),
-                              ),
-                            );
-                          }).toList(),
-                        );
-                      },
-                    ),
+                    OptionGrid(chips: [
+                      for (final focus in PositionFocus.values)
+                        OptionChip(
+                          icon: focus.icon,
+                          label: 'focus.${focus.name}'.tr(),
+                          isSelected: _selectedFocus.contains(focus),
+                          onTap: () => setState(() {
+                            _selectedFocus.contains(focus)
+                                ? _selectedFocus.remove(focus)
+                                : _selectedFocus.add(focus);
+                          }),
+                        ),
+                    ]),
 
                     const SizedBox(height: AppSpacing.xxl),
                   ],
@@ -389,27 +196,21 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
               ),
 
               // Apply button
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.lg),
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 56,
-                    child: ElevatedButton(
-                      onPressed: _applyFilters,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.burgundy,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.lg),
-                        ),
-                      ),
-                      child: Text(
-                        'common.done'.tr(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+              DecoratedBox(
+                decoration: const BoxDecoration(
+                  border: Border(top: BorderSide(color: AppColors.hairline)),
+                ),
+                child: SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md),
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 54,
+                      child: ElevatedButton(
+                        onPressed: _applyFilters,
+                        child: Text('common.done'.tr()),
                       ),
                     ),
                   ),
@@ -420,28 +221,5 @@ class _FilterSheetState extends ConsumerState<FilterSheet> {
         );
       },
     );
-  }
-
-  Widget _buildSectionHeader(String title, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: AppSpacing.sm),
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-        ),
-      ],
-    );
-  }
-
-  Color _getEnergyColor(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:    return AppColors.soft;
-      case EnergyLevel.medium: return AppColors.spicy;
-      case EnergyLevel.high:   return AppColors.extraSpicy;
-    }
   }
 }

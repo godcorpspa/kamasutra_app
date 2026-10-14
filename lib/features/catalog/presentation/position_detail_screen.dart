@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -10,6 +9,8 @@ import '../../../data/services/preferences_service.dart';
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
 import '../../../data/providers/providers.dart';
+import '../widgets/category_style.dart';
+import '../widgets/position_illustration.dart';
 
 class PositionDetailScreen extends ConsumerStatefulWidget {
   final String positionId;
@@ -36,6 +37,10 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final locale = context.locale.languageCode;
+    // Watching the loader (not just the repository) makes the screen work
+    // when opened directly — e.g. Android restoring the app on this route —
+    // instead of reporting "not found" until the catalog was visited.
+    final positionsAsync = ref.watch(positionsProvider(locale));
     final repo = ref.watch(positionRepositoryProvider);
     final position = repo.getById(widget.positionId);
 
@@ -43,33 +48,38 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
       return Scaffold(
         appBar: AppBar(),
         body: Center(
-          child: Text('errors.no_positions'.tr()),
+          child: positionsAsync.isLoading
+              ? const CircularProgressIndicator()
+              : Text('errors.no_positions'.tr()),
         ),
       );
     }
 
+    final category = position.categories.first;
+    final alias = position.getAlias(locale);
+    final tried = PreferencesService.instance.isTriedPosition(widget.positionId);
+    final topInset = MediaQuery.of(context).padding.top;
+    final plateSize = MediaQuery.of(context).size.width - AppSpacing.md * 2;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // App bar with illustration
+          // Art print header
           SliverAppBar(
-            expandedHeight: 300,
+            // The background spans the status bar too, so only the toolbar
+            // and a small gap sit above the plate.
+            expandedHeight: kToolbarHeight + AppSpacing.sm + plateSize,
             pinned: true,
             stretch: true,
-            backgroundColor: _getCategoryColor(position.categories.first),
-            leading: IconButton(
+            backgroundColor: AppColors.ink,
+            leading: _GlassButton(
+              icon: Icons.arrow_back,
               onPressed: () => context.pop(),
-              icon: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.black26,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
-              ),
             ),
             actions: [
-              IconButton(
+              _GlassButton(
+                icon: position.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: position.isFavorite ? AppColors.rose : AppColors.ivory,
                 onPressed: () async {
                   HapticFeedback.lightImpact();
                   await repo.toggleFavorite(position.id);
@@ -78,76 +88,28 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                     setState(() {});
                   }
                 },
-                icon: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.black26,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    position.isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: position.isFavorite ? AppColors.burgundy : Colors.white,
-                  ),
-                ),
               ),
+              const SizedBox(width: AppSpacing.sm),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Gradient background
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          _getCategoryColor(position.categories.first),
-                          _getCategoryColor(position.categories.first).withOpacity(0.7),
-                        ],
-                      ),
+              background: Padding(
+                padding: EdgeInsets.fromLTRB(
+                  AppSpacing.md,
+                  topInset + kToolbarHeight + AppSpacing.sm,
+                  AppSpacing.md,
+                  0,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox.square(
+                    dimension: plateSize,
+                    child: PositionIllustration(
+                      position: position,
+                      borderRadius: BorderRadius.circular(28),
+                      monogramSize: 132,
                     ),
                   ),
-                  // SVG Illustration
-                  Positioned.fill(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 40,
-                        vertical: 30,
-                      ),
-                      child: SvgPicture.asset(
-                        'assets/images/positions/${position.illustrationRef}',
-                        fit: BoxFit.contain,
-                        placeholderBuilder: (_) => Center(
-                          child: Icon(
-                            _getCategoryIcon(position.categories.first),
-                            size: 120,
-                            color: Colors.white.withOpacity(0.3),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Bottom gradient for readability
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Theme.of(context).scaffoldBackgroundColor,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
@@ -155,108 +117,82 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
           // Content
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, AppSpacing.lg),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
+                  Text(
+                    'categories.${category.name}'.tr().toUpperCase(),
+                    style: AppTypography.eyebrow.copyWith(color: category.tint),
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(
                     position.getName(locale),
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ).animate().fadeIn().slideX(begin: -0.1),
-
-                  // Alias
-                  if (position.getAlias(locale) != null && position.getAlias(locale)!.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ).animate().fadeIn().slideY(begin: 0.15),
+                  if (alias != null && alias.isNotEmpty) ...[
+                    const SizedBox(height: 6),
                     Text(
-                      position.getAlias(locale)!,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.6),
-                            fontStyle: FontStyle.italic,
-                          ),
-                    ).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1),
+                      alias,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.displayFont,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 18,
+                        color: AppColors.mist,
+                      ),
+                    ).animate().fadeIn(delay: 80.ms),
                   ],
 
                   const SizedBox(height: AppSpacing.lg),
 
-                  // Quick info chips
-                  Wrap(
-                    spacing: AppSpacing.sm,
-                    runSpacing: AppSpacing.sm,
-                    children: [
-                      _InfoChip(
-                        icon: Icons.star,
-                        label: '${'position.difficulty'.tr()}: ${position.difficulty}/5',
-                        color: _getDifficultyColor(position.difficulty),
-                      ),
-                      _InfoChip(
-                        icon: _getEnergyIcon(position.energy),
-                        label: 'energy.${position.energy.name}'.tr(),
-                        color: _getEnergyColor(position.energy),
-                      ),
-                      _InfoChip(
-                        icon: Icons.timer,
-                        label: 'duration.${position.duration.name}'.tr(),
-                        color: AppColors.gold,
-                      ),
-                    ],
-                  ).animate().fadeIn(delay: 200.ms),
+                  // Key facts
+                  _FactsRow(position: position)
+                      .animate()
+                      .fadeIn(delay: 160.ms),
 
-                  const SizedBox(height: AppSpacing.lg),
-
-                  // Categories
-                  _buildSection(
-                    context,
+                  // Categories & focus
+                  const SizedBox(height: AppSpacing.xl),
+                  _Section(
                     title: 'catalog.category'.tr(),
                     child: Wrap(
                       spacing: AppSpacing.sm,
                       runSpacing: AppSpacing.sm,
-                      children: position.categories.map((cat) {
-                        return Chip(
-                          label: Text('categories.${cat.name}'.tr()),
-                          backgroundColor:
-                              _getCategoryColor(cat).withOpacity(0.2),
-                          side: BorderSide.none,
-                        );
-                      }).toList(),
+                      children: [
+                        for (final cat in position.categories)
+                          _Tag(
+                            label: 'categories.${cat.name}'.tr(),
+                            icon: cat.icon,
+                            tint: cat.tint,
+                          ),
+                      ],
                     ),
                   ),
-
-                  // Focus areas
                   if (position.focus.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.lg),
-                    _buildSection(
-                      context,
+                    _Section(
                       title: 'catalog.focus'.tr(),
                       child: Wrap(
                         spacing: AppSpacing.sm,
                         runSpacing: AppSpacing.sm,
-                        children: position.focus.map((f) {
-                          return Chip(
-                            label: Text('focus.${f.name}'.tr()),
-                            backgroundColor: AppColors.navy.withOpacity(0.2),
-                            side: BorderSide.none,
-                          );
-                        }).toList(),
+                        children: [
+                          for (final f in position.focus)
+                            _Tag(label: 'focus.${f.name}'.tr()),
+                        ],
                       ),
                     ),
                   ],
 
                   // Setup instructions
-                  if (position.getSetup(locale) != null && position.getSetup(locale)!.isNotEmpty) ...[
+                  if (position.getSetup(locale)?.isNotEmpty ?? false) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    _buildSection(
-                      context,
+                    _Section(
                       title: 'position.setup'.tr(),
                       child: Text(
                         position.getSetup(locale)!,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              height: 1.6,
+                              color: AppColors.ivory.withOpacity(0.86),
+                              height: 1.65,
                             ),
                       ),
                     ),
@@ -265,148 +201,77 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   // Prerequisites
                   if (position.prerequisites.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    _buildSection(
-                      context,
+                    _Section(
                       title: 'position.prerequisites'.tr(),
                       child: Column(
-                        children: position.prerequisites.map((prereq) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.check_circle_outline,
-                                  size: 20,
-                                  color: AppColors.gold,
-                                ),
-                                const SizedBox(width: AppSpacing.sm),
-                                Expanded(
-                                  child: Text(prereq),
-                                ),
-                              ],
+                        children: [
+                          for (final prereq in position.prerequisites)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: AppSpacing.sm),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 2),
+                                    child: Icon(Icons.check, size: 18,
+                                        color: AppColors.champagne),
+                                  ),
+                                  const SizedBox(width: AppSpacing.sm),
+                                  Expanded(child: Text(prereq)),
+                                ],
+                              ),
                             ),
-                          );
-                        }).toList(),
+                        ],
                       ),
                     ),
                   ],
 
                   // Cautions
-                  if (position.getCautions(locale) != null && position.getCautions(locale)!.isNotEmpty) ...[
+                  if (position.getCautions(locale)?.isNotEmpty ?? false) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: AppColors.spicy.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                        border: Border.all(
-                          color: AppColors.spicy.withOpacity(0.3),
-                        ),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.warning_amber_rounded,
-                            color: AppColors.spicy,
-                          ),
-                          const SizedBox(width: AppSpacing.md),
-                          Expanded(
-                            child: Text(
-                              position.getCautions(locale)!,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
+                    _Callout(
+                      icon: Icons.error_outline,
+                      tint: AppColors.jewelEmber,
+                      title: 'position.cautions'.tr(),
+                      body: position.getCautions(locale)!,
                     ),
                   ],
 
                   // Easy variant
-                  if (position.getEasyVariant(locale) != null &&
-                      position.getEasyVariant(locale)!.isNotEmpty) ...[
-                    const SizedBox(height: AppSpacing.xl),
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: AppColors.soft.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                        border: Border.all(
-                          color: AppColors.soft.withOpacity(0.3),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.spa,
-                                color: AppColors.soft,
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Text(
-                                'position.easy_version'.tr(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.copyWith(
-                                      color: AppColors.soft,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text(
-                            position.getEasyVariant(locale)!,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
+                  if (position.getEasyVariant(locale)?.isNotEmpty ?? false) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    _Callout(
+                      icon: Icons.spa_outlined,
+                      tint: AppColors.jewelSage,
+                      title: 'position.easy_version'.tr(),
+                      body: position.getEasyVariant(locale)!,
                     ),
                   ],
 
-                  // Check-in prompt
-                  if (position.getCheckin(locale) != null && position.getCheckin(locale)!.isNotEmpty) ...[
+                  // Check-in prompt, set as a pull quote
+                  if (position.getCheckin(locale)?.isNotEmpty ?? false) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    Container(
-                      padding: const EdgeInsets.all(AppSpacing.md),
-                      decoration: BoxDecoration(
-                        color: AppColors.burgundy.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.chat_bubble_outline,
-                                color: AppColors.burgundy,
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Text(
-                                'position.check_in'.tr(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
-                                    ?.copyWith(
-                                      color: AppColors.burgundy,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                              ),
-                            ],
+                    _Section(
+                      title: 'position.check_in'.tr(),
+                      child: Container(
+                        padding: const EdgeInsets.only(left: AppSpacing.md),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            left: BorderSide(
+                                color: AppColors.champagne, width: 1.5),
                           ),
-                          const SizedBox(height: AppSpacing.sm),
-                          Text(
-                            '"${position.getCheckin(locale)}"',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                  fontStyle: FontStyle.italic,
-                                ),
+                        ),
+                        child: Text(
+                          position.getCheckin(locale)!,
+                          style: const TextStyle(
+                            fontFamily: AppTypography.displayFont,
+                            fontStyle: FontStyle.italic,
+                            fontSize: 19,
+                            height: 1.45,
+                            color: AppColors.ivory,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -414,26 +279,21 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   // Tags
                   if (position.tags.isNotEmpty) ...[
                     const SizedBox(height: AppSpacing.xl),
-                    _buildSection(
-                      context,
+                    _Section(
                       title: 'position.tags'.tr(),
                       child: Wrap(
-                        spacing: AppSpacing.sm,
-                        runSpacing: AppSpacing.sm,
-                        children: position.tags.map((tag) {
-                          return Chip(
-                            label: Text(
+                        spacing: AppSpacing.md,
+                        runSpacing: AppSpacing.xs,
+                        children: [
+                          for (final tag in position.tags)
+                            Text(
                               '#$tag',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: const TextStyle(
+                                color: AppColors.mist,
+                                fontSize: 13,
+                              ),
                             ),
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withOpacity(0.5),
-                            side: BorderSide.none,
-                            visualDensity: VisualDensity.compact,
-                          );
-                        }).toList(),
+                        ],
                       ),
                     ),
                   ],
@@ -441,8 +301,6 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                   // Similar positions
                   const SizedBox(height: AppSpacing.xxl),
                   _buildSimilarPositions(context, locale, position),
-
-                  const SizedBox(height: AppSpacing.xxl),
                 ],
               ),
             ),
@@ -451,55 +309,41 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
       ),
 
       // Try this button
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: ElevatedButton(
-            onPressed: () {
-              HapticFeedback.mediumImpact();
-              PreferencesService.instance.addTriedPosition(widget.positionId);
-              setState(() {});
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.burgundy,
-              foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 56),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppRadius.lg),
-              ),
-            ),
-            child: Text(
-              PreferencesService.instance.isTriedPosition(widget.positionId)
-                  ? 'position.already_tried'.tr()
-                  : 'position.try_this'.tr(),
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: AppColors.ink,
+          border: Border(top: BorderSide(color: AppColors.hairline)),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg, AppSpacing.md, AppSpacing.lg, AppSpacing.md),
+            child: tried
+                ? OutlinedButton.icon(
+                    onPressed: null,
+                    icon: const Icon(Icons.check, size: 18),
+                    label: Text('shuffle.tried'.tr()),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(54),
+                      disabledForegroundColor: AppColors.champagne,
+                      side: const BorderSide(color: AppColors.outline),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      PreferencesService.instance
+                          .addTriedPosition(widget.positionId);
+                      setState(() {});
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(54),
+                    ),
+                    child: Text('position.try_this'.tr()),
+                  ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildSection(
-    BuildContext context, {
-    required String title,
-    required Widget child,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-        const SizedBox(height: AppSpacing.sm),
-        child,
-      ],
     );
   }
 
@@ -509,187 +353,251 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
     Position position,
   ) {
     final repo = ref.watch(positionRepositoryProvider);
-    final similar = repo.getSimilar(position.id, limit: 4);
+    final similar = repo.getSimilar(position.id, limit: 6);
 
     if (similar.isEmpty) return const SizedBox.shrink();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'position.similar_positions'.tr(),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        SizedBox(
-          height: 160,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: similar.length,
-            separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.md),
-            itemBuilder: (context, index) {
-              final p = similar[index];
-              return GestureDetector(
-                onTap: () => context.push('/catalog/${p.id}'),
-                child: Container(
-                  width: 140,
-                  padding: const EdgeInsets.all(AppSpacing.md),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    color: _getCategoryColor(p.categories.first).withOpacity(0.1),
-                    border: Border.all(
-                      color: _getCategoryColor(p.categories.first).withOpacity(0.3),
+    return _Section(
+      title: 'position.similar_positions'.tr(),
+      child: SizedBox(
+        height: 196,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          clipBehavior: Clip.none,
+          itemCount: similar.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (context, index) {
+            final p = similar[index];
+            return GestureDetector(
+              onTap: () => context.push('/catalog/${p.id}'),
+              child: SizedBox(
+                width: 132,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox.square(
+                      dimension: 132,
+                      child: PositionIllustration(
+                        position: p,
+                        monogramSize: 46,
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: SvgPicture.asset(
-                            'assets/images/positions/${p.illustrationRef}',
-                            fit: BoxFit.contain,
-                            placeholderBuilder: (_) => Center(
-                              child: Icon(
-                                _getCategoryIcon(p.categories.first),
-                                size: 40,
-                                color: _getCategoryColor(p.categories.first)
-                                    .withOpacity(0.5),
-                              ),
-                            ),
-                          ),
-                        ),
+                    const SizedBox(height: 10),
+                    Text(
+                      p.getName(locale),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.displayFont,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
                       ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Text(
-                        p.getName(locale),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
-      ],
+      ),
     );
-  }
-
-  Color _getCategoryColor(PositionCategory category) {
-    switch (category) {
-      case PositionCategory.romantic:
-        return AppColors.burgundy;
-      case PositionCategory.beginner:
-        return AppColors.blush;
-      case PositionCategory.athletic:
-        return AppColors.spicy;
-      case PositionCategory.supported:
-        return AppColors.navy;
-      case PositionCategory.lowImpact:
-        return AppColors.soft;
-      case PositionCategory.adventurous:
-        return AppColors.extraSpicy;
-      case PositionCategory.reconnect:
-        return AppColors.gold;
-      case PositionCategory.quickie:
-        return Colors.purple;
-    }
-  }
-
-  IconData _getCategoryIcon(PositionCategory category) {
-    switch (category) {
-      case PositionCategory.romantic:
-        return Icons.favorite;
-      case PositionCategory.beginner:
-        return Icons.sentiment_satisfied;
-      case PositionCategory.athletic:
-        return Icons.fitness_center;
-      case PositionCategory.supported:
-        return Icons.support;
-      case PositionCategory.lowImpact:
-        return Icons.spa;
-      case PositionCategory.adventurous:
-        return Icons.explore;
-      case PositionCategory.reconnect:
-        return Icons.sync;
-      case PositionCategory.quickie:
-        return Icons.bolt;
-    }
-  }
-
-  IconData _getEnergyIcon(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return Icons.battery_3_bar;
-      case EnergyLevel.medium:
-        return Icons.battery_5_bar;
-      case EnergyLevel.high:
-        return Icons.battery_full;
-    }
-  }
-
-  Color _getEnergyColor(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return AppColors.soft;
-      case EnergyLevel.medium:
-        return AppColors.spicy;
-      case EnergyLevel.high:
-        return AppColors.extraSpicy;
-    }
-  }
-
-  Color _getDifficultyColor(int difficulty) {
-    if (difficulty <= 2) return AppColors.soft;
-    if (difficulty <= 3) return AppColors.spicy;
-    return AppColors.extraSpicy;
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
+/// Difficulty · energy · duration, separated by hairlines.
+class _FactsRow extends StatelessWidget {
+  final Position position;
 
-  const _InfoChip({
+  const _FactsRow({required this.position});
+
+  @override
+  Widget build(BuildContext context) {
+    Widget fact(String label, Widget value) => Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.eyebrow.copyWith(fontSize: 10)),
+              const SizedBox(height: 8),
+              value,
+            ],
+          ),
+        );
+    const valueStyle = TextStyle(
+      fontFamily: AppTypography.displayFont,
+      fontFeatures: AppTypography.lining,
+      fontSize: 17,
+      fontWeight: FontWeight.w600,
+      color: AppColors.ivory,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      decoration: const BoxDecoration(
+        border: Border.symmetric(
+          horizontal: BorderSide(color: AppColors.hairline),
+        ),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            fact(
+              'position.difficulty'.tr(),
+              Row(children: [
+                Text('${position.difficulty}/5', style: valueStyle),
+                const SizedBox(width: 10),
+                DifficultyMeter(difficulty: position.difficulty, barWidth: 6),
+              ]),
+            ),
+            const VerticalDivider(width: 24, color: AppColors.hairline),
+            fact('position.energy'.tr(),
+                Text('energy.${position.energy.name}'.tr(), style: valueStyle)),
+            const VerticalDivider(width: 24, color: AppColors.hairline),
+            fact(
+                'position.duration'.tr(),
+                Text('duration.${position.duration.name}'.tr(),
+                    style: valueStyle)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const _Section({required this.title, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title.toUpperCase(), style: AppTypography.eyebrow),
+        const SizedBox(height: 12),
+        child,
+      ],
+    );
+  }
+}
+
+/// Hairline pill used for categories and focus areas.
+class _Tag extends StatelessWidget {
+  final String label;
+  final IconData? icon;
+  final Color tint;
+
+  const _Tag({required this.label, this.icon, this.tint = AppColors.mist});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.round),
+        border: Border.all(color: AppColors.outline),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 15, color: tint),
+            const SizedBox(width: 6),
+          ],
+          Text(
+            label,
+            style: const TextStyle(fontSize: 13, color: AppColors.ivory),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Quiet bordered note with a tinted icon (cautions, easy variant).
+class _Callout extends StatelessWidget {
+  final IconData icon;
+  final Color tint;
+  final String title;
+  final String body;
+
+  const _Callout({
     required this.icon,
-    required this.label,
-    required this.color,
+    required this.tint,
+    required this.title,
+    required this.body,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: AppSpacing.sm,
-      ),
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(AppRadius.round),
+        color: AppColors.inkRaised,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: AppColors.hairline),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 16, color: color),
-          const SizedBox(width: AppSpacing.xs),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
+          Icon(icon, size: 20, color: tint),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: tint,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(body, style: Theme.of(context).textTheme.bodyMedium),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Translucent round button floating over the artwork.
+class _GlassButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final Color color;
+
+  const _GlassButton({
+    required this.icon,
+    required this.onPressed,
+    this.color = AppColors.ivory,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Material(
+        color: AppColors.ink.withOpacity(0.6),
+        shape: const CircleBorder(side: BorderSide(color: AppColors.hairline)),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Icon(icon, size: 20, color: color),
+          ),
+        ),
       ),
     );
   }

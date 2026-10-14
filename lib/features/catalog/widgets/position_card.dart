@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../app/theme.dart';
 import '../../../data/models/position.dart';
+import 'category_style.dart';
+import 'position_illustration.dart';
 
-/// A card displaying a position preview
+/// A card displaying a position preview: the illustration as an art print,
+/// then category, name, alias and difficulty in an editorial stack.
 class PositionCard extends StatelessWidget {
   final Position position;
   final VoidCallback? onTap;
@@ -22,261 +24,125 @@ class PositionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              _getCategoryColor(position.categories.first).withOpacity(0.3),
-              _getCategoryColor(position.categories.first).withOpacity(0.1),
-            ],
-          ),
-          border: Border.all(
-            color: _getCategoryColor(position.categories.first).withOpacity(0.3),
-            width: 1,
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Content
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Illustration placeholder
-                  Expanded(
-                    child: Center(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                          color: Theme.of(context)
-                              .colorScheme
-                              .surface
-                              .withOpacity(0.5),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                          child: Padding(
-                            padding: const EdgeInsets.all(AppSpacing.sm),
-                            child: SvgPicture.asset(
-                              'assets/images/positions/${position.illustrationRef}',
-                              fit: BoxFit.contain,
-                              placeholderBuilder: (_) => Center(
-                                child: Icon(
-                                  _getCategoryIcon(position.categories.first),
-                                  size: 48,
-                                  color: _getCategoryColor(position.categories.first)
-                                      .withOpacity(0.7),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+    final lang = context.locale.languageCode;
+    final category = position.categories.first;
+    final alias = position.getAlias(lang);
+
+    return Material(
+      color: AppColors.inkRaised,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.xl),
+        side: const BorderSide(color: AppColors.hairline),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(7),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: PositionIllustration(
+                        position: position,
+                        borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                     ),
-                  ),
-
-                  const SizedBox(height: AppSpacing.sm),
-
-                  // Name
-                  Text(
-                    position.getName(context.locale.languageCode),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
+                    if (showFavorite)
+                      Positioned(
+                        top: 2,
+                        right: 2,
+                        child: _FavoriteButton(
+                          isFavorite: position.isFavorite,
+                          onTap: onFavoriteTap,
                         ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  // Alias if available
-                  if (position.getAlias(context.locale.languageCode) != null && position.getAlias(context.locale.languageCode)!.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                      ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(7, 12, 7, 6),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      position.getAlias(context.locale.languageCode)!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.6),
-                            fontStyle: FontStyle.italic,
-                          ),
+                      'categories.${category.name}'.tr().toUpperCase(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: AppTypography.eyebrow.copyWith(
+                        fontSize: 9.5,
+                        letterSpacing: 1.4,
+                        color: category.tint,
+                      ),
                     ),
+                    const SizedBox(height: 5),
+                    Text(
+                      position.getName(lang),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.displayFont,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                        height: 1.2,
+                        color: AppColors.ivory,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      alias != null && alias.isNotEmpty ? alias : ' ',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontFamily: AppTypography.bodyFont,
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                        color: AppColors.mist,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    DifficultyMeter(difficulty: position.difficulty),
                   ],
-
-                  const SizedBox(height: AppSpacing.sm),
-
-                  // Info row
-                  Row(
-                    children: [
-                      // Difficulty
-                      _DifficultyIndicator(difficulty: position.difficulty),
-                      const Spacer(),
-                      // Energy
-                      Icon(
-                        _getEnergyIcon(position.energy),
-                        size: 16,
-                        color: _getEnergyColor(position.energy),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Favorite button
-            if (showFavorite)
-              Positioned(
-                top: AppSpacing.xs,
-                right: AppSpacing.xs,
-                child: IconButton(
-                  onPressed: onFavoriteTap,
-                  icon: Icon(
-                    position.isFavorite
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: position.isFavorite
-                        ? AppColors.burgundy
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.5),
-                  ),
-                  iconSize: 20,
-                  visualDensity: VisualDensity.compact,
                 ),
               ),
-
-            // Category badge
-            Positioned(
-              top: AppSpacing.sm,
-              left: AppSpacing.sm,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.sm,
-                  vertical: 2,
-                ),
-                decoration: BoxDecoration(
-                  color: _getCategoryColor(position.categories.first)
-                      .withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Text(
-                  'categories.${position.categories.first.name}'.tr(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: _getCategoryColor(position.categories.first),
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
-
-  Color _getCategoryColor(PositionCategory category) {
-    switch (category) {
-      case PositionCategory.romantic:
-        return AppColors.burgundy;
-      case PositionCategory.beginner:
-        return AppColors.blush;
-      case PositionCategory.athletic:
-        return AppColors.spicy;
-      case PositionCategory.supported:
-        return AppColors.navy;
-      case PositionCategory.lowImpact:
-        return AppColors.soft;
-      case PositionCategory.adventurous:
-        return AppColors.extraSpicy;
-      case PositionCategory.reconnect:
-        return AppColors.gold;
-      case PositionCategory.quickie:
-        return Colors.purple;
-    }
-  }
-
-  IconData _getCategoryIcon(PositionCategory category) {
-    switch (category) {
-      case PositionCategory.romantic:
-        return Icons.favorite;
-      case PositionCategory.beginner:
-        return Icons.sentiment_satisfied;
-      case PositionCategory.athletic:
-        return Icons.fitness_center;
-      case PositionCategory.supported:
-        return Icons.support;
-      case PositionCategory.lowImpact:
-        return Icons.spa;
-      case PositionCategory.adventurous:
-        return Icons.explore;
-      case PositionCategory.reconnect:
-        return Icons.sync;
-      case PositionCategory.quickie:
-        return Icons.bolt;
-    }
-  }
-
-  IconData _getEnergyIcon(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return Icons.battery_3_bar;
-      case EnergyLevel.medium:
-        return Icons.battery_5_bar;
-      case EnergyLevel.high:
-        return Icons.battery_full;
-    }
-  }
-
-  Color _getEnergyColor(EnergyLevel energy) {
-    switch (energy) {
-      case EnergyLevel.low:
-        return AppColors.soft;
-      case EnergyLevel.medium:
-        return AppColors.spicy;
-      case EnergyLevel.high:
-        return AppColors.extraSpicy;
-    }
-  }
 }
 
-class _DifficultyIndicator extends StatelessWidget {
-  final int difficulty;
+class _FavoriteButton extends StatelessWidget {
+  final bool isFavorite;
+  final VoidCallback? onTap;
 
-  const _DifficultyIndicator({required this.difficulty});
+  const _FavoriteButton({required this.isFavorite, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(5, (index) {
-        final isFilled = index < difficulty;
-        return Container(
-          width: 6,
-          height: 6,
-          margin: const EdgeInsets.only(right: 2),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isFilled
-                ? _getDifficultyColor(difficulty)
-                : Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+    // Sits directly on the parchment plate, so it is drawn in wine ink
+    // rather than on a disc of its own.
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap,
+        child: SizedBox(
+          width: 38,
+          height: 38,
+          child: Icon(
+            isFavorite ? Icons.favorite : Icons.favorite_border,
+            size: 19,
+            color: isFavorite
+                ? AppColors.wine
+                : AppColors.wine.withOpacity(0.45),
           ),
-        );
-      }),
+        ),
+      ),
     );
-  }
-
-  Color _getDifficultyColor(int difficulty) {
-    if (difficulty <= 2) return AppColors.soft;
-    if (difficulty <= 3) return AppColors.spicy;
-    return AppColors.extraSpicy;
   }
 }

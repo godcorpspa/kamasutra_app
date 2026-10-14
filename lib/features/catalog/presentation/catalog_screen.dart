@@ -21,6 +21,11 @@ class CatalogScreen extends ConsumerStatefulWidget {
 class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   final TextEditingController _searchController = TextEditingController();
 
+  static final _pill = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(AppRadius.round),
+    borderSide: const BorderSide(color: AppColors.hairline),
+  );
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -74,89 +79,88 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppSpacing.lg,
-                AppSpacing.md,
                 AppSpacing.lg,
-                AppSpacing.sm,
+                AppSpacing.md,
+                AppSpacing.md,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title row
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Expanded(
-                        child: Text(
-                          showFavoritesOnly
-                              ? 'catalog.favorites'.tr()
-                              : 'catalog.title'.tr(),
-                          style: Theme.of(context).textTheme.headlineMedium,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('KAMASUTRA',
+                                style: AppTypography.eyebrow),
+                            const SizedBox(height: 6),
+                            Text(
+                              showFavoritesOnly
+                                  ? 'catalog.favorites'.tr()
+                                  : 'catalog.title'.tr(),
+                              style: Theme.of(context).textTheme.displaySmall,
+                            ),
+                          ],
                         ),
                       ),
                       // Favorites toggle
-                      IconButton(
+                      _HeaderIconButton(
+                        icon: showFavoritesOnly
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: showFavoritesOnly
+                            ? AppColors.rose
+                            : AppColors.ivory,
                         onPressed: _toggleFavorites,
-                        icon: Icon(
-                          showFavoritesOnly
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: showFavoritesOnly
-                              ? AppColors.burgundy
-                              : null,
-                        ),
                       ),
                     ],
                   ),
 
-                  const SizedBox(height: AppSpacing.md),
+                  const SizedBox(height: AppSpacing.lg),
 
                   // Search bar
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: _onSearchChanged,
-                          decoration: InputDecoration(
-                            hintText: 'catalog.search_hint'.tr(),
-                            prefixIcon: const Icon(Icons.search),
-                            suffixIcon: _searchController.text.isNotEmpty
-                                ? IconButton(
-                                    icon: const Icon(Icons.clear),
-                                    onPressed: () {
-                                      _searchController.clear();
-                                      _onSearchChanged('');
-                                    },
-                                  )
-                                : null,
-                            filled: true,
-                            fillColor: Theme.of(context)
-                                .colorScheme
-                                .surface
-                                .withOpacity(0.5),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppRadius.md),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.md,
-                              vertical: AppSpacing.sm,
+                        child: SizedBox(
+                          height: 50,
+                          child: TextField(
+                            controller: _searchController,
+                            onChanged: _onSearchChanged,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            decoration: InputDecoration(
+                              hintText: 'catalog.search_hint'.tr(),
+                              prefixIcon: const Icon(Icons.search, size: 20),
+                              suffixIcon: _searchController.text.isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.close, size: 18),
+                                      onPressed: () {
+                                        _searchController.clear();
+                                        _onSearchChanged('');
+                                      },
+                                    )
+                                  : null,
+                              contentPadding: EdgeInsets.zero,
+                              border: _pill,
+                              enabledBorder: _pill,
+                              focusedBorder: _pill.copyWith(
+                                borderSide: const BorderSide(
+                                    color: AppColors.champagne),
+                              ),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       // Filter button
-                      Badge(
-                        isLabelVisible: hasActiveFilters,
-                        backgroundColor: AppColors.burgundy,
-                        child: IconButton.filled(
-                          onPressed: _showFilters,
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: AppColors.grey800,
-                          ),
-                          icon: const Icon(Icons.tune),
-                        ),
+                      _HeaderIconButton(
+                        icon: Icons.tune,
+                        onPressed: _showFilters,
+                        filled: true,
+                        showDot: hasActiveFilters,
                       ),
                     ],
                   ),
@@ -215,8 +219,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
           children: [
             Icon(
               showFavoritesOnly ? Icons.favorite_border : Icons.search_off,
-              size: 64,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+              size: 48,
+              color: AppColors.smoke,
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
@@ -247,12 +251,13 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
 
   Widget _buildGrid(List<Position> positions) {
     return GridView.builder(
-      padding: const EdgeInsets.all(AppSpacing.md),
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md, AppSpacing.xs, AppSpacing.md, AppSpacing.lg),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.75,
-        crossAxisSpacing: AppSpacing.md,
-        mainAxisSpacing: AppSpacing.md,
+        childAspectRatio: 0.64,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
       itemCount: positions.length,
       itemBuilder: (context, index) {
@@ -270,6 +275,66 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
           },
         ).animate().fadeIn(delay: Duration(milliseconds: 50 * (index % 10)));
       },
+    );
+  }
+}
+
+/// Round 48px header action: plain icon, or an [AppColors.inkHigh] disc with
+/// a hairline border when [filled]; [showDot] adds a champagne status dot.
+class _HeaderIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final Color color;
+  final bool filled;
+  final bool showDot;
+
+  const _HeaderIconButton({
+    required this.icon,
+    required this.onPressed,
+    this.color = AppColors.ivory,
+    this.filled = false,
+    this.showDot = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 50,
+      height: 50,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Material(
+              color: filled ? AppColors.inkHigh : Colors.transparent,
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: filled ? AppColors.hairline : Colors.transparent,
+                ),
+              ),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onPressed,
+                child: Icon(icon, size: 21, color: color),
+              ),
+            ),
+          ),
+          if (showDot)
+            const Positioned(
+              top: 12,
+              right: 12,
+              child: SizedBox(
+                width: 8,
+                height: 8,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: AppColors.champagne,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
