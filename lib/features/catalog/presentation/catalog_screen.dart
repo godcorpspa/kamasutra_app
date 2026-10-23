@@ -46,6 +46,8 @@ class _CatalogScreenState extends ConsumerState<CatalogScreen> {
   void _showFilters() {
     showModalBottomSheet(
       context: context,
+      // Above the shell's floating nav bar, which would cover the sheet.
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const FilterSheet(),

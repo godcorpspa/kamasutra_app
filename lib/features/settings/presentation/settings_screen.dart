@@ -803,6 +803,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showPrivacyPolicy() {
     showModalBottomSheet(
       context: context,
+      // Above the shell's floating nav bar, which would cover the sheet.
+      useRootNavigator: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
@@ -853,6 +855,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showTermsOfService() {
     showModalBottomSheet(
       context: context,
+      // Above the shell's floating nav bar, which would cover the sheet.
+      useRootNavigator: true,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
@@ -903,6 +907,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void _showContactOptions() {
     showModalBottomSheet(
       context: context,
+      // Above the shell's floating nav bar, which would cover the sheet.
+      useRootNavigator: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
