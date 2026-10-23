@@ -1728,7 +1728,8 @@
         "default_mood": "magical",
         "default_action": "something special",
         "default_surprise": "surprise",
-        "your_special_details": "Your special details"
+        "your_special_details": "Your special details",
+        "closing": "Let it carry you away, and make it real when you feel ready."
       },
       "rules": {
         "rule_1": "Take turns choosing elements",
@@ -1763,7 +1764,10 @@
         "theme_audacity": "Audacity",
         "theme_kiss": "Kiss",
         "theme_eternity": "Eternity"
-      }
+      },
+      "chooses": "Choosing",
+      "veto_by": "{name}'s veto",
+      "vetoed_by": "{name} used their veto: pick something else."
     },
     "compliment_battle": {
       "title": "Compliment Battle",

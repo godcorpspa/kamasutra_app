@@ -1728,7 +1728,8 @@
         "default_mood": "magique",
         "default_action": "quelque chose de spécial",
         "default_surprise": "surprise",
-        "your_special_details": "Vos détails spéciaux"
+        "your_special_details": "Vos détails spéciaux",
+        "closing": "Laissez-vous emporter et réalisez-le quand vous vous sentirez prêts."
       },
       "rules": {
         "rule_1": "Choisissez des éléments à tour de rôle",
@@ -1763,7 +1764,10 @@
         "theme_audacity": "Audace",
         "theme_kiss": "Baiser",
         "theme_eternity": "Éternité"
-      }
+      },
+      "chooses": "Choisit",
+      "veto_by": "Véto de {name}",
+      "vetoed_by": "{name} a utilisé son véto : choisis autre chose."
     },
     "compliment_battle": {
       "title": "Bataille de Compliments",

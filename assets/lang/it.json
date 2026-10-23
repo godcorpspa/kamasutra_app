@@ -1728,7 +1728,8 @@
         "default_mood": "magica",
         "default_action": "qualcosa di speciale",
         "default_surprise": "sorpresa",
-        "your_special_details": "I vostri dettagli speciali"
+        "your_special_details": "I vostri dettagli speciali",
+        "closing": "Lasciatevi trasportare e rendetela realtà quando vi sentite pronti."
       },
       "rules": {
         "rule_1": "A turno scegliete gli elementi",
@@ -1763,7 +1764,10 @@
         "theme_audacity": "Audacia",
         "theme_kiss": "Bacio",
         "theme_eternity": "Eternità"
-      }
+      },
+      "chooses": "Sceglie",
+      "veto_by": "Veto di {name}",
+      "vetoed_by": "{name} ha usato il suo veto: scegli un'altra opzione."
     },
     "compliment_battle": {
       "title": "Gara di Complimenti",

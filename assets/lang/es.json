@@ -1728,7 +1728,8 @@
         "default_mood": "mágica",
         "default_action": "algo especial",
         "default_surprise": "sorpresa",
-        "your_special_details": "Tus detalles especiales"
+        "your_special_details": "Vuestros detalles especiales",
+        "closing": "Dejaos llevar y hacedla realidad cuando os sintáis preparados."
       },
       "rules": {
         "rule_1": "Turnaos para elegir elementos",
@@ -1763,7 +1764,10 @@
         "theme_audacity": "Audacia",
         "theme_kiss": "Beso",
         "theme_eternity": "Eternidad"
-      }
+      },
+      "chooses": "Elige",
+      "veto_by": "Veto de {name}",
+      "vetoed_by": "{name} ha usado su veto: elige otra opción."
     },
     "compliment_battle": {
       "title": "Batalla de Cumplidos",

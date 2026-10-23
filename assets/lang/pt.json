@@ -1728,7 +1728,8 @@
         "default_mood": "mágica",
         "default_action": "algo especial",
         "default_surprise": "surpresa",
-        "your_special_details": "Seus detalhes especiais"
+        "your_special_details": "Os vossos detalhes especiais",
+        "closing": "Deixem-se levar e tornem-na realidade quando se sentirem prontos."
       },
       "rules": {
         "rule_1": "Escolham os elementos à vez",
@@ -1742,7 +1743,7 @@
       "vetoed": "VETO",
       "secret_theme": "Tema secreto",
       "previous_fantasies": "Fantasias salvas",
-      "fantasy_saved": "Fantasia salva nas vossas memórias",
+      "fantasy_saved": "Fantasia guardada nas vossas memórias",
       "exit_confirm": "Sair agora? A fantasia será perdida.",
       "feature_random": "Escolha aleatória",
       "feature_veto": "Veto gentil",
@@ -1763,7 +1764,10 @@
         "theme_audacity": "Audácia",
         "theme_kiss": "Beijo",
         "theme_eternity": "Eternidade"
-      }
+      },
+      "chooses": "Escolhe",
+      "veto_by": "Veto de {name}",
+      "vetoed_by": "{name} usou o seu veto: escolhe outra opção."
     },
     "compliment_battle": {
       "title": "Batalha de Elogios",
@@ -2496,7 +2500,7 @@
     "rules": "Regras",
     "how_to_play": "Como jogar",
     "how_it_works": "Como funciona",
-    "how_it_works_description": "Em turnos, escolham elementos sensuais para construir a fantasia perfeita. Quando terminarem, vivam-na juntos!",
+    "how_it_works_description": "À vez, escolham elementos sensuais para construir a fantasia perfeita. Quando terminarem, vivam-na juntos!",
     "how_to_play_title": "Como Jogar",
     "confirm_and_pass": "Confirmar e passar",
     "answered": "Respondido",
