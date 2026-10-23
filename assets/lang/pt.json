@@ -106,6 +106,8 @@
     "cautions": "Precauções",
     "easy_version": "Versão fácil",
     "setup": "Preparação",
+    "show_all_steps": "Mostrar todos os passos ({count})",
+    "show_fewer_steps": "Mostrar menos",
     "check_in": "Check-in",
     "prerequisites": "Pré-requisitos",
     "tags": "Etiquetas",

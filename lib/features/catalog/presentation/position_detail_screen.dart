@@ -188,13 +188,7 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                     const SizedBox(height: AppSpacing.xl),
                     _Section(
                       title: 'position.setup'.tr(),
-                      child: Text(
-                        position.getSetup(locale)!,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColors.ivory.withOpacity(0.86),
-                              height: 1.65,
-                            ),
-                      ),
+                      child: _SetupSteps(text: position.getSetup(locale)!),
                     ),
                   ],
 
@@ -463,6 +457,106 @@ class _FactsRow extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The setup as a numbered list that can be read at a glance: the first
+/// [_visibleSteps] steps (getting into position) are shown, the refinements
+/// that follow sit behind a "show all" toggle. Unnumbered setups (one-line
+/// descriptions) render as a plain paragraph.
+class _SetupSteps extends StatefulWidget {
+  final String text;
+
+  const _SetupSteps({required this.text});
+
+  @override
+  State<_SetupSteps> createState() => _SetupStepsState();
+}
+
+class _SetupStepsState extends State<_SetupSteps> {
+  static const _visibleSteps = 3;
+  static final _stepStart = RegExp(r'^\s*\d+[.)]\s*', multiLine: true);
+
+  bool _expanded = false;
+
+  List<String> get _steps => widget.text
+      .split(_stepStart)
+      .map((s) => s.trim())
+      .where((s) => s.isNotEmpty)
+      .toList();
+
+  @override
+  Widget build(BuildContext context) {
+    final bodyStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: AppColors.ivory.withOpacity(0.86),
+          height: 1.55,
+        );
+    final steps = _steps;
+    if (!_stepStart.hasMatch(widget.text) || steps.length < 2) {
+      return Text(widget.text.trim(), style: bodyStyle);
+    }
+
+    final collapsible = steps.length > _visibleSteps;
+    final shown =
+        _expanded || !collapsible ? steps : steps.take(_visibleSteps).toList();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedSize(
+          duration: AppDurations.normal,
+          curve: Curves.easeOutCubic,
+          alignment: Alignment.topCenter,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var i = 0; i < shown.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: Text(
+                          '${i + 1}',
+                          style: const TextStyle(
+                            fontFamily: AppTypography.displayFont,
+                            fontFeatures: AppTypography.lining,
+                            fontSize: 20,
+                            height: 1.25,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.champagne,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Text(shown[i], style: bodyStyle)),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+        if (collapsible)
+          TextButton.icon(
+            onPressed: () => setState(() => _expanded = !_expanded),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
+            ),
+            icon: Icon(
+              _expanded ? Icons.expand_less : Icons.expand_more,
+              size: 20,
+            ),
+            label: Text(
+              _expanded
+                  ? 'position.show_fewer_steps'.tr()
+                  : 'position.show_all_steps'
+                      .tr(namedArgs: {'count': '${steps.length}'}),
+            ),
+          ),
+      ],
     );
   }
 }
