@@ -238,6 +238,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   // ── Dice ──
   int  _lastRoll = 0;
   bool _isRolling = false;
+  // True for the whole turn (roll, pawn walk, dialogs), so the dice can't be
+  // rolled again while the pawn is still moving.
+  bool _busy = false;
 
   // ── Status message overlay ──
   String? _statusMsg;
@@ -326,7 +329,16 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   // ─────────────────────────── DICE LOGIC ───────────────────────────
 
   Future<void> _rollDice() async {
-    if (_isRolling || _gameOver) return;
+    if (_busy || _gameOver) return;
+    _busy = true;
+    try {
+      await _playTurn();
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _playTurn() async {
     HapticFeedback.mediumImpact();
     setState(() => _isRolling = true);
 
@@ -384,21 +396,42 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     const total = 100;
     final oldPos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
     int newPos = oldPos + spaces;
+    final overshoot = newPos > total;
+    if (overshoot) newPos = total - (newPos - total);
 
-    if (newPos > total) {
-      newPos = total - (newPos - total);
-      _showStatus('games.goose_game.bounce_back'.tr(namedArgs: {'square': '$newPos'}),
-          color: _kOrange, emoji: '🔄');
+    if (firstMove) {
+      setState(() {
+        if (_currentPlayer == 1) _p1OnBoard = true; else _p2OnBoard = true;
+      });
     }
 
-    setState(() {
-      if (_currentPlayer == 1) { _p1Pos = newPos; if (firstMove) _p1OnBoard = true; }
-      else                     { _p2Pos = newPos; if (firstMove) _p2OnBoard = true; }
-    });
+    // Past 100 the pawn walks up to the finish and back down.
+    await _walkTo(overshoot ? total : newPos);
+    if (overshoot) {
+      _showStatus('games.goose_game.bounce_back'.tr(namedArgs: {'square': '$newPos'}),
+          color: _kOrange, emoji: '🔄');
+      await _walkTo(newPos);
+    }
 
-    await Future.delayed(const Duration(milliseconds: 350));
+    await Future.delayed(const Duration(milliseconds: 250));
     await _checkMilestone(newPos);
     await _handleSquare(newPos);
+  }
+
+  /// Moves the current player's pawn one square at a time to [target].
+  /// Long jumps (ladders, holes) step faster so they don't drag on.
+  Future<void> _walkTo(int target) async {
+    var pos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
+    if (pos == target) return;
+    final dir = target > pos ? 1 : -1;
+    final step = Duration(milliseconds: (target - pos).abs() > 8 ? 110 : 230);
+    while (pos != target && mounted) {
+      pos += dir;
+      final p = pos;
+      setState(() { if (_currentPlayer == 1) _p1Pos = p; else _p2Pos = p; });
+      HapticFeedback.selectionClick();
+      await Future.delayed(step);
+    }
   }
 
   Future<void> _checkMilestone(int pos) async {
@@ -429,9 +462,9 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           emoji: '🪜', title: 'games.goose_game.ladder_title'.tr(),
           subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '+${dest - pos}'}),
           description: 'games.goose_game.reward_description'.tr(),
-          content: _rand(kRewards), color: _kGreen,
+          content: _rand(kRewards), pool: kRewards, color: _kGreen,
         ));
-        setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
+        await _walkTo(dest);
         break;
       case GooseSquareType.hole:
         final dest = sq.destination!;
@@ -439,16 +472,16 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           emoji: '🕳️', title: 'games.goose_game.hole_title'.tr(),
           subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '${dest - pos}'}),
           description: 'games.goose_game.penance_do'.tr(),
-          content: _rand(kPenances), color: _kRed,
+          content: _rand(kPenances), pool: kPenances, color: _kRed,
         ));
-        setState(() { if (_currentPlayer == 1) _p1Pos = dest; else _p2Pos = dest; });
+        await _walkTo(dest);
         break;
       case GooseSquareType.penance:
         await _showContentDialog(_ContentDialogArgs(
           emoji: '🔥', title: 'games.goose_game.penance_title'.tr(),
           subtitle: 'games.goose_game.spicy_square'.tr(),
           description: 'games.goose_game.execute_penance'.tr(),
-          content: _rand(kPenances), color: _kOrange,
+          content: _rand(kPenances), pool: kPenances, color: _kOrange,
         ));
         break;
       default:
@@ -466,7 +499,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
         emoji: '🔥', title: 'games.goose_game.naked_title'.tr(),
         subtitle: 'games.goose_game.no_clothes'.tr(namedArgs: {'player': _playerName(player)}),
         description: 'games.goose_game.penance_instead'.tr(),
-        content: _rand(kPenances), color: _kRed,
+        content: _rand(kPenances), pool: kPenances, color: _kRed,
       ));
     }
   }
@@ -489,7 +522,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       emoji: '🏆', title: 'games.goose_game.player_wins'.tr(namedArgs: {'player': _playerName(_currentPlayer)}),
       subtitle: 'games.goose_game.reached_100'.tr(),
       description: 'games.goose_game.final_prize'.tr(),
-      content: _rand(kFinalRewards), color: _kGold,
+      content: _rand(kFinalRewards), pool: kFinalRewards, color: _kGold,
       onDismiss: () { Navigator.of(context).pop(); context.pop(); },
     ));
   }
@@ -921,7 +954,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   }
 
   Widget _buildRollButton(Color color) {
-    final enabled = !_isRolling && !_gameOver;
+    final enabled = !_busy && !_gameOver;
     return GestureDetector(
       onTap: enabled ? _rollDice : null,
       child: AnimatedContainer(
@@ -1761,6 +1794,9 @@ class _IsoBoardPainter extends CustomPainter {
 class _ContentDialogArgs {
   final String emoji, title, subtitle, description;
   final GooseContent content;
+  /// Where [content] was drawn from: lets the players swap it for another
+  /// card when they can't do this one (missing props, not in the mood...).
+  final List<GooseContent>? pool;
   final Color color;
   final VoidCallback? onDismiss;
 
@@ -1768,6 +1804,7 @@ class _ContentDialogArgs {
     required this.emoji, required this.title,
     required this.subtitle, required this.description,
     required this.content, required this.color,
+    this.pool,
     this.onDismiss,
   });
 }
@@ -1786,6 +1823,7 @@ class _ContentDialogState extends State<_ContentDialog>
   Timer? _timer;
   int  _remaining = 0;
   bool _timerDone = false;
+  late GooseContent _content;
   late AnimationController _entryAnim;
   late Animation<double>   _scaleAnim;
 
@@ -1796,19 +1834,37 @@ class _ContentDialogState extends State<_ContentDialog>
         duration: const Duration(milliseconds: 350), vsync: this);
     _scaleAnim = CurvedAnimation(parent: _entryAnim, curve: Curves.elasticOut);
     _entryAnim.forward();
+    _content = widget.args.content;
+    _startTimer();
+  }
 
-    if (widget.args.content.timerSeconds != null) {
-      _remaining = widget.args.content.timerSeconds!;
-      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (_remaining <= 1) {
-          _timer?.cancel();
-          setState(() { _remaining = 0; _timerDone = true; });
-          HapticFeedback.heavyImpact();
-        } else {
-          setState(() => _remaining--);
-        }
-      });
-    }
+  void _startTimer() {
+    _timer?.cancel();
+    _timerDone = false;
+    if (_content.timerSeconds == null) return;
+    _remaining = _content.timerSeconds!;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_remaining <= 1) {
+        _timer?.cancel();
+        setState(() { _remaining = 0; _timerDone = true; });
+        HapticFeedback.heavyImpact();
+      } else {
+        setState(() => _remaining--);
+      }
+    });
+  }
+
+  /// Draws a different card from the same pool and restarts its timer.
+  void _changeCard() {
+    final pool = widget.args.pool!;
+    if (pool.length < 2) return;
+    HapticFeedback.selectionClick();
+    GooseContent next;
+    do {
+      next = pool[Random().nextInt(pool.length)];
+    } while (identical(next, _content) || next.text == _content.text);
+    setState(() => _content = next);
+    _startTimer();
   }
 
   @override
@@ -1822,7 +1878,8 @@ class _ContentDialogState extends State<_ContentDialog>
   @override
   Widget build(BuildContext context) {
     final a    = widget.args;
-    final hasT = a.content.timerSeconds != null;
+    final hasT = _content.timerSeconds != null;
+    final canChange = (a.pool?.length ?? 0) > 1;
     final c    = a.color;
 
     return ScaleTransition(
@@ -1890,12 +1947,16 @@ class _ContentDialogState extends State<_ContentDialog>
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: Colors.white12),
                   ),
-                  child: Text(a.content.text.tr(),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: Text(_content.text.tr(),
+                    key: ValueKey(_content.text),
                     style: const TextStyle(
                       color: Colors.white, fontSize: 16,
                       fontWeight: FontWeight.w600, height: 1.45,
                     ),
                     textAlign: TextAlign.center,
+                  ),
                   ),
                 ),
 
@@ -1930,7 +1991,29 @@ class _ContentDialogState extends State<_ContentDialog>
               ]),
             ),
 
-            // ── Button ──
+            // ── Buttons ──
+            if (canChange)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: _changeCard,
+                    icon: Icon(Icons.autorenew, color: c, size: 20),
+                    label: Text(
+                      'games.goose_game.change_card'.tr(),
+                      style: TextStyle(color: c, fontSize: 15,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      side: BorderSide(color: c.withOpacity(0.6)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                    ),
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               child: SizedBox(
