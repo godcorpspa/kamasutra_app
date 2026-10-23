@@ -25,6 +25,8 @@ extension PositionCategoryStyle on PositionCategory {
         return AppColors.jewelLilac;
       case PositionCategory.quickie:
         return AppColors.jewelAmber;
+      case PositionCategory.foreplay:
+        return AppColors.jewelTeal;
     }
   }
 
@@ -46,6 +48,8 @@ extension PositionCategoryStyle on PositionCategory {
         return Icons.all_inclusive;
       case PositionCategory.quickie:
         return Icons.timer_outlined;
+      case PositionCategory.foreplay:
+        return Icons.local_florist_outlined;
     }
   }
 }

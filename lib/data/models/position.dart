@@ -13,6 +13,7 @@ enum PositionCategory {
   adventurous,
   reconnect,
   quickie,
+  foreplay,
 }
 
 /// Energy levels

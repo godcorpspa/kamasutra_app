@@ -226,7 +226,7 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         if (position.difficulty >= 4) highDiffCount++;
       }
     }
-    final totalCategories = 8; // romantic, beginner, athletic, supported, lowImpact, adventurous, reconnect, quickie
+    final totalCategories = PositionCategory.values.length;
 
     // Per-category tried counts
     final Map<String, int> categoryTriedCount = {};

@@ -118,6 +118,7 @@ const _$PositionCategoryEnumMap = {
   PositionCategory.adventurous: 'adventurous',
   PositionCategory.reconnect: 'reconnect',
   PositionCategory.quickie: 'quickie',
+  PositionCategory.foreplay: 'foreplay',
 };
 
 const _$EnergyLevelEnumMap = {
