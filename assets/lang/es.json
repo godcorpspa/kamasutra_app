@@ -2276,7 +2276,7 @@
       },
       "compare_choices": "Comparar elecciones",
       "create_playlist": "Crear playlist",
-      "app_bar_title": "Tu Banda Sonora",
+      "app_bar_title": "Vuestra Banda Sonora",
       "step_receive_theme": "Recibe un tema musical",
       "step_choose_song": "Elige la canción perfecta",
       "step_final_playlist": "Crea la playlist final",
@@ -2295,10 +2295,17 @@
       "exit_confirm": "¿Salir ahora? La playlist se perderá.",
       "rule_1": "Elegid cuántos temas explorar (5/8/10)",
       "rule_2": "Para cada tema, uno de vosotros elige una canción",
-      "rule_3": "Tu partner reacciona con 💕 🔥 👍 🤔",
+      "rule_3": "Tu pareja reacciona a la elección",
       "rule_4": "Más reacciones positivas = más corazones para la canción",
       "rule_5": "Al final descubrid las 3 canciones más queridas",
-      "closing": "Sin ganadores — solo vuestra banda sonora. 🎶"
+      "closing": "Sin ganadores — solo vuestra banda sonora. 🎶",
+      "reacting": "Reacciona",
+      "reaction_love": "Me encanta",
+      "reaction_fire": "Me enciende",
+      "reaction_nice": "Está bien",
+      "reaction_meh": "Mmm…",
+      "copy_playlist": "Copiar la lista",
+      "copied": "Lista copiada: pégala donde quieras."
     },
     "mirror_challenge": {
       "title": "Desafío del Espejo",
@@ -3351,6 +3358,7 @@
     "leave_body": "Se perderá la partida en curso.",
     "stay": "Quedarme",
     "leave": "Salir",
-    "together": "Juntos"
+    "together": "Juntos",
+    "chooses": "Elige"
   }
 }

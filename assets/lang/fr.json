@@ -2295,10 +2295,17 @@
       "exit_confirm": "Sortir maintenant ? La playlist sera perdue.",
       "rule_1": "Choisissez combien de thèmes explorer (5/8/10)",
       "rule_2": "Pour chaque thème, l'un de vous choisit une chanson",
-      "rule_3": "Le partenaire réagit avec 💕 🔥 👍 🤔",
+      "rule_3": "Le partenaire réagit au choix",
       "rule_4": "Plus de réactions positives = plus de cœurs pour la chanson",
       "rule_5": "À la fin, découvrez les 3 chansons les plus aimées",
-      "closing": "Pas de gagnants — juste votre bande originale. 🎶"
+      "closing": "Pas de gagnants — juste votre bande originale. 🎶",
+      "reacting": "Réagit",
+      "reaction_love": "Je l'adore",
+      "reaction_fire": "Elle m'enflamme",
+      "reaction_nice": "Sympa",
+      "reaction_meh": "Bof…",
+      "copy_playlist": "Copier la playlist",
+      "copied": "Playlist copiée : colle-la où tu veux."
     },
     "mirror_challenge": {
       "title": "Défi du Miroir",
@@ -3351,6 +3358,7 @@
     "leave_body": "La partie en cours sera perdue.",
     "stay": "Rester",
     "leave": "Quitter",
-    "together": "Ensemble"
+    "together": "Ensemble",
+    "chooses": "Choisit"
   }
 }

@@ -2295,10 +2295,17 @@
       "exit_confirm": "Leave now? The playlist will be lost.",
       "rule_1": "Pick how many themes to explore (5/8/10)",
       "rule_2": "For each theme, one of you picks a song",
-      "rule_3": "Your partner reacts with 💕 🔥 👍 🤔",
+      "rule_3": "Your partner reacts to the pick",
       "rule_4": "More positive reactions = more hearts for the song",
       "rule_5": "At the end discover the top 3 most-loved songs",
-      "closing": "No winners — just your soundtrack. 🎶"
+      "closing": "No winners — just your soundtrack. 🎶",
+      "reacting": "Reacting",
+      "reaction_love": "Love it",
+      "reaction_fire": "Turns me on",
+      "reaction_nice": "Nice",
+      "reaction_meh": "Hmm…",
+      "copy_playlist": "Copy the playlist",
+      "copied": "Playlist copied: paste it wherever you like."
     },
     "mirror_challenge": {
       "title": "Mirror Challenge",
@@ -3351,6 +3358,7 @@
     "leave_body": "The game in progress will be lost.",
     "stay": "Stay",
     "leave": "Leave",
-    "together": "Together"
+    "together": "Together",
+    "chooses": "Choosing"
   }
 }

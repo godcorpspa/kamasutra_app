@@ -2295,10 +2295,17 @@
       "exit_confirm": "Uscire ora? La playlist andrà persa.",
       "rule_1": "Scegli quanti temi musicali esplorare (5/8/10)",
       "rule_2": "Per ogni tema, uno di voi sceglie una canzone",
-      "rule_3": "Il partner reagisce con 💕 🔥 👍 🤔",
+      "rule_3": "Il partner reagisce alla scelta",
       "rule_4": "Più reazioni positive = più cuori per la canzone",
       "rule_5": "Alla fine scoprite le 3 canzoni più amate",
-      "closing": "Niente vincitori — solo la vostra colonna sonora. 🎶"
+      "closing": "Niente vincitori — solo la vostra colonna sonora. 🎶",
+      "reacting": "Reagisce",
+      "reaction_love": "La adoro",
+      "reaction_fire": "Mi accende",
+      "reaction_nice": "Carina",
+      "reaction_meh": "Mah…",
+      "copy_playlist": "Copia la playlist",
+      "copied": "Playlist copiata: incollala dove vuoi."
     },
     "mirror_challenge": {
       "title": "Sfida allo Specchio",
@@ -3351,6 +3358,7 @@
     "leave_body": "La partita in corso andrà persa.",
     "stay": "Resta",
     "leave": "Esci",
-    "together": "Insieme"
+    "together": "Insieme",
+    "chooses": "Sceglie"
   }
 }

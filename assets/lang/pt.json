@@ -2276,7 +2276,7 @@
       },
       "compare_choices": "Comparar escolhas",
       "create_playlist": "Criar lista de músicas",
-      "app_bar_title": "Sua Trilha Sonora",
+      "app_bar_title": "A Vossa Banda Sonora",
       "step_receive_theme": "Receba um tema musical",
       "step_choose_song": "Escolhe a música perfeita",
       "step_final_playlist": "Cria a lista de músicas final",
@@ -2295,10 +2295,17 @@
       "exit_confirm": "Sair agora? A lista de músicas será perdida.",
       "rule_1": "Escolham quantos temas explorar (5/8/10)",
       "rule_2": "Para cada tema, um de vós escolhe uma música",
-      "rule_3": "O parceiro reage com 💕 🔥 👍 🤔",
+      "rule_3": "O parceiro reage à escolha",
       "rule_4": "Mais reações positivas = mais corações para a música",
       "rule_5": "No final descubram as 3 músicas mais amadas",
-      "closing": "Sem vencedores — apenas a vossa banda sonora. 🎶"
+      "closing": "Sem vencedores — apenas a vossa banda sonora. 🎶",
+      "reacting": "Reage",
+      "reaction_love": "Adoro",
+      "reaction_fire": "Deixa-me em brasa",
+      "reaction_nice": "Gira",
+      "reaction_meh": "Hmm…",
+      "copy_playlist": "Copiar a playlist",
+      "copied": "Playlist copiada: cola-a onde quiseres."
     },
     "mirror_challenge": {
       "title": "Desafio do Espelho",
@@ -3140,7 +3147,7 @@
     },
     "romantic_evening": {
       "title": "Noite Romântica",
-      "desc": "A trilha sonora ideal para um jantar à luz de velas"
+      "desc": "A banda sonora ideal para um jantar à luz das velas"
     },
     "energy": {
       "title": "Energia",
@@ -3351,6 +3358,7 @@
     "leave_body": "O jogo em curso será perdido.",
     "stay": "Ficar",
     "leave": "Sair",
-    "together": "Juntos"
+    "together": "Juntos",
+    "chooses": "Escolhe"
   }
 }
