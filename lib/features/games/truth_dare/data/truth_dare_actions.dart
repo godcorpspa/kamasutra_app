@@ -1,35 +1,25 @@
-import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 
-/// Repository of all truth and dare actions organized by intensity.
-/// Each category has 20 items per intensity level, loaded from localization files.
-class TruthDareActions {
-  static final _random = Random();
+import '../../shared/game_kit.dart';
 
-  static String getTruth(String intensity) {
-    final key = 'games.truth_dare.cards.truths.$intensity';
-    // Try to get localized list
-    final list = _getLocalizedList(key);
-    if (list.isEmpty) return 'games.truth_dare.cards.fallback_truth'.tr();
-    return list[_random.nextInt(list.length)];
-  }
+/// Truths and dares for one game, loaded from the localization files
+/// (`games.truth_dare.cards.{truths|dares}.{intensity}.N`).
+///
+/// Each pile is a shuffle bag: no card comes back until the whole pile has
+/// been played, and "change card" never hands out the same one again.
+class TruthDareDeck {
+  final _piles = <String, ShuffleBag<String>>{};
 
-  static String getDare(String intensity) {
-    final key = 'games.truth_dare.cards.dares.$intensity';
-    final list = _getLocalizedList(key);
-    if (list.isEmpty) return 'games.truth_dare.cards.fallback_dare'.tr();
-    return list[_random.nextInt(list.length)];
-  }
-
-  static List<String> _getLocalizedList(String key) {
-    final List<String> results = [];
-    for (int i = 0; i < 20; i++) {
-      final translated = '$key.$i'.tr();
-      // If the key is not found, easy_localization returns the key itself
-      if (translated != '$key.$i') {
-        results.add(translated);
-      }
+  String draw({required bool truth, required String intensity}) {
+    final kind = truth ? 'truths' : 'dares';
+    final pile = _piles.putIfAbsent(
+      '$kind.$intensity',
+      () => ShuffleBag(localizedList('games.truth_dare.cards.$kind.$intensity')),
+    );
+    if (pile.isEmpty) {
+      return 'games.truth_dare.cards.fallback_${truth ? 'truth' : 'dare'}'
+          .tr();
     }
-    return results;
+    return pile.next();
   }
 }

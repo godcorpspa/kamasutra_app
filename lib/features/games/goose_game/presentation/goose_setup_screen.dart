@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../app/theme.dart';
 import '../../../../app/router.dart';
 import '../../../../data/models/goose_game.dart';
+import '../../shared/game_kit.dart';
 
 /// Setup screen: enter player names, view tutorial, start game
 class GooseSetupScreen extends StatefulWidget {
@@ -25,8 +26,9 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
   @override
   void initState() {
     super.initState();
-    _player1Controller = TextEditingController(text: 'games.goose_game.player_1_default'.tr());
-    _player2Controller = TextEditingController(text: 'games.goose_game.player_2_default'.tr());
+    // Same names as the other games (entered once, shared everywhere).
+    _player1Controller = TextEditingController(text: GamePlayers.name(1));
+    _player2Controller = TextEditingController(text: GamePlayers.name(2));
     WidgetsBinding.instance.addPostFrameCallback((_) => _showTutorial());
   }
 
@@ -48,6 +50,9 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
   void _startGame() {
     if (!_formKey.currentState!.validate()) return;
     HapticFeedback.mediumImpact();
+
+    GamePlayers.save(1, _player1Controller.text);
+    GamePlayers.save(2, _player2Controller.text);
 
     final config = GooseGameConfig(
       player1Name: _player1Controller.text.trim().isEmpty

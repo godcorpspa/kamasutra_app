@@ -3212,5 +3212,14 @@
     "visuale": "visual",
     "volo": "vuelo",
     "yab-yum": "yab-yum"
+  },
+  "game_kit": {
+    "players": "Quién juega",
+    "players_hint": "Los nombres se guardan para todos los juegos.",
+    "turn_of": "Te toca",
+    "leave_title": "¿Salir de la partida?",
+    "leave_body": "Se perderá la partida en curso.",
+    "stay": "Quedarme",
+    "leave": "Salir"
   }
 }

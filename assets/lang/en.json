@@ -3212,5 +3212,14 @@
     "visuale": "visual",
     "volo": "flight",
     "yab-yum": "yab-yum"
+  },
+  "game_kit": {
+    "players": "Who's playing",
+    "players_hint": "Your names are saved for every game.",
+    "turn_of": "Your turn",
+    "leave_title": "Leave the game?",
+    "leave_body": "The game in progress will be lost.",
+    "stay": "Stay",
+    "leave": "Leave"
   }
 }

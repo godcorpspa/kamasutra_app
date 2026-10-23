@@ -6,5 +6,7 @@
 /// translations themselves are left untouched.
 String plainLabel(String text) => text.replaceAll(_edgeSymbols, '');
 
-final _edgeSymbols =
-    RegExp(r'^[^\p{L}\p{N}]+|[^\p{L}\p{N}).!?…]+$', unicode: true);
+// Opening ¡ ¿ « and closing » are punctuation, not decoration: Spanish
+// "¡Hecho!" must keep its first character.
+final _edgeSymbols = RegExp(r'^[^\p{L}\p{N}¡¿«]+|[^\p{L}\p{N}).!?…»]+$',
+    unicode: true);

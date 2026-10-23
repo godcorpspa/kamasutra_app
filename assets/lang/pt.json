@@ -2990,7 +2990,7 @@
     "truth": "VERDADE",
     "dare": "DESAFIO",
     "truth_sub": "Confessa tudo...",
-    "dare_sub": "Ouse tudo...",
+    "dare_sub": "Ousa tudo...",
     "end_game": "Terminar partida",
     "change": "Trocar",
     "done_next": "Feito! Próximo turno"
@@ -3212,5 +3212,14 @@
     "visuale": "visual",
     "volo": "voo",
     "yab-yum": "yab-yum"
+  },
+  "game_kit": {
+    "players": "Quem joga",
+    "players_hint": "Os nomes ficam guardados para todos os jogos.",
+    "turn_of": "É a tua vez",
+    "leave_title": "Sair do jogo?",
+    "leave_body": "O jogo em curso será perdido.",
+    "stay": "Ficar",
+    "leave": "Sair"
   }
 }

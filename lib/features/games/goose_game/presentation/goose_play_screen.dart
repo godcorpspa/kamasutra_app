@@ -8,8 +8,8 @@ import 'package:confetti/confetti.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../../app/theme.dart';
 import '../../../../data/models/goose_game.dart';
+import '../../shared/game_kit.dart';
 
 // ── Dark theme palette ──
 const _kBg1      = Color(0xFF0D0D1A);
@@ -33,7 +33,6 @@ const double _kTileW    = 96.0;    // isometric tile width
 const double _kTileH    = 48.0;    // isometric tile height
 const double _kBlockH   = 22.0;    // 3-D block depth
 const double _kTileStep = 1.18;    // grid-to-screen spacing multiplier
-const double _kRound    = 5.0;     // corner rounding for tiles
 const double _kBoardCX  = 2200.0;  // board centre-X in the large canvas
 const double _kBoardTY  = 80.0;    // board top-Y in the large canvas
 const double _kCanvasW  = 3600.0;
@@ -250,6 +249,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
   // ── Game end ──
   bool _gameOver = false;
+  final _session = GameSession();
 
   // ── Animations ──
   late AnimationController _diceAnim;
@@ -290,6 +290,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
   @override
   void dispose() {
+    _session.finish();
     _bgMusic.stop();
     _bgMusic.dispose();
     _diceAnim.dispose();
@@ -331,6 +332,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   Future<void> _rollDice() async {
     if (_busy || _gameOver) return;
     _busy = true;
+    _session.start();
     try {
       await _playTurn();
     } finally {
@@ -523,6 +525,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     HapticFeedback.heavyImpact();
     _confetti.play();
     _bgMusic.stop();
+    _session.finish();
     setState(() => _gameOver = true);
     await _showContentDialog(_ContentDialogArgs(
       emoji: '🏆', title: 'games.goose_game.player_wins'.tr(namedArgs: {'player': _playerName(_currentPlayer)}),
