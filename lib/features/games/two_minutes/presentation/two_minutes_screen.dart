@@ -465,7 +465,7 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  if (_current.breathing) _BreathingHalo(animation: _breath),
+                  if (_current.breathing) GameBreathingHalo(animation: _breath),
                   GameTimerRing(
                     size: 200,
                     progress: _countdown.progress,
@@ -615,38 +615,6 @@ class _TwoMinutesScreenState extends State<TwoMinutesScreen>
           ],
         ),
       ),
-    );
-  }
-}
-
-/// Soft disc that swells for 4 s (breathe in) and shrinks for 4 s.
-class _BreathingHalo extends StatelessWidget {
-  final Animation<double> animation;
-
-  const _BreathingHalo({required this.animation});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, _) {
-        final t = animation.value;
-        final phase = t < 0.5 ? t * 2 : (1 - t) * 2;
-        final eased = Curves.easeInOut.transform(phase);
-        final size = 200 + 60 * eased;
-        return Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: RadialGradient(colors: [
-              GameTone.accent.withOpacity(0.0),
-              GameTone.accent.withOpacity(0.10 + 0.08 * eased),
-              GameTone.accent.withOpacity(0.0),
-            ], stops: const [0.6, 0.85, 1.0]),
-          ),
-        );
-      },
     );
   }
 }
