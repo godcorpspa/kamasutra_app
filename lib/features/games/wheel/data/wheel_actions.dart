@@ -1,26 +1,20 @@
-import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 
-/// Repository of all wheel actions organized by category and intensity.
-/// Each category has 20 actions per intensity level, loaded from localization files.
-class WheelActions {
-  static final _random = Random();
+import '../../shared/game_kit.dart';
 
-  /// Returns a random action for the given category key and intensity.
-  static String getAction(String categoryKey, String intensity, String locale) {
-    final list = _getLocalizedList('games.wheel.cards.$categoryKey.$intensity');
-    if (list.isEmpty) return 'games.wheel.fallback_action'.tr();
-    return list[_random.nextInt(list.length)];
-  }
+/// Wheel actions for one game, loaded from the localization files
+/// (`games.wheel.cards.{category}.{intensity}.N`). Each category/intensity
+/// pile is a shuffle bag, so an action only comes back once the pile has
+/// been played through.
+class WheelDeck {
+  final _piles = <String, ShuffleBag<String>>{};
 
-  static List<String> _getLocalizedList(String key) {
-    final List<String> results = [];
-    for (int i = 0; i < 20; i++) {
-      final translated = '$key.$i'.tr();
-      if (translated != '$key.$i') {
-        results.add(translated);
-      }
-    }
-    return results;
+  String draw(String category, String intensity) {
+    final pile = _piles.putIfAbsent(
+      '$category.$intensity',
+      () => ShuffleBag(localizedList('games.wheel.cards.$category.$intensity')),
+    );
+    if (pile.isEmpty) return 'games.wheel.fallback_action'.tr();
+    return pile.next();
   }
 }

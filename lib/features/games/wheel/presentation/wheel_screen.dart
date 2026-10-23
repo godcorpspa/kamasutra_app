@@ -1,11 +1,17 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../../../app/theme.dart';
+import '../../../../shared/utils/display_text.dart';
+import '../../shared/game_kit.dart';
 import '../data/wheel_actions.dart';
 
+/// Wheel of fortune: the players take turns spinning; the slice it stops on
+/// picks a category and the game draws an action of the chosen intensity.
 class WheelScreen extends StatefulWidget {
   const WheelScreen({super.key});
 
@@ -13,1597 +19,627 @@ class WheelScreen extends StatefulWidget {
   State<WheelScreen> createState() => _WheelScreenState();
 }
 
+class _WheelSegment {
+  final String key;
+  final IconData icon;
+
+  const _WheelSegment(this.key, this.icon);
+
+  String get name => 'games.wheel.segments.$key'.tr().replaceAll('\n', ' ');
+  String get label => 'games.wheel.segments.$key'.tr();
+}
+
+class _Spin {
+  final int player;
+  final _WheelSegment segment;
+
+  const _Spin(this.player, this.segment);
+}
+
+const _segments = [
+  _WheelSegment('forbidden_kiss', Icons.favorite_border_rounded),
+  _WheelSegment('erotic_massage', Icons.spa_outlined),
+  _WheelSegment('strip_tease', Icons.checkroom_outlined),
+  _WheelSegment('hot_position', Icons.local_fire_department_outlined),
+  _WheelSegment('oral_pleasure', Icons.water_drop_outlined),
+  _WheelSegment('role_play', Icons.theater_comedy_outlined),
+  _WheelSegment('mutual_pleasure', Icons.all_inclusive_rounded),
+  _WheelSegment('secret_desire', Icons.auto_awesome_outlined),
+  _WheelSegment('sensual_touch', Icons.back_hand_outlined),
+  _WheelSegment('forbidden_temptation', Icons.nights_stay_outlined),
+  _WheelSegment('wild_card', Icons.style_outlined),
+];
+
+const _intensities = ['soft', 'spicy', 'extra_spicy'];
+
 class _WheelScreenState extends State<WheelScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _spinController;
-  late AnimationController _pulseController;
-  late AnimationController _glowController;
-  late AnimationController _ledController;
-  late AnimationController _vortexController;
-  late Animation<double> _spinAnimation;
-  late Animation<double> _pulseAnimation;
-  late Animation<double> _glowAnimation;
+    with SingleTickerProviderStateMixin {
+  final _deck = WheelDeck();
+  final _session = GameSession();
+  final _random = Random();
+  final List<_Spin> _history = [];
 
-  double _currentRotation = 0;
-  bool _isSpinning = false;
+  late final AnimationController _spin = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 5200),
+  )..addListener(_tick);
+
+  bool _playing = false;
   String _intensity = 'spicy';
-  int? _lastWinningIndex;
-  int _spinCount = 0;
-  final List<String> _history = [];
+  int _player = 1;
+  double _from = 0;
+  double _to = 0;
+  int? _winner;
+  int _lastTickSegment = -1;
 
-  final List<WheelSegment> _segments = [
-    WheelSegment('forbidden_kiss', '💋', const Color(0xFFE91E63), const Color(0xFFF48FB1)),
-    WheelSegment('erotic_massage', '💆', const Color(0xFF9C27B0), const Color(0xFFCE93D8)),
-    WheelSegment('strip_tease', '👙', const Color(0xFFFF9800), const Color(0xFFFFCC02)),
-    WheelSegment('hot_position', '🔥', const Color(0xFFF44336), const Color(0xFFFF8A80)),
-    WheelSegment('oral_pleasure', '👅', const Color(0xFFAD1457), const Color(0xFFF06292)),
-    WheelSegment('role_play', '🎭', const Color(0xFF7B1FA2), const Color(0xFFBA68C8)),
-    WheelSegment('mutual_pleasure', '🔄', const Color(0xFFC62828), const Color(0xFFEF9A9A)),
-    WheelSegment('secret_desire', '✨', const Color(0xFF1565C0), const Color(0xFF64B5F6)),
-    WheelSegment('sensual_touch', '🤚', const Color(0xFFD81B60), const Color(0xFFF8BBD0)),
-    WheelSegment('forbidden_temptation', '😈', const Color(0xFF4A148C), const Color(0xFFAB47BC)),
-    WheelSegment('wild_card', '🃏', const Color(0xFF00897B), const Color(0xFF80CBC4)),
-  ];
+  static const _segmentAngle = 2 * pi / 11;
 
-  @override
-  void initState() {
-    super.initState();
-    _spinController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 5500),
-    );
+  double get _rotation =>
+      _from + (_to - _from) * Curves.easeOutQuart.transform(_spin.value);
 
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1500),
-    )..repeat(reverse: true);
-
-    _pulseAnimation = Tween<double>(begin: 0.95, end: 1.08).animate(
-      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
-
-    _glowController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..repeat(reverse: true);
-
-    _glowAnimation = Tween<double>(begin: 0.3, end: 0.9).animate(
-      CurvedAnimation(parent: _glowController, curve: Curves.easeInOut),
-    );
-
-    _ledController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 150),
-    )..repeat(reverse: true);
-
-    _vortexController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat();
-  }
+  bool get _spinning => _spin.isAnimating;
 
   @override
   void dispose() {
-    _spinController.dispose();
-    _pulseController.dispose();
-    _glowController.dispose();
-    _ledController.dispose();
-    _vortexController.dispose();
+    _session.finish();
+    _spin.dispose();
     super.dispose();
   }
 
-  void _spin() {
-    if (_isSpinning) return;
+  /// Soft click each time a divider passes under the pointer.
+  void _tick() {
+    final passed = (_rotation / _segmentAngle).floor();
+    if (passed != _lastTickSegment) {
+      _lastTickSegment = passed;
+      HapticFeedback.selectionClick();
+    }
+  }
 
+  String _intensityLabel(String i) => switch (i) {
+        'soft' => 'games.wheel.intensity_soft'.tr(),
+        'spicy' => 'games.wheel.intensity_spicy'.tr(),
+        _ => 'games.wheel.intensity_extra_hot'.tr(),
+      };
+
+  List<String> get _rules => [
+        'games.wheel.rule_1'.tr(),
+        'games.wheel.rule_2'.tr(),
+        'games.wheel.rule_3'.tr(),
+        'games.wheel.rule_4'.tr(),
+      ];
+
+  Future<void> _spinWheel() async {
+    if (_spinning) return;
     HapticFeedback.mediumImpact();
+    _session.start();
+
+    // The pointer sits at the top; slice i spans [i·s − π/2, (i+1)·s − π/2]
+    // on the wheel, so landing on its centre needs a rotation of
+    // −(i·s + s/2) modulo a full turn.
+    final target = _random.nextInt(_segments.length);
+    final current = _rotation;
+    final desired =
+        (2 * pi - target * _segmentAngle - _segmentAngle / 2) % (2 * pi);
+    var delta = desired - current % (2 * pi);
+    if (delta < 0) delta += 2 * pi;
+    // A little jitter inside the slice so it doesn't always stop dead centre.
+    final jitter = (_random.nextDouble() - 0.5) * _segmentAngle * 0.6;
 
     setState(() {
-      _isSpinning = true;
-      _lastWinningIndex = null;
+      _winner = null;
+      _from = current;
+      _to = current + (6 + _random.nextInt(3)) * 2 * pi + delta + jitter;
     });
-
-    final random = Random();
-    final extraSpins = 6 + random.nextInt(4);
-    final targetSegment = random.nextInt(_segments.length);
-    final segmentAngle = (2 * pi) / _segments.length;
-
-    // Calculate the exact rotation so the pointer (fixed at top) lands
-    // on the center of targetSegment.
-    // Segments are drawn at startAngle = i * segmentAngle - π/2.
-    // After rotating the wheel by θ, the pointer (at -π/2) points to
-    // wheel-coordinate angle (-θ mod 2π). We need that to equal the
-    // center of segment t: t * segmentAngle + segmentAngle/2.
-    // So: θ mod 2π = (2π - t * segmentAngle - segmentAngle/2) mod 2π
-    final desiredMod = (2 * pi - targetSegment * segmentAngle - segmentAngle / 2) % (2 * pi);
-    final currentMod = _currentRotation % (2 * pi);
-    double delta = desiredMod - currentMod;
-    if (delta < 0) delta += 2 * pi;
-    final targetAngle = extraSpins * 2 * pi + delta;
-
-    _spinAnimation = Tween<double>(
-      begin: _currentRotation,
-      end: _currentRotation + targetAngle,
-    ).animate(CurvedAnimation(
-      parent: _spinController,
-      curve: const _WheelSpinCurve(),
-    ));
-
-    _spinAnimation.addListener(() {
-      setState(() {
-        _currentRotation = _spinAnimation.value;
-      });
-      if (_spinController.value > 0.7) {
-        final progress = (_spinController.value - 0.7) / 0.3;
-        if (random.nextDouble() > progress * 0.8) {
-          HapticFeedback.selectionClick();
-        }
-      }
+    await _spin.forward(from: 0);
+    if (!mounted) return;
+    HapticFeedback.heavyImpact();
+    setState(() {
+      _winner = target;
+      _history.insert(0, _Spin(_player, _segments[target]));
     });
-
-    _spinController.forward(from: 0).then((_) {
-      HapticFeedback.heavyImpact();
-      setState(() {
-        _isSpinning = false;
-        _lastWinningIndex = targetSegment;
-        _spinCount++;
-        final seg = _segments[targetSegment];
-        final displayName = 'games.wheel.segments.${seg.key}'.tr();
-        _history.insert(0, '${seg.emoji} ${displayName.replaceAll('\n', ' ')}');
-        if (_history.length > 10) _history.removeLast();
-      });
-      _showResultDialog(targetSegment);
-    });
+    await _showResult(_segments[target]);
   }
 
-  void _showResultDialog(int segmentIndex) {
-    final segment = _segments[segmentIndex];
-    final action = _getActionForSegment(segment, _intensity);
-
-    showGeneralDialog(
+  Future<void> _showResult(_WheelSegment segment) async {
+    final action = _deck.draw(segment.key, _intensity);
+    final again = await showDialog<bool>(
       context: context,
       barrierDismissible: false,
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (_, __, ___) => const SizedBox(),
-      transitionBuilder: (context, anim, secondaryAnim, child) {
-        final curvedAnim = CurvedAnimation(
-          parent: anim,
-          curve: Curves.elasticOut,
-        );
-        return ScaleTransition(
-          scale: curvedAnim,
-          child: FadeTransition(
-            opacity: anim,
-            child: DefaultTextStyle(
-              style: const TextStyle(decoration: TextDecoration.none),
-              child: _ResultDialog(
-                segment: segment,
-                action: action,
-                intensity: _intensity,
-                spinCount: _spinCount,
-                onSpinAgain: () {
-                  Navigator.pop(context);
-                  _spin();
-                },
-                onDone: () => Navigator.pop(context),
-              ),
-            ),
-          ),
-        );
-      },
+      builder: (context) => _ResultDialog(
+        segment: segment,
+        action: action,
+        player: _player,
+        intensity: _intensityLabel(_intensity),
+      ),
     );
-  }
-
-  String _getActionForSegment(WheelSegment segment, String intensity) {
-    final locale = context.locale.languageCode;
-    return WheelActions.getAction(segment.key, intensity, locale);
+    if (!mounted) return;
+    if (again == true) {
+      _spinWheel();
+    } else {
+      setState(() => _player = _player == 1 ? 2 : 1);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final wheelSize = screenSize.width * 0.85;
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text('games.wheel.title'.tr()),
-        backgroundColor: Colors.transparent,
-        // Material 3 paints an opaque surfaceTint band over a
-        // transparent AppBar on scroll; disable it so the bar blends
-        // with the game background as designed.
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        foregroundColor: Colors.white,
-        actions: [
-          if (_history.isNotEmpty)
-            IconButton(
-              icon: const Icon(Icons.history_rounded),
-              onPressed: _showHistory,
-              tooltip: 'games.wheel.history'.tr(),
-            ),
+    return GameScaffold(
+      title: 'games.wheel.title'.tr(),
+      onHelp: () => showGameRules(
+        context,
+        title: 'games.wheel.how_to_play'.tr(),
+        rules: [..._rules, 'games.wheel.consent_reminder'.tr()],
+      ),
+      actions: [
+        if (_playing && _history.isNotEmpty)
           IconButton(
-            icon: const Icon(Icons.help_outline_rounded),
-            onPressed: _showRules,
+            icon: const Icon(Icons.history_rounded, color: AppColors.mist),
+            tooltip: 'games.wheel.history'.tr(),
+            onPressed: _showHistory,
           ),
-        ],
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFF1A0A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F3460),
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              const SizedBox(height: 4),
-              // Intensity selector
-              _buildIntensitySelector(),
-
-              // Spin counter
-              if (_spinCount > 0)
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(
-                    'games.wheel.spin_number'.tr(namedArgs: {'count': '$_spinCount'}),
-                    style: TextStyle(
-                      color: AppColors.gold.withOpacity(0.6),
-                      fontSize: 13,
-                      fontFamily: AppTypography.bodyFont,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-
-              // Wheel area
-              Expanded(
-                child: Center(
-                  child: SizedBox(
-                    width: wheelSize + 40,
-                    height: wheelSize + 60,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Outer glow
-                        AnimatedBuilder(
-                          animation: _glowAnimation,
-                          builder: (context, child) {
-                            return Container(
-                              width: wheelSize + 30,
-                              height: wheelSize + 30,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.gold.withOpacity(
-                                        _glowAnimation.value * 0.4),
-                                    blurRadius: 40,
-                                    spreadRadius: 10,
-                                  ),
-                                  BoxShadow(
-                                    color: AppColors.fuchsia.withOpacity(
-                                        _glowAnimation.value * 0.2),
-                                    blurRadius: 60,
-                                    spreadRadius: 20,
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-
-                        // The wheel with LED ring
-                        AnimatedBuilder(
-                          animation: _ledController,
-                          builder: (context, child) {
-                            return Transform.rotate(
-                              angle: _currentRotation,
-                              child: CustomPaint(
-                                size: Size(wheelSize, wheelSize),
-                                painter: WheelPainter(
-                                  segments: _segments,
-                                  segmentNames: _segments.map((s) => s.displayName).toList(),
-                                  highlightIndex: _lastWinningIndex,
-                                  ledPhase: _isSpinning ? _ledController.value : 0,
-                                  isSpinning: _isSpinning,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-
-                        // Center button
-                        _buildCenterButton(),
-
-                        // Pointer at top
-                        Positioned(
-                          top: 0,
-                          child: CustomPaint(
-                            size: const Size(40, 50),
-                            painter: PointerPainter(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              // Bottom instruction
-              _buildBottomInstruction(),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
+      ],
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: _playing ? _buildGame() : _buildSetup(),
       ),
     );
   }
 
-  Widget _buildIntensitySelector() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+  // ── Setup ──────────────────────────────────────────────────────────────
+
+  Widget _buildSetup() {
+    return ListView(
+      key: const ValueKey('setup'),
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+      children: [
+        GameHero(
+          icon: Icons.donut_large_rounded,
+          title: 'games.wheel.title'.tr(),
+          subtitle: 'games.wheel.subtitle'.tr(),
+        ),
+        const SizedBox(height: 32),
+        const GamePlayersCard(),
+        const SizedBox(height: 28),
+        GameSectionLabel('game_ui.intensity'.tr()),
+        _intensityPicker(),
+        const SizedBox(height: 28),
+        GameRulesCard(title: 'games.wheel.how_to_play'.tr(), rules: _rules),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            'games.wheel.consent_reminder'.tr().replaceAll('\n', ' '),
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12.5,
+              fontStyle: FontStyle.italic,
+              color: AppColors.smoke,
+            ),
+          ),
+        ),
+        const SizedBox(height: 28),
+        GamePrimaryButton(
+          label: 'game_ui.start_playing'.tr(),
+          icon: Icons.play_arrow_rounded,
+          onPressed: () => setState(() => _playing = true),
+        ),
+      ],
+    );
+  }
+
+  Widget _intensityPicker() => GameSegmented<String>(
+        values: _intensities,
+        selected: _intensity,
+        label: _intensityLabel,
+        onChanged: (i) => setState(() => _intensity = i),
+      );
+
+  // ── Game ───────────────────────────────────────────────────────────────
+
+  Widget _buildGame() {
+    return Padding(
+      key: const ValueKey('game'),
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+      child: Column(
         children: [
-          _buildIntensityChip('soft', '🌸', 'games.wheel.intensity_soft'.tr(), const Color(0xFFFFB6C1)),
-          _buildIntensityChip('spicy', '🌶️', 'games.wheel.intensity_spicy'.tr(), const Color(0xFFFF6B35)),
-          _buildIntensityChip('extra_spicy', '🔥', 'games.wheel.intensity_extra_hot'.tr(), const Color(0xFFDC143C)),
+          GameTurnBanner(
+            player: _player,
+            trailing: _history.isEmpty
+                ? null
+                : 'games.wheel.spin_number'
+                    .tr(namedArgs: {'count': '${_history.length}'}),
+          ),
+          const SizedBox(height: 12),
+          IgnorePointer(ignoring: _spinning, child: _intensityPicker()),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, box) {
+                final size = min(box.maxWidth, box.maxHeight - 24)
+                    .clamp(200.0, 420.0);
+                return Center(child: _buildWheel(size));
+              },
+            ),
+          ),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: Text(
+              plainLabel(_spinning
+                  ? 'games.wheel.spinning'.tr()
+                  : 'games.wheel.tap_to_spin'.tr()),
+              key: ValueKey(_spinning),
+              style: const TextStyle(fontSize: 13.5, color: AppColors.mist),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildIntensityChip(
-      String value, String emoji, String label, Color color) {
-    final isSelected = _intensity == value;
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        setState(() => _intensity = value);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          gradient: isSelected
-              ? LinearGradient(
-                  colors: [color, color.withOpacity(0.7)],
-                )
-              : null,
-          borderRadius: BorderRadius.circular(26),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: color.withOpacity(0.4),
-                    blurRadius: 12,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 16)),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.white60,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                fontSize: 14,
-                fontFamily: AppTypography.bodyFont,
-                decoration: TextDecoration.none,
+  Widget _buildWheel(double size) {
+    final names = [for (final s in _segments) s.label];
+    return SizedBox(
+      width: size,
+      height: size,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: _spin,
+            builder: (context, _) => Transform.rotate(
+              angle: _rotation,
+              child: CustomPaint(
+                size: Size.square(size - 28),
+                painter: _WheelPainter(names: names, highlight: _winner),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCenterButton() {
-    return AnimatedBuilder(
-      animation: Listenable.merge([_pulseAnimation, _vortexController, _glowAnimation]),
-      builder: (context, child) {
-        final scale = _isSpinning ? 1.0 : _pulseAnimation.value;
-        return Transform.scale(
-          scale: scale,
-          child: GestureDetector(
-            onTap: _isSpinning ? null : _spin,
-            child: Container(
-              width: 85,
-              height: 85,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: _isSpinning
-                    ? const RadialGradient(
-                        colors: [
-                          Color(0xFF2D1536),
-                          Color(0xFF1A0A1F),
-                        ],
-                      )
-                    : const RadialGradient(
-                        colors: [
-                          Color(0xFFFFD700),
-                          Color(0xFFD4A574),
-                          Color(0xFFB8860B),
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                      ),
-                border: Border.all(
-                  color: _isSpinning
-                      ? AppColors.fuchsia.withOpacity(0.6)
-                      : Colors.white.withOpacity(0.5),
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: (_isSpinning
-                            ? AppColors.fuchsia
-                            : AppColors.gold)
-                        .withOpacity(_isSpinning ? _glowAnimation.value * 0.7 : 0.5),
-                    blurRadius: _isSpinning ? 35 : 25,
-                    spreadRadius: _isSpinning ? 5 : 3,
-                  ),
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 10,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: _isSpinning
-                  ? ClipOval(
-                      child: CustomPaint(
-                        size: const Size(81, 81),
-                        painter: _VortexPainter(
-                          rotation: _vortexController.value * 2 * pi,
-                          glowIntensity: _glowAnimation.value,
-                        ),
-                      ),
-                    )
-                  : Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.touch_app_rounded,
-                            color: Color(0xFF3E2723),
-                            size: 26,
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            'games.wheel.spin_button'.tr(),
-                            style: TextStyle(
-                              color: const Color(0xFF3E2723),
-                              fontWeight: FontWeight.w900,
-                              fontSize: 13,
-                              fontFamily: AppTypography.bodyFont,
-                              letterSpacing: 2,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildBottomInstruction() {
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      child: Container(
-        key: ValueKey(_isSpinning),
-        margin: const EdgeInsets.symmetric(horizontal: 32),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.white.withOpacity(0.1)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _isSpinning ? Icons.auto_awesome : Icons.touch_app_outlined,
-              color: AppColors.gold,
-              size: 20,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              _isSpinning
-                  ? 'games.wheel.spinning'.tr()
-                  : 'games.wheel.tap_to_spin'.tr(),
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.8),
-                fontSize: 15,
-                fontFamily: AppTypography.bodyFont,
-                decoration: TextDecoration.none,
+          CustomPaint(
+            size: Size.square(size),
+            painter: _RimPainter(),
+          ),
+          // Hub: tap to spin.
+          Semantics(
+            button: true,
+            label: 'games.wheel.spin_button'.tr(),
+            child: GestureDetector(
+              onTap: _spinning ? null : _spinWheel,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                width: size * 0.26,
+                height: size * 0.26,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.ink,
+                  gradient: _spinning
+                      ? null
+                      : RadialGradient(colors: [
+                          GameTone.accent.withOpacity(0.35),
+                          AppColors.ink,
+                        ]),
+                  border: Border.all(
+                    color: _spinning ? AppColors.outline : GameTone.accent,
+                    width: 1.2,
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  plainLabel('games.wheel.spin_button'.tr()),
+                  style: AppTypography.eyebrow.copyWith(
+                    fontSize: 12,
+                    letterSpacing: 3,
+                    color: _spinning ? AppColors.smoke : AppColors.ivory,
+                  ),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+          // Pointer.
+          Positioned(
+            top: 0,
+            child: CustomPaint(size: const Size(22, 30), painter: _PointerPainter()),
+          ),
+        ],
       ),
     );
   }
 
   void _showHistory() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => DefaultTextStyle(
-        style: const TextStyle(decoration: TextDecoration.none),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
-            ),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 40, height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.white24,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Icon(Icons.history_rounded, color: AppColors.gold, size: 22),
-                  const SizedBox(width: 10),
-                  Text(
-                    'games.wheel.history_title'.tr(namedArgs: {'count': '$_spinCount'}),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: AppTypography.displayFont,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              ..._history.asMap().entries.map((entry) {
-                final idx = entry.key;
-                final item = entry.value;
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 28, height: 28,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '${_spinCount - idx}',
-                            style: TextStyle(
-                              color: AppColors.gold.withOpacity(0.7),
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: AppTypography.bodyFont,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        item,
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 15,
-                          fontFamily: AppTypography.bodyFont,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
+      useRootNavigator: true,
+      backgroundColor: AppColors.inkHigh,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-    );
-  }
-
-  void _showRules() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => DefaultTextStyle(
-        style: const TextStyle(decoration: TextDecoration.none),
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
+      builder: (context) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+          children: [
+            Text(
+              'games.wheel.history_title'
+                  .tr(namedArgs: {'count': '${_history.length}'}),
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40, height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.gold.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Text('🎡', style: TextStyle(fontSize: 24)),
-                  ),
-                  const SizedBox(width: 14),
-                  Text(
-                    'games.wheel.how_to_play'.tr(),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: AppTypography.displayFont,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _buildRuleItem('games.wheel.rule_1'.tr(), Icons.tune_rounded),
-              _buildRuleItem('games.wheel.rule_2'.tr(), Icons.touch_app_rounded),
-              _buildRuleItem('games.wheel.rule_3'.tr(), Icons.favorite_rounded),
-              _buildRuleItem('games.wheel.rule_4'.tr(), Icons.refresh_rounded),
-              const SizedBox(height: 16),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.fuchsia.withOpacity(0.15),
-                      AppColors.fuchsia.withOpacity(0.05),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.fuchsia.withOpacity(0.2)),
-                ),
+            const SizedBox(height: 16),
+            for (var i = 0; i < _history.length; i++)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7),
                 child: Row(
                   children: [
-                    const Text('💕', style: TextStyle(fontSize: 20)),
+                    SizedBox(
+                      width: 30,
+                      child: Text(
+                        '${_history.length - i}',
+                        style: const TextStyle(
+                          fontFeatures: AppTypography.lining,
+                          color: AppColors.smoke,
+                        ),
+                      ),
+                    ),
+                    Icon(_history[i].segment.icon,
+                        size: 18, color: GameTone.accentSoft),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'games.wheel.consent_reminder'.tr(),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontStyle: FontStyle.italic,
-                          fontSize: 14,
-                          fontFamily: AppTypography.bodyFont,
-                        ),
+                        _history[i].segment.name,
+                        style: const TextStyle(color: AppColors.ivory),
                       ),
+                    ),
+                    PlayerDot(player: _history[i].player, size: 7),
+                    const SizedBox(width: 6),
+                    Text(
+                      GamePlayers.name(_history[i].player),
+                      style:
+                          const TextStyle(fontSize: 13, color: AppColors.mist),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
-
-  Widget _buildRuleItem(String text, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Container(
-            width: 36, height: 36,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.gold.withOpacity(0.3),
-                  AppColors.gold.withOpacity(0.1),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(child: Icon(icon, color: AppColors.gold, size: 18)),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.white.withOpacity(0.85),
-                fontSize: 15,
-                fontFamily: AppTypography.bodyFont,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-// Custom spin curve: fast start, dramatic slowdown at end
-class _WheelSpinCurve extends Curve {
-  const _WheelSpinCurve();
-
-  @override
-  double transformInternal(double t) {
-    return 1 - pow(1 - t, 4).toDouble();
-  }
-}
-
-// ============================================
-// Result Dialog — with confetti-like particles
-// ============================================
-class _ResultDialog extends StatefulWidget {
-  final WheelSegment segment;
+class _ResultDialog extends StatelessWidget {
+  final _WheelSegment segment;
   final String action;
+  final int player;
   final String intensity;
-  final int spinCount;
-  final VoidCallback onSpinAgain;
-  final VoidCallback onDone;
 
   const _ResultDialog({
     required this.segment,
     required this.action,
+    required this.player,
     required this.intensity,
-    required this.spinCount,
-    required this.onSpinAgain,
-    required this.onDone,
   });
 
   @override
-  State<_ResultDialog> createState() => _ResultDialogState();
-}
-
-class _ResultDialogState extends State<_ResultDialog>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _particleController;
-  late List<_Particle> _particles;
-
-  @override
-  void initState() {
-    super.initState();
-    final random = Random();
-    _particles = List.generate(20, (_) => _Particle(random));
-
-    _particleController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2500),
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _particleController.dispose();
-    super.dispose();
-  }
-
-  String get _intensityLabel {
-    switch (widget.intensity) {
-      case 'soft':
-        return '🌸 ${'games.wheel.intensity_soft'.tr()}';
-      case 'spicy':
-        return '🌶️ ${'games.wheel.intensity_spicy'.tr()}';
-      case 'extra_spicy':
-        return '🔥 ${'games.wheel.intensity_extra_hot'.tr()}';
-      default:
-        return '';
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final displayName = widget.segment.displayName.replaceAll('\n', ' ');
-
-    return Center(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          // Confetti particles
-          AnimatedBuilder(
-            animation: _particleController,
-            builder: (context, child) {
-              return CustomPaint(
-                size: const Size(350, 500),
-                painter: _ParticlePainter(
-                  particles: _particles,
-                  progress: _particleController.value,
-                  color: widget.segment.color,
-                ),
-              );
-            },
-          ),
-
-          // Dialog card
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 32),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(28),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF2D1536), Color(0xFF1A0A2E)],
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: GameTone.selectedBorder),
+                gradient: RadialGradient(colors: [
+                  GameTone.accent.withOpacity(0.22),
+                  Colors.transparent,
+                ]),
               ),
-              border: Border.all(
-                color: widget.segment.color.withOpacity(0.5),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: widget.segment.color.withOpacity(0.3),
-                  blurRadius: 30,
-                  spreadRadius: 5,
-                ),
-                const BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 20,
-                  offset: Offset(0, 10),
-                ),
-              ],
+              child: Icon(segment.icon, color: GameTone.accentSoft, size: 24),
             ),
-            child: Column(
+            const SizedBox(height: 14),
+            Text(
+              segment.name.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: AppTypography.eyebrow.copyWith(
+                color: GameTone.accentSoft,
+                letterSpacing: 2.5,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Top banner
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        widget.segment.color.withOpacity(0.35),
-                        widget.segment.colorSecondary.withOpacity(0.1),
-                      ],
-                    ),
-                    borderRadius: const BorderRadius.vertical(
-                      top: Radius.circular(26),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      // Emoji with glow
-                      Container(
-                        width: 90, height: 90,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: RadialGradient(
-                            colors: [
-                              widget.segment.color.withOpacity(0.3),
-                              widget.segment.color.withOpacity(0.05),
-                            ],
-                          ),
-                          border: Border.all(
-                            color: widget.segment.color.withOpacity(0.4),
-                            width: 2,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: widget.segment.color.withOpacity(0.3),
-                              blurRadius: 20,
-                              spreadRadius: 3,
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            widget.segment.emoji,
-                            style: const TextStyle(
-                              fontSize: 44,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      Text(
-                        displayName.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: AppTypography.displayFont,
-                          letterSpacing: 3,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              _intensityLabel,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.7),
-                                fontSize: 12,
-                                fontFamily: AppTypography.bodyFont,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.gold.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              'games.wheel.spin_number'.tr(namedArgs: {'count': '${widget.spinCount}'}),
-                              style: TextStyle(
-                                color: AppColors.gold.withOpacity(0.8),
-                                fontSize: 12,
-                                fontFamily: AppTypography.bodyFont,
-                                fontWeight: FontWeight.w600,
-                                decoration: TextDecoration.none,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Action description
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.06),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.white.withOpacity(0.08)),
-                    ),
-                    child: Text(
-                      widget.action,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        fontSize: 16,
-                        height: 1.5,
-                        fontFamily: AppTypography.bodyFont,
-                        decoration: TextDecoration.none,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-
-                // Buttons
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: widget.onSpinAgain,
-                          icon: const Icon(Icons.refresh_rounded, size: 18),
-                          label: Text('games.wheel.spin_again'.tr()),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.white70,
-                            side: BorderSide(
-                                color: Colors.white.withOpacity(0.2)),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: widget.onDone,
-                          icon: const Icon(Icons.check_rounded, size: 18),
-                          label: Text('games.wheel.done'.tr()),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: widget.segment.color,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            elevation: 6,
-                            shadowColor: widget.segment.color.withOpacity(0.5),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                PlayerDot(player: player, size: 7),
+                const SizedBox(width: 6),
+                Text(
+                  '${GamePlayers.name(player)} · ${plainLabel(intensity)}',
+                  style: const TextStyle(fontSize: 12.5, color: AppColors.mist),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              action,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: AppTypography.displayFont,
+                fontFeatures: AppTypography.lining,
+                fontSize: 21,
+                height: 1.35,
+                fontWeight: FontWeight.w500,
+                color: AppColors.ivory,
+              ),
+            ),
+            const SizedBox(height: 26),
+            GamePrimaryButton(
+              label: 'games.wheel.done'.tr(),
+              icon: Icons.check_rounded,
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            const SizedBox(height: 10),
+            GameSecondaryButton(
+              label: 'games.wheel.spin_again'.tr(),
+              icon: Icons.refresh_rounded,
+              onPressed: () => Navigator.of(context).pop(true),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// ============================================
-// Confetti particle system
-// ============================================
-class _Particle {
-  final double x;        // -1..1 horizontal spread
-  final double speed;    // fall speed multiplier
-  final double size;
-  final double rotation;
-  final int colorIndex;  // 0 = segment, 1 = gold, 2 = white
+/// The slices: three alternating plum tones, champagne hairline dividers
+/// and names written along the radius.
+class _WheelPainter extends CustomPainter {
+  final List<String> names;
+  final int? highlight;
 
-  _Particle(Random r)
-      : x = r.nextDouble() * 2 - 1,
-        speed = 0.3 + r.nextDouble() * 0.7,
-        size = 3 + r.nextDouble() * 5,
-        rotation = r.nextDouble() * 2 * pi,
-        colorIndex = r.nextInt(3);
-}
+  _WheelPainter({required this.names, required this.highlight});
 
-class _ParticlePainter extends CustomPainter {
-  final List<_Particle> particles;
-  final double progress;
-  final Color color;
-
-  _ParticlePainter({
-    required this.particles,
-    required this.progress,
-    required this.color,
-  });
+  static const _tones = [
+    Color(0xFF231225),
+    Color(0xFF2D1630),
+    Color(0xFF381B3B),
+  ];
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final p in particles) {
-      final opacity = (1 - progress).clamp(0.0, 1.0);
-      if (opacity <= 0) continue;
+    final c = size.center(Offset.zero);
+    final r = size.shortestSide / 2;
+    final rect = Rect.fromCircle(center: c, radius: r);
+    final n = names.length;
+    final s = 2 * pi / n;
 
-      final colors = [color, const Color(0xFFFFD700), Colors.white];
-      final paint = Paint()
-        ..color = colors[p.colorIndex].withOpacity(opacity * 0.8);
+    for (var i = 0; i < n; i++) {
+      final start = i * s - pi / 2;
+      canvas.drawArc(rect, start, s, true, Paint()..color = _tones[i % 3]);
+      if (i == highlight) {
+        canvas.drawArc(rect, start, s, true,
+            Paint()..color = GameTone.accent.withOpacity(0.32));
+      }
+    }
+    // Soft light towards the rim.
+    canvas.drawCircle(
+      c,
+      r,
+      Paint()
+        ..shader = RadialGradient(colors: [
+          Colors.transparent,
+          GameTone.accent.withOpacity(0.08),
+        ], stops: const [0.55, 1]).createShader(rect),
+    );
 
-      // Particles fly upward then fall
-      final yProgress = progress * p.speed;
-      final yOffset = -200 * yProgress + 300 * yProgress * yProgress;
-      final xOffset = p.x * 150 * progress;
-
-      final pos = Offset(
-        size.width / 2 + xOffset,
-        size.height / 2 + yOffset,
+    final divider = Paint()
+      ..color = AppColors.champagne.withOpacity(0.28)
+      ..strokeWidth = 1;
+    for (var i = 0; i < n; i++) {
+      canvas.drawLine(
+        c + Offset.fromDirection(i * s - pi / 2, r * 0.22),
+        c + Offset.fromDirection(i * s - pi / 2, r),
+        divider,
       );
+    }
 
-      canvas.save();
-      canvas.translate(pos.dx, pos.dy);
-      canvas.rotate(p.rotation + progress * 6);
-      canvas.drawRRect(
-        RRect.fromRectAndRadius(
-          Rect.fromCenter(center: Offset.zero, width: p.size, height: p.size * 0.6),
-          const Radius.circular(1),
+    final fontSize = (r * 0.068).clamp(9.0, 12.5);
+    for (var i = 0; i < n; i++) {
+      final mid = i * s + s / 2 - pi / 2;
+      final tp = TextPainter(
+        text: TextSpan(
+          text: names[i],
+          style: TextStyle(
+            fontFamily: AppTypography.bodyFont,
+            fontSize: fontSize,
+            height: 1.15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
+            color: i == highlight
+                ? AppColors.ivory
+                : AppColors.ivory.withOpacity(0.78),
+          ),
         ),
-        paint,
-      );
+        textAlign: TextAlign.right,
+        textDirection: ui.TextDirection.ltr,
+      )..layout(maxWidth: r * 0.66);
+      canvas.save();
+      canvas.translate(c.dx, c.dy);
+      canvas.rotate(mid);
+      // Text runs outward along the radius and ends near the rim.
+      tp.paint(canvas, Offset(r * 0.9 - tp.width, -tp.height / 2));
       canvas.restore();
     }
   }
 
   @override
-  bool shouldRepaint(covariant _ParticlePainter old) =>
-      progress != old.progress;
+  bool shouldRepaint(covariant _WheelPainter old) =>
+      old.highlight != highlight || old.names.join() != names.join();
 }
 
-// ============================================
-// Data model
-// ============================================
-class WheelSegment {
-  final String key;
-  final String emoji;
-  final Color color;
-  final Color colorSecondary;
-
-  WheelSegment(this.key, this.emoji, this.color, this.colorSecondary);
-
-  String get displayName => 'games.wheel.segments.$key'.tr();
-}
-
-// ============================================
-// Wheel Painter — Premium with LED lights
-// ============================================
-class WheelPainter extends CustomPainter {
-  final List<WheelSegment> segments;
-  final List<String> segmentNames;
-  final int? highlightIndex;
-  final double ledPhase;
-  final bool isSpinning;
-
-  WheelPainter({
-    required this.segments,
-    required this.segmentNames,
-    this.highlightIndex,
-    this.ledPhase = 0,
-    this.isSpinning = false,
-  });
-
+/// Fixed rim around the wheel: a hairline and a ring of champagne beads.
+class _RimPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-    final segmentAngle = (2 * pi) / segments.length;
-
-    // --- Outer decorative ring shadow ---
-    final outerShadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.4)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 12);
-    canvas.drawCircle(center + const Offset(0, 4), radius + 6, outerShadowPaint);
-
-    // --- Draw segments with gradients ---
-    for (int i = 0; i < segments.length; i++) {
-      final startAngle = i * segmentAngle - pi / 2;
-
-      // Gradient fill
-      final segRect = Rect.fromCircle(center: center, radius: radius);
-      final gradient = ui.Gradient.sweep(
-        center,
-        [
-          segments[i].color,
-          segments[i].colorSecondary,
-          segments[i].color,
-        ],
-        [0.0, 0.5, 1.0],
-        TileMode.clamp,
-        startAngle,
-        startAngle + segmentAngle,
-      );
-
-      final segPaint = Paint()
-        ..shader = gradient
-        ..style = PaintingStyle.fill;
-
-      canvas.drawArc(segRect, startAngle, segmentAngle, true, segPaint);
-
-      // Inner highlight
-      final highlightPaint = Paint()
-        ..shader = ui.Gradient.radial(
-          center + Offset.fromDirection(startAngle + segmentAngle / 2, radius * 0.3),
-          radius * 0.7,
-          [
-            Colors.white.withOpacity(0.18),
-            Colors.transparent,
-          ],
-        )
-        ..style = PaintingStyle.fill;
-      canvas.drawArc(segRect, startAngle, segmentAngle, true, highlightPaint);
-
-      // Segment divider lines
-      final dividerPaint = Paint()
-        ..color = Colors.white.withOpacity(0.5)
+    final c = size.center(Offset.zero);
+    final r = size.shortestSide / 2;
+    canvas.drawCircle(
+      c,
+      r - 14,
+      Paint()
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5;
-
-      final lineEnd = center + Offset.fromDirection(startAngle, radius);
-      canvas.drawLine(center, lineEnd, dividerPaint);
-
-      // --- Draw name + emoji (name ABOVE emoji) ---
-      _drawSegmentContent(canvas, center, radius, startAngle, segmentAngle, i);
-    }
-
-    // --- Outer golden rim ---
-    _drawOuterRim(canvas, center, radius);
-
-    // --- Inner circle (hub background) ---
-    _drawInnerHub(canvas, center, radius);
-
-    // --- Decorative dots/lights around edge ---
-    _drawEdgeLights(canvas, center, radius);
-  }
-
-  void _drawSegmentContent(Canvas canvas, Offset center, double radius,
-      double startAngle, double segmentAngle, int index) {
-    final midAngle = startAngle + segmentAngle / 2;
-
-    // Adapt sizes based on number of segments
-    final count = segments.length;
-    final nameFontSize = count > 8 ? 8.0 : 9.5;
-    final emojiFontSize = count > 8 ? 18.0 : 22.0;
-    final nameRadiusFactor = count > 8 ? 0.74 : 0.72;
-    final emojiRadiusFactor = count > 8 ? 0.48 : 0.46;
-
-    // Name (outer — above emoji, where there is more space)
-    final nameRadius = radius * nameRadiusFactor;
-    final namePos = center + Offset.fromDirection(midAngle, nameRadius);
-
-    canvas.save();
-    canvas.translate(namePos.dx, namePos.dy);
-    canvas.rotate(midAngle + pi / 2);
-
-    final namePainter = TextPainter(
-      text: TextSpan(
-        text: segmentNames[index],
-        style: TextStyle(
-          fontSize: nameFontSize,
-          color: Colors.white.withOpacity(0.95),
-          fontWeight: FontWeight.w800,
-          fontFamily: AppTypography.bodyFont,
-          letterSpacing: 0.2,
-          height: 1.1,
-          shadows: const [
-            Shadow(color: Colors.black87, blurRadius: 5),
-            Shadow(color: Colors.black54, blurRadius: 2, offset: Offset(0, 1)),
-          ],
-        ),
-      ),
-      textDirection: ui.TextDirection.ltr,
-      textAlign: TextAlign.center,
+        ..strokeWidth = 1.2
+        ..color = AppColors.champagne.withOpacity(0.45),
     );
-    namePainter.layout();
-    namePainter.paint(
-      canvas,
-      Offset(-namePainter.width / 2, -namePainter.height / 2),
-    );
-    canvas.restore();
-
-    // Emoji (inner — below name, closer to center)
-    final emojiRadius = radius * emojiRadiusFactor;
-    final emojiPos = center + Offset.fromDirection(midAngle, emojiRadius);
-
-    canvas.save();
-    canvas.translate(emojiPos.dx, emojiPos.dy);
-    canvas.rotate(midAngle + pi / 2);
-
-    final emojiPainter = TextPainter(
-      text: TextSpan(
-        text: segments[index].emoji,
-        style: TextStyle(fontSize: emojiFontSize),
-      ),
-      textDirection: ui.TextDirection.ltr,
-    );
-    emojiPainter.layout();
-    emojiPainter.paint(
-      canvas,
-      Offset(-emojiPainter.width / 2, -emojiPainter.height / 2),
-    );
-    canvas.restore();
-  }
-
-  void _drawOuterRim(Canvas canvas, Offset center, double radius) {
-    // Outer golden ring with sweep gradient
-    final outerRingPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 14
-      ..shader = ui.Gradient.sweep(
-        center,
-        [
-          const Color(0xFFD4A574),
-          const Color(0xFFFFD700),
-          const Color(0xFFB8860B),
-          const Color(0xFFFFD700),
-          const Color(0xFFD4A574),
-        ],
-        [0.0, 0.25, 0.5, 0.75, 1.0],
-      );
-    canvas.drawCircle(center, radius + 3, outerRingPaint);
-
-    // Inner accent ring
-    final innerRingPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..color = Colors.white.withOpacity(0.35);
-    canvas.drawCircle(center, radius - 1, innerRingPaint);
-
-    // Outermost thin bright edge
-    final outerEdgePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..color = const Color(0xFFFFD700).withOpacity(0.6);
-    canvas.drawCircle(center, radius + 10, outerEdgePaint);
-  }
-
-  void _drawInnerHub(Canvas canvas, Offset center, double radius) {
-    final hubRadius = radius * 0.18;
-
-    // Hub shadow
     canvas.drawCircle(
-      center + const Offset(0, 2),
-      hubRadius + 4,
+      c,
+      r - 1,
       Paint()
-        ..color = Colors.black.withOpacity(0.3)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
-    );
-
-    // Hub ring
-    final hubRingPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..shader = ui.Gradient.sweep(
-        center,
-        [
-          const Color(0xFFFFD700),
-          const Color(0xFFB8860B),
-          const Color(0xFFFFD700),
-        ],
-        [0.0, 0.5, 1.0],
-      );
-    canvas.drawCircle(center, hubRadius, hubRingPaint);
-  }
-
-  void _drawEdgeLights(Canvas canvas, Offset center, double radius) {
-    final lightCount = segments.length * 3; // 24 lights
-    for (int i = 0; i < lightCount; i++) {
-      final angle = (2 * pi / lightCount) * i - pi / 2;
-      final pos = center + Offset.fromDirection(angle, radius + 3);
-
-      final isHighlight = i % 3 == 0;
-
-      // Alternate LED colors during spin
-      double opacity;
-      Color dotColor;
-      double dotRadius;
-
-      if (isSpinning) {
-        // Alternate on/off based on ledPhase
-        final isOn = (i % 2 == 0) ? ledPhase > 0.5 : ledPhase <= 0.5;
-        opacity = isOn ? 1.0 : 0.2;
-        dotColor = isOn
-            ? (isHighlight ? const Color(0xFFFFD700) : Colors.white)
-            : Colors.white24;
-        dotRadius = isHighlight ? 4.0 : 2.5;
-      } else {
-        opacity = isHighlight ? 0.9 : 0.5;
-        dotColor = isHighlight ? const Color(0xFFFFD700) : Colors.white;
-        dotRadius = isHighlight ? 3.5 : 2.0;
-      }
-
-      canvas.drawCircle(pos, dotRadius, Paint()..color = dotColor.withOpacity(opacity));
-
-      if ((isHighlight && !isSpinning) || (isSpinning && opacity > 0.5)) {
-        canvas.drawCircle(
-          pos,
-          dotRadius + 4,
-          Paint()
-            ..color = const Color(0xFFFFD700).withOpacity(isSpinning ? 0.35 : 0.2)
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5),
-        );
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant WheelPainter oldDelegate) =>
-      highlightIndex != oldDelegate.highlightIndex ||
-      ledPhase != oldDelegate.ledPhase ||
-      isSpinning != oldDelegate.isSpinning ||
-      segmentNames != oldDelegate.segmentNames;
-}
-
-// ============================================
-// Vortex Painter — Hypnotic spinning portal
-// ============================================
-class _VortexPainter extends CustomPainter {
-  final double rotation;
-  final double glowIntensity;
-
-  _VortexPainter({required this.rotation, required this.glowIntensity});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final maxRadius = size.width / 2;
-
-    // Background
-    canvas.drawCircle(
-      center,
-      maxRadius,
-      Paint()..color = const Color(0xFF1A0A1F),
-    );
-
-    // Draw concentric spinning arcs (3 rings, each rotates differently)
-    for (int ring = 0; ring < 3; ring++) {
-      final ringRadius = maxRadius * (0.4 + ring * 0.22);
-      final ringRotation = rotation * (ring.isEven ? 1.0 : -1.0) * (1.0 + ring * 0.3);
-      final arcCount = 3 + ring;
-
-      for (int i = 0; i < arcCount; i++) {
-        final startAngle = ringRotation + (2 * pi / arcCount) * i;
-        final sweepAngle = pi / (arcCount + 1);
-
-        // Gold/fuchsia alternating colors
-        final colors = ring == 1
-            ? [
-                AppColors.fuchsia.withOpacity(0.6 + glowIntensity * 0.3),
-                AppColors.fuchsiaLight.withOpacity(0.2),
-              ]
-            : [
-                const Color(0xFFFFD700).withOpacity(0.5 + glowIntensity * 0.4),
-                const Color(0xFFD4A574).withOpacity(0.1),
-              ];
-
-        final arcPaint = Paint()
-          ..shader = ui.Gradient.sweep(
-            center,
-            colors,
-            [0.0, 1.0],
-            TileMode.clamp,
-            startAngle,
-            startAngle + sweepAngle,
-          )
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.0 - ring * 0.5
-          ..strokeCap = StrokeCap.round;
-
-        canvas.drawArc(
-          Rect.fromCircle(center: center, radius: ringRadius),
-          startAngle,
-          sweepAngle,
-          false,
-          arcPaint,
-        );
-      }
-    }
-
-    // Central glowing star/dot
-    final starGlow = Paint()
-      ..color = const Color(0xFFFFD700).withOpacity(glowIntensity * 0.6)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-    canvas.drawCircle(center, 6, starGlow);
-
-    canvas.drawCircle(
-      center,
-      3,
-      Paint()..color = Colors.white.withOpacity(0.9),
-    );
-
-    // Outer glow ring
-    final outerGlow = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..color = AppColors.fuchsia.withOpacity(glowIntensity * 0.4);
-    canvas.drawCircle(center, maxRadius - 2, outerGlow);
-  }
-
-  @override
-  bool shouldRepaint(covariant _VortexPainter old) =>
-      rotation != old.rotation || glowIntensity != old.glowIntensity;
-}
-
-// ============================================
-// Pointer Painter — Gem shape
-// ============================================
-class PointerPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final centerX = size.width / 2;
-
-    // Drop shadow
-    final shadowPath = Path()
-      ..moveTo(centerX, size.height)
-      ..lineTo(centerX - 12, 8)
-      ..lineTo(centerX - 8, 0)
-      ..lineTo(centerX + 8, 0)
-      ..lineTo(centerX + 12, 8)
-      ..close();
-
-    canvas.drawPath(
-      shadowPath.shift(const Offset(0, 3)),
-      Paint()
-        ..color = Colors.black.withOpacity(0.4)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-    );
-
-    // Main gem shape
-    final gemPath = Path()
-      ..moveTo(centerX, size.height)
-      ..lineTo(centerX - 14, 10)
-      ..lineTo(centerX - 10, 0)
-      ..lineTo(centerX + 10, 0)
-      ..lineTo(centerX + 14, 10)
-      ..close();
-
-    // Gold gradient
-    final gemPaint = Paint()
-      ..shader = ui.Gradient.linear(
-        Offset(centerX, 0),
-        Offset(centerX, size.height),
-        [
-          const Color(0xFFFFD700),
-          const Color(0xFFD4A574),
-          const Color(0xFFB8860B),
-        ],
-        [0.0, 0.4, 1.0],
-      );
-    canvas.drawPath(gemPath, gemPaint);
-
-    // Left facet highlight
-    final leftFacet = Path()
-      ..moveTo(centerX, size.height)
-      ..lineTo(centerX - 14, 10)
-      ..lineTo(centerX - 10, 0)
-      ..lineTo(centerX, 0)
-      ..lineTo(centerX, 10)
-      ..close();
-    canvas.drawPath(leftFacet, Paint()..color = Colors.white.withOpacity(0.2));
-
-    // Top shine
-    final shinePath = Path()
-      ..moveTo(centerX - 6, 2)
-      ..lineTo(centerX + 2, 2)
-      ..lineTo(centerX, 6)
-      ..close();
-    canvas.drawPath(shinePath, Paint()..color = Colors.white.withOpacity(0.5));
-
-    // Border
-    canvas.drawPath(
-      gemPath,
-      Paint()
-        ..color = const Color(0xFFFFD700).withOpacity(0.8)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
+        ..strokeWidth = 1
+        ..color = AppColors.hairline,
     );
-
-    // Glow at bottom tip
-    canvas.drawCircle(
-      Offset(centerX, size.height - 2),
-      5,
-      Paint()
-        ..color = const Color(0xFFFFD700).withOpacity(0.5)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7),
-    );
+    const beads = 44;
+    for (var i = 0; i < beads; i++) {
+      final a = i * 2 * pi / beads - pi / 2;
+      final major = i % 4 == 0;
+      canvas.drawCircle(
+        c + Offset.fromDirection(a, r - 7.5),
+        major ? 1.8 : 1.1,
+        Paint()
+          ..color = AppColors.champagne.withOpacity(major ? 0.75 : 0.35),
+      );
+    }
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _RimPainter oldDelegate) => false;
+}
+
+/// Slim champagne pointer with a fuchsia bead.
+class _PointerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+    final path = Path()
+      ..moveTo(w * 0.18, 0)
+      ..lineTo(w * 0.82, 0)
+      ..lineTo(w / 2, h)
+      ..close();
+    canvas.drawShadow(path, Colors.black, 3, false);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.champagne, AppColors.rose],
+        ).createShader(Offset.zero & size),
+    );
+    canvas.drawCircle(Offset(w / 2, h * 0.28), 2.6,
+        Paint()..color = GameTone.accent);
+  }
+
+  @override
+  bool shouldRepaint(covariant _PointerPainter oldDelegate) => false;
 }
