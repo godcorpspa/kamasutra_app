@@ -2190,12 +2190,12 @@
       "body_calves": "Pantorrillas",
       "body_feet": "Pies",
       "body_nape": "Nuca",
-      "body_neck_back": "Cuello (espalda)",
+      "body_neck_back": "Cuello (detrás)",
       "body_upper_back": "Espalda alta",
       "body_lower_back": "Espalda baja",
       "body_buttocks": "Glúteos",
-      "body_thighs_back": "Muslos (espalda)",
-      "body_calves_back": "Pantorrillas (espalda)",
+      "body_thighs_back": "Muslos (detrás)",
+      "body_calves_back": "Pantorrillas (detrás)",
       "how_it_works": "Cómo Funciona",
       "step1": "Turnaos tocando una zona del cuerpo en el mapa",
       "step2": "Indica cómo te gusta que te toquen ahí",
@@ -2258,7 +2258,11 @@
       "continue_marking": "Seguir marcando",
       "clear_mark": "Quitar marca",
       "exit_confirm": "¿Salir ahora? Los mapas se perderán.",
-      "closing_hint": "Explorad con calma — no hay correcto o incorrecto. 💫"
+      "closing_hint": "Explorad con calma — no hay correcto o incorrecto. 💫",
+      "pass_to": "Pásale el móvil a {name}",
+      "map_of": "Mapa de",
+      "tap_hint": "Toca un punto o un nombre para decir cómo te gusta que te toquen ahí.",
+      "only_one": "Marcadas solo por uno"
     },
     "soundtrack": {
       "title": "Nuestra Banda Sonora",

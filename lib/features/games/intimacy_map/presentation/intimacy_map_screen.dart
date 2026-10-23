@@ -1,12 +1,17 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../../app/theme.dart';
+import '../../../../shared/utils/display_text.dart';
+import '../../shared/game_kit.dart';
 
+/// Intimacy Map: each partner marks, on a body chart, how they like to be
+/// touched in each zone; then the two maps are compared. In private mode
+/// the phone is passed and the maps stay secret until the comparison; in
+/// together mode both see each other's marks live.
 class IntimacyMapScreen extends StatefulWidget {
   const IntimacyMapScreen({super.key});
 
@@ -14,2787 +19,1124 @@ class IntimacyMapScreen extends StatefulWidget {
   State<IntimacyMapScreen> createState() => _IntimacyMapScreenState();
 }
 
-class _IntimacyMapScreenState extends State<IntimacyMapScreen>
-    with TickerProviderStateMixin {
-  // ---------------------------------------------------------------------------
-  // Game state
-  // ---------------------------------------------------------------------------
-  bool _gameStarted = false;
-  bool _showingReveal = false;
-  String _mode = 'private'; // 'together' or 'private'
-  int _currentPlayer = 1;
-  String _selectedView = 'front';
+// ─────────────────────────────────────────────────────────────────────────
+// Data
+// ─────────────────────────────────────────────────────────────────────────
 
-  final Map<String, String> _player1Map = {}; // partId → touchTypeId
-  final Map<String, String> _player2Map = {};
+/// A zone on the chart. [x]/[y] are in figure units (the figure is drawn
+/// in a 100 × 200 box, see [_FigurePainter]), so dots always sit on the
+/// part they name. [left] says which margin its label goes to.
+class _Zone {
+  final String id;
+  final String labelKey;
+  final double x;
+  final double y;
+  final bool left;
 
-  // ---------------------------------------------------------------------------
-  // Animations
-  // ---------------------------------------------------------------------------
-  late final AnimationController _bgController;
-  late final AnimationController _glow;
-  late final AnimationController _shimmer;
-  late final AnimationController _pointsPulse;
-  late final AnimationController _entry;
-  late final AnimationController _revealAnim;
+  const _Zone(this.id, this.labelKey, this.x, this.y, {required this.left});
 
-  late Animation<double> _glowAnim;
-  late Animation<double> _entryAnim;
+  String get name => 'games.intimacy_map.body_$labelKey'.tr();
 
-  final List<_Particle> _particles =
-      List.generate(40, (i) => _Particle(Random(i * 13 + 9)));
+  /// "Cosce (dietro)" → "Cosce": on the back view the side is implicit.
+  String get shortName => name.replaceAll(RegExp(r'\s*\(.*\)\s*$'), '');
+}
 
-  final Random _random = Random();
+const _frontZones = [
+  _Zone('forehead', 'forehead', 50, 8.5, left: true),
+  _Zone('eyes', 'eyes', 54.4, 14.5, left: false),
+  _Zone('cheeks', 'cheeks', 43.8, 20.5, left: true),
+  _Zone('lips', 'lips', 50, 24.2, left: false),
+  _Zone('neck_front', 'neck', 50, 33, left: true),
+  _Zone('shoulders', 'shoulders', 32.5, 45.5, left: true),
+  _Zone('chest', 'chest', 50, 52, left: false),
+  _Zone('arms', 'arms', 23, 72, left: true),
+  _Zone('stomach', 'stomach', 50, 77, left: false),
+  _Zone('hips', 'hips', 66, 97, left: false),
+  _Zone('hands', 'hands', 17.6, 120, left: true),
+  _Zone('thighs_front', 'thighs', 59.5, 123, left: false),
+  _Zone('knees', 'knees', 40.4, 146, left: true),
+  _Zone('calves_front', 'calves', 59.8, 165, left: false),
+  _Zone('feet', 'feet', 41, 192.5, left: true),
+];
 
-  // ---------------------------------------------------------------------------
-  // Static data
-  // ---------------------------------------------------------------------------
-  List<Map<String, dynamic>> get _touchTypes => const [
-        {'id': 'love', 'emoji': '💕', 'color': Color(0xFFE53935)},
-        {'id': 'like', 'emoji': '💜', 'color': Color(0xFF8B5CF6)},
-        {'id': 'sensitive', 'emoji': '✨', 'color': Color(0xFFFFD166)},
-        {'id': 'ticklish', 'emoji': '🤭', 'color': Color(0xFF6EE7B7)},
-        {'id': 'neutral', 'emoji': '😐', 'color': Color(0xFF9CA3AF)},
-        {'id': 'avoid', 'emoji': '🚫', 'color': Color(0xFFEF4444)},
-      ];
+const _backZones = [
+  _Zone('head_back', 'nape', 50, 18, left: false),
+  _Zone('neck_back', 'neck_back', 50, 33, left: true),
+  _Zone('upper_back', 'upper_back', 50, 55, left: false),
+  _Zone('lower_back', 'lower_back', 50, 84, left: true),
+  _Zone('buttocks', 'buttocks', 57.5, 103, left: false),
+  _Zone('thighs_back', 'thighs_back', 40.5, 126, left: true),
+  _Zone('calves_back', 'calves_back', 59.8, 163, left: false),
+];
 
-  Map<String, dynamic>? _touchTypeData(String? id) {
-    if (id == null) return null;
-    return _touchTypes.firstWhere((t) => t['id'] == id,
-        orElse: () => _touchTypes.first);
+final _allZones = [..._frontZones, ..._backZones];
+
+class _Sensation {
+  final String id;
+  final Color color;
+  final IconData icon;
+
+  const _Sensation(this.id, this.color, this.icon);
+
+  String get label => 'games.intimacy_map.touch_$id'.tr();
+}
+
+const _sensations = [
+  _Sensation('love', GameTone.accent, Icons.favorite_rounded),
+  _Sensation('like', AppColors.jewelLilac, Icons.thumb_up_alt_outlined),
+  _Sensation('sensitive', AppColors.jewelAmber, Icons.auto_awesome_outlined),
+  _Sensation('ticklish', AppColors.jewelTeal,
+      Icons.sentiment_very_satisfied_outlined),
+  _Sensation('neutral', AppColors.mist, Icons.remove_rounded),
+  _Sensation('avoid', AppColors.jewelGarnet, Icons.block_rounded),
+];
+
+_Sensation? _sensation(String? id) {
+  if (id == null) return null;
+  for (final s in _sensations) {
+    if (s.id == id) return s;
   }
+  return null;
+}
 
-  List<Map<String, dynamic>> get _bodyPartsFront => const [
-        {'id': 'forehead', 'x': 0.5, 'y': 0.06},
-        {'id': 'eyes', 'x': 0.5, 'y': 0.10},
-        {'id': 'cheeks', 'x': 0.62, 'y': 0.13},
-        {'id': 'lips', 'x': 0.5, 'y': 0.155},
-        {'id': 'neck_front', 'x': 0.5, 'y': 0.21},
-        {'id': 'shoulders', 'x': 0.30, 'y': 0.27},
-        {'id': 'chest', 'x': 0.5, 'y': 0.33},
-        {'id': 'arms', 'x': 0.18, 'y': 0.40},
-        {'id': 'hands', 'x': 0.10, 'y': 0.55},
-        {'id': 'stomach', 'x': 0.5, 'y': 0.46},
-        {'id': 'hips', 'x': 0.62, 'y': 0.55},
-        {'id': 'thighs_front', 'x': 0.42, 'y': 0.66},
-        {'id': 'knees', 'x': 0.45, 'y': 0.78},
-        {'id': 'calves_front', 'x': 0.55, 'y': 0.86},
-        {'id': 'feet', 'x': 0.5, 'y': 0.95},
-      ];
+enum _Phase { setup, mapping, handoff, reveal }
 
-  List<Map<String, dynamic>> get _bodyPartsBack => const [
-        {'id': 'head_back', 'x': 0.5, 'y': 0.08},
-        {'id': 'neck_back', 'x': 0.5, 'y': 0.18},
-        {'id': 'upper_back', 'x': 0.4, 'y': 0.30},
-        {'id': 'lower_back', 'x': 0.55, 'y': 0.45},
-        {'id': 'buttocks', 'x': 0.5, 'y': 0.56},
-        {'id': 'thighs_back', 'x': 0.45, 'y': 0.70},
-        {'id': 'calves_back', 'x': 0.5, 'y': 0.86},
-      ];
+// ─────────────────────────────────────────────────────────────────────────
+// Screen
+// ─────────────────────────────────────────────────────────────────────────
 
-  List<Map<String, dynamic>> get _allParts =>
-      [..._bodyPartsFront, ..._bodyPartsBack];
+class _IntimacyMapScreenState extends State<IntimacyMapScreen> {
+  final _session = GameSession();
 
-  String _bodyName(String id) => 'games.intimacy_map.body_${_bodyKey(id)}'.tr();
+  _Phase _phase = _Phase.setup;
+  bool _private = true;
+  int _player = 1;
+  bool _front = true;
+  final _maps = [<String, String>{}, <String, String>{}];
 
-  // Some body part keys differ from the part id
-  String _bodyKey(String id) {
-    switch (id) {
-      case 'neck_front':
-        return 'neck';
-      case 'thighs_front':
-        return 'thighs';
-      case 'calves_front':
-        return 'calves';
-      case 'head_back':
-        return 'nape';
-      default:
-        return id;
-    }
-  }
-
-  // ---------------------------------------------------------------------------
-  // Lifecycle
-  // ---------------------------------------------------------------------------
-  @override
-  void initState() {
-    super.initState();
-    _bgController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 22),
-    )..repeat();
-
-    _glow = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2200),
-    )..repeat(reverse: true);
-    _glowAnim = CurvedAnimation(parent: _glow, curve: Curves.easeInOut);
-
-    _shimmer = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2400),
-    )..repeat();
-
-    _pointsPulse = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1800),
-    )..repeat(reverse: true);
-
-    _entry = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    );
-    _entryAnim = CurvedAnimation(parent: _entry, curve: Curves.easeOutCubic);
-    _entry.forward();
-
-    _revealAnim = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-  }
+  Map<String, String> get _mine => _maps[_player - 1];
+  Map<String, String> get _theirs => _maps[2 - _player];
+  int get _other => 3 - _player;
 
   @override
   void dispose() {
-    _bgController.dispose();
-    _glow.dispose();
-    _shimmer.dispose();
-    _pointsPulse.dispose();
-    _entry.dispose();
-    _revealAnim.dispose();
+    _session.finish();
     super.dispose();
   }
 
-  // ---------------------------------------------------------------------------
-  // Game flow
-  // ---------------------------------------------------------------------------
-  void _startGame() {
-    HapticFeedback.heavyImpact();
+  List<String> get _rules => [
+        'games.intimacy_map.step1'.tr(),
+        'games.intimacy_map.step2'.tr(),
+        'games.intimacy_map.step3'.tr(),
+        'games.intimacy_map.step4'.tr(),
+      ];
+
+  void _start() {
+    _session.start();
     setState(() {
-      _gameStarted = true;
-      _showingReveal = false;
-      _currentPlayer = 1;
-      _selectedView = 'front';
-      _player1Map.clear();
-      _player2Map.clear();
+      _maps[0].clear();
+      _maps[1].clear();
+      _player = 1;
+      _front = true;
+      _phase = _Phase.mapping;
     });
-    _entry.forward(from: 0);
   }
 
-  void _passToOtherPlayer() {
-    HapticFeedback.heavyImpact();
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF1A0A4A), Color(0xFF0A0F2C)],
-            ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(
-                color: const Color(0xFF7DD3FC).withOpacity(0.4)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('🤫', style: TextStyle(fontSize: 56)),
-              const SizedBox(height: 8),
-              Text(
-                'games.intimacy_map.pass_phone'.tr(namedArgs: {
-                  'player': '${_currentPlayer == 1 ? 2 : 1}',
-                }),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'games.intimacy_map.pass_phone_hint'.tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 13,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white.withOpacity(0.6),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 18),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                  HapticFeedback.mediumImpact();
-                  setState(() {
-                    _currentPlayer = _currentPlayer == 1 ? 2 : 1;
-                    _selectedView = 'front';
-                  });
-                  _entry.forward(from: 0);
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF7DD3FC), Color(0xFFB388FF)],
-                    ),
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color:
-                            const Color(0xFF7DD3FC).withOpacity(0.45),
-                        blurRadius: 18,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'games.intimacy_map.ready'.tr(),
-                      style: const TextStyle(
-                        fontFamily: 'DMSans',
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                        letterSpacing: 1,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _markPart(String partId, String touchType) {
+  void _mark(_Zone zone, String? sensation) {
     HapticFeedback.selectionClick();
     setState(() {
-      if (_currentPlayer == 1) {
-        _player1Map[partId] = touchType;
+      if (sensation == null) {
+        _mine.remove(zone.id);
       } else {
-        _player2Map[partId] = touchType;
+        _mine[zone.id] = sensation;
       }
     });
   }
 
-  void _clearPart(String partId) {
-    HapticFeedback.lightImpact();
-    setState(() {
-      if (_currentPlayer == 1) {
-        _player1Map.remove(partId);
-      } else {
-        _player2Map.remove(partId);
-      }
-    });
+  void _switchPlayer() {
+    HapticFeedback.mediumImpact();
+    if (_private) {
+      setState(() => _phase = _Phase.handoff);
+    } else {
+      setState(() => _player = _other);
+    }
   }
 
-  void _resetMaps() {
-    HapticFeedback.heavyImpact();
-    showDialog(
+  Future<void> _reset() async {
+    final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1A0A4A), Color(0xFF0A0F2C)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
+      builder: (context) => AlertDialog(
+        title: Text('games.intimacy_map.reset_maps'.tr()),
+        content: Text('games.intimacy_map.reset_confirm'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('games.intimacy_map.cancel'.tr()),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('🗑️', style: TextStyle(fontSize: 40)),
-              const SizedBox(height: 10),
-              Text(
-                'games.intimacy_map.reset_maps'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'games.intimacy_map.reset_confirm'.tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 13,
-                  color: Colors.white.withOpacity(0.7),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.18)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'games.intimacy_map.cancel'.tr(),
-                            style: TextStyle(
-                              fontFamily: 'DMSans',
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        setState(() {
-                          _player1Map.clear();
-                          _player2Map.clear();
-                        });
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFE53935), Color(0xFFFF8C42)],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'games.intimacy_map.reset'.tr(),
-                            style: const TextStyle(
-                              fontFamily: 'DMSans',
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.rose),
+            child: Text('games.intimacy_map.reset'.tr()),
           ),
-        ),
+        ],
       ),
     );
+    if (ok == true) {
+      setState(() {
+        _maps[0].clear();
+        _maps[1].clear();
+      });
+    }
   }
 
-  void _reveal() {
+  void _compare() {
     HapticFeedback.heavyImpact();
-    setState(() => _showingReveal = true);
-    _revealAnim.forward(from: 0);
+    _session.finish();
+    setState(() => _phase = _Phase.reveal);
   }
 
-  // ---------------------------------------------------------------------------
-  // Build
-  // ---------------------------------------------------------------------------
+  Future<void> _pickSensation(_Zone zone) async {
+    final current = _mine[zone.id];
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      useRootNavigator: true,
+      backgroundColor: AppColors.inkHigh,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      ),
+      builder: (context) => _SensationSheet(zone: zone, current: current),
+    );
+    if (!mounted || picked == null) return;
+    _mark(zone, picked.isEmpty ? null : picked);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        // Material 3 paints an opaque surfaceTint band over a transparent
-        // AppBar on scroll; disable it so the bar blends with the game
-        // background as designed.
-        surfaceTintColor: Colors.transparent,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white70),
-          onPressed: () {
-            if (_showingReveal) {
-              setState(() => _showingReveal = false);
-            } else if (_gameStarted) {
-              _confirmExit();
-            } else {
-              context.pop();
-            }
+    final mapping = _phase == _Phase.mapping;
+    return GameScaffold(
+      title: 'games.intimacy_map.title'.tr(),
+      guardExit: mapping || _phase == _Phase.handoff,
+      onHelp: () => showGameRules(
+        context,
+        title: 'games.intimacy_map.how_it_works'.tr(),
+        rules: _rules,
+      ),
+      actions: [
+        if (mapping && (_maps[0].isNotEmpty || _maps[1].isNotEmpty))
+          IconButton(
+            icon: const Icon(Icons.restart_alt_rounded, color: AppColors.mist),
+            tooltip: plainLabel('games.intimacy_map.reset_maps'.tr()),
+            onPressed: _reset,
+          ),
+      ],
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        child: KeyedSubtree(
+          key: ValueKey('$_phase$_player'),
+          child: switch (_phase) {
+            _Phase.setup => _buildSetup(),
+            _Phase.mapping => _buildMapping(),
+            _Phase.handoff => GameHandoff(
+                player: _other,
+                icon: Icons.lock_outline_rounded,
+                title: 'games.intimacy_map.pass_to'
+                    .tr(namedArgs: {'name': GamePlayers.name(_other)}),
+                message: 'games.intimacy_map.pass_phone_hint'.tr(),
+                action: 'game_ui.continue_btn'.tr(),
+                onContinue: () => setState(() {
+                  _player = _other;
+                  _front = true;
+                  _phase = _Phase.mapping;
+                }),
+              ),
+            _Phase.reveal => _buildReveal(),
           },
         ),
-        title: !_gameStarted
-            ? Text(
-                'games.intimacy_map.title'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              )
-            : null,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline, color: Colors.white70),
-            onPressed: _showInstructions,
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          // Cosmic background
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F0729),
-                  Color(0xFF1A0A4A),
-                  Color(0xFF0A0F2C),
-                  Color(0xFF050818),
-                ],
-              ),
-            ),
-          ),
-          AnimatedBuilder(
-            animation: _bgController,
-            builder: (context, _) {
-              return CustomPaint(
-                size: Size.infinite,
-                painter: _ParticlesPainter(
-                  particles: _particles,
-                  progress: _bgController.value,
-                ),
-              );
-            },
-          ),
-          // Main content
-          SafeArea(
-            // Force tight horizontal constraints down the body subtree.
-            // Stack defaults to StackFit.loose, which lets the inner
-            // SingleChildScrollView / Column shrink-wrap to the widest child
-            // — then the Column's centered children render off-axis from the
-            // screen, and tap targets land where the layout *thinks* the
-            // widgets are rather than where the user sees them. A
-            // double-infinity SizedBox is the smallest fix: bounded by the
-            // SafeArea (= screen width), it makes the body always exactly
-            // screen-wide.
-            child: SizedBox(
-              width: double.infinity,
-              child: !_gameStarted
-                  ? _buildSetupView()
-                  : _showingReveal
-                      ? _buildRevealView()
-                      : _buildMapView(),
-            ),
-          ),
-        ],
       ),
     );
   }
 
-  void _confirmExit() {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF1A0A4A), Color(0xFF0A0F2C)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(0.15)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('🗺️', style: TextStyle(fontSize: 48)),
-              const SizedBox(height: 12),
-              Text(
-                'games.intimacy_map.exit_confirm'.tr(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.15)),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'common.cancel'.tr(),
-                            style: TextStyle(
-                              fontFamily: 'DMSans',
-                              color: Colors.white.withOpacity(0.7),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        context.pop();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFFE53935),
-                              Color(0xFFFF8C42),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'common.yes'.tr(),
-                            style: const TextStyle(
-                              fontFamily: 'DMSans',
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              decoration: TextDecoration.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // ── Setup ──────────────────────────────────────────────────────────────
 
-  // ---------------------------------------------------------------------------
-  // Setup view
-  // ---------------------------------------------------------------------------
-  Widget _buildSetupView() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, kToolbarHeight, 24, 24),
-      child: Column(
-        children: [
-          const SizedBox(height: 6),
-          // Header — animated body silhouette icon
-          AnimatedBuilder(
-            animation: Listenable.merge([_glowAnim, _pointsPulse]),
-            builder: (context, _) {
-              return SizedBox(
-                height: 200,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: RadialGradient(
-                          colors: [
-                            const Color(0xFFE879F9).withOpacity(
-                                0.32 + 0.18 * _glowAnim.value),
-                            const Color(0xFF7DD3FC).withOpacity(0.15),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 110,
-                      height: 170,
-                      child: CustomPaint(
-                        painter: _MiniSilhouettePainter(
-                          glow: _glowAnim.value,
-                          dotsPulse: _pointsPulse.value,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            'games.intimacy_map.title'.tr(),
-            style: const TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              fontSize: 30,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-              letterSpacing: 1.2,
-              decoration: TextDecoration.none,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'games.intimacy_map.subtitle'.tr(),
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 14,
-              color: Colors.white.withOpacity(0.6),
-              fontStyle: FontStyle.italic,
-              decoration: TextDecoration.none,
-            ),
-            textAlign: TextAlign.center,
-          ),
-
-          const SizedBox(height: 30),
-
-          // Mode selector
-          _sectionLabel(
-            icon: Icons.style,
-            color: const Color(0xFFB388FF),
-            label: 'games.intimacy_map.mode_label'.tr(),
-          ),
-          const SizedBox(height: 14),
-          _modeCard(
-            id: 'private',
-            emoji: '🤫',
-            label: 'games.intimacy_map.mode_private'.tr(),
-            desc: 'games.intimacy_map.mode_private_desc'.tr(),
-            color: const Color(0xFFB388FF),
-          ),
-          const SizedBox(height: 10),
-          _modeCard(
-            id: 'together',
-            emoji: '🤝',
-            label: 'games.intimacy_map.mode_together'.tr(),
-            desc: 'games.intimacy_map.mode_together_desc'.tr(),
-            color: const Color(0xFF7DD3FC),
-          ),
-
-          const SizedBox(height: 22),
-
-          // Sensation legend
-          _sectionLabel(
-            icon: Icons.palette,
-            color: const Color(0xFFFFD166),
-            label: 'games.intimacy_map.sensation_types'.tr(),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _touchTypes.map((t) {
-              final color = t['color'] as Color;
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      color.withOpacity(0.25),
-                      color.withOpacity(0.08),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: color.withOpacity(0.45)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(t['emoji'] as String,
-                        style: const TextStyle(fontSize: 14)),
-                    const SizedBox(width: 6),
-                    Text(
-                      'games.intimacy_map.touch_${t['id']}'.tr(),
-                      style: TextStyle(
-                        fontFamily: 'DMSans',
-                        color: color,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
-
-          const SizedBox(height: 22),
-
-          // Features hint
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFFB388FF).withOpacity(0.10),
-                  const Color(0xFF7DD3FC).withOpacity(0.04),
-                ],
-              ),
-              borderRadius: BorderRadius.circular(18),
-              border: Border.all(color: Colors.white.withOpacity(0.08)),
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.auto_awesome,
-                        color: Color(0xFFB388FF), size: 18),
-                    const SizedBox(width: 8),
-                    Text(
-                      'games.intimacy_map.features_title'.tr(),
-                      style: const TextStyle(
-                        fontFamily: 'PlayfairDisplay',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    _featureChip('🤫',
-                        'games.intimacy_map.feature_private'.tr()),
-                    _featureChip('💎',
-                        'games.intimacy_map.feature_compatibility'.tr()),
-                    _featureChip('🔥',
-                        'games.intimacy_map.feature_heatmap'.tr()),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // Start button — purple/cyan shimmer
-          AnimatedBuilder(
-            animation: _shimmer,
-            builder: (context, _) {
-              return GestureDetector(
-                onTap: _startGame,
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 18),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(-1 + 2 * _shimmer.value, 0),
-                      end: Alignment(1 + 2 * _shimmer.value, 0),
-                      colors: const [
-                        Color(0xFF6B2D5B),
-                        Color(0xFFB388FF),
-                        Color(0xFF7DD3FC),
-                        Color(0xFFB388FF),
-                        Color(0xFF6B2D5B),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(18),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFB388FF).withOpacity(0.5),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.explore,
-                          color: Colors.white, size: 24),
-                      const SizedBox(width: 10),
-                      Text(
-                        'games.intimacy_map.start_exploration'.tr(),
-                        style: const TextStyle(
-                          fontFamily: 'DMSans',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          letterSpacing: 1.2,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionLabel({
-    required IconData icon,
-    required Color color,
-    required String label,
-  }) {
-    return Row(
+  Widget _buildSetup() {
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
       children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'PlayfairDisplay',
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-            decoration: TextDecoration.none,
-          ),
+        GameHero(
+          icon: Icons.map_outlined,
+          title: 'games.intimacy_map.title'.tr(),
+          subtitle: 'games.intimacy_map.subtitle'.tr(),
+        ),
+        const SizedBox(height: 32),
+        const GamePlayersCard(),
+        const SizedBox(height: 28),
+        GameSectionLabel('games.intimacy_map.mode_label'.tr()),
+        GameOptionTile(
+          title: 'games.intimacy_map.mode_private'.tr(),
+          subtitle: 'games.intimacy_map.mode_private_desc'.tr(),
+          icon: Icons.lock_outline_rounded,
+          selected: _private,
+          onTap: () => setState(() => _private = true),
+        ),
+        const SizedBox(height: 10),
+        GameOptionTile(
+          title: 'games.intimacy_map.mode_together'.tr(),
+          subtitle: 'games.intimacy_map.mode_together_desc'.tr(),
+          icon: Icons.people_outline_rounded,
+          selected: !_private,
+          onTap: () => setState(() => _private = false),
+        ),
+        const SizedBox(height: 28),
+        GameSectionLabel('games.intimacy_map.sensation_types'.tr()),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [for (final s in _sensations) _SensationChip(s)],
+        ),
+        const SizedBox(height: 28),
+        GameRulesCard(
+            title: 'games.intimacy_map.how_it_works'.tr(), rules: _rules),
+        const SizedBox(height: 28),
+        GamePrimaryButton(
+          label: 'games.intimacy_map.start_exploration'.tr(),
+          icon: Icons.play_arrow_rounded,
+          onPressed: _start,
         ),
       ],
     );
   }
 
-  Widget _modeCard({
-    required String id,
-    required String emoji,
-    required String label,
-    required String desc,
-    required Color color,
-  }) {
-    final isSelected = _mode == id;
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        setState(() => _mode = id);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isSelected
-                ? [color.withOpacity(0.32), color.withOpacity(0.10)]
-                : [
-                    Colors.white.withOpacity(0.05),
-                    Colors.white.withOpacity(0.02),
-                  ],
+  // ── Mapping ────────────────────────────────────────────────────────────
+
+  Widget _buildMapping() {
+    final zones = _front ? _frontZones : _backZones;
+    final canCompare = _maps[0].isNotEmpty && _maps[1].isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+      child: Column(
+        children: [
+          GameTurnBanner(
+            player: _player,
+            caption: 'games.intimacy_map.map_of'.tr(),
+            trailing: 'games.intimacy_map.zones_marked'.tr(namedArgs: {
+              'count': '${_mine.length}',
+              'total': '${_allZones.length}',
+            }),
           ),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? color : Colors.white.withOpacity(0.1),
-            width: isSelected ? 2 : 1,
+          const SizedBox(height: 10),
+          GameSegmented<bool>(
+            values: const [true, false],
+            selected: _front,
+            label: (f) => f
+                ? 'games.intimacy_map.view_front'.tr()
+                : 'games.intimacy_map.view_back'.tr(),
+            onChanged: (f) => setState(() => _front = f),
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: color.withOpacity(0.4),
-                    blurRadius: 18,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : null,
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                gradient: RadialGradient(
-                  colors: [color.withOpacity(0.6), color.withOpacity(0.15)],
-                ),
-                border: Border.all(color: color.withOpacity(0.6)),
-              ),
-              child: Center(
-                  child: Text(emoji, style: const TextStyle(fontSize: 22))),
+          const SizedBox(height: 6),
+          Expanded(
+            child: _BodyAtlas(
+              front: _front,
+              zones: zones,
+              marks: _mine,
+              partnerMarks: _private ? null : _theirs,
+              onTap: _pickSensation,
             ),
-            const SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          Text(
+            'games.intimacy_map.tap_hint'.tr(),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: AppColors.smoke),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: _switchPlayer,
+                  icon: const Icon(Icons.swap_horiz_rounded, size: 18),
+                  label: Text(
+                    GamePlayers.name(_other),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                flex: 2,
+                child: GamePrimaryButton(
+                  label: 'games.intimacy_map.compare_maps'.tr(),
+                  icon: Icons.compare_arrows_rounded,
+                  onPressed: canCompare ? _compare : null,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Reveal ─────────────────────────────────────────────────────────────
+
+  Widget _buildReveal() {
+    final text = Theme.of(context).textTheme;
+    final matches = <_Zone>[];
+    final differences = <_Zone>[];
+    final onlyOne = <_Zone>[];
+    for (final z in _allZones) {
+      final a = _maps[0][z.id];
+      final b = _maps[1][z.id];
+      if (a != null && b != null) {
+        (a == b ? matches : differences).add(z);
+      } else if (a != null || b != null) {
+        onlyOne.add(z);
+      }
+    }
+    final shared = matches.length + differences.length;
+    final ratio = shared == 0 ? 0.0 : matches.length / shared;
+    final message = ratio > 0.7
+        ? 'games.intimacy_map.compatibility_msg_high'
+        : ratio > 0.4
+            ? 'games.intimacy_map.compatibility_msg_mid'
+            : 'games.intimacy_map.compatibility_msg_low';
+    final favourites = matches
+        .where((z) => const {'love', 'sensitive'}.contains(_maps[0][z.id]))
+        .toList();
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+      children: [
+        const Center(child: GameEmblem(icon: Icons.map_outlined)),
+        const SizedBox(height: 18),
+        Text(
+          plainLabel('games.intimacy_map.compare_title'.tr()),
+          textAlign: TextAlign.center,
+          style: text.headlineMedium,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          plainLabel(message.tr()),
+          textAlign: TextAlign.center,
+          style: text.bodyMedium?.copyWith(color: AppColors.mist),
+        ),
+        const SizedBox(height: 22),
+        GameSurface(
+          child: Column(
+            children: [
+              Row(
                 children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontFamily: 'PlayfairDisplay',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: isSelected
-                          ? color
-                          : Colors.white.withOpacity(0.85),
-                      decoration: TextDecoration.none,
+                  Expanded(
+                    child: Text(
+                      'games.intimacy_map.compatibility_score'.tr(),
+                      style:
+                          const TextStyle(fontSize: 13, color: AppColors.mist),
                     ),
                   ),
-                  const SizedBox(height: 2),
                   Text(
-                    desc,
-                    style: TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 12,
-                      color: Colors.white.withOpacity(0.55),
-                      decoration: TextDecoration.none,
+                    '${(ratio * 100).round()}%',
+                    style: const TextStyle(
+                      fontFamily: AppTypography.displayFont,
+                      fontFeatures: AppTypography.lining,
+                      fontSize: 22,
+                      color: AppColors.ivory,
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 10),
+              GameProgressBar(value: ratio),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  _Stat('${matches.length}',
+                      'games.intimacy_map.match_count'.tr()),
+                  _Stat('${differences.length}',
+                      'games.intimacy_map.discovery_count'.tr()),
+                  _Stat('${_maps[0].length}', GamePlayers.name(1)),
+                  _Stat('${_maps[1].length}', GamePlayers.name(2)),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (favourites.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          GameSectionLabel('games.intimacy_map.favorite_zones'.tr()),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final z in favourites)
+                _ZonePill(z.name, _sensation(_maps[0][z.id])!),
+            ],
+          ),
+        ],
+        const SizedBox(height: 24),
+        GameSectionLabel('games.intimacy_map.compatible_zones'.tr()),
+        if (matches.isEmpty)
+          _Empty('games.intimacy_map.no_matching_zones'.tr())
+        else
+          for (final z in matches)
+            _CompareRow(zone: z, a: _maps[0][z.id], b: _maps[1][z.id]),
+        const SizedBox(height: 18),
+        GameSectionLabel('games.intimacy_map.zones_to_explore'.tr()),
+        if (differences.isEmpty)
+          _Empty('games.intimacy_map.all_compatible'.tr())
+        else
+          for (final z in differences)
+            _CompareRow(zone: z, a: _maps[0][z.id], b: _maps[1][z.id]),
+        if (onlyOne.isNotEmpty) ...[
+          const SizedBox(height: 18),
+          GameSectionLabel('games.intimacy_map.only_one'.tr()),
+          for (final z in onlyOne)
+            _CompareRow(zone: z, a: _maps[0][z.id], b: _maps[1][z.id]),
+        ],
+        const SizedBox(height: 14),
+        Text(
+          plainLabel('games.intimacy_map.closing_hint'.tr()),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontFamily: AppTypography.displayFont,
+            fontStyle: FontStyle.italic,
+            fontSize: 15,
+            color: AppColors.mist,
+          ),
+        ),
+        const SizedBox(height: 26),
+        GamePrimaryButton(
+          label: 'games.intimacy_map.continue_marking'.tr(),
+          icon: Icons.edit_outlined,
+          onPressed: () => setState(() => _phase = _Phase.mapping),
+        ),
+        const SizedBox(height: 10),
+        GameSecondaryButton(
+          label: 'game_ui.new_game'.tr(),
+          icon: Icons.replay_rounded,
+          onPressed: () => setState(() => _phase = _Phase.setup),
+        ),
+        const SizedBox(height: 6),
+        Center(
+          child: GameQuietButton(
+            label: 'game_ui.end'.tr(),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Body atlas
+// ─────────────────────────────────────────────────────────────────────────
+
+/// The figure with a dot on every zone and its name in the margin, joined
+/// by a hairline — like an anatomical plate. Dot and name are both tappable.
+class _BodyAtlas extends StatelessWidget {
+  final bool front;
+  final List<_Zone> zones;
+  final Map<String, String> marks;
+  final Map<String, String>? partnerMarks;
+  final ValueChanged<_Zone> onTap;
+
+  const _BodyAtlas({
+    required this.front,
+    required this.zones,
+    required this.marks,
+    required this.partnerMarks,
+    required this.onTap,
+  });
+
+  static const _labelWidth = 86.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, box) {
+        final w = box.maxWidth;
+        final h = box.maxHeight;
+        // Labels sit outside the body's span (x 11…89 in figure units).
+        final s = min((h - 8) / 200, (w / 2 - _labelWidth - 6) / 39)
+            .clamp(0.8, 4.0);
+        final left = (w - 100 * s) / 2;
+        final top = (h - 200 * s) / 2;
+        final leftEdge = left + 11 * s;
+        final rightEdge = left + 89 * s;
+        Offset at(_Zone z) => Offset(left + z.x * s, top + z.y * s);
+
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned.fill(
+              child: CustomPaint(
+                painter: _FigurePainter(
+                  front: front,
+                  scale: s,
+                  origin: Offset(left, top),
+                  leaders: [
+                    for (final z in zones)
+                      (at(z), z.left ? leftEdge : rightEdge),
+                  ],
+                ),
+              ),
             ),
-            if (isSelected) Icon(Icons.check_circle, color: color, size: 22),
+            for (final z in zones) ...[
+              _label(z, at(z), leftEdge, rightEdge),
+              Positioned(
+                left: at(z).dx - 18,
+                top: at(z).dy - 18,
+                width: 36,
+                height: 36,
+                child: Semantics(
+                  button: true,
+                  label: z.name,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onTap(z),
+                    child: Center(
+                      child: _Dot(
+                        mine: _sensation(marks[z.id]),
+                        partner: _sensation(partnerMarks?[z.id]),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _label(_Zone z, Offset dot, double leftEdge, double rightEdge) {
+    final marked = _sensation(marks[z.id]);
+    final text = Text(
+      front ? z.name : z.shortName,
+      maxLines: 1,
+      style: TextStyle(
+        fontSize: 11.5,
+        fontWeight: marked != null ? FontWeight.w600 : FontWeight.w500,
+        color: marked?.color ?? AppColors.mist,
+      ),
+    );
+    return Positioned(
+      left: z.left ? leftEdge - 4 - _labelWidth : rightEdge + 4,
+      top: dot.dy - 10,
+      width: _labelWidth,
+      height: 20,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => onTap(z),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: z.left ? Alignment.centerRight : Alignment.centerLeft,
+          child: text,
+        ),
+      ),
+    );
+  }
+}
+
+class _Dot extends StatelessWidget {
+  final _Sensation? mine;
+  final _Sensation? partner;
+
+  const _Dot({required this.mine, required this.partner});
+
+  @override
+  Widget build(BuildContext context) {
+    final m = mine;
+    return SizedBox(
+      width: 22,
+      height: 22,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (partner != null)
+            Container(
+              width: 22,
+              height: 22,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: partner!.color, width: 1.6),
+              ),
+            ),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            width: m == null ? 11 : 14,
+            height: m == null ? 11 : 14,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: m?.color ?? AppColors.ink,
+              border: Border.all(
+                color: m == null
+                    ? AppColors.champagne.withOpacity(0.85)
+                    : AppColors.ivory.withOpacity(0.9),
+                width: m == null ? 1.3 : 1.2,
+              ),
+              boxShadow: m == null
+                  ? null
+                  : [BoxShadow(color: m.color.withOpacity(0.45), blurRadius: 8)],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A slender, neutral figure in a single hairline contour (100 × 200
+/// units), with collarbones on the front and the spine on the back, plus
+/// the leader lines from each zone to its label.
+class _FigurePainter extends CustomPainter {
+  final bool front;
+  final double scale;
+  final Offset origin;
+  final List<(Offset, double)> leaders;
+
+  _FigurePainter({
+    required this.front,
+    required this.scale,
+    required this.origin,
+    required this.leaders,
+  });
+
+  /// Left half of the outline, from the neck down to the crotch, as cubic
+  /// segments (control 1, control 2, end). The right half is its mirror.
+  static const _leftContour = <List<double>>[
+    [45, 28, 45, 31, 45, 33], // neck
+    [44, 36, 36, 38, 30, 41], // trapezius → shoulder
+    [25.5, 43, 23.5, 49, 23, 56], // deltoid
+    [22.4, 65, 20.8, 74, 19.8, 82], // upper arm → elbow
+    [18.9, 92, 17.4, 103, 16.6, 111], // forearm → wrist
+    [15, 115, 13.8, 121, 15.2, 125.5], // hand, outer edge
+    [16.4, 128.6, 19.4, 128.2, 20.2, 125], // fingertips
+    [20.9, 121, 20.9, 116, 20.6, 112], // hand, inner edge
+    [21.4, 104, 23.2, 94, 24.3, 83], // inner forearm
+    [25.3, 73, 27.2, 63, 30.2, 56.5], // inner upper arm → armpit
+    [31.4, 64, 35.6, 72, 37, 80], // ribs → waist
+    [38, 87, 31.3, 91, 31, 99], // waist → hip
+    [30.8, 112, 33.6, 128, 35.2, 146], // outer thigh → knee
+    [34.6, 153, 33.4, 161, 34.8, 170], // calf
+    [35.8, 177, 37.6, 182, 38.4, 186], // ankle
+    [37, 189, 35.2, 193, 37.2, 195.6], // heel
+    [39.6, 197.6, 44, 197.2, 45, 194.4], // sole → toes
+    [45.6, 191, 44.6, 188.4, 44.3, 186], // instep
+    [45.2, 176, 46.6, 165, 45.8, 156], // inner calf
+    [45.2, 151.5, 45.1, 148.6, 45.4, 146], // inner knee
+    [46.2, 132, 48.6, 118, 50, 109], // inner thigh → crotch
+  ];
+
+  Offset _p(double x, double y) =>
+      origin + Offset(x * scale, y * scale);
+
+  Path _body() {
+    const start = Offset(45, 25);
+    final path = Path()..moveTo(_p(start.dx, start.dy).dx, _p(start.dx, start.dy).dy);
+    for (final s in _leftContour) {
+      final c1 = _p(s[0], s[1]);
+      final c2 = _p(s[2], s[3]);
+      final e = _p(s[4], s[5]);
+      path.cubicTo(c1.dx, c1.dy, c2.dx, c2.dy, e.dx, e.dy);
+    }
+    // Mirror, walking back up: each segment reversed and flipped.
+    final points = <Offset>[start];
+    for (final s in _leftContour) {
+      points.add(Offset(s[4], s[5]));
+    }
+    for (var i = _leftContour.length - 1; i >= 0; i--) {
+      final s = _leftContour[i];
+      final from = points[i];
+      final c1 = _p(100 - s[2], s[3]);
+      final c2 = _p(100 - s[0], s[1]);
+      final e = _p(100 - from.dx, from.dy);
+      path.cubicTo(c1.dx, c1.dy, c2.dx, c2.dy, e.dx, e.dy);
+    }
+    return path..close();
+  }
+
+  Path _head() => Path()
+    ..addOval(Rect.fromCenter(
+      center: _p(50, 16),
+      width: 19.2 * scale,
+      height: 24 * scale,
+    ));
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final figure = Path.combine(PathOperation.union, _head(), _body());
+    final bounds = figure.getBounds();
+
+    canvas.drawPath(
+      figure,
+      Paint()
+        ..color = GameTone.accent.withOpacity(0.10)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 18),
+    );
+    canvas.drawPath(
+      figure,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            AppColors.ivory.withOpacity(0.09),
+            GameTone.accent.withOpacity(0.05),
+            AppColors.ivory.withOpacity(0.03),
+          ],
+        ).createShader(bounds),
+    );
+
+    final detail = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1
+      ..strokeCap = StrokeCap.round
+      ..color = AppColors.champagne.withOpacity(0.22);
+    if (front) {
+      // Collarbones.
+      for (final side in [-1.0, 1.0]) {
+        final a = _p(50 + side * 3.5, 40.5);
+        final c = _p(50 + side * 9, 38.6);
+        final b = _p(50 + side * 15.5, 40.2);
+        canvas.drawPath(
+          Path()
+            ..moveTo(a.dx, a.dy)
+            ..quadraticBezierTo(c.dx, c.dy, b.dx, b.dy),
+          detail,
+        );
+      }
+    } else {
+      // Spine and the curve of the lower back.
+      final top = _p(50, 37);
+      final bottom = _p(50, 96);
+      canvas.drawLine(top, bottom, detail);
+      for (final side in [-1.0, 1.0]) {
+        final a = _p(50, 104);
+        final c = _p(50 + side * 5, 109);
+        final b = _p(50 + side * 12, 106.5);
+        canvas.drawPath(
+          Path()
+            ..moveTo(a.dx, a.dy)
+            ..quadraticBezierTo(c.dx, c.dy, b.dx, b.dy),
+          detail,
+        );
+      }
+    }
+
+    canvas.drawPath(
+      figure,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2
+        ..strokeJoin = StrokeJoin.round
+        ..color = AppColors.champagne.withOpacity(0.7),
+    );
+
+    final leader = Paint()
+      ..strokeWidth = 0.8
+      ..color = AppColors.ivory.withOpacity(0.18);
+    for (final (dot, edgeX) in leaders) {
+      final dir = edgeX < dot.dx ? -1 : 1;
+      canvas.drawLine(dot + Offset(dir * 8.0, 0), Offset(edgeX, dot.dy), leader);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _FigurePainter old) =>
+      old.front != front ||
+      old.scale != scale ||
+      old.origin != origin ||
+      old.leaders.length != leaders.length;
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Small pieces
+// ─────────────────────────────────────────────────────────────────────────
+
+class _SensationSheet extends StatelessWidget {
+  final _Zone zone;
+  final String? current;
+
+  const _SensationSheet({required this.zone, required this.current});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(zone.name, style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 4),
+            Text(
+              'games.intimacy_map.how_touched_here'.tr(),
+              style: const TextStyle(fontSize: 14, color: AppColors.mist),
+            ),
+            const SizedBox(height: 18),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 3.2,
+              children: [
+                for (final s in _sensations)
+                  _SensationButton(
+                    sensation: s,
+                    selected: current == s.id,
+                    onTap: () => Navigator.of(context).pop(s.id),
+                  ),
+              ],
+            ),
+            if (current != null) ...[
+              const SizedBox(height: 8),
+              Center(
+                child: TextButton.icon(
+                  onPressed: () => Navigator.of(context).pop(''),
+                  style: TextButton.styleFrom(foregroundColor: AppColors.smoke),
+                  icon: const Icon(Icons.close_rounded, size: 16),
+                  label: Text('games.intimacy_map.clear_mark'.tr()),
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _featureChip(String emoji, String label) {
+class _SensationButton extends StatelessWidget {
+  final _Sensation sensation;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _SensationButton({
+    required this.sensation,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = sensation.color;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Ink(
+          decoration: BoxDecoration(
+            color: selected ? c.withOpacity(0.16) : AppColors.inkRaised,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: selected ? c : AppColors.hairline,
+              width: selected ? 1.3 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              const SizedBox(width: 14),
+              Icon(sensation.icon, size: 18, color: c),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  sensation.label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.ivory,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SensationChip extends StatelessWidget {
+  final _Sensation sensation;
+
+  const _SensationChip(this.sensation);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        borderRadius: BorderRadius.circular(AppRadius.round),
+        border: Border.all(color: AppColors.hairline),
+        color: AppColors.inkRaised.withOpacity(0.78),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(emoji, style: const TextStyle(fontSize: 13)),
+          Icon(sensation.icon, size: 14, color: sensation.color),
           const SizedBox(width: 6),
           Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: Colors.white.withOpacity(0.8),
-              decoration: TextDecoration.none,
-            ),
+            sensation.label,
+            style: const TextStyle(fontSize: 13, color: AppColors.ivory),
           ),
         ],
       ),
     );
   }
+}
 
-  // ---------------------------------------------------------------------------
-  // Map view (active marking)
-  // ---------------------------------------------------------------------------
-  Widget _buildMapView() {
-    final color = _currentPlayer == 1
-        ? const Color(0xFFE879F9)
-        : const Color(0xFFFFD166);
-    final currentMap = _currentPlayer == 1 ? _player1Map : _player2Map;
-    final otherMap = _currentPlayer == 1 ? _player2Map : _player1Map;
+class _ZonePill extends StatelessWidget {
+  final String name;
+  final _Sensation sensation;
 
-    return AnimatedBuilder(
-      animation: _entryAnim,
-      builder: (context, child) {
-        return Opacity(
-          opacity: _entryAnim.value,
-          child: Transform.translate(
-            offset: Offset(0, 16 * (1 - _entryAnim.value)),
-            child: child,
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, kToolbarHeight, 20, 16),
-        child: Column(
-          children: [
-            // Top: player + view toggle
-            Row(
-              children: [
-                Expanded(
-                  child: AnimatedBuilder(
-                    animation: _shimmer,
-                    builder: (context, _) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 10),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              color.withOpacity(0.18),
-                              color.withOpacity(0.06),
-                              color.withOpacity(0.18),
-                            ],
-                            stops: [0.0, _shimmer.value, 1.0],
-                          ),
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: color.withOpacity(0.4)),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 26,
-                              height: 26,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(colors: [
-                                  color,
-                                  color.withOpacity(0.4),
-                                ]),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: color.withOpacity(0.5),
-                                      blurRadius: 10),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '$_currentPlayer',
-                                  style: const TextStyle(
-                                    fontFamily: 'PlayfairDisplay',
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'games.intimacy_map.partner_label'
-                                        .tr(namedArgs: {
-                                      'player': '$_currentPlayer',
-                                    }),
-                                    style: TextStyle(
-                                      fontFamily: 'PlayfairDisplay',
-                                      color: color,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 13,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                  ),
-                                  Text(
-                                    'games.intimacy_map.zones_marked'
-                                        .tr(namedArgs: {
-                                      'count': '${currentMap.length}',
-                                      'total': '${_allParts.length}',
-                                    }),
-                                    style: TextStyle(
-                                      fontFamily: 'DMSans',
-                                      color:
-                                          Colors.white.withOpacity(0.65),
-                                      fontSize: 11,
-                                      decoration: TextDecoration.none,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // View toggle
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.06),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.white.withOpacity(0.08)),
-              ),
-              child: Row(
-                children: [
-                  _viewToggleButton('front',
-                      'games.intimacy_map.view_front'.tr(), '👤'),
-                  _viewToggleButton('back',
-                      'games.intimacy_map.view_back'.tr(), '🔙'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Body map
-            Expanded(
-              child: _buildBodyMap(
-                currentMap: currentMap,
-                otherMap: _mode == 'together' ? otherMap : null,
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Action row
-            Row(
-              children: [
-                Expanded(
-                  child: _bottomButton(
-                    icon: Icons.refresh,
-                    label: 'games.intimacy_map.reset'.tr(),
-                    onTap: _resetMaps,
-                    color: Colors.white.withOpacity(0.5),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _bottomButton(
-                    icon: Icons.swap_horiz,
-                    label: 'games.intimacy_map.pass_btn'.tr(),
-                    onTap: _passToOtherPlayer,
-                    color: const Color(0xFF7DD3FC),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 2,
-                  child: AnimatedBuilder(
-                    animation: _shimmer,
-                    builder: (context, _) {
-                      final ready = _player1Map.isNotEmpty &&
-                          _player2Map.isNotEmpty;
-                      return GestureDetector(
-                        onTap: ready ? _reveal : null,
-                        child: AnimatedOpacity(
-                          duration: const Duration(milliseconds: 200),
-                          opacity: ready ? 1 : 0.4,
-                          child: Container(
-                            padding:
-                                const EdgeInsets.symmetric(vertical: 14),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment(-1 + 2 * _shimmer.value, 0),
-                                end: Alignment(1 + 2 * _shimmer.value, 0),
-                                colors: const [
-                                  Color(0xFF6B2D5B),
-                                  Color(0xFFD946EF),
-                                  Color(0xFFFFD166),
-                                  Color(0xFFD946EF),
-                                  Color(0xFF6B2D5B),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(14),
-                              boxShadow: ready
-                                  ? [
-                                      BoxShadow(
-                                        color: const Color(0xFFD946EF)
-                                            .withOpacity(0.45),
-                                        blurRadius: 16,
-                                        offset: const Offset(0, 5),
-                                      ),
-                                    ]
-                                  : null,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.auto_awesome,
-                                    color: Colors.white, size: 16),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'games.intimacy_map.reveal'.tr(),
-                                  style: const TextStyle(
-                                    fontFamily: 'DMSans',
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                    letterSpacing: 0.6,
-                                    decoration: TextDecoration.none,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+  const _ZonePill(this.name, this.sensation);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.round),
+        color: sensation.color.withOpacity(0.14),
+        border: Border.all(color: sensation.color.withOpacity(0.6)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(sensation.icon, size: 14, color: sensation.color),
+          const SizedBox(width: 6),
+          Text(name,
+              style: const TextStyle(fontSize: 13, color: AppColors.ivory)),
+        ],
       ),
     );
   }
+}
 
-  Widget _viewToggleButton(String view, String label, String emoji) {
-    final isSelected = _selectedView == view;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          HapticFeedback.selectionClick();
-          setState(() => _selectedView = view);
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          decoration: BoxDecoration(
-            gradient: isSelected
-                ? const LinearGradient(
-                    colors: [Color(0xFFB388FF), Color(0xFF6B2D5B)],
-                  )
-                : null,
-            borderRadius: BorderRadius.circular(10),
+/// Zone name, then each partner's sensation (or a dash).
+class _CompareRow extends StatelessWidget {
+  final _Zone zone;
+  final String? a;
+  final String? b;
+
+  const _CompareRow({required this.zone, required this.a, required this.b});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.hairline)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              zone.name,
+              style: const TextStyle(fontSize: 14.5, color: AppColors.ivory),
+            ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 13)),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  color: isSelected
-                      ? Colors.white
-                      : Colors.white.withOpacity(0.6),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ],
-          ),
-        ),
+          _Mark(player: 1, sensation: _sensation(a)),
+          const SizedBox(width: 12),
+          _Mark(player: 2, sensation: _sensation(b)),
+        ],
       ),
     );
   }
+}
 
-  Widget _bottomButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    required Color color,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withOpacity(0.4)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color, size: 16),
-            const SizedBox(width: 6),
+class _Mark extends StatelessWidget {
+  final int player;
+  final _Sensation? sensation;
+
+  const _Mark({required this.player, required this.sensation});
+
+  @override
+  Widget build(BuildContext context) {
+    final s = sensation;
+    return SizedBox(
+      width: 92,
+      child: Row(
+        children: [
+          PlayerDot(player: player, size: 6),
+          const SizedBox(width: 6),
+          if (s == null)
+            const Text('—', style: TextStyle(color: AppColors.smoke))
+          else ...[
+            Icon(s.icon, size: 13, color: s.color),
+            const SizedBox(width: 4),
             Flexible(
               child: Text(
-                label,
+                s.label,
+                maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  color: color,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.none,
-                ),
+                style: TextStyle(fontSize: 12.5, color: s.color),
               ),
             ),
           ],
-        ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildBodyMap({
-    required Map<String, String> currentMap,
-    Map<String, String>? otherMap,
-  }) {
-    final parts = _selectedView == 'front' ? _bodyPartsFront : _bodyPartsBack;
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.04),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final availableW = constraints.maxWidth;
-          final availableH = constraints.maxHeight;
-          // Body silhouette has a roughly 1:2 (W:H) aspect ratio.
-          // Compute the largest box that fits and preserve it.
-          const bodyAspect = 0.5;
-          double boxW;
-          double boxH;
-          if (availableW / availableH > bodyAspect) {
-            // Height-constrained
-            boxH = availableH * 0.95;
-            boxW = boxH * bodyAspect;
-          } else {
-            // Width-constrained
-            boxW = availableW * 0.78;
-            boxH = boxW / bodyAspect;
-          }
-          final boxLeft = (availableW - boxW) / 2;
-          final boxTop = (availableH - boxH) / 2;
+class _Empty extends StatelessWidget {
+  final String text;
 
-          return Stack(
-            // Let edge touch-points (e.g. hands at x=0.10) and the partner
-            // mini-dot (drawn at a negative offset) paint outside the box
-            // instead of being clipped.
-            clipBehavior: Clip.none,
-            children: [
-              // Silhouette
-              Positioned(
-                left: boxLeft,
-                top: boxTop,
-                width: boxW,
-                height: boxH,
-                child: CustomPaint(
-                  painter: _BodySilhouettePainter(
-                    isFront: _selectedView == 'front',
-                    glow: _glowAnim.value,
-                    currentColor: _currentPlayer == 1
-                        ? const Color(0xFFE879F9)
-                        : const Color(0xFFFFD166),
-                  ),
-                ),
-              ),
-              // Touch points
-              ...parts.map((part) {
-                final id = part['id'] as String;
-                final x = part['x'] as double;
-                final y = part['y'] as double;
-                final myType = currentMap[id];
-                final partnerType = otherMap?[id];
+  const _Empty(this.text);
 
-                final myData = _touchTypeData(myType);
-                final partnerData = _touchTypeData(partnerType);
-
-                final dotColor = myData != null
-                    ? myData['color'] as Color
-                    : Colors.white.withOpacity(0.7);
-                final dotEmoji = myData?['emoji'] as String?;
-
-                return Positioned(
-                  left: boxLeft + boxW * x - 18,
-                  top: boxTop + boxH * y - 18,
-                  child: GestureDetector(
-                    onTap: () => _showTouchSelector(part),
-                    onLongPress: myData != null ? () => _clearPart(id) : null,
-                    child: AnimatedBuilder(
-                      animation: _pointsPulse,
-                      builder: (context, _) {
-                        final pulse = myData == null
-                            ? 0.5 + 0.5 * _pointsPulse.value
-                            : 0.85;
-                        return Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            // Outer glow
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: dotColor.withOpacity(0.3 * pulse),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: dotColor.withOpacity(0.5 * pulse),
-                                    blurRadius: 14,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: 26,
-                              height: 26,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    dotColor,
-                                    dotColor.withOpacity(0.5),
-                                  ],
-                                ),
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.85),
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Center(
-                                child: dotEmoji != null
-                                    ? Text(
-                                        dotEmoji,
-                                        style: const TextStyle(fontSize: 12),
-                                      )
-                                    : Icon(
-                                        Icons.add,
-                                        color: Colors.white
-                                            .withOpacity(0.9),
-                                        size: 14,
-                                      ),
-                              ),
-                            ),
-                            // Partner mini-dot if in 'together' mode
-                            if (partnerData != null)
-                              Positioned(
-                                right: -2,
-                                top: -2,
-                                child: Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: partnerData['color'] as Color,
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 1.2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                );
-              }),
-            ],
-          );
-        },
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+      child: Text(
+        plainLabel(text),
+        style: const TextStyle(fontSize: 13.5, color: AppColors.smoke),
       ),
     );
   }
+}
 
-  void _showTouchSelector(Map<String, dynamic> part) {
-    final id = part['id'] as String;
-    final currentMap = _currentPlayer == 1 ? _player1Map : _player2Map;
-    final selected = currentMap[id];
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A0A4A), Color(0xFF0A0F2C)],
-          ),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        padding: const EdgeInsets.fromLTRB(24, 18, 24, 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.25),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _bodyName(id),
-              style: const TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'games.intimacy_map.how_touched_here'.tr(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'DMSans',
-                color: Colors.white.withOpacity(0.6),
-                fontSize: 13,
-                fontStyle: FontStyle.italic,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            const SizedBox(height: 18),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              alignment: WrapAlignment.center,
-              children: _touchTypes.map((t) {
-                final color = t['color'] as Color;
-                final isSelected = selected == t['id'];
-                return GestureDetector(
-                  onTap: () {
-                    _markPart(id, t['id'] as String);
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 10),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          color.withOpacity(isSelected ? 0.45 : 0.2),
-                          color.withOpacity(isSelected ? 0.2 : 0.08),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isSelected
-                            ? color
-                            : color.withOpacity(0.4),
-                        width: isSelected ? 2 : 1,
-                      ),
-                      boxShadow: isSelected
-                          ? [
-                              BoxShadow(
-                                color: color.withOpacity(0.4),
-                                blurRadius: 14,
-                              ),
-                            ]
-                          : null,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(t['emoji'] as String,
-                            style: const TextStyle(fontSize: 22)),
-                        const SizedBox(width: 8),
-                        Text(
-                          'games.intimacy_map.touch_${t['id']}'.tr(),
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-            if (selected != null) ...[
-              const SizedBox(height: 14),
-              GestureDetector(
-                onTap: () {
-                  _clearPart(id);
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.06),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.15),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.close,
-                          color: Colors.white.withOpacity(0.6),
-                          size: 14),
-                      const SizedBox(width: 6),
-                      Text(
-                        'games.intimacy_map.clear_mark'.tr(),
-                        style: TextStyle(
-                          fontFamily: 'DMSans',
-                          color: Colors.white.withOpacity(0.6),
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
+class _Stat extends StatelessWidget {
+  final String value;
+  final String label;
 
-  // ---------------------------------------------------------------------------
-  // Reveal view
-  // ---------------------------------------------------------------------------
-  Widget _buildRevealView() {
-    final allKeys = {..._player1Map.keys, ..._player2Map.keys};
-    int matches = 0;
-    int discoveries = 0;
-    int onlyP1 = 0;
-    int onlyP2 = 0;
-    final matchedZones = <String>[];
-    final discoveryZones = <String>[];
-    for (final k in allKeys) {
-      final p1 = _player1Map[k];
-      final p2 = _player2Map[k];
-      if (p1 != null && p2 != null) {
-        if (p1 == p2) {
-          matches++;
-          matchedZones.add(k);
-        } else {
-          discoveries++;
-          discoveryZones.add(k);
-        }
-      } else if (p1 != null) {
-        onlyP1++;
-      } else if (p2 != null) {
-        onlyP2++;
-      }
-    }
-    final totalShared =
-        (matches + discoveries) > 0 ? (matches + discoveries) : 1;
-    final compatibility = matches / totalShared;
-    final messageKey = compatibility > 0.7
-        ? 'games.intimacy_map.compatibility_msg_high'
-        : compatibility > 0.4
-            ? 'games.intimacy_map.compatibility_msg_mid'
-            : 'games.intimacy_map.compatibility_msg_low';
-    // Find favorite zones (love/sensitive) shared
-    final favorites = matchedZones
-        .where((id) {
-          final t = _player1Map[id];
-          return t == 'love' || t == 'sensitive';
-        })
-        .toList();
+  const _Stat(this.value, this.label);
 
-    return AnimatedBuilder(
-      animation: _revealAnim,
-      builder: (context, child) {
-        return Opacity(
-          opacity: _revealAnim.value,
-          child: Transform.translate(
-            offset: Offset(0, 20 * (1 - _revealAnim.value)),
-            child: child,
-          ),
-        );
-      },
-      child: SingleChildScrollView(
-        padding:
-            const EdgeInsets.fromLTRB(20, kToolbarHeight + 4, 20, 30),
-        child: Column(
-          children: [
-            // Header
-            const Text('💎', style: TextStyle(fontSize: 56)),
-            const SizedBox(height: 4),
-            Text(
-              'games.intimacy_map.compare_title'.tr(),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: 'PlayfairDisplay',
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFFD946EF),
-                decoration: TextDecoration.none,
-                shadows: [
-                  Shadow(color: Color(0xFFD946EF), blurRadius: 18),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Compatibility gauge
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0x33B388FF),
-                    Color(0x33D946EF),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                    color: const Color(0xFFB388FF).withOpacity(0.35)),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'games.intimacy_map.compatibility_score'.tr(),
-                    style: TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 11,
-                      color: Colors.white.withOpacity(0.6),
-                      letterSpacing: 1.5,
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 160,
-                    height: 90,
-                    child: CustomPaint(
-                      painter: _CompatibilityGaugePainter(
-                        ratio: compatibility,
-                        glow: _glowAnim.value,
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 30),
-                          child: Text(
-                            '${(compatibility * 100).round()}%',
-                            style: const TextStyle(
-                              fontFamily: 'PlayfairDisplay',
-                              fontSize: 32,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                              decoration: TextDecoration.none,
-                              shadows: [
-                                Shadow(
-                                    color: Color(0xFFD946EF), blurRadius: 12),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    messageKey.tr(),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'DMSans',
-                      fontSize: 13,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white.withOpacity(0.85),
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 14),
-            // Stats
-            Row(
-              children: [
-                Expanded(
-                  child: _statBox(
-                    icon: '✅',
-                    label: 'games.intimacy_map.match_count'.tr(),
-                    value: '$matches',
-                    color: const Color(0xFF6EE7B7),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _statBox(
-                    icon: '🔍',
-                    label: 'games.intimacy_map.discovery_count'.tr(),
-                    value: '$discoveries',
-                    color: const Color(0xFFFFD166),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _statBox(
-                    icon: '🗺️',
-                    label: 'games.intimacy_map.mapped_total'.tr(),
-                    value: '${_player1Map.length}/${_player2Map.length}',
-                    color: const Color(0xFFB388FF),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            // Heatmap visualization
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.04),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(0.06)),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.local_fire_department,
-                          color: Color(0xFFFF6B35), size: 16),
-                      const SizedBox(width: 6),
-                      Text(
-                        'games.intimacy_map.heat_map'.tr(),
-                        style: const TextStyle(
-                          fontFamily: 'PlayfairDisplay',
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    height: 360,
-                    child: _buildHeatmap(),
-                  ),
-                ],
-              ),
-            ),
-            if (favorites.isNotEmpty) ...[
-              const SizedBox(height: 14),
-              _favoriteZonesCard(favorites),
-            ],
-            if (discoveryZones.isNotEmpty) ...[
-              const SizedBox(height: 14),
-              _discoveryZonesCard(discoveryZones),
-            ],
-            if (onlyP1 + onlyP2 > 0) ...[
-              const SizedBox(height: 12),
-              Text(
-                'games.intimacy_map.only_one_marked'.tr(namedArgs: {
-                  'p1': '$onlyP1',
-                  'p2': '$onlyP2',
-                }),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 11,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white.withOpacity(0.5),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ],
-            const SizedBox(height: 22),
-            // Action buttons
-            Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        _gameStarted = false;
-                      });
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(14),
-                        border:
-                            Border.all(color: Colors.white.withOpacity(0.18)),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'games.intimacy_map.menu'.tr(),
-                          style: TextStyle(
-                            fontFamily: 'DMSans',
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 2,
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() => _showingReveal = false);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [
-                            Color(0xFFB388FF),
-                            Color(0xFF6B2D5B),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFB388FF).withOpacity(0.45),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          'games.intimacy_map.continue_marking'.tr(),
-                          style: const TextStyle(
-                            fontFamily: 'DMSans',
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _statBox({
-    required String icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            color.withOpacity(0.18),
-            color.withOpacity(0.06),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.35)),
-      ),
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
       child: Column(
         children: [
-          Text(icon, style: const TextStyle(fontSize: 18)),
-          const SizedBox(height: 2),
           Text(
             value,
-            style: TextStyle(
-              fontFamily: 'PlayfairDisplay',
-              color: color,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              decoration: TextDecoration.none,
+            style: const TextStyle(
+              fontFamily: AppTypography.displayFont,
+              fontFeatures: AppTypography.lining,
+              fontSize: 22,
+              color: AppColors.ivory,
             ),
           ),
-          const SizedBox(height: 2),
           Text(
-            label,
-            textAlign: TextAlign.center,
-            maxLines: 2,
+            plainLabel(label),
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              color: Colors.white.withOpacity(0.65),
-              fontSize: 9,
-              decoration: TextDecoration.none,
-            ),
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 12, color: AppColors.mist),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildHeatmap() {
-    // Combined heatmap: show body and dots colored by intensity (love=red glow, etc.)
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        // Body silhouette has a roughly 1:2 aspect ratio — preserve it.
-        const bodyAspect = 0.5;
-        final availableW = constraints.maxWidth;
-        final availableH = constraints.maxHeight;
-        double boxW;
-        double boxH;
-        if (availableW / availableH > bodyAspect) {
-          boxH = availableH;
-          boxW = boxH * bodyAspect;
-        } else {
-          boxW = availableW * 0.85;
-          boxH = boxW / bodyAspect;
-        }
-        final boxLeft = (availableW - boxW) / 2;
-        final boxTop = (availableH - boxH) / 2;
-        return Stack(
-          children: [
-            Positioned(
-              left: boxLeft,
-              top: boxTop,
-              width: boxW,
-              height: boxH,
-              child: CustomPaint(
-                painter: _BodySilhouettePainter(
-                  isFront: true,
-                  glow: 0.5,
-                  currentColor: const Color(0xFFE879F9),
-                  ghost: true,
-                ),
-              ),
-            ),
-            // Front parts heatmap
-            ..._bodyPartsFront.map((part) {
-              final id = part['id'] as String;
-              final p1 = _touchTypeData(_player1Map[id]);
-              final p2 = _touchTypeData(_player2Map[id]);
-              if (p1 == null && p2 == null) return const SizedBox.shrink();
-              final x = part['x'] as double;
-              final y = part['y'] as double;
-              final isMatch = p1 != null &&
-                  p2 != null &&
-                  p1['id'] == p2['id'];
-              final color =
-                  (p1 ?? p2)!['color'] as Color;
-              return Positioned(
-                left: boxLeft + boxW * x - 14,
-                top: boxTop + boxH * y - 14,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: color.withOpacity(0.85),
-                    border: Border.all(
-                      color: isMatch
-                          ? const Color(0xFFFFD166)
-                          : Colors.white.withOpacity(0.7),
-                      width: isMatch ? 2 : 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: color.withOpacity(0.6),
-                        blurRadius: isMatch ? 14 : 8,
-                      ),
-                      if (isMatch)
-                        const BoxShadow(
-                          color: Color(0xFFFFD166),
-                          blurRadius: 10,
-                        ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      (p1 ?? p2)!['emoji'] as String,
-                      style: const TextStyle(fontSize: 13),
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _favoriteZonesCard(List<String> favorites) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0x33E53935), Color(0x33FFD166)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: const Color(0xFFE53935).withOpacity(0.35)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.favorite,
-                  color: Color(0xFFE53935), size: 16),
-              const SizedBox(width: 6),
-              Text(
-                'games.intimacy_map.favorite_zones'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFFFF8FB1),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: favorites
-                .map((id) => Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        _bodyName(id),
-                        style: const TextStyle(
-                          fontFamily: 'DMSans',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          decoration: TextDecoration.none,
-                        ),
-                      ),
-                    ))
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _discoveryZonesCard(List<String> zones) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0x33FFD166), Color(0x33B388FF)],
-        ),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: const Color(0xFFFFD166).withOpacity(0.35)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.explore,
-                  color: Color(0xFFFFD166), size: 16),
-              const SizedBox(width: 6),
-              Text(
-                'games.intimacy_map.zones_to_explore'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFFFFD166),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ...zones.take(8).map((id) {
-            final p1 = _touchTypeData(_player1Map[id]);
-            final p2 = _touchTypeData(_player2Map[id]);
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _bodyName(id),
-                      style: const TextStyle(
-                        fontFamily: 'DMSans',
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                  ),
-                  Text(p1?['emoji'] as String? ?? '–',
-                      style: const TextStyle(fontSize: 14)),
-                  const SizedBox(width: 4),
-                  Container(
-                      width: 1, height: 12, color: Colors.white24),
-                  const SizedBox(width: 4),
-                  Text(p2?['emoji'] as String? ?? '–',
-                      style: const TextStyle(fontSize: 14)),
-                ],
-              ),
-            );
-          }),
-        ],
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Instructions sheet
-  // ---------------------------------------------------------------------------
-  void _showInstructions() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-        ),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A0A4A), Color(0xFF0A0F2C)],
-          ),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        padding: const EdgeInsets.fromLTRB(24, 18, 24, 30),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              Text(
-                'games.intimacy_map.instructions_title'.tr(),
-                style: const TextStyle(
-                  fontFamily: 'PlayfairDisplay',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _ruleRow('1', 'games.intimacy_map.instr1'.tr()),
-              const SizedBox(height: 8),
-              _ruleRow('2', 'games.intimacy_map.instr2'.tr()),
-              const SizedBox(height: 8),
-              _ruleRow('3', 'games.intimacy_map.instr3'.tr()),
-              const SizedBox(height: 8),
-              _ruleRow('4', 'games.intimacy_map.instr4'.tr()),
-              const SizedBox(height: 8),
-              _ruleRow('5', 'games.intimacy_map.instr5'.tr()),
-              const SizedBox(height: 18),
-              Text(
-                'games.intimacy_map.closing_hint'.tr(),
-                style: TextStyle(
-                  fontFamily: 'DMSans',
-                  fontSize: 13,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white.withOpacity(0.55),
-                  decoration: TextDecoration.none,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _ruleRow(String number, String text) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              colors: [Color(0xFFB388FF), Color(0xFF6B2D5B)],
-            ),
-          ),
-          child: Center(
-            child: Text(
-              number,
-              style: const TextStyle(
-                fontFamily: 'DMSans',
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-                decoration: TextDecoration.none,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontFamily: 'DMSans',
-              fontSize: 13,
-              height: 1.4,
-              color: Colors.white.withOpacity(0.7),
-              decoration: TextDecoration.none,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// =============================================================================
-// Painters
-// =============================================================================
-
-/// Anatomical body silhouette with gradient skin and glow.
-class _BodySilhouettePainter extends CustomPainter {
-  final bool isFront;
-  final double glow;
-  final Color currentColor;
-  final bool ghost;
-
-  _BodySilhouettePainter({
-    required this.isFront,
-    required this.glow,
-    required this.currentColor,
-    this.ghost = false,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
-    final cx = w / 2;
-    final path = Path();
-
-    // Head (slightly oval)
-    path.addOval(Rect.fromCenter(
-      center: Offset(cx, h * 0.085),
-      width: w * 0.28,
-      height: h * 0.115,
-    ));
-
-    // Neck
-    path.moveTo(cx - w * 0.08, h * 0.14);
-    path.lineTo(cx - w * 0.07, h * 0.18);
-    path.quadraticBezierTo(cx, h * 0.20, cx + w * 0.07, h * 0.18);
-    path.lineTo(cx + w * 0.08, h * 0.14);
-    path.close();
-
-    // Torso (curvy)
-    final torso = Path();
-    torso.moveTo(cx - w * 0.30, h * 0.20); // shoulder L
-    torso.quadraticBezierTo(
-        cx - w * 0.36, h * 0.30, cx - w * 0.24, h * 0.42); // armpit→waist
-    torso.quadraticBezierTo(
-        cx - w * 0.16, h * 0.50, cx - w * 0.20, h * 0.55); // hip L
-    torso.lineTo(cx + w * 0.20, h * 0.55); // hip R
-    torso.quadraticBezierTo(
-        cx + w * 0.16, h * 0.50, cx + w * 0.24, h * 0.42);
-    torso.quadraticBezierTo(
-        cx + w * 0.36, h * 0.30, cx + w * 0.30, h * 0.20);
-    torso.close();
-
-    // Arms (left)
-    final armL = Path();
-    armL.moveTo(cx - w * 0.30, h * 0.20);
-    armL.quadraticBezierTo(
-        cx - w * 0.42, h * 0.30, cx - w * 0.42, h * 0.45);
-    armL.quadraticBezierTo(
-        cx - w * 0.40, h * 0.55, cx - w * 0.34, h * 0.62);
-    armL.lineTo(cx - w * 0.27, h * 0.60);
-    armL.quadraticBezierTo(
-        cx - w * 0.32, h * 0.50, cx - w * 0.34, h * 0.40);
-    armL.quadraticBezierTo(
-        cx - w * 0.32, h * 0.27, cx - w * 0.26, h * 0.22);
-    armL.close();
-
-    // Arms (right)
-    final armR = Path();
-    armR.moveTo(cx + w * 0.30, h * 0.20);
-    armR.quadraticBezierTo(
-        cx + w * 0.42, h * 0.30, cx + w * 0.42, h * 0.45);
-    armR.quadraticBezierTo(
-        cx + w * 0.40, h * 0.55, cx + w * 0.34, h * 0.62);
-    armR.lineTo(cx + w * 0.27, h * 0.60);
-    armR.quadraticBezierTo(
-        cx + w * 0.32, h * 0.50, cx + w * 0.34, h * 0.40);
-    armR.quadraticBezierTo(
-        cx + w * 0.32, h * 0.27, cx + w * 0.26, h * 0.22);
-    armR.close();
-
-    // Legs
-    final legL = Path();
-    legL.moveTo(cx - w * 0.20, h * 0.55);
-    legL.quadraticBezierTo(
-        cx - w * 0.22, h * 0.75, cx - w * 0.18, h * 0.95);
-    legL.lineTo(cx - w * 0.06, h * 0.95);
-    legL.quadraticBezierTo(
-        cx - w * 0.04, h * 0.75, cx - w * 0.05, h * 0.55);
-    legL.close();
-
-    final legR = Path();
-    legR.moveTo(cx + w * 0.20, h * 0.55);
-    legR.quadraticBezierTo(
-        cx + w * 0.22, h * 0.75, cx + w * 0.18, h * 0.95);
-    legR.lineTo(cx + w * 0.06, h * 0.95);
-    legR.quadraticBezierTo(
-        cx + w * 0.04, h * 0.75, cx + w * 0.05, h * 0.55);
-    legR.close();
-
-    final fullPath = Path()
-      ..addPath(path, Offset.zero)
-      ..addPath(torso, Offset.zero)
-      ..addPath(armL, Offset.zero)
-      ..addPath(armR, Offset.zero)
-      ..addPath(legL, Offset.zero)
-      ..addPath(legR, Offset.zero);
-
-    // Glow halo around body
-    if (!ghost) {
-      final haloPaint = Paint()
-        ..color = currentColor.withOpacity(0.18 + 0.1 * glow)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 14);
-      canvas.drawPath(fullPath, haloPaint);
-    }
-
-    // Skin gradient fill
-    final skinPaint = Paint()
-      ..shader = ui.Gradient.linear(
-        const Offset(0, 0),
-        Offset(0, h),
-        ghost
-            ? [
-                Colors.white.withOpacity(0.07),
-                Colors.white.withOpacity(0.04),
-              ]
-            : [
-                currentColor.withOpacity(0.18),
-                Colors.white.withOpacity(0.1),
-                currentColor.withOpacity(0.10),
-              ],
-        ghost ? null : const [0.0, 0.5, 1.0],
-      );
-    canvas.drawPath(fullPath, skinPaint);
-
-    // Outline
-    final outline = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2
-      ..color = ghost
-          ? Colors.white.withOpacity(0.18)
-          : Colors.white.withOpacity(0.4);
-    canvas.drawPath(fullPath, outline);
-
-    // Subtle face hint (front view)
-    if (isFront && !ghost) {
-      final eyePaint = Paint()..color = Colors.white.withOpacity(0.35);
-      canvas.drawCircle(
-          Offset(cx - w * 0.06, h * 0.085), 1.3, eyePaint);
-      canvas.drawCircle(
-          Offset(cx + w * 0.06, h * 0.085), 1.3, eyePaint);
-      // smile
-      final smile = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1
-        ..color = Colors.white.withOpacity(0.3);
-      canvas.drawArc(
-        Rect.fromCenter(
-            center: Offset(cx, h * 0.115), width: w * 0.06, height: h * 0.02),
-        0,
-        pi,
-        false,
-        smile,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _BodySilhouettePainter old) =>
-      old.isFront != isFront ||
-      old.glow != glow ||
-      old.currentColor != currentColor ||
-      old.ghost != ghost;
-}
-
-/// Mini silhouette for the setup header — body + 3 glowing points.
-class _MiniSilhouettePainter extends CustomPainter {
-  final double glow;
-  final double dotsPulse;
-
-  _MiniSilhouettePainter({required this.glow, required this.dotsPulse});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final w = size.width;
-    final h = size.height;
-    final cx = w / 2;
-
-    final fullPath = Path();
-    fullPath.addOval(Rect.fromCenter(
-      center: Offset(cx, h * 0.085),
-      width: w * 0.30,
-      height: h * 0.13,
-    ));
-    final torso = Path();
-    torso.moveTo(cx - w * 0.32, h * 0.22);
-    torso.quadraticBezierTo(
-        cx - w * 0.20, h * 0.50, cx - w * 0.18, h * 0.55);
-    torso.lineTo(cx + w * 0.18, h * 0.55);
-    torso.quadraticBezierTo(
-        cx + w * 0.20, h * 0.50, cx + w * 0.32, h * 0.22);
-    torso.close();
-    fullPath.addPath(torso, Offset.zero);
-
-    final legs = Path();
-    legs.moveTo(cx - w * 0.18, h * 0.55);
-    legs.lineTo(cx - w * 0.16, h * 0.95);
-    legs.lineTo(cx - w * 0.04, h * 0.95);
-    legs.lineTo(cx - w * 0.02, h * 0.55);
-    legs.moveTo(cx + w * 0.18, h * 0.55);
-    legs.lineTo(cx + w * 0.16, h * 0.95);
-    legs.lineTo(cx + w * 0.04, h * 0.95);
-    legs.lineTo(cx + w * 0.02, h * 0.55);
-    fullPath.addPath(legs, Offset.zero);
-
-    // Glow
-    final glowPaint = Paint()
-      ..color = const Color(0xFFE879F9).withOpacity(0.3 + 0.2 * glow)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 16);
-    canvas.drawPath(fullPath, glowPaint);
-
-    // Body fill
-    final bodyPaint = Paint()
-      ..shader = ui.Gradient.linear(
-        const Offset(0, 0),
-        Offset(0, h),
-        const [
-          Color(0xFFFFB6C1),
-          Color(0xFFE879F9),
-          Color(0xFFB388FF),
-        ],
-        // ui.Gradient requires explicit stops for != 2 colors; without them
-        // it throws mid-paint, leaving the canvas translated and shifting
-        // everything painted afterwards off-screen.
-        const [0.0, 0.5, 1.0],
-      );
-    canvas.drawPath(fullPath, bodyPaint);
-
-    // Outline
-    final outline = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1
-      ..color = Colors.white.withOpacity(0.5);
-    canvas.drawPath(fullPath, outline);
-
-    // Animated touch points
-    final points = [
-      Offset(cx, h * 0.16), // lips
-      Offset(cx - w * 0.05, h * 0.35), // chest
-      Offset(cx + w * 0.10, h * 0.50), // hip
-    ];
-    final colors = [
-      const Color(0xFFE53935),
-      const Color(0xFFFFD166),
-      const Color(0xFF7DD3FC),
-    ];
-    for (int i = 0; i < points.length; i++) {
-      final pulse = 0.7 + 0.3 * dotsPulse;
-      final p = Paint()
-        ..color = colors[i].withOpacity(0.4 * pulse)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-      canvas.drawCircle(points[i], 8, p);
-      canvas.drawCircle(
-        points[i],
-        4,
-        Paint()..color = colors[i],
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _MiniSilhouettePainter old) =>
-      old.glow != glow || old.dotsPulse != dotsPulse;
-}
-
-/// Compatibility gauge — semicircle with gradient sweep + needle.
-class _CompatibilityGaugePainter extends CustomPainter {
-  final double ratio; // 0..1
-  final double glow;
-
-  _CompatibilityGaugePainter({required this.ratio, required this.glow});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height * 0.95);
-    final radius = size.height * 0.85;
-    final rect = Rect.fromCircle(center: center, radius: radius);
-
-    // Track
-    final track = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
-      ..strokeCap = StrokeCap.round;
-    canvas.drawArc(rect, pi, pi, false, track);
-
-    // Filled portion with gradient
-    final glowPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 16
-      ..strokeCap = StrokeCap.round
-      ..color = const Color(0xFFD946EF).withOpacity(0.4 + 0.2 * glow)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    final fgPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
-      ..strokeCap = StrokeCap.round
-      ..shader = ui.Gradient.sweep(
-        center,
-        const [
-          Color(0xFFE53935),
-          Color(0xFFFFD166),
-          Color(0xFF6EE7B7),
-        ],
-        const [0.0, 0.5, 1.0],
-        TileMode.clamp,
-        pi,
-        pi + pi * ratio,
-      );
-    canvas.drawArc(rect, pi, pi * ratio, false, glowPaint);
-    canvas.drawArc(rect, pi, pi * ratio, false, fgPaint);
-
-    // Tick marks
-    final tickPaint = Paint()
-      ..color = Colors.white.withOpacity(0.25)
-      ..strokeWidth = 1.2;
-    for (int i = 0; i <= 10; i++) {
-      final a = pi + (i / 10) * pi;
-      final p1 = center +
-          Offset(cos(a) * (radius - 14), sin(a) * (radius - 14));
-      final p2 = center +
-          Offset(cos(a) * (radius - 18), sin(a) * (radius - 18));
-      canvas.drawLine(p1, p2, tickPaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _CompatibilityGaugePainter old) =>
-      old.ratio != ratio || old.glow != glow;
-}
-
-/// Drifting particles for the cosmic background.
-class _ParticlesPainter extends CustomPainter {
-  final List<_Particle> particles;
-  final double progress;
-
-  _ParticlesPainter({required this.particles, required this.progress});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    // Soft nebula
-    for (int i = 0; i < 4; i++) {
-      final phase = (progress + i * 0.27) % 1.0;
-      final cx =
-          size.width * (0.2 + 0.6 * (i / 4)) + sin(phase * 2 * pi) * 30;
-      final cy = size.height * (0.2 + 0.6 * ((i + 1) / 5)) +
-          cos(phase * 2 * pi) * 30;
-      final paint = Paint()
-        ..shader = ui.Gradient.radial(
-          Offset(cx, cy),
-          110,
-          [
-            const [
-              Color(0xFFD946EF),
-              Color(0xFF7DD3FC),
-              Color(0xFFB388FF),
-              Color(0xFFFFD166),
-            ][i % 4]
-                .withOpacity(0.07),
-            Colors.transparent,
-          ],
-        );
-      canvas.drawCircle(Offset(cx, cy), 110, paint);
-    }
-    // Particles
-    final paint = Paint();
-    final colors = [
-      const Color(0xFFB388FF),
-      const Color(0xFFE879F9),
-      Colors.white,
-      const Color(0xFFFFD166),
-    ];
-    for (final p in particles) {
-      final phase = (p.phase + progress * p.speed) % 1.0;
-      final x = p.x * size.width + sin(phase * 2 * pi + p.phase * 4) * 18;
-      final y = (1 - phase) * size.height;
-      final opacity =
-          (0.15 + 0.3 * (1 - (phase - 0.5).abs() * 2)).clamp(0.0, 0.45);
-      paint.color = colors[p.colorIdx].withOpacity(opacity);
-      canvas.drawCircle(Offset(x, y), p.size, paint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _ParticlesPainter old) =>
-      old.progress != progress;
-}
-
-class _Particle {
-  final double x;
-  final double size;
-  final double speed;
-  final double phase;
-  final int colorIdx;
-  _Particle(Random r)
-      : x = r.nextDouble(),
-        size = 1.2 + r.nextDouble() * 2.5,
-        speed = 0.2 + r.nextDouble() * 0.5,
-        phase = r.nextDouble(),
-        colorIdx = r.nextInt(4);
 }

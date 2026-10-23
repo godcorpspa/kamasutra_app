@@ -2258,7 +2258,11 @@
       "continue_marking": "Keep marking",
       "clear_mark": "Clear mark",
       "exit_confirm": "Leave now? Your maps will be lost.",
-      "closing_hint": "Explore calmly — no right or wrong. 💫"
+      "closing_hint": "Explore calmly — no right or wrong. 💫",
+      "pass_to": "Hand the phone to {name}",
+      "map_of": "Map of",
+      "tap_hint": "Tap a point or a name to say how you like to be touched there.",
+      "only_one": "Marked by one of you"
     },
     "soundtrack": {
       "title": "Our Soundtrack",

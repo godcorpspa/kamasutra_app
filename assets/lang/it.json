@@ -2258,7 +2258,11 @@
       "continue_marking": "Continua a marcare",
       "clear_mark": "Rimuovi marcatura",
       "exit_confirm": "Uscire ora? Le mappe andranno perse.",
-      "closing_hint": "Esplorate con calma — non c'è giusto o sbagliato. 💫"
+      "closing_hint": "Esplorate con calma — non c'è giusto o sbagliato. 💫",
+      "pass_to": "Passa il telefono a {name}",
+      "map_of": "Mappa di",
+      "tap_hint": "Tocca un punto o un nome per dire come ti piace essere toccato/a lì.",
+      "only_one": "Segnate da uno solo"
     },
     "soundtrack": {
       "title": "La Nostra Colonna Sonora",

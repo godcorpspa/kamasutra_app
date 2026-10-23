@@ -2190,12 +2190,12 @@
       "body_calves": "Mollets",
       "body_feet": "Pieds",
       "body_nape": "Nuque",
-      "body_neck_back": "Cou (dos)",
+      "body_neck_back": "Cou (arrière)",
       "body_upper_back": "Haut du dos",
       "body_lower_back": "Bas du dos",
       "body_buttocks": "Fesses",
-      "body_thighs_back": "Cuisses (dos)",
-      "body_calves_back": "Mollets (dos)",
+      "body_thighs_back": "Cuisses (arrière)",
+      "body_calves_back": "Mollets (arrière)",
       "how_it_works": "Comment Ça Marche",
       "step1": "Touchez à tour de rôle une zone du corps sur la carte",
       "step2": "Indiquez comment vous aimez être touché(e) là",
@@ -2258,7 +2258,11 @@
       "continue_marking": "Continuer à marquer",
       "clear_mark": "Effacer la marque",
       "exit_confirm": "Sortir maintenant ? Les cartes seront perdues.",
-      "closing_hint": "Explorez calmement — il n'y a ni juste ni faux. 💫"
+      "closing_hint": "Explorez calmement — il n'y a ni juste ni faux. 💫",
+      "pass_to": "Passe le téléphone à {name}",
+      "map_of": "Carte de",
+      "tap_hint": "Touche un point ou un nom pour dire comment tu aimes être touché(e) à cet endroit.",
+      "only_one": "Marquées par un seul de vous"
     },
     "soundtrack": {
       "title": "Notre Bande Sonore",
