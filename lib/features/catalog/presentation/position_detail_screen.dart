@@ -199,21 +199,29 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                       title: 'position.prerequisites'.tr(),
                       child: Column(
                         children: [
-                          for (final prereq in position.prerequisites)
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(bottom: AppSpacing.sm),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(top: 2),
-                                    child: Icon(Icons.check, size: 18,
+                          // Prerequisites are position ids: show the
+                          // position's name and open it on tap.
+                          for (final prereq in position.prerequisites
+                              .map(repo.getById)
+                              .whereType<Position>())
+                            InkWell(
+                              onTap: () =>
+                                  context.push('/catalog/${prereq.id}'),
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: AppSpacing.xs),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.check, size: 18,
                                         color: AppColors.champagne),
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Expanded(child: Text(prereq)),
-                                ],
+                                    const SizedBox(width: AppSpacing.sm),
+                                    Expanded(
+                                        child: Text(prereq.getName(locale))),
+                                    const Icon(Icons.chevron_right,
+                                        size: 20, color: AppColors.smoke),
+                                  ],
+                                ),
                               ),
                             ),
                         ],

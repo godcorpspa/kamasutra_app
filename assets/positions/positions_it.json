@@ -1244,7 +1244,7 @@
     ],
     "duration": "medium",
     "prerequisites": [
-      "pos_022"
+      "pos_123"
     ],
     "cautionsIt": "Richede flessibilità — riscaldarsi prima",
     "cautionsEn": "Requires flexibility — warm up first",
@@ -3159,7 +3159,7 @@
     ],
     "duration": "medium",
     "prerequisites": [
-      "pos_022"
+      "pos_123"
     ],
     "cautionsIt": null,
     "cautionsEn": null,
@@ -3216,7 +3216,7 @@
     ],
     "duration": "medium",
     "prerequisites": [
-      "pos_005"
+      "pos_006"
     ],
     "cautionsIt": null,
     "cautionsEn": null,
@@ -3441,7 +3441,7 @@
     ],
     "duration": "medium",
     "prerequisites": [
-      "pos_014"
+      "pos_020"
     ],
     "cautionsIt": "Assicurarsi che il partner che sorregge abbia stabilità",
     "cautionsEn": "Make sure the supporting partner has stability",
@@ -3784,7 +3784,7 @@
     ],
     "duration": "long",
     "prerequisites": [
-      "pos_014"
+      "pos_020"
     ],
     "cautionsIt": null,
     "cautionsEn": null,
@@ -4238,7 +4238,7 @@
     ],
     "duration": "brief",
     "prerequisites": [
-      "pos_007"
+      "pos_015"
     ],
     "cautionsIt": "Evitare se si hanno problemi alle ginocchia",
     "cautionsEn": "Avoid if you have knee issues",
@@ -4636,7 +4636,7 @@
     ],
     "duration": "brief",
     "prerequisites": [
-      "pos_009"
+      "pos_043"
     ],
     "cautionsIt": "Estrema attenzione — eseguire solo con grande forza e coordinazione",
     "cautionsEn": "Extreme care — only attempt with great strength and coordination",

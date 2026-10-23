@@ -25,6 +25,11 @@ void main() {
       expect(positions, isNotEmpty);
       final ids = positions.map((p) => p.id).toList();
       expect(ids.toSet().length, ids.length, reason: 'duplicate ids');
+      for (final p in positions) {
+        for (final prereq in p.prerequisites) {
+          expect(ids, contains(prereq), reason: '${p.id} prerequisite');
+        }
+      }
 
       for (final p in positions) {
         expect(p.categories, isNotEmpty, reason: p.id);
