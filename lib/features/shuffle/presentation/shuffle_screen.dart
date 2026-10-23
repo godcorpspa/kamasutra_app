@@ -257,8 +257,8 @@ class _ShuffleScreenState extends ConsumerState<ShuffleScreen> {
         title: Text('catalog.favorites'.tr()),
         subtitle: Text(
           _favoritesOnly
-            ? 'Solo dalle tue scoperte salvate'
-            : 'Includi tutte le posizioni',
+            ? 'shuffle.favorites_only_on'.tr()
+            : 'shuffle.favorites_only_off'.tr(),
           style: Theme.of(context).textTheme.bodySmall,
         ),
         value: _favoritesOnly,

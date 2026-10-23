@@ -1450,12 +1450,12 @@ class _MirrorChallengeScreenState extends State<MirrorChallengeScreen>
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Text('🫁', style: TextStyle(fontSize: 11)),
-                      SizedBox(width: 4),
+                    children: [
+                      const Text('🫁', style: TextStyle(fontSize: 11)),
+                      const SizedBox(width: 4),
                       Text(
-                        'BREATHING MODE',
-                        style: TextStyle(
+                        'games.mirror_challenge.breathing_badge'.tr(),
+                        style: const TextStyle(
                           fontFamily: 'DMSans',
                           color: Color(0xFF7DD3FC),
                           fontSize: 9,

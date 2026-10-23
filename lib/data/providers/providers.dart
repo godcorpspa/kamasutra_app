@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/position.dart';
@@ -102,7 +103,8 @@ final filteredPositionsProvider = Provider.family<List<Position>, String>((ref, 
   final filter = ref.watch(positionFilterProvider);
   
   return positionsAsync.maybeWhen(
-    data: (positions) => filter.apply(positions),
+    data: (positions) =>
+        filter.apply(positions, tagLabel: (t) => 'position_tags.$t'.tr()),
     orElse: () => [],
   );
 });

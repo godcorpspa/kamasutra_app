@@ -58,14 +58,10 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen>
   final Random _random = Random();
 
   // Quick-add detail chips (pre-baked common ideas)
-  static const List<String> _detailChips = [
-    'musica jazz',
-    'candele',
-    'profumo',
-    'silenzio',
-    'sussurri',
-    'velluto',
-  ];
+  static List<String> get _detailChips => [
+        for (var i = 1; i <= 6; i++)
+          'games.fantasy_builder.detail_chip_$i'.tr(),
+      ];
 
   // ---------------------------------------------------------------------------
   // Static option data (emoji + value + i18n key)

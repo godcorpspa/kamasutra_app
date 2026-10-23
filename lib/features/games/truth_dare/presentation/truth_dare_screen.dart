@@ -1068,7 +1068,7 @@ class _TruthDareScreenState extends ConsumerState<TruthDareScreen>
             icon: Icon(Icons.exit_to_app,
                 color: Colors.white.withOpacity(0.4), size: 16),
             label: Text(
-              'Termina partita',
+              'truth_dare_ui.end_game'.tr(),
               style: TextStyle(
                 fontFamily: 'DMSans',
                 fontSize: 13,

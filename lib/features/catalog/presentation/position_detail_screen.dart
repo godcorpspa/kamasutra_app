@@ -275,19 +275,15 @@ class _PositionDetailScreenState extends ConsumerState<PositionDetailScreen> {
                     const SizedBox(height: AppSpacing.xl),
                     _Section(
                       title: 'position.tags'.tr(),
-                      child: Wrap(
-                        spacing: AppSpacing.md,
-                        runSpacing: AppSpacing.xs,
-                        children: [
-                          for (final tag in position.tags)
-                            Text(
-                              '#$tag',
-                              style: const TextStyle(
-                                color: AppColors.mist,
-                                fontSize: 13,
-                              ),
-                            ),
-                        ],
+                      child: Text(
+                        position.tags
+                            .map((t) => 'position_tags.$t'.tr())
+                            .join('  ·  '),
+                        style: const TextStyle(
+                          color: AppColors.mist,
+                          fontSize: 13,
+                          height: 1.6,
+                        ),
                       ),
                     ),
                   ],

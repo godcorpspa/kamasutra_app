@@ -392,7 +392,11 @@ class PositionFilter extends Equatable {
       (searchQuery == null || searchQuery!.isEmpty);
 
   /// Apply filter to a list of positions
-  List<Position> apply(List<Position> positions) {
+  ///
+  /// [tagLabel] maps a tag to its label in the UI language, so searching in
+  /// Spanish finds a position tagged `dadietro` by "desde atrás".
+  List<Position> apply(List<Position> positions,
+      {String Function(String tag)? tagLabel}) {
     return positions.where((p) {
       // Category filter
       if (categories != null && categories!.isNotEmpty) {
@@ -453,7 +457,9 @@ class PositionFilter extends Equatable {
             (p.aliasEs?.toLowerCase().contains(query) ?? false) ||
             (p.aliasFr?.toLowerCase().contains(query) ?? false) ||
             (p.aliasPt?.toLowerCase().contains(query) ?? false);
-        final tagMatch = p.tags.any((t) => t.toLowerCase().contains(query));
+        final tagMatch = p.tags.any((t) =>
+            t.toLowerCase().contains(query) ||
+            (tagLabel?.call(t).toLowerCase().contains(query) ?? false));
         if (!nameMatch && !aliasMatch && !tagMatch) {
           return false;
         }

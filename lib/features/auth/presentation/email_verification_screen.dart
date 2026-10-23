@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
+import '../../../shared/utils/auth_error_text.dart';
 import '../../../shared/widgets/brand.dart';
 import '../../../data/services/preferences_service.dart';
 
@@ -76,7 +77,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
-        setState(() => _errorMessage = e.message ?? 'auth.connection_error'.tr());
+        setState(() => _errorMessage = authErrorText(e.code));
       }
     } finally {
       if (mounted) setState(() => _isChecking = false);
@@ -98,7 +99,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       }
     } on FirebaseAuthException catch (e) {
       if (mounted) {
-        setState(() => _errorMessage = e.message ?? 'auth.connection_error'.tr());
+        setState(() => _errorMessage = authErrorText(e.code));
       }
     }
   }

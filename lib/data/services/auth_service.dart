@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../shared/utils/auth_error_text.dart';
+
 class AuthService {
   // Getter (non campo): FirebaseAuth.instance LANCIA se Firebase.initializeApp
   // è fallita (modalità locale, vedi main.dart), quindi non va mai toccato
@@ -150,26 +152,5 @@ class AuthService {
   }
 
   // Gestione errori
-  String _handleAuthException(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'weak-password':
-        return 'La password è troppo debole (minimo 6 caratteri)';
-      case 'email-already-in-use':
-        return 'Questa email è già registrata';
-      case 'invalid-email':
-        return 'Email non valida';
-      case 'user-not-found':
-        return 'Nessun account trovato con questa email';
-      case 'wrong-password':
-        return 'Password errata';
-      case 'user-disabled':
-        return 'Account disabilitato';
-      case 'too-many-requests':
-        return 'Troppi tentativi. Riprova tra qualche minuto';
-      case 'invalid-credential':
-        return 'Email o password non corretti';
-      default:
-        return e.message ?? 'Errore sconosciuto';
-    }
-  }
+  String _handleAuthException(FirebaseAuthException e) => authErrorText(e.code);
 }

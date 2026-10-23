@@ -9,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../app/router.dart';
 import '../../../app/theme.dart';
 import '../../../data/services/preferences_service.dart';
+import '../../../shared/utils/auth_error_text.dart';
 import '../../../shared/widgets/brand.dart';
 import '../../../shared/widgets/offline_mode_badge.dart';
 
@@ -161,7 +162,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         registeredFreshAccount = true;
       }
     } on FirebaseAuthException catch (e) {
-      errorMsg = _getErrorMessage(e.code);
+      errorMsg = authErrorText(e.code);
       debugPrint('FirebaseAuthException: ${e.code} - ${e.message}');
     } catch (e) {
       debugPrint('Errore generico: $e');
@@ -286,33 +287,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  String _getErrorMessage(String code) {
-    switch (code) {
-      case 'weak-password':
-        return 'auth.error_weak_password'.tr();
-      case 'email-already-in-use':
-        return 'auth.error_email_in_use'.tr();
-      case 'invalid-email':
-        return 'auth.error_invalid_email'.tr();
-      case 'user-not-found':
-        return 'auth.error_user_not_found'.tr();
-      case 'wrong-password':
-        return 'auth.error_wrong_password'.tr();
-      case 'user-disabled':
-        return 'auth.error_user_disabled'.tr();
-      case 'too-many-requests':
-        return 'auth.error_too_many_requests'.tr();
-      case 'invalid-credential':
-        return 'auth.error_invalid_credential'.tr();
-      case 'operation-not-allowed':
-        return 'auth.error_not_allowed'.tr();
-      case 'network-request-failed':
-        return 'auth.error_network'.tr();
-      default:
-        return 'auth.error_auth_generic'.tr(namedArgs: {'code': code});
-    }
-  }
-
   void _showResetPasswordDialog() {
     final emailController = TextEditingController(text: _emailController.text);
 
@@ -349,7 +323,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               } on FirebaseAuthException catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(_getErrorMessage(e.code))),
+                    SnackBar(content: Text(authErrorText(e.code))),
                   );
                 }
               }

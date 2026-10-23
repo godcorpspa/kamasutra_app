@@ -39,4 +39,20 @@ void main() {
       }
     });
   }
+
+  // Tags are shown translated on the detail screen; a tag without a label
+  // would surface its raw Italian key in every other language.
+  for (final locale in locales) {
+    test('every position tag has a $locale label', () {
+      final positions = json.decode(
+          File('assets/positions/positions_it.json').readAsStringSync()) as List;
+      final labels = (json.decode(File('assets/lang/$locale.json')
+              .readAsStringSync()) as Map)['position_tags'] as Map;
+      for (final p in positions) {
+        for (final tag in (p as Map)['tags'] as List) {
+          expect(labels[tag], isA<String>(), reason: '${p['id']} #$tag');
+        }
+      }
+    });
+  }
 }

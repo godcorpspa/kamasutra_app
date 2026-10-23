@@ -928,8 +928,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
-                    subject: '[BUG] - Kamasutra & Couple Games v1.0.0',
-                    body: 'Descrivi il problema:\n\nDispositivo:\nVersione OS:\nPassaggi per riprodurlo:\n',
+                    subject: 'settings_extra.email_subject_bug'.tr(),
+                    body: 'settings_extra.email_body_bug'.tr(),
                   );
                 },
               ),
@@ -940,8 +940,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
-                    subject: '[SUGGERIMENTO] - Kamasutra & Couple Games',
-                    body: 'Il mio suggerimento:\n\n',
+                    subject: 'settings_extra.email_subject_suggestion'.tr(),
+                    body: 'settings_extra.email_body_suggestion'.tr(),
                   );
                 },
               ),
@@ -952,8 +952,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 onTap: () {
                   Navigator.pop(sheetContext);
                   _sendEmail(
-                    subject: '[FEEDBACK] - Kamasutra & Couple Games',
-                    body: 'La mia opinione sull\'app:\n\n',
+                    subject: 'settings_extra.email_subject_feedback'.tr(),
+                    body: 'settings_extra.email_body_feedback'.tr(),
                   );
                 },
               ),
@@ -1005,83 +1005,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
-  String _privacyPolicyText() {
-    return '''Privacy Policy - Kamasutra & Couple Games
+  String _privacyPolicyText() => 'settings_extra.privacy_text'.tr();
 
-Ultimo aggiornamento: 19 febbraio 2026
-
-1. Introduzione
-La tua privacy è importante per noi. Questa Privacy Policy spiega come raccogliamo, utilizziamo e proteggiamo i tuoi dati personali.
-
-2. Dati raccolti
-- Dati di autenticazione: email e nome (se forniti tramite login Google o email).
-- Dati di utilizzo: preferenze, cronologia esplorazioni, progressi e badge.
-- Dati locali: PIN (hash), impostazioni dell'app.
-
-3. Come utilizziamo i dati
-- Per fornire e migliorare il servizio.
-- Per sincronizzare i tuoi dati tra dispositivi (opzionale).
-- Non vendiamo né condividiamo i tuoi dati con terze parti.
-
-4. Archiviazione e sicurezza
-- I dati sensibili (PIN) sono archiviati esclusivamente in locale sul tuo dispositivo.
-- I dati cloud sono protetti tramite Firebase con crittografia in transito e a riposo.
-- Puoi eliminare tutti i tuoi dati in qualsiasi momento dalle impostazioni.
-
-5. Servizi di terze parti
-- Firebase (Google): autenticazione e archiviazione cloud.
-- Google Sign-In: accesso opzionale.
-
-6. I tuoi diritti
-- Accesso ai tuoi dati personali.
-- Cancellazione completa dei dati.
-- Portabilità dei dati.
-- Revoca del consenso in qualsiasi momento.
-
-7. Contatti
-Per domande sulla privacy, contattaci a: support@kamasutraapp.com
-
-8. Modifiche
-Ci riserviamo il diritto di aggiornare questa policy. Le modifiche saranno comunicate tramite l'app.''';
-  }
-
-  String _termsOfServiceText() {
-    return '''Termini di Servizio - Kamasutra & Couple Games
-
-Ultimo aggiornamento: 19 febbraio 2026
-
-1. Accettazione dei termini
-Utilizzando l'app, accetti i presenti termini di servizio.
-
-2. Requisiti di età
-L'app è destinata esclusivamente a utenti maggiorenni (18+ anni). L'accesso è subordinato alla verifica dell'età.
-
-3. Uso dell'app
-- L'app è progettata per coppie adulte consenzienti.
-- È vietato qualsiasi uso illegale o non autorizzato.
-- Il contenuto è fornito a scopo educativo e di intrattenimento.
-
-4. Account e dati
-- Sei responsabile della sicurezza del tuo account.
-- Puoi eliminare i tuoi dati in qualsiasi momento.
-- La sincronizzazione cloud è opzionale.
-
-5. Proprietà intellettuale
-Tutti i contenuti, illustrazioni, testi e design sono protetti da copyright.
-
-6. Limitazione di responsabilità
-L'app è fornita "così com'è". Non garantiamo che il servizio sia privo di errori o interruzioni.
-
-7. Consenso e sicurezza
-- L'app promuove il consenso reciproco in ogni interazione.
-- Le funzionalità di pausa e check-in sono integrate per garantire il comfort di entrambi i partner.
-
-8. Modifiche ai termini
-Ci riserviamo il diritto di modificare questi termini. Le modifiche saranno comunicate tramite l'app.
-
-9. Contatti
-Per domande sui termini, contattaci a: support@kamasutraapp.com''';
-  }
+  String _termsOfServiceText() => 'settings_extra.terms_text'.tr();
 
   void _showClearAllDataDialog() {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
