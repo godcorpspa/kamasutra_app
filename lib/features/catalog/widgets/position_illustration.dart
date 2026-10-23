@@ -10,10 +10,11 @@ import '../../../data/models/position.dart';
 /// with the artwork multiplied onto it, so the white background of the
 /// line-art assets melts into the paper instead of showing as a white box.
 ///
-/// Positions whose asset is still the generic template placeholder get an
-/// editorial monogram instead. Detection is content-based, so every real
-/// illustration dropped into assets/images/positions/ shows up automatically
-/// with no code change.
+/// Positions whose asset is still the generic template placeholder (or has
+/// no file yet) get an editorial monogram instead. SVG, PNG, JPG and WebP
+/// are supported and detection is content-based, so every real illustration
+/// dropped into assets/images/positions/ shows up automatically with no
+/// code change.
 class PositionIllustration extends StatelessWidget {
   final Position position;
   final BorderRadius borderRadius;
@@ -29,17 +30,42 @@ class PositionIllustration extends StatelessWidget {
   /// Marker text present only in the generated placeholder SVGs.
   static const _placeholderMarker = '>Illustrazione<';
 
-  static final Map<String, Future<String?>> _cache = {};
+  static const _extensions = ['svg', 'png', 'jpg', 'jpeg', 'webp'];
 
-  /// The SVG source for [ref], or null when it is a placeholder or missing.
-  static Future<String?> _artwork(String ref) => _cache.putIfAbsent(ref, () async {
-        try {
-          final svg =
-              await rootBundle.loadString('assets/images/positions/$ref');
-          return svg.contains(_placeholderMarker) ? null : svg;
-        } catch (_) {
-          return null;
+  static final Map<String, Future<_Artwork?>> _cache = {};
+
+  /// Finds the artwork for [ref] in assets/images/positions/.
+  ///
+  /// [ref] may carry an extension ("cowgirl.svg") or not ("cowgirl"). The
+  /// named file is tried first, then the same base name in every supported
+  /// format — so a real `cowgirl.png` dropped next to a placeholder
+  /// `cowgirl.svg` is picked up without editing the positions JSON.
+  /// Returns null when only a placeholder (or nothing) exists.
+  static Future<_Artwork?> _artwork(String ref) =>
+      _cache.putIfAbsent(ref, () async {
+        final dot = ref.lastIndexOf('.');
+        final hasExtension = dot > 0 &&
+            _extensions.contains(ref.substring(dot + 1).toLowerCase());
+        final base = hasExtension ? ref.substring(0, dot) : ref;
+        final candidates = {
+          if (hasExtension) ref,
+          for (final ext in _extensions) '$base.$ext',
+        };
+        for (final name in candidates) {
+          final path = 'assets/images/positions/$name';
+          try {
+            if (name.toLowerCase().endsWith('.svg')) {
+              final svg = await rootBundle.loadString(path);
+              if (svg.contains(_placeholderMarker)) continue;
+              return _Artwork(svg: svg);
+            }
+            final data = await rootBundle.load(path);
+            return _Artwork(bytes: data.buffer.asUint8List());
+          } catch (_) {
+            // Not bundled in this format — try the next one.
+          }
         }
+        return null;
       });
 
   @override
@@ -48,14 +74,14 @@ class PositionIllustration extends StatelessWidget {
       borderRadius: borderRadius,
       child: ColoredBox(
         color: AppColors.parchment,
-        child: FutureBuilder<String?>(
+        child: FutureBuilder<_Artwork?>(
           future: _artwork(position.illustrationRef),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return const SizedBox.expand();
             }
-            final svg = snapshot.data;
-            if (svg == null) {
+            final artwork = snapshot.data;
+            if (artwork == null) {
               return _Monogram(
                 letter: _initial(position.getName(context.locale.languageCode)),
                 size: monogramSize,
@@ -68,7 +94,22 @@ class PositionIllustration extends StatelessWidget {
                   AppColors.parchment,
                   BlendMode.multiply,
                 ),
-                child: SvgPicture.string(svg, fit: BoxFit.contain),
+                child: artwork.svg != null
+                    ? SvgPicture.string(artwork.svg!, fit: BoxFit.contain)
+                    : LayoutBuilder(
+                        builder: (context, constraints) => Image.memory(
+                          artwork.bytes!,
+                          fit: BoxFit.contain,
+                          gaplessPlayback: true,
+                          // Decode at display size, not full resolution:
+                          // the catalog can show ~150 of these.
+                          cacheWidth: constraints.maxWidth.isFinite
+                              ? (constraints.maxWidth *
+                                      MediaQuery.devicePixelRatioOf(context))
+                                  .round()
+                              : null,
+                        ),
+                      ),
               ),
             );
           },
@@ -116,4 +157,12 @@ class _Monogram extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Loaded artwork: either SVG source or encoded raster bytes.
+class _Artwork {
+  final String? svg;
+  final Uint8List? bytes;
+
+  const _Artwork({this.svg, this.bytes});
 }
