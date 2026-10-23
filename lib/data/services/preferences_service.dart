@@ -72,6 +72,11 @@ class PreferencesService {
   bool get hasCompletedOnboarding => getBool('onboarding_completed') ?? false;
   Future<void> setOnboardingCompleted(bool value) => setBool('onboarding_completed', value);
 
+  /// Set after the first successful sign-in on this device, so the login
+  /// screen only says "welcome back" to people who have been here before.
+  bool get hasSignedInBefore => getBool('has_signed_in_before') ?? false;
+  Future<void> setSignedInBefore() => setBool('has_signed_in_before', true);
+
   DateTime? get firstLaunchDate {
     final str = getString('first_launch_date');
     return str != null ? DateTime.tryParse(str) : null;

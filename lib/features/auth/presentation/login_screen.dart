@@ -251,9 +251,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           _isLoading = false;
           // The technical code is what identifies the cause (e.g. 10 = the
           // app's SHA-1 is not registered in Firebase), so always show it.
+          // operation-not-allowed = the Google provider is switched off in
+          // Firebase Authentication: say so instead of "try again".
+          final base = errorCode == 'operation-not-allowed'
+              ? 'auth.google_unavailable'.tr()
+              : 'auth.google_error'.tr();
           _errorMessage = errorCode == null
-              ? 'auth.google_error'.tr()
-              : '${'auth.google_error'.tr()} (${'auth.error_code'.tr(namedArgs: {'code': errorCode})})';
+              ? base
+              : '$base (${'auth.error_code'.tr(namedArgs: {'code': errorCode})})';
         });
       }
     }
@@ -275,6 +280,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _navigateAfterAuth() {
     final prefs = PreferencesService.instance;
+    prefs.setSignedInBefore();
     
     if (!prefs.isAgeVerified) {
       context.go(AppRoutes.ageGate);
@@ -354,9 +360,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   const BrandLockup(markSize: 44),
                   const SizedBox(height: 44),
                   Text(
-                    _isLogin
-                        ? 'auth.welcome_back'.tr()
-                        : 'auth.create_account'.tr(),
+                    !_isLogin
+                        ? 'auth.create_account'.tr()
+                        : PreferencesService.instance.hasSignedInBefore
+                            ? 'auth.welcome_back'.tr()
+                            : 'auth.welcome'.tr(),
                     style: textTheme.headlineSmall,
                     textAlign: TextAlign.center,
                   ),
