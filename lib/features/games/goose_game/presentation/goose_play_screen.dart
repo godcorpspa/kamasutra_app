@@ -418,13 +418,13 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
     await _handleSquare(newPos);
   }
 
-  /// Moves the current player's pawn one square at a time to [target].
-  /// Long jumps (ladders, holes) step faster so they don't drag on.
+  /// Moves the current player's pawn one square at a time to [target], at a
+  /// pace the players can follow and count along with.
   Future<void> _walkTo(int target) async {
     var pos = _currentPlayer == 1 ? _p1Pos : _p2Pos;
     if (pos == target) return;
     final dir = target > pos ? 1 : -1;
-    final step = Duration(milliseconds: (target - pos).abs() > 8 ? 110 : 230);
+    const step = Duration(milliseconds: 460);
     while (pos != target && mounted) {
       pos += dir;
       final p = pos;
@@ -432,6 +432,12 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       HapticFeedback.selectionClick();
       await Future.delayed(step);
     }
+  }
+
+  /// Ladders and holes move the pawn straight to their destination.
+  void _jumpTo(int target) {
+    HapticFeedback.mediumImpact();
+    setState(() { if (_currentPlayer == 1) _p1Pos = target; else _p2Pos = target; });
   }
 
   Future<void> _checkMilestone(int pos) async {
@@ -464,7 +470,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           description: 'games.goose_game.reward_description'.tr(),
           content: _rand(kRewards), pool: kRewards, color: _kGreen,
         ));
-        await _walkTo(dest);
+        _jumpTo(dest);
         break;
       case GooseSquareType.hole:
         final dest = sq.destination!;
@@ -474,7 +480,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           description: 'games.goose_game.penance_do'.tr(),
           content: _rand(kPenances), pool: kPenances, color: _kRed,
         ));
-        await _walkTo(dest);
+        _jumpTo(dest);
         break;
       case GooseSquareType.penance:
         await _showContentDialog(_ContentDialogArgs(
