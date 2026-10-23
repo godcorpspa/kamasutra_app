@@ -220,62 +220,6 @@
     "lastViewed": null
   },
   {
-    "id": "pos_005",
-    "nameIt": "Loto",
-    "nameEn": "Lotus",
-    "nameEs": "Loto",
-    "nameFr": "Lotus",
-    "namePt": "Lótus",
-    "aliasIt": "Yab-Yum",
-    "aliasEn": "Tantric Embrace",
-    "aliasEs": "Abrazo Tántrico",
-    "aliasFr": "Étreinte Tantrique",
-    "aliasPt": "Abraço Tântrico",
-    "categories": [
-      "romantic",
-      "reconnect"
-    ],
-    "difficulty": 3,
-    "energy": "medium",
-    "focus": [
-      "intimacy",
-      "connection",
-      "trust"
-    ],
-    "duration": "long",
-    "prerequisites": [],
-    "cautionsIt": "Richiede flessibilità nelle gambe",
-    "cautionsEn": "Requires leg flexibility",
-    "cautionsEs": "Requiere flexibilidad de piernas",
-    "cautionsFr": "Nécessite de la souplesse des jambes",
-    "cautionsPt": "Requer flexibilidade de pernas",
-    "easyVariantIt": "Sedersi sul bordo del letto invece che a gambe incrociate",
-    "easyVariantEn": "Sit on edge of bed instead of cross-legged",
-    "easyVariantEs": "Siéntate en el borde de la cama en lugar de con las piernas cruzadas",
-    "easyVariantFr": "Asseyez-vous au bord du lit au lieu de croiser les jambes",
-    "easyVariantPt": "Senta-te na borda da cama em vez de pernas cruzadas",
-    "setupIt": "1. Un partner si sdraia sulla schiena, con la testa verso i piedi dell'altro.\n2. Il secondo partner si posiziona sopra in direzione opposta, creando la forma del 69.\n3. Entrambi dovrebbero avere accesso confortevole al corpo dell'altro senza sforzare il collo.\n4. Usare cuscini sotto la testa del partner inferiore per ridurre la tensione del collo.\n5. Le gambe del partner superiore si posizionano ai lati della testa dell'altro.\n6. Comunicare costantemente per sincronizzare i ritmi e assicurarsi che entrambi siano a proprio agio.",
-    "setupEn": "1. One partner lies on their back, with their head toward the other's feet.\n2. The second partner positions themselves on top in the opposite direction, creating the 69 shape.\n3. Both should have comfortable access to each other's body without straining the neck.\n4. Use pillows under the bottom partner's head to reduce neck tension.\n5. The top partner's legs position on either side of the other's head.\n6. Communicate constantly to synchronize rhythms and make sure both are comfortable.",
-    "setupEs": "1. Una pareja se acuesta boca arriba, with their head toward the other's feet.\n2. The second partner se posiciona on top in the opposite direction, creating the 69 shape.\n3. Both should have comfortable access to each other's body without straining the cuello.\n4. Use pillows under the bottom de la pareja head to reduce cuello tension.\n5. La pareja de arriba's legs position a cada lado of the other's head.\n6. Communicate constantly to synchronize rhythms and make sure both are comfortable.",
-    "setupFr": "1. Un partenaire s'allonge sur le dos, la tête vers les pieds de l'autre.\n2. Le second partenaire se positionne au-dessus dans la direction opposée, créant la forme du 69.\n3. Les deux doivent avoir un accès confortable au corps de l'autre sans forcer le cou.\n4. Utilisez des oreillers sous la tête du partenaire du dessous pour réduire la tension du cou.\n5. Les jambes du partenaire du dessus se positionnent de chaque côté de la tête de l'autre.\n6. Communiquez constamment pour synchroniser les rythmes et vous assurer que les deux sont à l'aise.",
-    "setupPt": "1. Um parceiro deita-se de costas, com a cabeça em direção aos pés do outro.\n2. O segundo parceiro se posiciona em cima na direção oposta, criando o formato do 69.\n3. Ambos devem ter acesso confortável ao corpo do outro sem forçar o pescoço.\n4. Use travesseiros sob a cabeça do parceiro de baixo para reduzir a tensão no pescoço.\n5. As pernas do parceiro de cima ficam de cada lado da cabeça do outro.\n6. Comuniquem-se constantemente para sincronizar os ritmos e garantir que ambos estejam confortáveis.",
-    "checkinIt": "Riesci a mantenere questa posizione?",
-    "checkinEn": "Can you maintain this position?",
-    "checkinEs": "¿Puedes mantener esta posición?",
-    "checkinFr": "Tu peux maintenir cette position ?",
-    "checkinPt": "Consegues manter esta posição?",
-    "tags": [
-      "tantrico",
-      "spirituale",
-      "intimo",
-      "connessione"
-    ],
-    "illustrationRef": "lotus.svg",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
     "id": "pos_006",
     "nameIt": "69",
     "nameEn": "69",
@@ -326,116 +270,6 @@
       "gioco"
     ],
     "illustrationRef": "specchio",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_007",
-    "nameIt": "Reverse Cowgirl",
-    "nameEn": "Reverse Cowgirl",
-    "nameEs": "Vaquera Invertida",
-    "nameFr": "Cowgirl Inversée",
-    "namePt": "Cowgirl Invertida",
-    "aliasIt": "Amazzone Inversa",
-    "aliasEn": "Reverse Woman on Top",
-    "aliasEs": "Mujer Invertida",
-    "aliasFr": "Femme Inversée",
-    "aliasPt": "Mulher Invertida",
-    "categories": [
-      "athletic",
-      "adventurous"
-    ],
-    "difficulty": 3,
-    "energy": "high",
-    "focus": [
-      "variety",
-      "passion"
-    ],
-    "duration": "medium",
-    "prerequisites": [
-      "pos_002"
-    ],
-    "cautionsIt": "Attenzione agli angoli - rischio di piegature",
-    "cautionsEn": "Be careful with angles - risk of bending",
-    "cautionsEs": "Cuidado con los ángulos - riesgo de flexión",
-    "cautionsFr": "Attention aux angles - risque de pliage",
-    "cautionsPt": "Cuidado com os ângulos - risco de flexão",
-    "easyVariantIt": "Inclinarsi leggermente in avanti",
-    "easyVariantEn": "Lean slightly forward",
-    "easyVariantEs": "Inclínate ligeramente hacia adelante",
-    "easyVariantFr": "Penchez-vous légèrement en avant",
-    "easyVariantPt": "Inclina-te ligeiramente para a frente",
-    "setupIt": "1. Il partner ricevente si sdraia sulla schiena e porta le ginocchia verso il petto.\n2. Le caviglie possono incrociarsi dietro la testa o rimanere ai lati delle orecchie.\n3. Un cuscino sotto i fianchi aiuta a mantenere la posizione e ridurre la pressione sulla schiena.\n4. Il partner attivo si inginocchia di fronte, afferrando le cosce o i polpacci dell'altro per supporto.\n5. L'angolazione elevata del bacino permette una penetrazione più profonda — procedere con delicatezza.\n6. Comunicare costantemente sulla profondità e il comfort. Il partner piegato dovrebbe dire subito se sente tensione alla schiena o al collo.",
-    "setupEn": "1. The receiving partner lies on their back and brings their knees toward their chest.\n2. Ankles can cross behind the head or stay beside the ears.\n3. A pillow under the hips helps maintain the position and reduces back pressure.\n4. The active partner kneels in front, holding the other's thighs or calves for support.\n5. The elevated pelvic angle allows deeper penetration — proceed gently.\n6. Communicate constantly about depth and comfort. The folded partner should immediately say if they feel tension in the back or neck.",
-    "setupEs": "1. La pareja receptora se acuesta boca arriba and brings their rodillas toward their pecho.\n2. Ankles can cross behind the head or stay beside the ears.\n3. A almohada debajo de the caderas helps maintain the position and reduces espalda pressure.\n4. La pareja activa kneels in front, holding the other's muslos or calves for support.\n5. The elevated pelvic angle allows deeper penetration — proceed gently.\n6. Communicate constantly about depth and comfort. The folded partner should immediately say if they feel tension in the espalda or cuello.",
-    "setupFr": "1. Le partenaire réceptif s'allonge sur le dos et ramène les genoux vers la poitrine.\n2. Les chevilles peuvent se croiser derrière la tête ou rester à côté des oreilles.\n3. Un oreiller sous les hanches aide à maintenir la position et réduit la pression sur le dos.\n4. Le partenaire actif s'agenouille devant, tenant les cuisses ou les mollets de l'autre pour le soutien.\n5. L'angle pelvien élevé permet une pénétration plus profonde — procédez doucement.\n6. Communiquez constamment sur la profondeur et le confort. Le partenaire replié doit immédiatement signaler toute tension dans le dos ou le cou.",
-    "setupPt": "1. O parceiro receptor deita-se de costas e leva os joelhos em direção ao peito.\n2. Os tornozelos podem se cruzar atrás da cabeça ou ficar ao lado das orelhas.\n3. Um travesseiro sob os quadris ajuda a manter a posição e reduz a pressão nas costas.\n4. O parceiro ativo se ajoelha à frente, segurando as coxas ou panturrilhas do outro para apoio.\n5. O ângulo elevado da pélvis permite uma penetração mais profunda — proceda com gentileza.\n6. Comuniquem-se constantemente sobre a profundidade e o conforto. O parceiro dobrado deve avisar imediatamente se sentir tensão nas costas ou no pescoço.",
-    "checkinIt": "L'angolo va bene per te?",
-    "checkinEn": "Is the angle okay for you?",
-    "checkinEs": "¿El ángulo está bien para ti?",
-    "checkinFr": "L'angle est bon pour toi ?",
-    "checkinPt": "O ângulo está bem para ti?",
-    "tags": [
-      "visuale",
-      "controllo",
-      "intenso"
-    ],
-    "illustrationRef": "reverse_cowgirl.svg",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_008",
-    "nameIt": "Forbici",
-    "nameEn": "Scissors",
-    "nameEs": "Tijeras",
-    "nameFr": "Ciseaux",
-    "namePt": "Tesoura",
-    "aliasIt": "Incastro",
-    "aliasEn": "Interlocking",
-    "aliasEs": "Entrelazados",
-    "aliasFr": "Entrelacés",
-    "aliasPt": "Entrelaçados",
-    "categories": [
-      "lowImpact",
-      "romantic"
-    ],
-    "difficulty": 2,
-    "energy": "low",
-    "focus": [
-      "intimacy",
-      "relax"
-    ],
-    "duration": "long",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": null,
-    "easyVariantEn": null,
-    "easyVariantEs": null,
-    "easyVariantFr": null,
-    "easyVariantPt": null,
-    "setupIt": "1. Il partner inferiore si sdraia sulla schiena con le gambe piegate e i piedi appoggiati al materasso.\n2. Il partner superiore si posiziona seduto con la schiena rivolta verso il viso dell'altro.\n3. Mettere le ginocchia ai lati delle cosce del partner inferiore per stabilità.\n4. Appoggiarsi leggermente in avanti, usando le mani sulle ginocchia o gli stinchi del partner inferiore.\n5. Il partner inferiore può guidare il ritmo tenendo i fianchi dell'altro.\n6. Questa posizione offre una visuale completamente diversa — sperimentare con l'angolo di inclinazione del busto per trovare le sensazioni migliori.",
-    "setupEn": "1. The bottom partner lies on their back with legs bent and feet resting on the mattress.\n2. The top partner sits facing away from the other's face.\n3. Place knees on either side of the bottom partner's thighs for stability.\n4. Lean slightly forward, using hands on the bottom partner's knees or shins.\n5. The bottom partner can guide the rhythm by holding the other's hips.\n6. This position offers a completely different view — experiment with torso inclination angle to find the best sensations.",
-    "setupEs": "1. La pareja de abajo se acuesta boca arriba with legs bent and feet resting on the mattress.\n2. La pareja de arriba sits facing away from the other's face.\n3. Place rodillas a cada lado of the bottom de la pareja muslos for stability.\n4. Lean slightly forward, using hands on the bottom de la pareja rodillas or shins.\n5. La pareja de abajo can guide the rhythm by holding the other's caderas.\n6. This position offers a completely different view — experiment with torso inclination angle to find the best sensations.",
-    "setupFr": "1. Le partenaire du dessous s'allonge sur le dos avec les jambes pliées et les pieds posés sur le matelas.\n2. Le partenaire du dessus s'assied face opposée au visage de l'autre.\n3. Placez les genoux de chaque côté des cuisses du partenaire du dessous pour la stabilité.\n4. Penchez-vous légèrement en avant, en utilisant les mains sur les genoux ou les tibias du partenaire du dessous.\n5. Le partenaire du dessous peut guider le rythme en tenant les hanches de l'autre.\n6. Cette position offre une vue complètement différente — expérimentez avec l'angle d'inclinaison du torse pour trouver les meilleures sensations.",
-    "setupPt": "1. O parceiro de baixo deita-se de costas com as pernas flexionadas e os pés apoiados no colchão.\n2. O parceiro de cima senta-se de costas para o rosto do outro.\n3. Posicione os joelhos de cada lado das coxas do parceiro de baixo para estabilidade.\n4. Incline-se levemente para a frente, usando as mãos sobre os joelhos ou as canelas do parceiro de baixo.\n5. O parceiro de baixo pode guiar o ritmo segurando os quadris do outro.\n6. Esta posição oferece uma vista completamente diferente — experimente o ângulo de inclinação do tronco para encontrar as melhores sensações.",
-    "checkinIt": "Ti senti connesso/a?",
-    "checkinEn": "Do you feel connected?",
-    "checkinEs": "¿Sientes la conexión?",
-    "checkinFr": "Tu te sens connecté(e) ?",
-    "checkinPt": "Sentes a conexão?",
-    "tags": [
-      "rilassante",
-      "intimo",
-      "lento"
-    ],
-    "illustrationRef": "scissors.svg",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
@@ -508,45 +342,43 @@
     "aliasFr": "Profond",
     "aliasPt": "Profundo",
     "categories": [
-      "romantic",
-      "beginner"
+      "romantic"
     ],
     "difficulty": 2,
     "energy": "medium",
     "focus": [
-      "intimacy",
       "passion"
     ],
     "duration": "medium",
-    "prerequisites": [
-      "pos_001"
-    ],
+    "prerequisites": [],
     "cautionsIt": "La penetrazione è più profonda in questa variante",
     "cautionsEn": "Penetration is deeper in this variation",
     "cautionsEs": "La penetración es más profunda en esta variación",
     "cautionsFr": "La pénétration est plus profonde dans cette variation",
     "cautionsPt": "A penetração é mais profunda nesta variação",
-    "easyVariantIt": "Gambe appoggiate sulle spalle del partner",
-    "easyVariantEn": "Legs resting on partner's shoulders",
-    "easyVariantEs": "Piernas apoyadas en los hombros de la pareja",
-    "easyVariantFr": "Jambes posées sur les épaules du partenaire",
-    "easyVariantPt": "Pernas apoiadas nos ombros do parceiro",
-    "setupIt": "1. Il partner inferiore si sdraia sulla schiena ai piedi del letto, con i glutei vicini al bordo.\n2. Le gambe pendono dal bordo del letto, con i piedi che toccano il pavimento.\n3. Il partner attivo si inginocchia a terra tra le gambe dell'altro, usando il bordo del letto come altezza di lavoro.\n4. Mettere un cuscino sotto le ginocchia di chi sta a terra per il comfort.\n5. Le mani del partner attivo possono appoggiare sulle cosce o sulla pancia dell'altro.\n6. L'altezza del letto dovrebbe allinearsi naturalmente — se non è perfetta, aggiungere cuscini sotto i fianchi del partner sdraiato.",
-    "setupEn": "1. The bottom partner lies on their back at the foot of the bed, with buttocks near the edge.\n2. Legs hang over the bed edge, with feet touching the floor.\n3. The active partner kneels on the floor between the other's legs, using the bed edge as working height.\n4. Place a cushion under the kneeling partner's knees for comfort.\n5. The active partner's hands can rest on the other's thighs or belly.\n6. The bed height should align naturally — if not perfect, add pillows under the lying partner's hips.",
-    "setupEs": "1. La pareja de abajo se acuesta boca arriba at the foot of the bed, with buttocks near the edge.\n2. Legs hang over the bed edge, with feet touching the floor.\n3. La pareja activa kneels on the floor between the other's legs, using the bed edge as working height.\n4. Place a cushion under the kneeling de la pareja rodillas for comfort.\n5. La pareja activa's hands pueden apoyarse en the other's muslos or belly.\n6. The bed height should align naturally — if not perfect, add pillows under the lying de la pareja caderas.",
-    "setupFr": "1. Le partenaire du dessous s'allonge sur le dos au pied du lit, les fesses près du bord.\n2. Les jambes pendent par-dessus le bord du lit, pieds touchant le sol.\n3. Le partenaire actif s'agenouille au sol entre les jambes de l'autre, utilisant le bord du lit comme hauteur de travail.\n4. Placez un coussin sous les genoux du partenaire agenouillé pour le confort.\n5. Les mains du partenaire actif peuvent reposer sur les cuisses ou le ventre de l'autre.\n6. La hauteur du lit doit s'aligner naturellement — si ce n'est pas parfait, ajoutez des oreillers sous les hanches du partenaire allongé.",
-    "setupPt": "1. O parceiro de baixo deita-se de costas no pé da cama, com as nádegas próximas à borda.\n2. As pernas ficam penduradas para fora da borda da cama, com os pés tocando o chão.\n3. O parceiro ativo se ajoelha no chão entre as pernas do outro, usando a borda da cama como altura de trabalho.\n4. Coloque uma almofada sob os joelhos de quem está ajoelhado para conforto.\n5. As mãos do parceiro ativo podem descansar nas coxas ou na barriga do outro.\n6. A altura da cama deve se alinhar naturalmente — se não estiver perfeita, adicione travesseiros sob os quadris do parceiro deitado.",
-    "checkinIt": "La profondità è comoda?",
-    "checkinEn": "Is the depth comfortable?",
-    "checkinEs": "¿La profundidad es cómoda?",
-    "checkinFr": "La profondeur est confortable ?",
-    "checkinPt": "A profundidade é confortável?",
+    "easyVariantIt": "Mettere un cuscino sotto i fianchi del partner ricevente e appoggiare le gambe su una spalla sola.",
+    "easyVariantEn": "Put a pillow under the receiving partner's hips and rest the legs on one shoulder only.",
+    "easyVariantEs": "Pon un cojín bajo las caderas de la pareja receptora y apoya las piernas en un solo hombro.",
+    "easyVariantFr": "Placez un coussin sous les hanches du partenaire réceptif et posez les jambes sur une seule épaule.",
+    "easyVariantPt": "Põe uma almofada sob as ancas do parceiro receptor e apoia as pernas num só ombro.",
+    "setupIt": "1. Il partner ricevente si sdraia sulla schiena e solleva le gambe tenendole unite.\n2. Il partner attivo si inginocchia davanti e sostiene piedi o caviglie del partner, appoggiandoli al petto o a una spalla.\n3. Con le gambe chiuse lo spazio è più stretto: il partner attivo entra molto lentamente.\n4. Il partner attivo guida i movimenti tenendo le gambe del partner, con un ritmo dolce.\n5. Il partner ricevente può distendere una gamba se preferisce più libertà.\n6. Parlarsi spesso per regolare intensità e angolazione.",
+    "setupEn": "1. The receiving partner lies on their back and lifts the legs, keeping them together.\n2. The active partner kneels in front and supports the partner's feet or ankles, resting them against the chest or one shoulder.\n3. With the legs closed the fit is tighter: the active partner enters very slowly.\n4. The active partner guides the movements by holding the partner's legs, with a gentle rhythm.\n5. The receiving partner can stretch out one leg for more freedom.\n6. Talk often to adjust intensity and angle.",
+    "setupEs": "1. La pareja receptora se acuesta boca arriba y levanta las piernas manteniéndolas juntas.\n2. La pareja activa se arrodilla delante y sostiene los pies o los tobillos de la pareja, apoyándolos en el pecho o en un hombro.\n3. Con las piernas cerradas el espacio es más estrecho: la pareja activa entra muy despacio.\n4. La pareja activa guía los movimientos sujetando las piernas de la pareja, con un ritmo suave.\n5. La pareja receptora puede estirar una pierna si prefiere más libertad.\n6. Hablad a menudo para ajustar intensidad y ángulo.",
+    "setupFr": "1. Le partenaire réceptif s'allonge sur le dos et lève les jambes en les gardant serrées.\n2. Le partenaire actif s'agenouille devant et soutient les pieds ou les chevilles du partenaire, en les appuyant contre sa poitrine ou une épaule.\n3. Jambes fermées, l'espace est plus étroit : le partenaire actif entre très lentement.\n4. Le partenaire actif guide les mouvements en tenant les jambes du partenaire, avec un rythme doux.\n5. Le partenaire réceptif peut allonger une jambe s'il préfère plus de liberté.\n6. Parlez-vous souvent pour ajuster intensité et angle.",
+    "setupPt": "1. O parceiro receptor deita-se de costas e levanta as pernas mantendo-as juntas.\n2. O parceiro ativo ajoelha-se à frente e segura os pés ou os tornozelos do parceiro, apoiando-os no peito ou num ombro.\n3. Com as pernas fechadas o espaço é mais estreito: o parceiro ativo entra muito devagar.\n4. O parceiro ativo conduz os movimentos segurando as pernas do parceiro, com um ritmo suave.\n5. O parceiro receptor pode esticar uma perna se preferir mais liberdade.\n6. Falem muitas vezes para ajustar intensidade e ângulo.",
+    "checkinIt": "Ti senti a tuo agio? Vuoi distendere una gamba?",
+    "checkinEn": "Are you comfortable? Want to stretch out a leg?",
+    "checkinEs": "¿Estás a gusto? ¿Quieres estirar una pierna?",
+    "checkinFr": "Tu es à l'aise ? Tu veux allonger une jambe ?",
+    "checkinPt": "Estás confortável? Queres esticar uma perna?",
     "tags": [
-      "profondo",
+      "passionale",
+      "gambeunite",
+      "lento",
       "intenso",
-      "variante"
+      "facciaafaccia"
     ],
-    "illustrationRef": "missionary_legs.svg",
+    "illustrationRef": "arco-sostenuto",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
@@ -564,43 +396,45 @@
     "aliasFr": "Assis",
     "aliasPt": "Sentados",
     "categories": [
-      "adventurous",
-      "quickie"
+      "supported",
+      "reconnect",
+      "lowImpact"
     ],
     "difficulty": 2,
-    "energy": "medium",
+    "energy": "low",
     "focus": [
-      "variety",
-      "playfulness"
+      "intimacy",
+      "connection"
     ],
-    "duration": "medium",
+    "duration": "long",
     "prerequisites": [],
     "cautionsIt": "Assicurarsi che la sedia sia stabile",
     "cautionsEn": "Make sure the chair is stable",
     "cautionsEs": "Asegúrate de que la silla sea estable",
     "cautionsFr": "Assurez-vous que la chaise est stable",
     "cautionsPt": "Certifica-te de que a cadeira é estável",
-    "easyVariantIt": "Usare una sedia con braccioli per supporto",
-    "easyVariantEn": "Use a chair with armrests for support",
-    "easyVariantEs": "Usa una silla con reposabrazos para apoyo",
-    "easyVariantFr": "Utilisez une chaise avec accoudoirs pour l'appui",
-    "easyVariantPt": "Usa uma cadeira com braços para apoio",
-    "setupIt": "1. Il partner inferiore si sdraia su un fianco, con la gamba inferiore distesa e quella superiore piegata al ginocchio.\n2. Il partner attivo si inginocchia a cavalcioni della gamba distesa, posizionandosi perpendicolarmente.\n3. La gamba piegata del partner inferiore può poggiare sulla spalla o sull'anca del partner attivo.\n4. Questa angolazione a T crea sensazioni uniche grazie all'angolo laterale.\n5. Il partner attivo tiene il fianco o la coscia dell'altro per stabilità.\n6. Sperimentare con diverse altezze della gamba piegata per variare l'angolo e le sensazioni.",
-    "setupEn": "1. The bottom partner lies on one side, with the lower leg extended and the upper leg bent at the knee.\n2. The active partner kneels straddling the extended leg, positioning themselves perpendicularly.\n3. The bottom partner's bent leg can rest on the active partner's shoulder or hip.\n4. This T-angle creates unique sensations thanks to the lateral angle.\n5. The active partner holds the other's hip or thigh for stability.\n6. Experiment with different heights of the bent leg to vary the angle and sensations.",
-    "setupEs": "1. La pareja de abajo lies on one side, with the lower leg extended and the upper leg bent at the knee.\n2. La pareja activa kneels straddling the extended leg, positioning themselves perpendicularly.\n3. La pareja de abajo's bent leg pueden apoyarse en the active de la pareja shoulder or hip.\n4. This T-angle creates unique sensations thanks to the lateral angle.\n5. La pareja activa holds the other's hip or thigh for stability.\n6. Experimentar con different heights of the bent leg to vary the angle and sensations.",
-    "setupFr": "1. Le partenaire du dessous s'allonge sur un côté, la jambe inférieure étendue et la jambe supérieure pliée au genou.\n2. Le partenaire actif s'agenouille à califourchon sur la jambe étendue, se positionnant perpendiculairement.\n3. La jambe pliée du partenaire du dessous peut reposer sur l'épaule ou la hanche du partenaire actif.\n4. Cet angle en T crée des sensations uniques grâce à l'angle latéral.\n5. Le partenaire actif tient la hanche ou la cuisse de l'autre pour la stabilité.\n6. Expérimentez avec différentes hauteurs de la jambe pliée pour varier l'angle et les sensations.",
-    "setupPt": "1. O parceiro de baixo deita-se de lado, com a perna inferior estendida e a perna superior flexionada no joelho.\n2. O parceiro ativo se ajoelha sobre a perna estendida, posicionando-se perpendicularmente.\n3. A perna flexionada do parceiro de baixo pode descansar no ombro ou no quadril do parceiro ativo.\n4. Este ângulo em T cria sensações únicas graças ao ângulo lateral.\n5. O parceiro ativo segura o quadril ou a coxa do outro para estabilidade.\n6. Experimente diferentes alturas da perna flexionada para variar o ângulo e as sensações.",
-    "checkinIt": "La sedia è comoda?",
-    "checkinEn": "Is the chair comfortable?",
-    "checkinEs": "¿La silla es cómoda?",
-    "checkinFr": "La chaise est confortable ?",
-    "checkinPt": "A cadeira é confortável?",
+    "easyVariantIt": "Usare una sedia più bassa o il bordo del letto, così i piedi del partner ricevente toccano terra.",
+    "easyVariantEn": "Use a lower chair or the edge of the bed, so the receiving partner's feet touch the floor.",
+    "easyVariantEs": "Usa una silla más baja o el borde de la cama, para que los pies de la pareja receptora toquen el suelo.",
+    "easyVariantFr": "Utilisez une chaise plus basse ou le bord du lit, pour que les pieds du partenaire réceptif touchent le sol.",
+    "easyVariantPt": "Usa uma cadeira mais baixa ou a beira da cama, para que os pés do parceiro receptor toquem no chão.",
+    "setupIt": "1. Il partner attivo si siede su una sedia stabile, senza braccioli, con le gambe ben aperte.\n2. Il partner ricevente si mette di fronte e si abbassa lentamente in braccio, guidando l'unione.\n3. Invece di muoversi su e giù, il partner ricevente strofina dolcemente il bacino contro quello del partner, con movimenti lenti.\n4. Se vuole, può avvolgere una gamba attorno alla coscia del partner per stare ancora più vicino.\n5. Il partner attivo abbraccia e sostiene la schiena del partner.\n6. È una posizione pensata più per la vicinanza che per l'intensità: godersi baci, sguardi e lentezza.",
+    "setupEn": "1. The active partner sits on a sturdy chair without armrests, legs well apart.\n2. The receiving partner stands in front and slowly lowers onto the lap, guiding the union.\n3. Instead of moving up and down, the receiving partner gently grinds the pelvis against the partner's, with slow movements.\n4. If they like, they can wrap a leg around the partner's thigh to get even closer.\n5. The active partner hugs and supports the partner's back.\n6. This position is about closeness more than intensity: enjoy kisses, glances and slowness.",
+    "setupEs": "1. La pareja activa se sienta en una silla estable, sin reposabrazos, con las piernas bien abiertas.\n2. La pareja receptora se coloca delante y baja despacio a su regazo, guiando la unión.\n3. En lugar de moverse arriba y abajo, la pareja receptora frota suavemente la pelvis contra la de la pareja, con movimientos lentos.\n4. Si quiere, puede rodear con una pierna el muslo de la pareja para estar aún más cerca.\n5. La pareja activa abraza y sostiene la espalda de la pareja.\n6. Es una posición pensada más para la cercanía que para la intensidad: disfrutad de besos, miradas y lentitud.",
+    "setupFr": "1. Le partenaire actif s'assoit sur une chaise stable, sans accoudoirs, les jambes bien écartées.\n2. Le partenaire réceptif se place devant et descend lentement sur ses genoux, en guidant l'union.\n3. Au lieu de bouger de haut en bas, le partenaire réceptif frotte doucement son bassin contre celui du partenaire, avec des mouvements lents.\n4. S'il le souhaite, il peut enrouler une jambe autour de la cuisse du partenaire pour être encore plus proche.\n5. Le partenaire actif enlace et soutient le dos du partenaire.\n6. C'est une position pensée pour la proximité plus que pour l'intensité : profitez des baisers, des regards et de la lenteur.",
+    "setupPt": "1. O parceiro ativo senta-se numa cadeira estável, sem braços, com as pernas bem abertas.\n2. O parceiro receptor coloca-se à frente e desce devagar para o colo, conduzindo a união.\n3. Em vez de se mexer para cima e para baixo, o parceiro receptor esfrega suavemente a bacia contra a do parceiro, com movimentos lentos.\n4. Se quiser, pode envolver uma perna à volta da coxa do parceiro para ficar ainda mais perto.\n5. O parceiro ativo abraça e apoia as costas do parceiro.\n6. É uma posição pensada mais para a proximidade do que para a intensidade: aproveitem os beijos, os olhares e a lentidão.",
+    "checkinIt": "Va bene così vicini? Vuoi che ti stringa di più?",
+    "checkinEn": "Is this close enough? Want me to hold you tighter?",
+    "checkinEs": "¿Está bien así de cerca? ¿Quieres que te abrace más fuerte?",
+    "checkinFr": "C'est bien comme ça, si proches ? Tu veux que je te serre plus fort ?",
+    "checkinPt": "Está bem assim tão perto? Queres que te abrace com mais força?",
     "tags": [
-      "mobili",
-      "creativo",
-      "spontaneo"
+      "seduto",
+      "sedia",
+      "intimo",
+      "lento"
     ],
-    "illustrationRef": "chair.svg",
+    "illustrationRef": "cavalcata-sulla-sedia",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
@@ -656,114 +490,6 @@
       "sfidante"
     ],
     "illustrationRef": "standing.svg",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_013",
-    "nameIt": "Plancetta",
-    "nameEn": "Prone Bone",
-    "nameEs": "Boca Abajo",
-    "nameFr": "Allongé sur le Ventre",
-    "namePt": "De Bruços",
-    "aliasIt": "Sdraiata Prona",
-    "aliasEn": "Flat on Stomach",
-    "aliasEs": "Plano sobre el Estómago",
-    "aliasFr": "À Plat",
-    "aliasPt": "Deitado de Barriga",
-    "categories": [
-      "lowImpact",
-      "romantic"
-    ],
-    "difficulty": 1,
-    "energy": "low",
-    "focus": [
-      "intimacy",
-      "relax"
-    ],
-    "duration": "long",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": "Cuscino sotto i fianchi per comfort",
-    "easyVariantEn": "Pillow under hips for comfort",
-    "easyVariantEs": "Almohada bajo las caderas para comodidad",
-    "easyVariantFr": "Coussin sous les hanches pour le confort",
-    "easyVariantPt": "Almofada sob as ancas para conforto",
-    "setupIt": "1. Il partner ricevente si sdraia sulla schiena con le gambe alzate e unite, i piedi verso il soffitto.\n2. Il partner attivo si posiziona in ginocchio di fronte, con il busto eretto.\n3. Le gambe del partner inferiore poggiano contro il petto o le spalle del partner attivo.\n4. Tenere le caviglie o i piedi dell'altro per mantenere la posizione stabile.\n5. L'angolazione verticale delle gambe crea una sensazione di maggiore aderenza.\n6. Iniziare lentamente e comunicare sulla profondità, poiché l'angolo cambia le sensazioni rispetto alle posizioni standard.",
-    "setupEn": "1. The receiving partner lies on their back with legs raised and together, feet toward the ceiling.\n2. The active partner positions themselves kneeling in front, with torso upright.\n3. The bottom partner's legs rest against the active partner's chest or shoulders.\n4. Hold the other's ankles or feet to keep the position stable.\n5. The vertical angle of the legs creates a sensation of increased closeness.\n6. Start slowly and communicate about depth, as the angle changes sensations compared to standard positions.",
-    "setupEs": "1. La pareja receptora se acuesta boca arriba with legs raised and together, feet toward the ceiling.\n2. La pareja activa se posiciona kneeling in front, with torso upright.\n3. La pareja de abajo's legs rest against the active de la pareja pecho or hombros.\n4. Hold the other's tobillos or feet to keep the position stable.\n5. The vertical angle of the legs creates a sensation of increased closeness.\n6. Start lentamente and communicate about depth, as the angle changes sensations compared to standard positions.",
-    "setupFr": "1. Le partenaire réceptif s'allonge sur le dos avec les jambes levées et jointes, pieds vers le plafond.\n2. Le partenaire actif se positionne à genoux devant, le torse droit.\n3. Les jambes du partenaire du dessous reposent contre la poitrine ou les épaules du partenaire actif.\n4. Tenez les chevilles ou les pieds de l'autre pour maintenir la position stable.\n5. L'angle vertical des jambes crée une sensation de proximité accrue.\n6. Commencez lentement et communiquez sur la profondeur, car l'angle modifie les sensations par rapport aux positions classiques.",
-    "setupPt": "1. O parceiro receptor deita-se de costas com as pernas levantadas e unidas, os pés voltados para o teto.\n2. O parceiro ativo se posiciona ajoelhado à frente, com o tronco ereto.\n3. As pernas do parceiro de baixo se apoiam contra o peito ou os ombros do parceiro ativo.\n4. Segure os tornozelos ou os pés do outro para manter a posição estável.\n5. O ângulo vertical das pernas cria uma sensação de maior proximidade.\n6. Comecem devagar e comuniquem-se sobre a profundidade, pois o ângulo muda as sensações em comparação com as posições padrão.",
-    "checkinIt": "Riesci a respirare bene?",
-    "checkinEn": "Can you breathe well?",
-    "checkinEs": "¿Puedes respirar bien?",
-    "checkinFr": "Tu peux bien respirer ?",
-    "checkinPt": "Consegues respirar bem?",
-    "tags": [
-      "rilassante",
-      "profondo",
-      "intimo"
-    ],
-    "illustrationRef": "prone.svg",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_014",
-    "nameIt": "Aquila Spiegata",
-    "nameEn": "Spread Eagle",
-    "nameEs": "Águila Abierta",
-    "nameFr": "Aigle Déployé",
-    "namePt": "Águia Aberta",
-    "aliasIt": "X",
-    "aliasEn": "X Position",
-    "aliasEs": "Posición X",
-    "aliasFr": "Position X",
-    "aliasPt": "Posição X",
-    "categories": [
-      "romantic",
-      "beginner"
-    ],
-    "difficulty": 1,
-    "energy": "low",
-    "focus": [
-      "trust",
-      "intimacy"
-    ],
-    "duration": "medium",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": null,
-    "easyVariantEn": null,
-    "easyVariantEs": null,
-    "easyVariantFr": null,
-    "easyVariantPt": null,
-    "setupIt": "1. Entrambi i partner stanno in piedi, uno rivolto nella stessa direzione dell'altro (da dietro).\n2. Il partner davanti si inclina leggermente in avanti, appoggiando le mani su un muro, un tavolo o il bordo del letto.\n3. I piedi devono essere divaricati alla larghezza delle spalle per stabilità.\n4. Il partner dietro si avvicina, tenendo i fianchi dell'altro.\n5. Regolare l'altezza piegando leggermente le ginocchia se c'è differenza di statura.\n6. Usare il supporto del muro o del mobile per mantenere l'equilibrio. Ideale come posizione spontanea e veloce.",
-    "setupEn": "1. Both partners stand, one facing the same direction as the other (from behind).\n2. The front partner leans slightly forward, placing hands on a wall, table, or bed edge.\n3. Feet should be shoulder-width apart for stability.\n4. The back partner approaches, holding the other's hips.\n5. Adjust height by slightly bending knees if there's a height difference.\n6. Use the wall or furniture support to maintain balance. Ideal as a spontaneous and quick position.",
-    "setupEs": "1. Ambas parejas stand, one facing the same direction as the other (from behind).\n2. The front partner leans slightly forward, placing hands on a wall, table, or bed edge.\n3. Feet debe ser shoulder-width apart for stability.\n4. The espalda partner approaches, holding the other's caderas.\n5. Adjust height by slightly bending rodillas if there's a height difference.\n6. Use the wall or furniture support to maintain balance. Ideal as a spontaneous and quick position.",
-    "setupFr": "1. Les deux partenaires se tiennent debout, l'un face à la même direction que l'autre (par derrière).\n2. Le partenaire de devant se penche légèrement en avant, plaçant les mains sur un mur, une table ou le bord du lit.\n3. Les pieds doivent être écartés à la largeur des épaules pour la stabilité.\n4. Le partenaire arrière s'approche, tenant les hanches de l'autre.\n5. Ajustez la hauteur en pliant légèrement les genoux s'il y a une différence de taille.\n6. Utilisez le mur ou le meuble comme support pour maintenir l'équilibre. Idéal comme position spontanée et rapide.",
-    "setupPt": "1. Ambos os parceiros ficam de pé, um voltado para a mesma direção que o outro (por trás).\n2. O parceiro da frente se inclina levemente para a frente, apoiando as mãos em uma parede, mesa ou borda da cama.\n3. Os pés devem estar afastados na largura dos ombros para estabilidade.\n4. O parceiro de trás se aproxima, segurando os quadris do outro.\n5. Ajuste a altura flexionando levemente os joelhos se houver diferença de estatura.\n6. Use o apoio da parede ou do móvel para manter o equilíbrio. Ideal como uma posição espontânea e rápida.",
-    "checkinIt": "Ti senti vulnerabile ma sicuro/a?",
-    "checkinEn": "Do you feel vulnerable but safe?",
-    "checkinEs": "¿Te sientes vulnerable pero seguro/a?",
-    "checkinFr": "Tu te sens vulnérable mais en sécurité ?",
-    "checkinPt": "Sentes-te vulnerável mas seguro/a?",
-    "tags": [
-      "fiducia",
-      "apertura",
-      "intimo"
-    ],
-    "illustrationRef": "spread_eagle.svg",
     "isFavorite": false,
     "timesViewed": 0,
     "lastViewed": null
@@ -1152,62 +878,6 @@
     "lastViewed": null
   },
   {
-    "id": "pos_022",
-    "nameIt": "Forbici",
-    "nameEn": "Scissors",
-    "nameEs": "Tijeras",
-    "nameFr": "Ciseaux",
-    "namePt": "Tesoura",
-    "aliasIt": "Intreccio",
-    "aliasEn": "The Interlock",
-    "aliasEs": "El Entrelazado",
-    "aliasFr": "L'Entrelacement",
-    "aliasPt": "O Entrelaçamento",
-    "categories": [
-      "romantic",
-      "beginner",
-      "lowImpact"
-    ],
-    "difficulty": 2,
-    "energy": "low",
-    "focus": [
-      "intimacy",
-      "relax"
-    ],
-    "duration": "long",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": "Cuscino sotto il bacino per migliore allineamento",
-    "easyVariantEn": "Pillow under pelvis for better alignment",
-    "easyVariantEs": "Almohada bajo la pelvis para mejor alineación",
-    "easyVariantFr": "Coussin sous le bassin pour un meilleur alignement",
-    "easyVariantPt": "Almofada sob a pélvis para melhor alinhamento",
-    "setupIt": "1. Entrambi i partner si sdraiano sui fianchi opposti, uno di fronte all'altro.\n2. Le gambe si intrecciano a forbice: la gamba superiore di ciascuno passa sopra la gamba inferiore dell'altro.\n3. I bacini si avvicinano nel punto di incrocio delle gambe.\n4. Usare le mani per accarezzare il corpo dell'altro o per trovare appoggio sul materasso.\n5. Un cuscino sotto il fianco o la testa migliora il comfort.\n6. Questa posizione è rilassante e intima, ideale per ritmi lenti e prolungati. I movimenti sono piccoli e ondulatori, guidati dal bacino. Non richiede forza fisica ed è perfetta per momenti di pigrizia.",
-    "setupEn": "1. Both partners lie on opposite sides, facing each other.\n2. Legs interlock in a scissors shape: each person's upper leg passes over the other's lower leg.\n3. Pelvises come together at the crossing point of the legs.\n4. Use hands to caress each other's body or for support on the mattress.\n5. A pillow under the hip or head improves comfort.\n6. This position is relaxing and intimate, ideal for slow and prolonged rhythms. Movements are small and wave-like, guided by the pelvis. No physical strength required — perfect for lazy moments.",
-    "setupEs": "1. Ambas parejas lie on opposite sides, facing each other.\n2. Legs interlock in a scissors shape: each person's upper leg passes over the other's lower leg.\n3. Pelvises come together at the crossing point of the legs.\n4. Use hands to caress each other's body or for support on the mattress.\n5. A almohada debajo de the hip or head improves comfort.\n6. This position is relaxing and intimate, ideal for slow and prolonged rhythms. Movements are small and wave-like, guided by the pelvis. No physical strength required — perfect for lazy moments.",
-    "setupFr": "1. Les deux partenaires s'allongent sur des côtés opposés, face à face.\n2. Les jambes s'entrelacent en forme de ciseaux : la jambe supérieure de chacun passe par-dessus la jambe inférieure de l'autre.\n3. Les bassins se rejoignent au point de croisement des jambes.\n4. Utilisez les mains pour caresser le corps de l'autre ou pour le soutien sur le matelas.\n5. Un oreiller sous la hanche ou la tête améliore le confort.\n6. Cette position est relaxante et intime, idéale pour des rythmes lents et prolongés. Les mouvements sont petits et ondulatoires, guidés par le bassin. Aucune force physique requise — parfait pour les moments paresseux.",
-    "setupPt": "1. Ambos os parceiros deitam-se em lados opostos, um de frente para o outro.\n2. As pernas se entrelaçam em forma de tesoura: a perna superior de cada um passa sobre a perna inferior do outro.\n3. As pélvis se aproximam no ponto de cruzamento das pernas.\n4. Use as mãos para acariciar o corpo do outro ou para se apoiar no colchão.\n5. Um travesseiro sob o quadril ou a cabeça melhora o conforto.\n6. Esta posição é relaxante e íntima, ideal para ritmos lentos e prolongados. Os movimentos são pequenos e ondulares, guiados pela pélvis. Não requer força física — perfeita para momentos de preguiça.",
-    "checkinIt": "L'angolo è confortevole per te?",
-    "checkinEn": "Is the angle comfortable for you?",
-    "checkinEs": "¿El ángulo es cómodo para ti?",
-    "checkinFr": "L'angle est confortable pour toi ?",
-    "checkinPt": "O ângulo é confortável para ti?",
-    "tags": [
-      "laterale",
-      "intrecciato",
-      "rilassante",
-      "tenero"
-    ],
-    "illustrationRef": "scissors.svg",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
     "id": "pos_023",
     "nameIt": "Arco",
     "nameEn": "The Bridge",
@@ -1487,7 +1157,8 @@
       "tantrico",
       "meditativo",
       "intimo",
-      "occhi-negli-occhi"
+      "occhi-negli-occhi",
+      "yab-yum"
     ],
     "illustrationRef": "lotus.svg",
     "isFavorite": false,
@@ -6054,116 +5725,6 @@
   },
   {
     "id": "pos_109",
-    "nameIt": "Cavalcata sulla Sedia",
-    "nameEn": "Chair Ride",
-    "nameEs": "Cabalgata en la Silla",
-    "nameFr": "Chevauchée sur la Chaise",
-    "namePt": "Cavalgada na Cadeira",
-    "aliasIt": "Vicini e Lenti",
-    "aliasEn": "Close and Slow",
-    "aliasEs": "Cerca y Despacio",
-    "aliasFr": "Proches et Lents",
-    "aliasPt": "Juntos e Devagar",
-    "categories": [
-      "supported",
-      "reconnect",
-      "lowImpact"
-    ],
-    "difficulty": 2,
-    "energy": "low",
-    "focus": [
-      "intimacy",
-      "connection"
-    ],
-    "duration": "long",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": "Usare una sedia più bassa o il bordo del letto, così i piedi del partner ricevente toccano terra.",
-    "easyVariantEn": "Use a lower chair or the edge of the bed, so the receiving partner's feet touch the floor.",
-    "easyVariantEs": "Usa una silla más baja o el borde de la cama, para que los pies de la pareja receptora toquen el suelo.",
-    "easyVariantFr": "Utilisez une chaise plus basse ou le bord du lit, pour que les pieds du partenaire réceptif touchent le sol.",
-    "easyVariantPt": "Usa uma cadeira mais baixa ou a beira da cama, para que os pés do parceiro receptor toquem no chão.",
-    "setupIt": "1. Il partner attivo si siede su una sedia stabile, senza braccioli, con le gambe ben aperte.\n2. Il partner ricevente si mette di fronte e si abbassa lentamente in braccio, guidando l'unione.\n3. Invece di muoversi su e giù, il partner ricevente strofina dolcemente il bacino contro quello del partner, con movimenti lenti.\n4. Se vuole, può avvolgere una gamba attorno alla coscia del partner per stare ancora più vicino.\n5. Il partner attivo abbraccia e sostiene la schiena del partner.\n6. È una posizione pensata più per la vicinanza che per l'intensità: godersi baci, sguardi e lentezza.",
-    "setupEn": "1. The active partner sits on a sturdy chair without armrests, legs well apart.\n2. The receiving partner stands in front and slowly lowers onto the lap, guiding the union.\n3. Instead of moving up and down, the receiving partner gently grinds the pelvis against the partner's, with slow movements.\n4. If they like, they can wrap a leg around the partner's thigh to get even closer.\n5. The active partner hugs and supports the partner's back.\n6. This position is about closeness more than intensity: enjoy kisses, glances and slowness.",
-    "setupEs": "1. La pareja activa se sienta en una silla estable, sin reposabrazos, con las piernas bien abiertas.\n2. La pareja receptora se coloca delante y baja despacio a su regazo, guiando la unión.\n3. En lugar de moverse arriba y abajo, la pareja receptora frota suavemente la pelvis contra la de la pareja, con movimientos lentos.\n4. Si quiere, puede rodear con una pierna el muslo de la pareja para estar aún más cerca.\n5. La pareja activa abraza y sostiene la espalda de la pareja.\n6. Es una posición pensada más para la cercanía que para la intensidad: disfrutad de besos, miradas y lentitud.",
-    "setupFr": "1. Le partenaire actif s'assoit sur une chaise stable, sans accoudoirs, les jambes bien écartées.\n2. Le partenaire réceptif se place devant et descend lentement sur ses genoux, en guidant l'union.\n3. Au lieu de bouger de haut en bas, le partenaire réceptif frotte doucement son bassin contre celui du partenaire, avec des mouvements lents.\n4. S'il le souhaite, il peut enrouler une jambe autour de la cuisse du partenaire pour être encore plus proche.\n5. Le partenaire actif enlace et soutient le dos du partenaire.\n6. C'est une position pensée pour la proximité plus que pour l'intensité : profitez des baisers, des regards et de la lenteur.",
-    "setupPt": "1. O parceiro ativo senta-se numa cadeira estável, sem braços, com as pernas bem abertas.\n2. O parceiro receptor coloca-se à frente e desce devagar para o colo, conduzindo a união.\n3. Em vez de se mexer para cima e para baixo, o parceiro receptor esfrega suavemente a bacia contra a do parceiro, com movimentos lentos.\n4. Se quiser, pode envolver uma perna à volta da coxa do parceiro para ficar ainda mais perto.\n5. O parceiro ativo abraça e apoia as costas do parceiro.\n6. É uma posição pensada mais para a proximidade do que para a intensidade: aproveitem os beijos, os olhares e a lentidão.",
-    "checkinIt": "Va bene così vicini? Vuoi che ti stringa di più?",
-    "checkinEn": "Is this close enough? Want me to hold you tighter?",
-    "checkinEs": "¿Está bien así de cerca? ¿Quieres que te abrace más fuerte?",
-    "checkinFr": "C'est bien comme ça, si proches ? Tu veux que je te serre plus fort ?",
-    "checkinPt": "Está bem assim tão perto? Queres que te abrace com mais força?",
-    "tags": [
-      "seduto",
-      "sedia",
-      "intimo",
-      "lento"
-    ],
-    "illustrationRef": "cavalcata-sulla-sedia",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_110",
-    "nameIt": "Arco Sostenuto",
-    "nameEn": "Supported Arch",
-    "nameEs": "Arco Sostenido",
-    "nameFr": "Arc Soutenu",
-    "namePt": "Arco Sustentado",
-    "aliasIt": "Gambe Unite",
-    "aliasEn": "Legs Together",
-    "aliasEs": "Piernas Juntas",
-    "aliasFr": "Jambes Serrées",
-    "aliasPt": "Pernas Juntas",
-    "categories": [
-      "romantic"
-    ],
-    "difficulty": 2,
-    "energy": "medium",
-    "focus": [
-      "passion"
-    ],
-    "duration": "medium",
-    "prerequisites": [],
-    "cautionsIt": null,
-    "cautionsEn": null,
-    "cautionsEs": null,
-    "cautionsFr": null,
-    "cautionsPt": null,
-    "easyVariantIt": "Mettere un cuscino sotto i fianchi del partner ricevente e appoggiare le gambe su una spalla sola.",
-    "easyVariantEn": "Put a pillow under the receiving partner's hips and rest the legs on one shoulder only.",
-    "easyVariantEs": "Pon un cojín bajo las caderas de la pareja receptora y apoya las piernas en un solo hombro.",
-    "easyVariantFr": "Placez un coussin sous les hanches du partenaire réceptif et posez les jambes sur une seule épaule.",
-    "easyVariantPt": "Põe uma almofada sob as ancas do parceiro receptor e apoia as pernas num só ombro.",
-    "setupIt": "1. Il partner ricevente si sdraia sulla schiena e solleva le gambe tenendole unite.\n2. Il partner attivo si inginocchia davanti e sostiene piedi o caviglie del partner, appoggiandoli al petto o a una spalla.\n3. Con le gambe chiuse lo spazio è più stretto: il partner attivo entra molto lentamente.\n4. Il partner attivo guida i movimenti tenendo le gambe del partner, con un ritmo dolce.\n5. Il partner ricevente può distendere una gamba se preferisce più libertà.\n6. Parlarsi spesso per regolare intensità e angolazione.",
-    "setupEn": "1. The receiving partner lies on their back and lifts the legs, keeping them together.\n2. The active partner kneels in front and supports the partner's feet or ankles, resting them against the chest or one shoulder.\n3. With the legs closed the fit is tighter: the active partner enters very slowly.\n4. The active partner guides the movements by holding the partner's legs, with a gentle rhythm.\n5. The receiving partner can stretch out one leg for more freedom.\n6. Talk often to adjust intensity and angle.",
-    "setupEs": "1. La pareja receptora se acuesta boca arriba y levanta las piernas manteniéndolas juntas.\n2. La pareja activa se arrodilla delante y sostiene los pies o los tobillos de la pareja, apoyándolos en el pecho o en un hombro.\n3. Con las piernas cerradas el espacio es más estrecho: la pareja activa entra muy despacio.\n4. La pareja activa guía los movimientos sujetando las piernas de la pareja, con un ritmo suave.\n5. La pareja receptora puede estirar una pierna si prefiere más libertad.\n6. Hablad a menudo para ajustar intensidad y ángulo.",
-    "setupFr": "1. Le partenaire réceptif s'allonge sur le dos et lève les jambes en les gardant serrées.\n2. Le partenaire actif s'agenouille devant et soutient les pieds ou les chevilles du partenaire, en les appuyant contre sa poitrine ou une épaule.\n3. Jambes fermées, l'espace est plus étroit : le partenaire actif entre très lentement.\n4. Le partenaire actif guide les mouvements en tenant les jambes du partenaire, avec un rythme doux.\n5. Le partenaire réceptif peut allonger une jambe s'il préfère plus de liberté.\n6. Parlez-vous souvent pour ajuster intensité et angle.",
-    "setupPt": "1. O parceiro receptor deita-se de costas e levanta as pernas mantendo-as juntas.\n2. O parceiro ativo ajoelha-se à frente e segura os pés ou os tornozelos do parceiro, apoiando-os no peito ou num ombro.\n3. Com as pernas fechadas o espaço é mais estreito: o parceiro ativo entra muito devagar.\n4. O parceiro ativo conduz os movimentos segurando as pernas do parceiro, com um ritmo suave.\n5. O parceiro receptor pode esticar uma perna se preferir mais liberdade.\n6. Falem muitas vezes para ajustar intensidade e ângulo.",
-    "checkinIt": "Ti senti a tuo agio? Vuoi distendere una gamba?",
-    "checkinEn": "Are you comfortable? Want to stretch out a leg?",
-    "checkinEs": "¿Estás a gusto? ¿Quieres estirar una pierna?",
-    "checkinFr": "Tu es à l'aise ? Tu veux allonger une jambe ?",
-    "checkinPt": "Estás confortável? Queres esticar uma perna?",
-    "tags": [
-      "passionale",
-      "gambeunite",
-      "lento",
-      "intenso",
-      "facciaafaccia"
-    ],
-    "illustrationRef": "arco-sostenuto",
-    "isFavorite": false,
-    "timesViewed": 0,
-    "lastViewed": null
-  },
-  {
-    "id": "pos_111",
     "nameIt": "Incastro Perfetto",
     "nameEn": "Perfect Fit",
     "nameEs": "Encaje Perfecto",
@@ -6218,7 +5779,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_112",
+    "id": "pos_110",
     "nameIt": "Gambe Avvolte",
     "nameEn": "Wrapped Legs",
     "nameEs": "Piernas Envolventes",
@@ -6273,7 +5834,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_113",
+    "id": "pos_111",
     "nameIt": "Danza in Braccio",
     "nameEn": "Lap Dance",
     "nameEs": "Baile en el Regazo",
@@ -6329,7 +5890,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_114",
+    "id": "pos_112",
     "nameIt": "Abbraccio Raccolto",
     "nameEn": "Gathered Embrace",
     "nameEs": "Abrazo Recogido",
@@ -6385,7 +5946,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_115",
+    "id": "pos_113",
     "nameIt": "Sul Tavolo",
     "nameEn": "On the Table",
     "nameEs": "Sobre la Mesa",
@@ -6440,7 +6001,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_116",
+    "id": "pos_114",
     "nameIt": "Gambe al Cielo",
     "nameEn": "Legs to the Sky",
     "nameEs": "Piernas al Cielo",
@@ -6495,7 +6056,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_117",
+    "id": "pos_115",
     "nameIt": "Linea Retta",
     "nameEn": "Straight Line",
     "nameEs": "Línea Recta",
@@ -6552,7 +6113,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_118",
+    "id": "pos_116",
     "nameIt": "Polena",
     "nameEn": "Figurehead",
     "nameEs": "Mascarón de Proa",
@@ -6607,7 +6168,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_119",
+    "id": "pos_117",
     "nameIt": "Caviglie Incrociate",
     "nameEn": "Crossed Ankles",
     "nameEs": "Tobillos Cruzados",
@@ -6662,7 +6223,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_120",
+    "id": "pos_118",
     "nameIt": "Omaggio",
     "nameEn": "Homage",
     "nameEs": "Homenaje",
@@ -6717,7 +6278,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_121",
+    "id": "pos_119",
     "nameIt": "Pesca di Perle",
     "nameEn": "Pearl Diving",
     "nameEs": "Pesca de Perlas",
@@ -6772,7 +6333,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_122",
+    "id": "pos_120",
     "nameIt": "Il Trono",
     "nameEn": "The Throne",
     "nameEs": "El Trono",
@@ -6827,7 +6388,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_123",
+    "id": "pos_121",
     "nameIt": "Sgabello",
     "nameEn": "Stool",
     "nameEs": "Taburete",
@@ -6881,7 +6442,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_124",
+    "id": "pos_122",
     "nameIt": "Crescendo",
     "nameEn": "Crescendo",
     "nameEs": "Crescendo",
@@ -6936,7 +6497,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_125",
+    "id": "pos_123",
     "nameIt": "Forbice",
     "nameEn": "Scissor",
     "nameEs": "Tijera",
@@ -6992,7 +6553,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_126",
+    "id": "pos_124",
     "nameIt": "Intreccio",
     "nameEn": "Entwined",
     "nameEs": "Entrelazados",
@@ -7048,7 +6609,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_127",
+    "id": "pos_125",
     "nameIt": "Ovazione",
     "nameEn": "Ovation",
     "nameEs": "Ovación",
@@ -7103,7 +6664,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_128",
+    "id": "pos_126",
     "nameIt": "Al Muro",
     "nameEn": "Against the Wall",
     "nameEs": "Contra la Pared",
@@ -7157,7 +6718,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_129",
+    "id": "pos_127",
     "nameIt": "Di Fretta",
     "nameEn": "In a Hurry",
     "nameEs": "Con Prisa",
@@ -7213,7 +6774,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_130",
+    "id": "pos_128",
     "nameIt": "Capriola",
     "nameEn": "Somersault",
     "nameEs": "Voltereta",
@@ -7269,7 +6830,7 @@
     "lastViewed": null
   },
   {
-    "id": "pos_131",
+    "id": "pos_129",
     "nameIt": "Riverenza",
     "nameEn": "Reverence",
     "nameEs": "Reverencia",
