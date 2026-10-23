@@ -21,9 +21,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kamasutra_app/app/theme.dart';
+import 'package:kamasutra_app/features/games/compliment_battle/presentation/compliment_battle_screen.dart';
+import 'package:kamasutra_app/features/games/fantasy_builder/presentation/fantasy_builder_screen.dart';
+import 'package:kamasutra_app/features/games/hot_cold/presentation/hot_cold_screen.dart';
 import 'package:kamasutra_app/features/games/intimacy_map/presentation/intimacy_map_screen.dart';
+import 'package:kamasutra_app/features/games/love_notes/presentation/love_notes_screen.dart';
 import 'package:kamasutra_app/features/games/mirror_challenge/presentation/mirror_challenge_screen.dart';
+import 'package:kamasutra_app/features/games/question_quest/presentation/question_quest_screen.dart';
+import 'package:kamasutra_app/features/games/soundtrack/presentation/soundtrack_screen.dart';
+import 'package:kamasutra_app/features/games/truth_dare/presentation/truth_dare_screen.dart';
 import 'package:kamasutra_app/features/games/two_minutes/presentation/two_minutes_screen.dart';
+import 'package:kamasutra_app/features/games/wheel/presentation/wheel_screen.dart';
 
 const _screenshots =
     String.fromEnvironment('GAME_LAYOUT_SCREENSHOTS') == '1';
@@ -36,9 +44,16 @@ const _phones = <String, Size>{
 };
 
 final _games = <String, Widget Function()>{
+  'truth_dare': () => const TruthDareScreen(),
+  'wheel': () => const WheelScreen(),
+  'hot_cold': () => const HotColdScreen(),
+  'love_notes': () => const LoveNotesScreen(),
+  'fantasy_builder': () => const FantasyBuilderScreen(),
+  'compliment_battle': () => const ComplimentBattleScreen(),
+  'question_quest': () => const QuestionQuestScreen(),
   'two_minutes': () => const TwoMinutesScreen(),
   'intimacy_map': () => const IntimacyMapScreen(),
-  // Control: a game the user confirmed renders correctly.
+  'soundtrack': () => const SoundtrackScreen(),
   'mirror_challenge': () => const MirrorChallengeScreen(),
 };
 

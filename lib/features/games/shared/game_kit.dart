@@ -113,7 +113,12 @@ class GameScaffold extends StatelessWidget {
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             onPressed: () => Navigator.of(context).maybePop(),
           ),
-          title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
+          // Long titles ("Costruiamo una Fantasia") shrink a little on
+          // narrow phones instead of being cut.
+          title: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(title, maxLines: 1),
+          ),
           actions: [
             ...actions,
             if (onHelp != null)
