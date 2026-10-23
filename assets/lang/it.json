@@ -1616,7 +1616,51 @@
       "rule_1": "Scrivete un messaggio segreto al partner",
       "rule_2": "Non fate vedere cosa scrivete!",
       "rule_3": "Alla fine leggeteli insieme ad alta voce",
-      "rule_4": "Conservate i preferiti come ricordo"
+      "rule_4": "Conservate i preferiti come ricordo",
+      "prompts": {
+        "romantic": {
+          "0": "Il momento in cui ho capito che eri speciale…",
+          "1": "Il ricordo di noi due che porto sempre con me…",
+          "2": "Una cosa che vorrei fare con te quest'anno…",
+          "3": "Quando sono con te mi sento…",
+          "4": "La prima cosa che ho notato di te…",
+          "5": "Il nostro posto del cuore, e perché…",
+          "6": "Una promessa che voglio farti…",
+          "7": "Il nostro giorno perfetto, dall'alba al tramonto…",
+          "8": "Una canzone che mi fa pensare a te, e perché…",
+          "9": "Grazie per quella volta in cui…"
+        },
+        "compliment": {
+          "0": "Una cosa che ammiro di te e che non ti dico abbastanza…",
+          "1": "Il tuo sorriso mi fa…",
+          "2": "Il tuo talento nascosto che adoro…",
+          "3": "Una tua qualità che vorrei avere anch'io…",
+          "4": "Come ti descriverei a qualcuno che non ti conosce…",
+          "5": "Il tuo piccolo gesto quotidiano che mi scalda il cuore…",
+          "6": "Quando ti guardo da lontano penso…",
+          "7": "La parte del tuo carattere che mi ha conquistato il cuore…",
+          "8": "Mi incanti soprattutto quando…",
+          "9": "Una cosa che fai meglio di chiunque altro…"
+        },
+        "spicy": {
+          "0": "La prima volta che ho avuto davvero voglia di te…",
+          "1": "Una fantasia che non ti ho mai confessato…",
+          "2": "Il punto del tuo corpo che mi fa impazzire…",
+          "3": "Stanotte vorrei che tu…",
+          "4": "Il ricordo più bollente che abbiamo insieme…",
+          "5": "Una cosa che vorrei provare con te…",
+          "6": "Quello che penso quando mi guardi così…",
+          "7": "Il bacio che non dimenticherò mai…",
+          "8": "Se avessimo un'intera notte solo per noi…",
+          "9": "Quello che di te mi fa perdere la testa…"
+        }
+      },
+      "handoff_title": "Tocca a {name}",
+      "handoff_body": "{other}, niente sbirciate: il bigliettino resta segreto fino alla fine.",
+      "send_to": "Piega e passa a {name}",
+      "reveal_title": "I bigliettini sono pronti",
+      "reveal_body": "Sedetevi vicini e apriteli insieme.",
+      "reveal_action": "Apri i bigliettini"
     },
     "fantasy_builder": {
       "title": "Costruiamo una Fantasia",

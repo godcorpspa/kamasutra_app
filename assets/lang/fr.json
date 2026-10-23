@@ -1616,7 +1616,51 @@
       "rule_1": "Écrivez un message secret à votre partenaire",
       "rule_2": "Ne le laissez pas voir ce que vous écrivez !",
       "rule_3": "À la fin, lisez-les ensemble à voix haute",
-      "rule_4": "Gardez vos favoris en souvenir"
+      "rule_4": "Gardez vos favoris en souvenir",
+      "prompts": {
+        "romantic": {
+          "0": "Le moment où j'ai compris que tu comptais pour moi…",
+          "1": "Le souvenir de nous deux que je garde toujours avec moi…",
+          "2": "Une chose que j'aimerais faire avec toi cette année…",
+          "3": "Quand je suis avec toi, je me sens…",
+          "4": "La première chose que j'ai remarquée chez toi…",
+          "5": "Notre endroit à nous, et pourquoi…",
+          "6": "Une promesse que je veux te faire…",
+          "7": "Notre journée parfaite, de l'aube au coucher du soleil…",
+          "8": "Une chanson qui me fait penser à toi, et pourquoi…",
+          "9": "Merci pour cette fois où…"
+        },
+        "compliment": {
+          "0": "Une chose que j'admire chez toi et que je ne te dis pas assez…",
+          "1": "Ton sourire me fait…",
+          "2": "Ton talent caché que j'adore…",
+          "3": "Une de tes qualités que j'aimerais avoir, moi aussi…",
+          "4": "Comment je te décrirais à quelqu'un qui ne te connaît pas…",
+          "5": "Ce petit geste de tous les jours qui me réchauffe le cœur…",
+          "6": "Quand je te regarde de loin, je pense…",
+          "7": "Ce qui, dans ton caractère, a fait chavirer mon cœur…",
+          "8": "Tu me charmes surtout quand…",
+          "9": "Une chose que tu fais mieux que personne…"
+        },
+        "spicy": {
+          "0": "La première fois que j'ai eu vraiment envie de toi…",
+          "1": "Un fantasme que je ne t'ai jamais avoué…",
+          "2": "L'endroit de ton corps qui m'affole…",
+          "3": "Cette nuit, j'aimerais que tu…",
+          "4": "Notre souvenir le plus brûlant…",
+          "5": "Une chose que j'aimerais essayer avec toi…",
+          "6": "Ce que je pense quand tu me regardes comme ça…",
+          "7": "Le baiser que je n'oublierai jamais…",
+          "8": "Si nous avions une nuit entière rien que pour nous…",
+          "9": "Ce qui, chez toi, me fait perdre la tête…"
+        }
+      },
+      "handoff_title": "À {name} d'écrire",
+      "handoff_body": "{other}, on ne regarde pas : le mot reste secret jusqu'à la fin.",
+      "send_to": "Plie-le et passe-le à {name}",
+      "reveal_title": "Vos mots sont prêts",
+      "reveal_body": "Asseyez-vous côte à côte et ouvrez-les ensemble.",
+      "reveal_action": "Ouvrir les mots"
     },
     "fantasy_builder": {
       "title": "Construisons un Fantasme",

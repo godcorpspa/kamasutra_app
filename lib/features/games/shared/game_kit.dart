@@ -1233,7 +1233,8 @@ class _ScoreCell extends StatelessWidget {
 /// Full-page "pass the phone" step: tells one player to look away (or to
 /// take the phone) before something private is shown.
 class GameHandoff extends StatelessWidget {
-  final int player;
+  /// Whose turn it is; null when the step is for both.
+  final int? player;
   final String title;
   final String? message;
   final String action;
@@ -1242,10 +1243,10 @@ class GameHandoff extends StatelessWidget {
 
   const GameHandoff({
     super.key,
-    required this.player,
     required this.title,
     required this.action,
     required this.onContinue,
+    this.player,
     this.message,
     this.icon = Icons.visibility_off_outlined,
   });
@@ -1260,8 +1261,10 @@ class GameHandoff extends StatelessWidget {
           const Spacer(),
           GameEmblem(icon: icon, size: 96),
           const SizedBox(height: 22),
-          PlayerDot(player: player, size: 9),
-          const SizedBox(height: 12),
+          if (player != null) ...[
+            PlayerDot(player: player!, size: 9),
+            const SizedBox(height: 12),
+          ],
           Text(plainLabel(title),
               textAlign: TextAlign.center, style: text.headlineSmall),
           if (message != null) ...[

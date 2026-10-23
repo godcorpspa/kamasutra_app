@@ -1616,7 +1616,51 @@
       "rule_1": "Write a secret message to your partner",
       "rule_2": "Don't let them see what you write!",
       "rule_3": "At the end, read them together out loud",
-      "rule_4": "Keep your favorites as a memory"
+      "rule_4": "Keep your favorites as a memory",
+      "prompts": {
+        "romantic": {
+          "0": "The moment I knew you were special…",
+          "1": "The memory of us I always carry with me…",
+          "2": "Something I'd love to do with you this year…",
+          "3": "When I'm with you, I feel…",
+          "4": "The first thing I noticed about you…",
+          "5": "Our special place, and why…",
+          "6": "A promise I want to make you…",
+          "7": "Our perfect day, from sunrise to sunset…",
+          "8": "A song that makes me think of you, and why…",
+          "9": "Thank you for that time when…"
+        },
+        "compliment": {
+          "0": "Something I admire about you and don't say often enough…",
+          "1": "Your smile makes me…",
+          "2": "Your hidden talent that I adore…",
+          "3": "A quality of yours I wish I had too…",
+          "4": "How I'd describe you to someone who's never met you…",
+          "5": "Your little everyday gesture that warms my heart…",
+          "6": "When I watch you from across the room, I think…",
+          "7": "The part of your character that won my heart…",
+          "8": "You enchant me most when…",
+          "9": "Something you do better than anyone else…"
+        },
+        "spicy": {
+          "0": "The first time I really wanted you…",
+          "1": "A fantasy I've never confessed to you…",
+          "2": "The spot on your body that drives me wild…",
+          "3": "Tonight I'd like you to…",
+          "4": "Our hottest memory together…",
+          "5": "Something I'd like to try with you…",
+          "6": "What I think when you look at me like that…",
+          "7": "The kiss I'll never forget…",
+          "8": "If we had a whole night just for us…",
+          "9": "What it is about you that makes me lose my head…"
+        }
+      },
+      "handoff_title": "{name}'s turn",
+      "handoff_body": "{other}, no peeking: the note stays secret until the end.",
+      "send_to": "Fold it and pass to {name}",
+      "reveal_title": "Your notes are ready",
+      "reveal_body": "Sit close and open them together.",
+      "reveal_action": "Open the notes"
     },
     "fantasy_builder": {
       "title": "Fantasy Builder",

@@ -1616,7 +1616,51 @@
       "rule_1": "Escribe un mensaje secreto para tu pareja",
       "rule_2": "¡No dejes que vea lo que escribes!",
       "rule_3": "Al final, leedlos juntos en voz alta",
-      "rule_4": "Guardad los favoritos como recuerdo"
+      "rule_4": "Guardad los favoritos como recuerdo",
+      "prompts": {
+        "romantic": {
+          "0": "El momento en que supe que eras especial…",
+          "1": "El recuerdo de nosotros que siempre llevo conmigo…",
+          "2": "Algo que me gustaría hacer contigo este año…",
+          "3": "Cuando estoy contigo me siento…",
+          "4": "Lo primero que me llamó la atención de ti…",
+          "5": "Nuestro lugar especial, y por qué…",
+          "6": "Una promesa que quiero hacerte…",
+          "7": "Nuestro día perfecto, del amanecer al atardecer…",
+          "8": "Una canción que me hace pensar en ti, y por qué…",
+          "9": "Gracias por aquella vez en que…"
+        },
+        "compliment": {
+          "0": "Algo que admiro de ti y que no te digo lo suficiente…",
+          "1": "Tu sonrisa me hace…",
+          "2": "Tu talento oculto que me encanta…",
+          "3": "Una cualidad tuya que me gustaría tener…",
+          "4": "Cómo te describiría a alguien que no te conoce…",
+          "5": "Ese pequeño gesto tuyo de cada día que me derrite…",
+          "6": "Cuando te miro desde lejos pienso…",
+          "7": "La parte de tu carácter que me robó el corazón…",
+          "8": "Me encantas sobre todo cuando…",
+          "9": "Algo que haces mejor que nadie…"
+        },
+        "spicy": {
+          "0": "La primera vez que te deseé de verdad…",
+          "1": "Una fantasía que nunca te he confesado…",
+          "2": "El rincón de tu cuerpo que más me provoca…",
+          "3": "Esta noche me gustaría que tú…",
+          "4": "Nuestro recuerdo más ardiente…",
+          "5": "Algo que me gustaría probar contigo…",
+          "6": "Lo que pienso cuando me miras así…",
+          "7": "El beso que nunca olvidaré…",
+          "8": "Si tuviéramos una noche entera solo para nosotros…",
+          "9": "Lo que de ti me hace perder la cabeza…"
+        }
+      },
+      "handoff_title": "Le toca a {name}",
+      "handoff_body": "{other}, nada de mirar: la nota queda en secreto hasta el final.",
+      "send_to": "Dóblala y pásasela a {name}",
+      "reveal_title": "Las notas están listas",
+      "reveal_body": "Sentaos juntos y abridlas a la vez.",
+      "reveal_action": "Abrir las notas"
     },
     "fantasy_builder": {
       "title": "Construyamos una Fantasía",

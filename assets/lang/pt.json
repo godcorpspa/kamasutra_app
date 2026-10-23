@@ -1616,7 +1616,51 @@
       "rule_1": "Escreve uma mensagem secreta para o teu parceiro",
       "rule_2": "Não o/a deixes ver o que escreves!",
       "rule_3": "No final, leiam juntos em voz alta",
-      "rule_4": "Guardem as preferidas como recordação"
+      "rule_4": "Guardem as preferidas como recordação",
+      "prompts": {
+        "romantic": {
+          "0": "O momento em que percebi que eras especial…",
+          "1": "A memória de nós os dois que levo sempre comigo…",
+          "2": "Algo que gostava de fazer contigo este ano…",
+          "3": "Quando estou contigo, sinto-me…",
+          "4": "A primeira coisa em que reparei em ti…",
+          "5": "O nosso lugar especial, e porquê…",
+          "6": "Uma promessa que te quero fazer…",
+          "7": "O nosso dia perfeito, do nascer ao pôr do sol…",
+          "8": "Uma canção que me faz pensar em ti, e porquê…",
+          "9": "Agradeço-te aquela vez em que…"
+        },
+        "compliment": {
+          "0": "Algo que admiro em ti e que não te digo o suficiente…",
+          "1": "O teu sorriso faz-me…",
+          "2": "O teu talento escondido que adoro…",
+          "3": "Uma qualidade tua que eu também gostava de ter…",
+          "4": "Como te descreveria a alguém que não te conhece…",
+          "5": "Aquele teu pequeno gesto de todos os dias que me aquece o coração…",
+          "6": "Quando te olho de longe, penso…",
+          "7": "A parte do teu feitio que me conquistou o coração…",
+          "8": "Encantas-me sobretudo quando…",
+          "9": "Algo que fazes melhor do que ninguém…"
+        },
+        "spicy": {
+          "0": "A primeira vez que te desejei a sério…",
+          "1": "Uma fantasia que nunca te confessei…",
+          "2": "O ponto do teu corpo que mais me provoca…",
+          "3": "Esta noite gostava que tu…",
+          "4": "A nossa memória mais escaldante…",
+          "5": "Algo que gostava de experimentar contigo…",
+          "6": "O que penso quando me olhas assim…",
+          "7": "O beijo que nunca vou esquecer…",
+          "8": "Se tivéssemos uma noite inteira só para nós…",
+          "9": "O que em ti me faz perder a cabeça…"
+        }
+      },
+      "handoff_title": "É a vez de {name}",
+      "handoff_body": "{other}, nada de espreitar: o bilhete fica em segredo até ao fim.",
+      "send_to": "Dobra-o e passa a {name}",
+      "reveal_title": "Os bilhetes estão prontos",
+      "reveal_body": "Sentem-se lado a lado e abram-nos juntos.",
+      "reveal_action": "Abrir os bilhetes"
     },
     "fantasy_builder": {
       "title": "Construamos uma Fantasia",
