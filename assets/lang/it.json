@@ -1593,7 +1593,15 @@
           "emoji": "💝",
           "hint": "Zona del cuore"
         }
-      }
+      },
+      "look_away": "{name}, non guardare!",
+      "look_away_body": "Passa il telefono a {guide} e girati.",
+      "reveal_zone": "Mostra la zona segreta",
+      "secret_zone": "Zona segreta",
+      "start_search": "Inizia la ricerca",
+      "searching": "Cerca",
+      "guides": "Guida",
+      "guide_hint": "{name} guida con i pulsanti qui sotto"
     },
     "love_notes": {
       "title": "Bigliettini d'Amore",

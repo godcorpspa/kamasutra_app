@@ -1593,7 +1593,15 @@
           "emoji": "💝",
           "hint": "Heart zone"
         }
-      }
+      },
+      "look_away": "{name}, don't look!",
+      "look_away_body": "Hand the phone to {guide} and look away.",
+      "reveal_zone": "Show the secret zone",
+      "secret_zone": "Secret zone",
+      "start_search": "Start the search",
+      "searching": "Searching",
+      "guides": "Guiding",
+      "guide_hint": "{name} guides with the buttons below"
     },
     "love_notes": {
       "title": "Love Notes",

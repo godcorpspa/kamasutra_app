@@ -1593,7 +1593,15 @@
           "emoji": "💝",
           "hint": "Zona del corazón"
         }
-      }
+      },
+      "look_away": "{name}, ¡no mires!",
+      "look_away_body": "Pásale el móvil a {guide} y date la vuelta.",
+      "reveal_zone": "Mostrar la zona secreta",
+      "secret_zone": "Zona secreta",
+      "start_search": "Empezar la búsqueda",
+      "searching": "Busca",
+      "guides": "Guía",
+      "guide_hint": "{name} guía con los botones de abajo"
     },
     "love_notes": {
       "title": "Notas de Amor",

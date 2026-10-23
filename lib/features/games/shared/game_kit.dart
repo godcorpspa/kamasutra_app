@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -1164,6 +1165,188 @@ class _TimerRingPainter extends CustomPainter {
       old.progress != progress || old.urgent != urgent;
 }
 
+/// Both players' scores side by side.
+class GameScoreboard extends StatelessWidget {
+  final int score1;
+  final int score2;
+
+  const GameScoreboard({super.key, required this.score1, required this.score2});
+
+  @override
+  Widget build(BuildContext context) {
+    return GameSurface(
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            Expanded(child: _ScoreCell(player: 1, score: score1)),
+            const VerticalDivider(width: 1, color: AppColors.hairline),
+            Expanded(child: _ScoreCell(player: 2, score: score2)),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ScoreCell extends StatelessWidget {
+  final int player;
+  final int score;
+
+  const _ScoreCell({required this.player, required this.score});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            PlayerDot(player: player, size: 7),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                GamePlayers.name(player),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 13, color: AppColors.mist),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          '$score',
+          style: TextStyle(
+            fontFamily: AppTypography.displayFont,
+            fontFeatures: AppTypography.lining,
+            fontSize: 34,
+            fontWeight: FontWeight.w500,
+            color: GamePlayers.color(player),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Full-page "pass the phone" step: tells one player to look away (or to
+/// take the phone) before something private is shown.
+class GameHandoff extends StatelessWidget {
+  final int player;
+  final String title;
+  final String? message;
+  final String action;
+  final VoidCallback onContinue;
+  final IconData icon;
+
+  const GameHandoff({
+    super.key,
+    required this.player,
+    required this.title,
+    required this.action,
+    required this.onContinue,
+    this.message,
+    this.icon = Icons.visibility_off_outlined,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(28, 8, 28, 24),
+      child: Column(
+        children: [
+          const Spacer(),
+          GameEmblem(icon: icon, size: 96),
+          const SizedBox(height: 22),
+          PlayerDot(player: player, size: 9),
+          const SizedBox(height: 12),
+          Text(plainLabel(title),
+              textAlign: TextAlign.center, style: text.headlineSmall),
+          if (message != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              plainLabel(message!),
+              textAlign: TextAlign.center,
+              style: text.bodyMedium?.copyWith(color: AppColors.mist),
+            ),
+          ],
+          const Spacer(),
+          GamePrimaryButton(label: action, onPressed: onContinue),
+        ],
+      ),
+    );
+  }
+}
+
+/// End-of-game page: emblem, outcome, optional content and the two exits.
+class GameFinale extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final Widget? child;
+  final VoidCallback onPlayAgain;
+  final VoidCallback onExit;
+  final IconData icon;
+
+  const GameFinale({
+    super.key,
+    required this.title,
+    required this.onPlayAgain,
+    required this.onExit,
+    this.subtitle,
+    this.child,
+    this.icon = Icons.emoji_events_outlined,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+      children: [
+        Center(child: GameEmblem(icon: icon)),
+        const SizedBox(height: 20),
+        Text(plainLabel(title),
+            textAlign: TextAlign.center, style: text.headlineMedium),
+        if (subtitle != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            plainLabel(subtitle!),
+            textAlign: TextAlign.center,
+            style: text.bodyMedium?.copyWith(color: AppColors.mist),
+          ),
+        ],
+        if (child != null) ...[
+          const SizedBox(height: 28),
+          child!,
+        ],
+        const SizedBox(height: 32),
+        GamePrimaryButton(
+          label: 'game_ui.new_game'.tr(),
+          icon: Icons.replay_rounded,
+          onPressed: onPlayAgain,
+        ),
+        const SizedBox(height: 6),
+        Center(
+          child: GameQuietButton(
+            label: 'game_ui.end'.tr(),
+            icon: Icons.close_rounded,
+            onPressed: onExit,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// "Giulia wins!" / "It's a draw" for two scores.
+String winnerTitle(int score1, int score2) {
+  if (score1 == score2) return plainLabel('game_ui.draw_love'.tr());
+  return 'game_ui.wins'
+      .tr(namedArgs: {'player': GamePlayers.name(score1 > score2 ? 1 : 2)});
+}
+
 // ─────────────────────────────────────────────────────────────────────────
 // Plumbing
 // ─────────────────────────────────────────────────────────────────────────
@@ -1208,6 +1391,58 @@ List<String> localizedList(String prefix, {int max = 100}) {
     out.add(value);
   }
   return out;
+}
+
+/// One-second countdown for timed rounds. Calls [onTick] every second
+/// and [onDone] when it reaches zero.
+class GameCountdown {
+  final VoidCallback onTick;
+  final VoidCallback onDone;
+  Timer? _timer;
+  int total = 0;
+  int remaining = 0;
+
+  GameCountdown({required this.onTick, required this.onDone});
+
+  bool get isRunning => _timer?.isActive ?? false;
+  double get progress => total == 0 ? 0 : remaining / total;
+
+  void start(int seconds) {
+    total = seconds;
+    remaining = seconds;
+    _run();
+  }
+
+  void pause() => _timer?.cancel();
+
+  void resume() {
+    if (!isRunning && remaining > 0) _run();
+  }
+
+  void cancel() => _timer?.cancel();
+
+  void _run() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      remaining--;
+      if (remaining <= 0) {
+        remaining = 0;
+        _timer?.cancel();
+        onTick();
+        onDone();
+      } else {
+        onTick();
+      }
+    });
+  }
+}
+
+/// "45" under a minute, "1:05" above.
+String formatSeconds(int seconds) {
+  if (seconds < 60) return '$seconds';
+  final m = seconds ~/ 60;
+  final s = seconds % 60;
+  return '$m:${s.toString().padLeft(2, '0')}';
 }
 
 /// Counts a played game towards the progress badges (games played, days of

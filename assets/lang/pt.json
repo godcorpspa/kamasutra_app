@@ -1512,7 +1512,7 @@
       "mission_complete": "Missão cumprida!",
       "new_mission": "Nova missão",
       "blindfold_mode": "Modo de olhos vendados",
-      "freezing": "Congelando! 🥶",
+      "freezing": "Gelado! 🥶",
       "found_title": "Encontraste! 🎯",
       "hint_label": "Dica",
       "how_to_play": "Como jogar 🔥❄️",
@@ -1593,7 +1593,15 @@
           "emoji": "💝",
           "hint": "Zona do coração"
         }
-      }
+      },
+      "look_away": "{name}, não espreites!",
+      "look_away_body": "Passa o telemóvel a {guide} e vira-te.",
+      "reveal_zone": "Mostrar a zona secreta",
+      "secret_zone": "Zona secreta",
+      "start_search": "Começar a procura",
+      "searching": "Procura",
+      "guides": "Guia",
+      "guide_hint": "{name} guia com os botões abaixo"
     },
     "love_notes": {
       "title": "Bilhetes de Amor",
