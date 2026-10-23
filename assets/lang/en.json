@@ -2085,7 +2085,11 @@
         "sync_breathing_title": "Synchronized Breathing",
         "sync_breathing_desc": "Lie down and synchronize your breathing. Inhale and exhale together.",
         "light_caresses_title": "Light Caresses",
-        "light_caresses_desc": "Caress your partner's face with your fingertips, slowly."
+        "light_caresses_desc": "Caress your partner's face with your fingertips, slowly.",
+        "forehead_rest_title": "Forehead to Forehead",
+        "forehead_rest_desc": "Rest your foreheads together, close your eyes and breathe slowly as one.",
+        "gratitude_title": "Thanks to You",
+        "gratitude_desc": "Take turns telling each other three things you're grateful for in the other. No rush, eyes on each other."
       },
       "spicy": {
         "exploring_kisses_title": "Exploring Kisses",
@@ -2097,7 +2101,11 @@
         "slow_dance_title": "Slow Dance",
         "slow_dance_desc": "Dance slowly in each other's arms, even without music.",
         "blind_touch_title": "Blind Touch",
-        "blind_touch_desc": "Close your eyes and let your partner guide your hands over them."
+        "blind_touch_desc": "Close your eyes and let your partner guide your hands over them.",
+        "hair_caress_title": "Hands in the Hair",
+        "hair_caress_desc": "Stroke your partner's hair and gently massage their head, from the nape to the temples.",
+        "lip_tracing_title": "Tracing Lips",
+        "lip_tracing_desc": "With your fingertips, trace the outline of your partner's lips, then kiss them slowly."
       },
       "extra_spicy": {
         "sensitive_spots_title": "Sensitive Spots",
@@ -2109,7 +2117,11 @@
         "tactile_exploration_title": "Tactile Exploration",
         "tactile_exploration_desc": "With eyes closed, memorize your partner's body using only touch.",
         "total_connection_title": "Total Connection",
-        "total_connection_desc": "Lie skin to skin, feel each other's warmth."
+        "total_connection_desc": "Lie skin to skin, feel each other's warmth.",
+        "slow_undress_title": "Slow Undressing",
+        "slow_undress_desc": "Take off each other's clothes one piece at a time, slowly, without speaking.",
+        "warm_breath_title": "Warm Breath",
+        "warm_breath_desc": "Trail your warm breath over your partner's skin, from the neck down the back, without touching."
       },
       "exit_confirm": "Leave now? The session will end.",
       "features_title": "What makes these minutes special",
@@ -2143,7 +2155,8 @@
       "rule_3": "🫁 challenges include guided 4-4 breathing",
       "rule_4": "At halftime you'll receive a gentle cue",
       "rule_5": "Rate the connection at the end: 💕 / 💖 / 🔥",
-      "closing": "No competition — just shared presence. 💫"
+      "closing": "No competition — just shared presence. 💫",
+      "leads": "Leading"
     },
     "intimacy_map": {
       "title": "Intimacy Map",
@@ -3333,6 +3346,7 @@
     "leave_title": "Leave the game?",
     "leave_body": "The game in progress will be lost.",
     "stay": "Stay",
-    "leave": "Leave"
+    "leave": "Leave",
+    "together": "Together"
   }
 }

@@ -2085,7 +2085,11 @@
         "sync_breathing_title": "Respiração Sincronizada",
         "sync_breathing_desc": "Deitem-se e sincronizem a respiração. Inspirar e expirar juntos.",
         "light_caresses_title": "Carícias Suaves",
-        "light_caresses_desc": "Acaricia devagar o rosto do teu parceiro com a ponta dos dedos."
+        "light_caresses_desc": "Acaricia devagar o rosto do teu parceiro com a ponta dos dedos.",
+        "forehead_rest_title": "Testa com Testa",
+        "forehead_rest_desc": "Encostem as testas uma à outra, fechem os olhos e respirem devagar ao mesmo tempo.",
+        "gratitude_title": "Graças a Ti",
+        "gratitude_desc": "À vez, digam três coisas pelas quais estão gratos ao outro. Sem pressa, a olhar um para o outro."
       },
       "spicy": {
         "exploring_kisses_title": "Beijos Exploradores",
@@ -2097,7 +2101,11 @@
         "slow_dance_title": "Dança Lenta",
         "slow_dance_desc": "Dancem devagar nos braços um do outro, mesmo sem música.",
         "blind_touch_title": "Toque às Cegas",
-        "blind_touch_desc": "Fecha os olhos e deixa o teu parceiro guiar as tuas mãos pelo corpo dele/dela."
+        "blind_touch_desc": "Fecha os olhos e deixa o teu parceiro guiar as tuas mãos pelo corpo dele/dela.",
+        "hair_caress_title": "Mãos no Cabelo",
+        "hair_caress_desc": "Acaricia o cabelo do teu parceiro e massaja suavemente a cabeça, da nuca às têmporas.",
+        "lip_tracing_title": "Lábios Desenhados",
+        "lip_tracing_desc": "Com a ponta dos dedos, desenha o contorno dos lábios do teu parceiro e depois beija-os devagar."
       },
       "extra_spicy": {
         "sensitive_spots_title": "Pontos Sensíveis",
@@ -2109,7 +2117,11 @@
         "tactile_exploration_title": "Exploração Tátil",
         "tactile_exploration_desc": "De olhos fechados, memoriza o corpo do teu parceiro usando só o tato.",
         "total_connection_title": "Conexão Total",
-        "total_connection_desc": "Deitem-se pele com pele e sintam o calor um do outro."
+        "total_connection_desc": "Deitem-se pele com pele e sintam o calor um do outro.",
+        "slow_undress_title": "Despir Devagar",
+        "slow_undress_desc": "Tirem a roupa um ao outro, peça a peça, devagar e sem falar.",
+        "warm_breath_title": "Respiração Quente",
+        "warm_breath_desc": "Percorre a pele do teu parceiro com a tua respiração quente, do pescoço às costas, sem lhe tocar."
       },
       "exit_confirm": "Sair agora? A sessão será interrompida.",
       "features_title": "O que torna estes minutos especiais",
@@ -2143,7 +2155,8 @@
       "rule_3": "Os desafios 🫁 incluem respiração guiada (4-4)",
       "rule_4": "A meio receberão um aviso suave",
       "rule_5": "No final avaliem a conexão: 💕 / 💖 / 🔥",
-      "closing": "Sem competição — apenas presença partilhada. 💫"
+      "closing": "Sem competição — apenas presença partilhada. 💫",
+      "leads": "Guia"
     },
     "intimacy_map": {
       "title": "Mapa da Intimidade",
@@ -3333,6 +3346,7 @@
     "leave_title": "Sair do jogo?",
     "leave_body": "O jogo em curso será perdido.",
     "stay": "Ficar",
-    "leave": "Sair"
+    "leave": "Sair",
+    "together": "Juntos"
   }
 }

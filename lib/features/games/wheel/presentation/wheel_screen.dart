@@ -59,10 +59,7 @@ class _WheelScreenState extends State<WheelScreen>
   final _random = Random();
   final List<_Spin> _history = [];
 
-  late final AnimationController _spin = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 5200),
-  )..addListener(_tick);
+  late final AnimationController _spin;
 
   bool _playing = false;
   String _intensity = 'spicy';
@@ -78,6 +75,15 @@ class _WheelScreenState extends State<WheelScreen>
       _from + (_to - _from) * Curves.easeOutQuart.transform(_spin.value);
 
   bool get _spinning => _spin.isAnimating;
+
+  @override
+  void initState() {
+    super.initState();
+    _spin = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 5200),
+    )..addListener(_tick);
+  }
 
   @override
   void dispose() {

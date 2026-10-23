@@ -2085,7 +2085,11 @@
         "sync_breathing_title": "Respiro Sincronizzato",
         "sync_breathing_desc": "Sdraiatevi e sincronizzate il vostro respiro. Inspirate ed espirate insieme.",
         "light_caresses_title": "Carezze Leggere",
-        "light_caresses_desc": "Accarezza il viso del partner con la punta delle dita, lentamente."
+        "light_caresses_desc": "Accarezza il viso del partner con la punta delle dita, lentamente.",
+        "forehead_rest_title": "Fronte a Fronte",
+        "forehead_rest_desc": "Appoggiate la fronte l'una contro l'altra, chiudete gli occhi e respirate lentamente insieme.",
+        "gratitude_title": "Grazie a Te",
+        "gratitude_desc": "A turno, ditevi tre cose per cui siete grati all'altro. Senza fretta, guardandovi."
       },
       "spicy": {
         "exploring_kisses_title": "Baci Esplorativi",
@@ -2097,7 +2101,11 @@
         "slow_dance_title": "Danza Lenta",
         "slow_dance_desc": "Ballate lentamente abbracciati, anche senza musica.",
         "blind_touch_title": "Tocco Cieco",
-        "blind_touch_desc": "Chiudi gli occhi e lascia che il partner guidi le tue mani su di sé."
+        "blind_touch_desc": "Chiudi gli occhi e lascia che il partner guidi le tue mani su di sé.",
+        "hair_caress_title": "Mani tra i Capelli",
+        "hair_caress_desc": "Accarezza i capelli del partner e massaggia piano la testa, dalla nuca alle tempie.",
+        "lip_tracing_title": "Labbra Disegnate",
+        "lip_tracing_desc": "Con la punta delle dita disegna il contorno delle labbra del partner, poi baciale piano."
       },
       "extra_spicy": {
         "sensitive_spots_title": "Punti Sensibili",
@@ -2109,7 +2117,11 @@
         "tactile_exploration_title": "Esplorazione Tattile",
         "tactile_exploration_desc": "Con gli occhi chiusi, memorizza il corpo del partner solo col tatto.",
         "total_connection_title": "Connessione Totale",
-        "total_connection_desc": "Sdraiatevi pelle contro pelle, sentite il calore reciproco."
+        "total_connection_desc": "Sdraiatevi pelle contro pelle, sentite il calore reciproco.",
+        "slow_undress_title": "Spogliarsi Piano",
+        "slow_undress_desc": "Toglietevi a vicenda un capo alla volta, lentamente, senza parlare.",
+        "warm_breath_title": "Respiro Caldo",
+        "warm_breath_desc": "Percorri con il respiro caldo la pelle del partner, dal collo alla schiena, senza toccarla."
       },
       "exit_confirm": "Uscire ora? La sessione si interromperà.",
       "features_title": "Cosa rende speciali questi minuti",
@@ -2143,7 +2155,8 @@
       "rule_3": "Le sfide 🫁 includono respiro guidato (4-4)",
       "rule_4": "A metà tempo riceverai una gentile notifica",
       "rule_5": "Alla fine valuta la connessione: 💕 / 💖 / 🔥",
-      "closing": "Niente competizione, solo presenza condivisa. 💫"
+      "closing": "Niente competizione, solo presenza condivisa. 💫",
+      "leads": "Guida"
     },
     "intimacy_map": {
       "title": "Mappa dell'Intimità",
@@ -3333,6 +3346,7 @@
     "leave_title": "Uscire dalla partita?",
     "leave_body": "La partita in corso andrà persa.",
     "stay": "Resta",
-    "leave": "Esci"
+    "leave": "Esci",
+    "together": "Insieme"
   }
 }

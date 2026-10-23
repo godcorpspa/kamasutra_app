@@ -2085,7 +2085,11 @@
         "sync_breathing_title": "Respiration Synchronisée",
         "sync_breathing_desc": "Allongez-vous et synchronisez votre respiration. Inspirez et expirez ensemble.",
         "light_caresses_title": "Caresses Légères",
-        "light_caresses_desc": "Caressez le visage de votre partenaire du bout des doigts, lentement."
+        "light_caresses_desc": "Caressez le visage de votre partenaire du bout des doigts, lentement.",
+        "forehead_rest_title": "Front contre Front",
+        "forehead_rest_desc": "Posez vos fronts l'un contre l'autre, fermez les yeux et respirez lentement ensemble.",
+        "gratitude_title": "Merci à Toi",
+        "gratitude_desc": "Chacun votre tour, dites-vous trois choses pour lesquelles vous êtes reconnaissants à l'autre. Sans vous presser, en vous regardant."
       },
       "spicy": {
         "exploring_kisses_title": "Baisers Explorateurs",
@@ -2097,7 +2101,11 @@
         "slow_dance_title": "Danse Lente",
         "slow_dance_desc": "Dansez lentement dans les bras l'un de l'autre, même sans musique.",
         "blind_touch_title": "Toucher Aveugle",
-        "blind_touch_desc": "Fermez les yeux et laissez votre partenaire guider vos mains sur lui/elle."
+        "blind_touch_desc": "Fermez les yeux et laissez votre partenaire guider vos mains sur lui/elle.",
+        "hair_caress_title": "Mains dans les Cheveux",
+        "hair_caress_desc": "Caressez les cheveux de votre partenaire et massez doucement sa tête, de la nuque aux tempes.",
+        "lip_tracing_title": "Lèvres Dessinées",
+        "lip_tracing_desc": "Du bout des doigts, dessinez le contour des lèvres de votre partenaire, puis embrassez-les lentement."
       },
       "extra_spicy": {
         "sensitive_spots_title": "Points Sensibles",
@@ -2109,7 +2117,11 @@
         "tactile_exploration_title": "Exploration Tactile",
         "tactile_exploration_desc": "Les yeux fermés, mémorisez le corps de votre partenaire uniquement par le toucher.",
         "total_connection_title": "Connexion Totale",
-        "total_connection_desc": "Allongez-vous peau contre peau, sentez la chaleur de l'autre."
+        "total_connection_desc": "Allongez-vous peau contre peau, sentez la chaleur de l'autre.",
+        "slow_undress_title": "Se Déshabiller Lentement",
+        "slow_undress_desc": "Déshabillez-vous mutuellement, un vêtement à la fois, lentement et sans parler.",
+        "warm_breath_title": "Souffle Chaud",
+        "warm_breath_desc": "Promenez votre souffle chaud sur la peau de votre partenaire, de la nuque au dos, sans la toucher."
       },
       "exit_confirm": "Sortir maintenant ? La session sera interrompue.",
       "features_title": "Ce qui rend ces minutes spéciales",
@@ -2143,7 +2155,8 @@
       "rule_3": "Les défis 🫁 incluent une respiration guidée (4-4)",
       "rule_4": "À mi-chemin vous recevrez un repère doux",
       "rule_5": "À la fin évaluez la connexion : 💕 / 💖 / 🔥",
-      "closing": "Pas de compétition — juste une présence partagée. 💫"
+      "closing": "Pas de compétition — juste une présence partagée. 💫",
+      "leads": "Guide"
     },
     "intimacy_map": {
       "title": "Carte de l'Intimité",
@@ -3333,6 +3346,7 @@
     "leave_title": "Quitter la partie ?",
     "leave_body": "La partie en cours sera perdue.",
     "stay": "Rester",
-    "leave": "Quitter"
+    "leave": "Quitter",
+    "together": "Ensemble"
   }
 }
