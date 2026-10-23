@@ -1851,7 +1851,7 @@
       "power_skip": "Cambiar",
       "power_used": "Usado",
       "judge_now": "Jugador {player} juzga",
-      "judge_prompt": "¿Qué tan bueno fue el cumplido?",
+      "judge_prompt": "¿Cómo de bueno ha sido el cumplido?",
       "judge_hint": "Sé honesto, ¡es tu pareja!",
       "judge_great": "Magnífico",
       "judge_great_desc": "¡Me conquistó! Puntos completos",
@@ -1860,7 +1860,9 @@
       "judge_weak": "Genérico",
       "judge_weak_desc": "¡Inténtalo otra vez! Sin puntos",
       "longest_streak": "Combo más largo",
-      "total_compliments": "Cumplidos exitosos"
+      "total_compliments": "Cumplidos exitosos",
+      "judging": "Juzga",
+      "streak": "Racha ×{count}"
     },
     "question_quest": {
       "title": "Búsqueda de Preguntas",

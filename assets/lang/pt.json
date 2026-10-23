@@ -1860,7 +1860,9 @@
       "judge_weak": "Genérico",
       "judge_weak_desc": "Tenta outra vez! Sem pontos",
       "longest_streak": "Combo mais longo",
-      "total_compliments": "Elogios bem-sucedidos"
+      "total_compliments": "Elogios bem-sucedidos",
+      "judging": "Avalia",
+      "streak": "Sequência ×{count}"
     },
     "question_quest": {
       "title": "Caça às Perguntas",

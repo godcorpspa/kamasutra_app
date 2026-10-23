@@ -1860,7 +1860,9 @@
       "judge_weak": "Générique",
       "judge_weak_desc": "Réessaie ! Aucun point",
       "longest_streak": "Combo le plus long",
-      "total_compliments": "Compliments réussis"
+      "total_compliments": "Compliments réussis",
+      "judging": "Juge",
+      "streak": "Série ×{count}"
     },
     "question_quest": {
       "title": "Quête de Questions",
