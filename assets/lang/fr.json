@@ -1684,7 +1684,19 @@
         "forest_clearing": "Clairière en forêt",
         "luxury_hotel": "Hôtel de luxe",
         "private_pool": "Piscine privée",
-        "vintage_train": "Train vintage"
+        "vintage_train": "Train vintage",
+        "spa_suite": "Spa privé",
+        "snowy_chalet": "Chalet sous la neige",
+        "yacht": "Yacht au large",
+        "vineyard_farmhouse": "Mas au milieu des vignes",
+        "rainy_attic": "Mansarde sous la pluie",
+        "tropical_island": "Île tropicale",
+        "paris_balcony": "Balcon à Paris",
+        "library_night": "Bibliothèque la nuit",
+        "hot_springs": "Sources chaudes sous les étoiles",
+        "desert_tent": "Tente dans le désert",
+        "midnight_kitchen": "Cuisine à minuit",
+        "masquerade_ball": "Bal masqué"
       },
       "moods": {
         "romantic": "Romantique et doux",
@@ -1692,7 +1704,15 @@
         "passionate": "Passionné et intense",
         "mysterious": "Mystérieux et séducteur",
         "adventurous": "Aventurier et audacieux",
-        "tender": "Tendre et délicat"
+        "tender": "Tendre et délicat",
+        "dreamy": "Rêveur et suspendu",
+        "wild": "Sauvage et instinctif",
+        "slow": "Lent et sans hâte",
+        "forbidden": "Interdit et secret",
+        "luxurious": "Luxueux et raffiné",
+        "nostalgic": "Comme la première fois",
+        "bold": "Assuré et dominant",
+        "intimate": "Intime et silencieux"
       },
       "actions_soft": {
         "massage": "Massage relaxant",
@@ -1700,7 +1720,15 @@
         "bath": "Bain chaud ensemble",
         "stargazing": "Observer les étoiles",
         "cooking": "Cuisiner ensemble",
-        "reading": "Lire de la poésie"
+        "reading": "Lire de la poésie",
+        "shower": "Douche chaude à deux",
+        "foot_massage": "Massage des pieds",
+        "slow_kisses": "Longs baisers lents",
+        "cuddles": "Câlins sous la couette",
+        "body_painting": "Peinture sur le corps",
+        "candle_picnic": "Pique-nique aux chandelles",
+        "love_letters": "Se lire des lettres d'amour",
+        "hair_wash": "Se laver les cheveux mutuellement"
       },
       "actions_spicy": {
         "blindfold": "Jeu du bandeau",
@@ -1708,7 +1736,17 @@
         "ice_game": "Jeu du glaçon",
         "feather": "Exploration à la plume",
         "oil_massage": "Massage à l'huile",
-        "strip_game": "Jeu de strip"
+        "strip_game": "Jeu de strip",
+        "silk_ties": "Mains attachées avec un foulard",
+        "mirror": "Faire l'amour devant un miroir",
+        "chocolate_body": "Chocolat sur le corps",
+        "tantric": "Sexe tantrique lent",
+        "no_touching": "Se provoquer sans se toucher",
+        "shower_passion": "Passion sous la douche",
+        "commands": "L'un commande, l'autre obéit",
+        "toy": "Un jouet surprise",
+        "edging": "Jusqu'à la limite, sans la franchir",
+        "sixty_nine": "Un 69 tout en lenteur"
       },
       "surprises": {
         "music": "Playlist spéciale",
@@ -1718,7 +1756,17 @@
         "lingerie": "Surprise de style",
         "letter": "Lettre d'amour",
         "perfume": "Parfum préféré",
-        "game": "Jeu surprise"
+        "game": "Jeu surprise",
+        "candles": "Cent bougies allumées",
+        "silk_blindfold": "Bandeau de soie",
+        "massage_candle": "Bougie de massage",
+        "polaroids": "Polaroïds souvenirs",
+        "breakfast_bed": "Petit-déjeuner au lit",
+        "love_coupons": "Bons d'amour à échanger",
+        "ice_cubes": "Glaçons",
+        "tease_feather": "Une plume pour taquiner",
+        "fluffy_cuffs": "Menottes en fourrure",
+        "secret_note": "Un mot avec une demande secrète"
       },
       "steps": {
         "setting": "Décor",
@@ -1768,7 +1816,11 @@
         "theme_velvet": "Velours",
         "theme_audacity": "Audace",
         "theme_kiss": "Baiser",
-        "theme_eternity": "Éternité"
+        "theme_eternity": "Éternité",
+        "theme_silk": "Soie",
+        "theme_fire": "Feu",
+        "theme_slowness": "Lenteur",
+        "theme_surrender": "Abandon"
       },
       "chooses": "Choisit",
       "veto_by": "Véto de {name}",

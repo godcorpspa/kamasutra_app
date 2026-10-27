@@ -1684,7 +1684,19 @@
         "forest_clearing": "Clareira na floresta",
         "luxury_hotel": "Hotel de luxo",
         "private_pool": "Piscina privada",
-        "vintage_train": "Comboio antigo"
+        "vintage_train": "Comboio antigo",
+        "spa_suite": "Spa privado",
+        "snowy_chalet": "Chalé debaixo da neve",
+        "yacht": "Iate em alto-mar",
+        "vineyard_farmhouse": "Casa de campo entre vinhas",
+        "rainy_attic": "Sótão à chuva",
+        "tropical_island": "Ilha tropical",
+        "paris_balcony": "Varanda em Paris",
+        "library_night": "Biblioteca à noite",
+        "hot_springs": "Termas sob as estrelas",
+        "desert_tent": "Tenda no deserto",
+        "midnight_kitchen": "Cozinha à meia-noite",
+        "masquerade_ball": "Baile de máscaras"
       },
       "moods": {
         "romantic": "Romântico e doce",
@@ -1692,7 +1704,15 @@
         "passionate": "Apaixonado e intenso",
         "mysterious": "Misterioso e sedutor",
         "adventurous": "Aventureiro e ousado",
-        "tender": "Terno e delicado"
+        "tender": "Terno e delicado",
+        "dreamy": "Sonhador e suspenso",
+        "wild": "Selvagem e instintivo",
+        "slow": "Lento e sem pressa",
+        "forbidden": "Proibido e secreto",
+        "luxurious": "Luxuoso e requintado",
+        "nostalgic": "Como da primeira vez",
+        "bold": "Decidido e dominante",
+        "intimate": "Íntimo e silencioso"
       },
       "actions_soft": {
         "massage": "Massagem relaxante",
@@ -1700,7 +1720,15 @@
         "bath": "Banho quente juntos",
         "stargazing": "Observar as estrelas",
         "cooking": "Cozinhar juntos",
-        "reading": "Ler poesia"
+        "reading": "Ler poesia",
+        "shower": "Duche quente a dois",
+        "foot_massage": "Massagem aos pés",
+        "slow_kisses": "Beijos longos e lentos",
+        "cuddles": "Mimos debaixo do edredão",
+        "body_painting": "Pintura corporal",
+        "candle_picnic": "Piquenique à luz das velas",
+        "love_letters": "Ler cartas de amor um ao outro",
+        "hair_wash": "Lavar o cabelo um ao outro"
       },
       "actions_spicy": {
         "blindfold": "Jogo da venda",
@@ -1708,7 +1736,17 @@
         "ice_game": "Jogo do gelo",
         "feather": "Exploração com pena",
         "oil_massage": "Massagem com óleo",
-        "strip_game": "Jogo de strip"
+        "strip_game": "Jogo de strip",
+        "silk_ties": "Mãos atadas com um lenço",
+        "mirror": "Fazer amor em frente ao espelho",
+        "chocolate_body": "Chocolate no corpo",
+        "tantric": "Sexo tântrico lento",
+        "no_touching": "Provocar sem se tocarem",
+        "shower_passion": "Paixão no duche",
+        "commands": "Um manda, o outro obedece",
+        "toy": "Um brinquedo surpresa",
+        "edging": "Até ao limite, sem lá chegar",
+        "sixty_nine": "Um 69 lento"
       },
       "surprises": {
         "music": "Playlist especial",
@@ -1718,7 +1756,17 @@
         "lingerie": "Surpresa de estilo",
         "letter": "Carta de amor",
         "perfume": "Perfume favorito",
-        "game": "Jogo surpresa"
+        "game": "Jogo surpresa",
+        "candles": "Cem velas acesas",
+        "silk_blindfold": "Venda de seda",
+        "massage_candle": "Vela de massagem",
+        "polaroids": "Polaroides de recordação",
+        "breakfast_bed": "Pequeno-almoço na cama",
+        "love_coupons": "Vales de amor para trocar",
+        "ice_cubes": "Cubos de gelo",
+        "tease_feather": "Uma pena para provocar",
+        "fluffy_cuffs": "Algemas de peluche",
+        "secret_note": "Um bilhete com um pedido secreto"
       },
       "steps": {
         "setting": "Cenário",
@@ -1768,7 +1816,11 @@
         "theme_velvet": "Veludo",
         "theme_audacity": "Audácia",
         "theme_kiss": "Beijo",
-        "theme_eternity": "Eternidade"
+        "theme_eternity": "Eternidade",
+        "theme_silk": "Seda",
+        "theme_fire": "Fogo",
+        "theme_slowness": "Lentidão",
+        "theme_surrender": "Entrega"
       },
       "chooses": "Escolhe",
       "veto_by": "Veto de {name}",

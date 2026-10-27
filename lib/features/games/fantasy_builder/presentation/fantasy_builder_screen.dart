@@ -37,6 +37,18 @@ const _settings = [
   _Option('luxury_hotel', Icons.hotel_outlined),
   _Option('private_pool', Icons.pool_outlined),
   _Option('vintage_train', Icons.train_outlined),
+  _Option('spa_suite', Icons.spa_outlined),
+  _Option('snowy_chalet', Icons.ac_unit_rounded),
+  _Option('yacht', Icons.sailing_outlined),
+  _Option('vineyard_farmhouse', Icons.landscape_outlined),
+  _Option('rainy_attic', Icons.umbrella_outlined),
+  _Option('tropical_island', Icons.wb_sunny_outlined),
+  _Option('paris_balcony', Icons.balcony_outlined),
+  _Option('library_night', Icons.local_library_outlined),
+  _Option('hot_springs', Icons.hot_tub_outlined),
+  _Option('desert_tent', Icons.festival_outlined),
+  _Option('midnight_kitchen', Icons.kitchen_outlined),
+  _Option('masquerade_ball', Icons.theater_comedy_outlined),
 ];
 
 const _moods = [
@@ -46,6 +58,14 @@ const _moods = [
   _Option('mysterious', Icons.theater_comedy_outlined),
   _Option('adventurous', Icons.bolt_outlined),
   _Option('tender', Icons.spa_outlined),
+  _Option('dreamy', Icons.cloud_outlined),
+  _Option('wild', Icons.flash_on_rounded),
+  _Option('slow', Icons.hourglass_empty_rounded),
+  _Option('forbidden', Icons.lock_outline_rounded),
+  _Option('luxurious', Icons.diamond_outlined),
+  _Option('nostalgic', Icons.history_rounded),
+  _Option('bold', Icons.whatshot_outlined),
+  _Option('intimate', Icons.nightlight_outlined),
 ];
 
 const _softActions = [
@@ -55,6 +75,14 @@ const _softActions = [
   _Option('stargazing', Icons.star_outline_rounded),
   _Option('cooking', Icons.restaurant_outlined),
   _Option('reading', Icons.menu_book_outlined),
+  _Option('shower', Icons.shower_outlined),
+  _Option('foot_massage', Icons.self_improvement_rounded),
+  _Option('slow_kisses', Icons.favorite_border_rounded),
+  _Option('cuddles', Icons.bed_outlined),
+  _Option('body_painting', Icons.brush_outlined),
+  _Option('candle_picnic', Icons.local_dining_outlined),
+  _Option('love_letters', Icons.mail_outline_rounded),
+  _Option('hair_wash', Icons.water_drop_outlined),
 ];
 
 const _spicyActions = [
@@ -64,6 +92,16 @@ const _spicyActions = [
   _Option('feather', Icons.gesture_rounded),
   _Option('oil_massage', Icons.water_drop_outlined),
   _Option('strip_game', Icons.casino_outlined),
+  _Option('silk_ties', Icons.link_rounded),
+  _Option('mirror', Icons.flip_outlined),
+  _Option('chocolate_body', Icons.cake_outlined),
+  _Option('tantric', Icons.all_inclusive_rounded),
+  _Option('no_touching', Icons.do_not_touch_outlined),
+  _Option('shower_passion', Icons.shower_outlined),
+  _Option('commands', Icons.workspace_premium_outlined),
+  _Option('toy', Icons.toys_outlined),
+  _Option('edging', Icons.hourglass_bottom_rounded),
+  _Option('sixty_nine', Icons.sync_rounded),
 ];
 
 const _surprises = [
@@ -75,6 +113,16 @@ const _surprises = [
   _Option('letter', Icons.mail_outline_rounded),
   _Option('perfume', Icons.auto_awesome_outlined),
   _Option('game', Icons.extension_outlined),
+  _Option('candles', Icons.local_fire_department_outlined),
+  _Option('silk_blindfold', Icons.visibility_off_outlined),
+  _Option('massage_candle', Icons.whatshot_outlined),
+  _Option('polaroids', Icons.photo_camera_outlined),
+  _Option('breakfast_bed', Icons.free_breakfast_outlined),
+  _Option('love_coupons', Icons.confirmation_number_outlined),
+  _Option('ice_cubes', Icons.ac_unit_rounded),
+  _Option('tease_feather', Icons.gesture_rounded),
+  _Option('fluffy_cuffs', Icons.link_rounded),
+  _Option('secret_note', Icons.sticky_note_2_outlined),
 ];
 
 const _themes = [
@@ -86,6 +134,10 @@ const _themes = [
   _Option('theme_audacity', Icons.bolt_outlined),
   _Option('theme_kiss', Icons.favorite_border_rounded),
   _Option('theme_eternity', Icons.all_inclusive_rounded),
+  _Option('theme_silk', Icons.waves_rounded),
+  _Option('theme_fire', Icons.local_fire_department_outlined),
+  _Option('theme_slowness', Icons.hourglass_empty_rounded),
+  _Option('theme_surrender', Icons.spa_outlined),
 ];
 
 const _whenOptions = [

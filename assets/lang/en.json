@@ -1684,7 +1684,19 @@
         "forest_clearing": "Forest clearing",
         "luxury_hotel": "Luxury hotel",
         "private_pool": "Private pool",
-        "vintage_train": "Vintage train"
+        "vintage_train": "Vintage train",
+        "spa_suite": "Private spa",
+        "snowy_chalet": "Snowy chalet",
+        "yacht": "Yacht at sea",
+        "vineyard_farmhouse": "Farmhouse among vineyards",
+        "rainy_attic": "Attic in the rain",
+        "tropical_island": "Tropical island",
+        "paris_balcony": "Balcony in Paris",
+        "library_night": "Library at night",
+        "hot_springs": "Hot springs under the stars",
+        "desert_tent": "Desert tent",
+        "midnight_kitchen": "Kitchen at midnight",
+        "masquerade_ball": "Masquerade ball"
       },
       "moods": {
         "romantic": "Romantic and sweet",
@@ -1692,7 +1704,15 @@
         "passionate": "Passionate and intense",
         "mysterious": "Mysterious and seductive",
         "adventurous": "Adventurous and bold",
-        "tender": "Tender and delicate"
+        "tender": "Tender and delicate",
+        "dreamy": "Dreamy and weightless",
+        "wild": "Wild and instinctive",
+        "slow": "Slow and unhurried",
+        "forbidden": "Forbidden and secret",
+        "luxurious": "Luxurious and refined",
+        "nostalgic": "Like the very first time",
+        "bold": "Bold and dominant",
+        "intimate": "Intimate and quiet"
       },
       "actions_soft": {
         "massage": "Relaxing massage",
@@ -1700,7 +1720,15 @@
         "bath": "Warm bath together",
         "stargazing": "Stargazing",
         "cooking": "Cooking together",
-        "reading": "Reading poetry"
+        "reading": "Reading poetry",
+        "shower": "Hot shower together",
+        "foot_massage": "Foot massage",
+        "slow_kisses": "Long, slow kisses",
+        "cuddles": "Cuddling under the covers",
+        "body_painting": "Body painting",
+        "candle_picnic": "Candlelit picnic",
+        "love_letters": "Reading each other love letters",
+        "hair_wash": "Washing each other's hair"
       },
       "actions_spicy": {
         "blindfold": "Blindfold game",
@@ -1708,7 +1736,17 @@
         "ice_game": "Ice game",
         "feather": "Feather exploration",
         "oil_massage": "Oil massage",
-        "strip_game": "Strip game"
+        "strip_game": "Strip game",
+        "silk_ties": "Hands tied with a silk scarf",
+        "mirror": "Making love in front of a mirror",
+        "chocolate_body": "Chocolate on the body",
+        "tantric": "Slow tantric sex",
+        "no_touching": "Teasing without touching",
+        "shower_passion": "Passion in the shower",
+        "commands": "One commands, the other obeys",
+        "toy": "A surprise toy",
+        "edging": "To the edge, never over",
+        "sixty_nine": "A slow 69"
       },
       "surprises": {
         "music": "Special playlist",
@@ -1718,7 +1756,17 @@
         "lingerie": "Style surprise",
         "letter": "Love letter",
         "perfume": "Favorite perfume",
-        "game": "Surprise game"
+        "game": "Surprise game",
+        "candles": "A hundred lit candles",
+        "silk_blindfold": "Silk blindfold",
+        "massage_candle": "Massage candle",
+        "polaroids": "Keepsake Polaroids",
+        "breakfast_bed": "Breakfast in bed",
+        "love_coupons": "Love coupons to redeem",
+        "ice_cubes": "Ice cubes",
+        "tease_feather": "A feather to tease",
+        "fluffy_cuffs": "Fluffy handcuffs",
+        "secret_note": "A note with a secret request"
       },
       "steps": {
         "setting": "Setting",
@@ -1768,7 +1816,11 @@
         "theme_velvet": "Velvet",
         "theme_audacity": "Audacity",
         "theme_kiss": "Kiss",
-        "theme_eternity": "Eternity"
+        "theme_eternity": "Eternity",
+        "theme_silk": "Silk",
+        "theme_fire": "Fire",
+        "theme_slowness": "Slowness",
+        "theme_surrender": "Surrender"
       },
       "chooses": "Choosing",
       "veto_by": "{name}'s veto",
