@@ -225,7 +225,7 @@
       "quick_rule_six": "Tirou um 6: jogue novamente (máximo 2 vezes)",
       "quick_rules_title": "Regras Rápidas",
       "tutorial_welcome_title": "Bem-vindos!",
-      "tutorial_welcome_body": "O Jogo do Ganso Picante é um jogo de casal em 100 casas, cheio de recompensas sensuais, penitências picantes e reviravoltas! Quem chegar à casa 100 ganha e recebe uma recompensa especial do parceiro! 😈",
+      "tutorial_welcome_body": "O Jogo do Ganso Picante é um jogo de casal em 100 casas, cheio de recompensas sensuais, penitências picantes e reviravoltas! Quem chegar à casa 100 ganha e recebe uma recompensa especial do parceiro! Começa-se com um aquecimento: quanto mais avançam no tabuleiro, mais quentes ficam as recompensas e as penitências. 😈",
       "tutorial_clothing_title": "4 Peças de Roupa Cada Um",
       "tutorial_clothing_body": "Cada jogador começa com 4 peças de roupa. À medida que o jogo avança, vais perdê-las... Se já não tiveres peças para tirar, entra em ação uma penitência picante! 🔥",
       "tutorial_exit_title": "Sair da Partida",
@@ -557,7 +557,12 @@
       "final_027": "🏆 PRÉMIO FINAL: Massagem erótica completa com final feliz!\nÓleo, velas e prazer total 💆",
       "final_028": "🏆 PRÉMIO FINAL: O vencedor escolhe 3 atos sexuais!\nO perdedor os executa todos sem discutir 🔥",
       "final_029": "🏆 PRÉMIO FINAL: Sexo oral mútuo + posição à escolha!\nPrimeiro o 69, depois o vencedor escolhe como continuar 🔥",
-      "final_030": "🏆 PRÉMIO FINAL: Noite de paixão total!\nO vencedor decide tudo: posições, ritmo e duração 🔥"
+      "final_030": "🏆 PRÉMIO FINAL: Noite de paixão total!\nO vencedor decide tudo: posições, ritmo e duração 🔥",
+      "heat_1": "Aquecimento",
+      "heat_2": "Sensual",
+      "heat_3": "Quente",
+      "heat_4": "Escaldante",
+      "quick_rule_heat": "Quanto mais avanças, mais quentes ficam as recompensas e as penitências"
     },
     "truth_dare": {
       "title": "Verdade ou Desafio",

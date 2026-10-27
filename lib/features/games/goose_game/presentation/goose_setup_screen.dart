@@ -220,6 +220,7 @@ class _GooseSetupScreenState extends State<GooseSetupScreen> {
       ('🪜', 'games.goose_game.quick_rule_ladder'.tr()),
       ('🕳️', 'games.goose_game.quick_rule_hole'.tr()),
       ('🔥', 'games.goose_game.quick_rule_penance'.tr()),
+      ('🌡️', 'games.goose_game.quick_rule_heat'.tr()),
       ('🎲', 'games.goose_game.quick_rule_six'.tr()),
     ];
 

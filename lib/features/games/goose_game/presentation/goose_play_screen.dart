@@ -460,6 +460,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   Future<void> _handleSquare(int pos) async {
     if (pos >= _board.length) return;
     final sq = _board[pos];
+    // Cards heat up with the square: warm-up at the start, explicit near 100.
+    final heat = gooseHeatForSquare(pos);
     switch (sq.type) {
       case GooseSquareType.finish:
         await _handleVictory();
@@ -470,7 +472,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           emoji: '🪜', title: 'games.goose_game.ladder_title'.tr(),
           subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '+${dest - pos}'}),
           description: 'games.goose_game.reward_description'.tr(),
-          content: _rand(kRewards), pool: kRewards, color: _kGreen,
+          content: _draw(gooseRewards(heat), 'reward$heat'),
+          pool: gooseRewards(heat), heat: heat, color: _kGreen,
         ));
         _jumpTo(dest);
         break;
@@ -480,7 +483,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           emoji: '🕳️', title: 'games.goose_game.hole_title'.tr(),
           subtitle: 'games.goose_game.square_move'.tr(namedArgs: {'from': '$pos', 'to': '$dest', 'diff': '${dest - pos}'}),
           description: 'games.goose_game.penance_do'.tr(),
-          content: _rand(kPenances), pool: kPenances, color: _kRed,
+          content: _draw(goosePenances(heat), 'penance$heat'),
+          pool: goosePenances(heat), heat: heat, color: _kRed,
         ));
         _jumpTo(dest);
         break;
@@ -489,7 +493,8 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           emoji: '🔥', title: 'games.goose_game.penance_title'.tr(),
           subtitle: 'games.goose_game.spicy_square'.tr(),
           description: 'games.goose_game.execute_penance'.tr(),
-          content: _rand(kPenances), pool: kPenances, color: _kOrange,
+          content: _draw(goosePenances(heat), 'penance$heat'),
+          pool: goosePenances(heat), heat: heat, color: _kOrange,
         ));
         break;
       default:
@@ -503,11 +508,13 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
       setState(() { if (player == 1) _p1Clothing--; else _p2Clothing--; });
       await _showClothingModal(player, reason: reason);
     } else {
+      final heat = gooseHeatForSquare(player == 1 ? _p1Pos : _p2Pos);
       await _showContentDialog(_ContentDialogArgs(
         emoji: '🔥', title: 'games.goose_game.naked_title'.tr(),
         subtitle: 'games.goose_game.no_clothes'.tr(namedArgs: {'player': _playerName(player)}),
         description: 'games.goose_game.penance_instead'.tr(),
-        content: _rand(kPenances), pool: kPenances, color: _kRed,
+        content: _draw(goosePenances(heat), 'penance$heat'),
+        pool: goosePenances(heat), heat: heat, color: _kRed,
       ));
     }
   }
@@ -541,6 +548,11 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
   Color        _playerColor(int p) => p == 1 ? _kP1 : _kP2;
   GooseContent _rand(List<GooseContent> l) => l[_rng.nextInt(l.length)];
 
+  /// Cards of one heat level don't repeat until the whole pile is played.
+  final Map<String, ShuffleBag<GooseContent>> _decks = {};
+  GooseContent _draw(List<GooseContent> pile, String key) =>
+      _decks.putIfAbsent(key, () => ShuffleBag(pile, random: _rng)).next();
+
   // ─────────────────────────── MODALS ───────────────────────────────
 
   Future<void> _showContentDialog(_ContentDialogArgs args) async {
@@ -570,7 +582,15 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    // Once the dice have been rolled, leaving asks first (the game is lost).
+    return PopScope(
+      canPop: _gameOver || !_session.isStarted,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (didPop) return;
+        final navigator = Navigator.of(context);
+        if (await confirmLeaveGame(context)) navigator.pop();
+      },
+      child: Scaffold(
       backgroundColor: _kBg1,
       appBar: _buildAppBar(),
       body: Stack(
@@ -610,6 +630,7 @@ class _GoosePlayScreenState extends State<GoosePlayScreen>
           ),
         ],
       ),
+    ),
     );
   }
 
@@ -1800,12 +1821,34 @@ class _IsoBoardPainter extends CustomPainter {
 
 // ==================== DIALOGS ====================
 
+/// Four flames, lit up to the card's heat, and the level's name.
+class _HeatMeter extends StatelessWidget {
+  final int heat;
+  final Color color;
+  const _HeatMeter({required this.heat, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisSize: MainAxisSize.min, children: [
+      for (var i = 1; i <= 4; i++)
+        Icon(Icons.local_fire_department_rounded, size: 16,
+            color: i <= heat ? color : Colors.white24),
+      const SizedBox(width: 6),
+      Text('games.goose_game.heat_$heat'.tr(),
+          style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700,
+              letterSpacing: 0.6)),
+    ]);
+  }
+}
+
 class _ContentDialogArgs {
   final String emoji, title, subtitle, description;
   final GooseContent content;
   /// Where [content] was drawn from: lets the players swap it for another
   /// card when they can't do this one (missing props, not in the mood...).
   final List<GooseContent>? pool;
+  /// Heat level (1-4) of [content], shown under the subtitle.
+  final int? heat;
   final Color color;
   final VoidCallback? onDismiss;
 
@@ -1814,6 +1857,7 @@ class _ContentDialogArgs {
     required this.subtitle, required this.description,
     required this.content, required this.color,
     this.pool,
+    this.heat,
     this.onDismiss,
   });
 }
@@ -1937,6 +1981,10 @@ class _ContentDialogState extends State<_ContentDialog>
                 Text(a.subtitle,
                     style: const TextStyle(color: Colors.white54, fontSize: 13),
                     textAlign: TextAlign.center),
+                if (a.heat != null) ...[
+                  const SizedBox(height: 10),
+                  _HeatMeter(heat: a.heat!, color: c),
+                ],
               ]),
             ),
 

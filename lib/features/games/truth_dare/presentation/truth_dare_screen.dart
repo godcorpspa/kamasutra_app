@@ -106,6 +106,7 @@ class _TruthDareScreenState extends State<TruthDareScreen> {
   Widget build(BuildContext context) {
     return GameScaffold(
       title: 'truth_dare_ui.title'.tr(),
+      guardExit: _playing,
       onHelp: () => showGameRules(
         context,
         title: 'truth_dare_ui.how_to_play'.tr(),

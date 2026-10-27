@@ -225,7 +225,7 @@
       "quick_rule_six": "Fai 6: tira ancora (max 2 volte)",
       "quick_rules_title": "Regole Rapide",
       "tutorial_welcome_title": "Benvenuti!",
-      "tutorial_welcome_body": "Il Gioco dell'Oca Piccante è un gioco di coppia su 100 caselle, pieno di ricompense bollenti, penitenze hot e colpi di scena! Chi raggiunge la casella 100 vince e riceve una ricompensa speciale dal partner 😈",
+      "tutorial_welcome_body": "Il Gioco dell'Oca Piccante è un gioco di coppia su 100 caselle, pieno di ricompense bollenti, penitenze hot e colpi di scena! Chi raggiunge la casella 100 vince e riceve una ricompensa speciale dal partner. Si parte con il riscaldamento: più avanzate sul tabellone, più ricompense e penitenze diventano hot. 😈",
       "tutorial_clothing_title": "4 Capi Ciascuno",
       "tutorial_clothing_body": "Ogni giocatore inizia con 4 capi di abbigliamento. Man mano che il gioco prosegue, li perderete... Se non avete più capi da togliere, scatta una penitenza piccante! 🔥",
       "tutorial_exit_title": "Uscire dalla Partenza",
@@ -557,7 +557,12 @@
       "final_027": "🏆 PREMIO FINALE: Massaggio erotico completo con happy ending!\nOlio, candele e piacere totale 💆",
       "final_028": "🏆 PREMIO FINALE: Il vincitore sceglie 3 atti sessuali!\nIl perdente li esegue tutti senza discutere 🔥",
       "final_029": "🏆 PREMIO FINALE: Sesso orale reciproco + posizione a scelta!\nPrima il 69, poi il vincitore sceglie come continuare 🔥",
-      "final_030": "🏆 PREMIO FINALE: Notte di passione totale!\nIl vincitore decide tutto: posizioni, ritmo e durata 🔥"
+      "final_030": "🏆 PREMIO FINALE: Notte di passione totale!\nIl vincitore decide tutto: posizioni, ritmo e durata 🔥",
+      "heat_1": "Riscaldamento",
+      "heat_2": "Sensuale",
+      "heat_3": "Hot",
+      "heat_4": "Bollente",
+      "quick_rule_heat": "Più avanzi, più ricompense e penitenze diventano hot"
     },
     "truth_dare": {
       "title": "Obbligo o Verità",

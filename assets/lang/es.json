@@ -225,7 +225,7 @@
       "quick_rule_six": "Sacas un 6: tira otra vez (máximo 2 veces)",
       "quick_rules_title": "Reglas Rápidas",
       "tutorial_welcome_title": "¡Bienvenidos!",
-      "tutorial_welcome_body": "El Juego de la Oca Picante es un juego de pareja en 100 casillas, lleno de recompensas sensuales, penitencias picantes y giros inesperados. ¡Quien llegue a la casilla 100 gana y recibe una recompensa especial de su pareja! 😈",
+      "tutorial_welcome_body": "El Juego de la Oca Picante es un juego de pareja en 100 casillas, lleno de recompensas sensuales, penitencias picantes y giros inesperados. ¡Quien llegue a la casilla 100 gana y recibe una recompensa especial de su pareja! Se empieza calentando: cuanto más avanzáis en el tablero, más subidas de tono son las recompensas y las penitencias. 😈",
       "tutorial_clothing_title": "4 Prendas Cada Uno",
       "tutorial_clothing_body": "Cada jugador empieza con 4 prendas. A medida que avanza el juego, las irás perdiendo... ¡Si no te quedan prendas, te toca una penitencia picante! 🔥",
       "tutorial_exit_title": "Salir de la Salida",
@@ -557,7 +557,12 @@
       "final_027": "🏆 PREMIO FINAL: ¡Masaje erótico completo con final feliz!\nAceite, velas y placer total 💆",
       "final_028": "🏆 PREMIO FINAL: ¡El ganador elige 3 actos sexuales!\nEl perdedor los ejecuta todos sin discutir 🔥",
       "final_029": "🏆 PREMIO FINAL: ¡Sexo oral mutuo + posición a elección!\nPrimero el 69, luego el ganador elige cómo continuar 🔥",
-      "final_030": "🏆 PREMIO FINAL: ¡Noche de pasión total!\nEl ganador decide todo: posiciones, ritmo y duración 🔥"
+      "final_030": "🏆 PREMIO FINAL: ¡Noche de pasión total!\nEl ganador decide todo: posiciones, ritmo y duración 🔥",
+      "heat_1": "Calentamiento",
+      "heat_2": "Sensual",
+      "heat_3": "Caliente",
+      "heat_4": "Ardiente",
+      "quick_rule_heat": "Cuanto más avanzas, más subidas de tono son recompensas y penitencias"
     },
     "truth_dare": {
       "title": "Verdad o Reto",

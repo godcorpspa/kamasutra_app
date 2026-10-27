@@ -381,6 +381,48 @@ const List<GooseContent> kPenances = [
   GooseContent('games.goose_game.penance_116'),
 ];
 
+// ==================== HEAT ====================
+//
+// Rewards and penances are graded from warm-up (1) to explicit (4), and the
+// board is split into four quarters: squares 1-25 draw warm-up cards
+// (massages, kisses, whispers — foreplay), 26-50 sensual ones, 51-75 hot
+// ones and 76-100 the most explicit. The game heats up as the pawns climb.
+
+/// Heat level (1-4) of the cards drawn on [square].
+int gooseHeatForSquare(int square) => ((square - 1).clamp(0, 99) ~/ 25) + 1;
+
+const Map<int, List<int>> _kRewardHeat = {
+  1: [1, 2, 3, 4, 5, 6, 7, 13, 17, 18, 19, 20, 23, 24, 60, 70, 76, 97, 98,
+      99, 100, 102],
+  2: [8, 11, 12, 14, 15, 16, 21, 22, 25, 27, 30, 34, 35, 50, 54, 56, 63, 64,
+      65, 66, 69, 74, 75, 77, 78, 79, 81, 84, 88, 101, 104, 108, 110, 112,
+      113],
+  3: [9, 10, 26, 28, 29, 31, 32, 33, 44, 51, 52, 53, 59, 67, 68, 71, 72, 73,
+      80, 82, 83, 85, 86, 87, 89, 90, 92, 94, 95, 103, 105, 106, 107, 111,
+      114],
+  4: [36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49, 55, 57, 58, 61, 62,
+      91, 93, 96, 109, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124],
+};
+
+const Map<int, List<int>> _kPenanceHeat = {
+  1: [1, 2, 3, 9, 10, 12, 13, 14, 16, 17, 50, 56, 70, 98, 103],
+  2: [4, 7, 8, 11, 15, 19, 24, 25, 42, 54, 55, 57, 58, 66, 67, 68, 69, 71, 72,
+      74, 75, 78, 79, 85, 87, 88, 89, 97, 100, 101, 104, 115],
+  3: [5, 6, 18, 20, 21, 22, 23, 26, 34, 41, 43, 44, 46, 49, 59, 60, 61, 62, 63,
+      64, 73, 76, 77, 80, 81, 82, 83, 84, 86, 90, 93, 94, 95, 96, 99, 102, 105,
+      106, 107],
+  4: [27, 28, 29, 30, 31, 32, 33, 35, 36, 37, 38, 39, 40, 45, 47, 48, 51, 52,
+      53, 65, 91, 92, 108, 109, 110, 111, 112, 113, 114, 116],
+};
+
+/// Rewards of the given [heat] (1-4).
+List<GooseContent> gooseRewards(int heat) =>
+    [for (final n in _kRewardHeat[heat.clamp(1, 4)]!) kRewards[n - 1]];
+
+/// Penances of the given [heat] (1-4).
+List<GooseContent> goosePenances(int heat) =>
+    [for (final n in _kPenanceHeat[heat.clamp(1, 4)]!) kPenances[n - 1]];
+
 // ==================== FINAL REWARDS (victory prizes, 30) ====================
 //
 // Each entry stores a translation key (games.goose_game.final_NNN).

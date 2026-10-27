@@ -225,7 +225,7 @@
       "quick_rule_six": "Vous faites un 6 : relancez (max 2 fois)",
       "quick_rules_title": "Règles Rapides",
       "tutorial_welcome_title": "Bienvenue !",
-      "tutorial_welcome_body": "Le Jeu de l'Oie Pimenté est un jeu de couple sur 100 cases, plein de récompenses sensuelles, de pénitences pimentées et de rebondissements ! Celui qui atteint la case 100 gagne et reçoit une récompense spéciale de son partenaire ! 😈",
+      "tutorial_welcome_body": "Le Jeu de l'Oie Pimenté est un jeu de couple sur 100 cases, plein de récompenses sensuelles, de pénitences pimentées et de rebondissements ! Celui qui atteint la case 100 gagne et reçoit une récompense spéciale de son partenaire ! On commence par s'échauffer : plus vous avancez sur le plateau, plus les récompenses et les gages deviennent chauds. 😈",
       "tutorial_clothing_title": "4 Vêtements Chacun",
       "tutorial_clothing_body": "Chaque joueur commence avec 4 vêtements. Au fil du jeu, vous les perdrez... Si vous n'avez plus de vêtements à retirer, une pénitence pimentée s'applique ! 🔥",
       "tutorial_exit_title": "Quitter le Départ",
@@ -557,7 +557,12 @@
       "final_027": "🏆 PRIX FINAL : Massage érotique complet avec happy ending !\nHuile, bougies et plaisir total 💆",
       "final_028": "🏆 PRIX FINAL : Le gagnant choisit 3 actes sexuels !\nLe perdant les exécute tous sans discuter 🔥",
       "final_029": "🏆 PRIX FINAL : Sexe oral mutuel + position au choix !\nD'abord le 69, puis le gagnant choisit comment continuer 🔥",
-      "final_030": "🏆 PRIX FINAL : Nuit de passion totale !\nLe gagnant décide de tout : positions, rythme et durée 🔥"
+      "final_030": "🏆 PRIX FINAL : Nuit de passion totale !\nLe gagnant décide de tout : positions, rythme et durée 🔥",
+      "heat_1": "Échauffement",
+      "heat_2": "Sensuel",
+      "heat_3": "Chaud",
+      "heat_4": "Brûlant",
+      "quick_rule_heat": "Plus tu avances, plus les récompenses et les gages deviennent chauds"
     },
     "truth_dare": {
       "title": "Action ou Vérité",
