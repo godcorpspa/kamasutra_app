@@ -44,16 +44,21 @@ class _Zone {
 const _frontZones = [
   _Zone('forehead', 'forehead', 50, 8.5, left: true),
   _Zone('eyes', 'eyes', 54.4, 14.5, left: false),
-  _Zone('cheeks', 'cheeks', 43.8, 20.5, left: true),
+  _Zone('ears', 'ears', 40.8, 16.5, left: true),
+  _Zone('cheeks', 'cheeks', 44, 21, left: true),
   _Zone('lips', 'lips', 50, 24.2, left: false),
   _Zone('neck_front', 'neck', 50, 33, left: true),
   _Zone('shoulders', 'shoulders', 32.5, 45.5, left: true),
-  _Zone('chest', 'chest', 50, 52, left: false),
+  _Zone('chest', 'chest', 50, 49, left: false),
+  _Zone('nipples', 'nipples', 42.5, 55, left: true),
   _Zone('arms', 'arms', 23, 72, left: true),
-  _Zone('stomach', 'stomach', 50, 77, left: false),
+  _Zone('stomach', 'stomach', 50, 76, left: false),
+  _Zone('lower_belly', 'lower_belly', 50, 91, left: false),
   _Zone('hips', 'hips', 66, 97, left: false),
+  _Zone('intimate', 'intimate', 50, 103.5, left: true),
   _Zone('hands', 'hands', 17.6, 120, left: true),
   _Zone('thighs_front', 'thighs', 59.5, 123, left: false),
+  _Zone('inner_thighs', 'inner_thighs', 46.4, 127, left: true),
   _Zone('knees', 'knees', 40.4, 146, left: true),
   _Zone('calves_front', 'calves', 59.8, 165, left: false),
   _Zone('feet', 'feet', 41, 192.5, left: true),
@@ -66,6 +71,7 @@ const _backZones = [
   _Zone('lower_back', 'lower_back', 50, 84, left: true),
   _Zone('buttocks', 'buttocks', 57.5, 103, left: false),
   _Zone('thighs_back', 'thighs_back', 40.5, 126, left: true),
+  _Zone('back_knees', 'back_knees', 40.4, 146, left: true),
   _Zone('calves_back', 'calves_back', 59.8, 163, left: false),
 ];
 
@@ -360,7 +366,8 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
                   ),
                 ),
               ),
@@ -567,6 +574,7 @@ class _BodyAtlas extends StatelessWidget {
         final leftEdge = left + 11 * s;
         final rightEdge = left + 89 * s;
         Offset at(_Zone z) => Offset(left + z.x * s, top + z.y * s);
+        final labelY = _labelYs(zones, (z) => at(z).dy, h - 10);
 
         return Stack(
           clipBehavior: Clip.none,
@@ -579,13 +587,16 @@ class _BodyAtlas extends StatelessWidget {
                   origin: Offset(left, top),
                   leaders: [
                     for (final z in zones)
-                      (at(z), z.left ? leftEdge : rightEdge),
+                      (
+                        at(z),
+                        Offset(z.left ? leftEdge : rightEdge, labelY[z.id]!),
+                      ),
                   ],
                 ),
               ),
             ),
             for (final z in zones) ...[
-              _label(z, at(z), leftEdge, rightEdge),
+              _label(z, labelY[z.id]!, leftEdge, rightEdge),
               Positioned(
                 left: at(z).dx - 18,
                 top: at(z).dy - 18,
@@ -613,7 +624,37 @@ class _BodyAtlas extends StatelessWidget {
     );
   }
 
-  Widget _label(_Zone z, Offset dot, double leftEdge, double rightEdge) {
+  /// Where each zone's label sits vertically: level with its dot, nudged
+  /// down (or up, near the bottom) so labels in the same margin never
+  /// overlap — the head and the hips have several zones close together.
+  static Map<String, double> _labelYs(
+    List<_Zone> zones,
+    double Function(_Zone) dotY,
+    double maxY,
+  ) {
+    const gap = 19.0;
+    final out = <String, double>{};
+    for (final side in [true, false]) {
+      final column = zones.where((z) => z.left == side).toList()
+        ..sort((a, b) => dotY(a).compareTo(dotY(b)));
+      final ys = [for (final z in column) dotY(z)];
+      for (var i = 1; i < ys.length; i++) {
+        ys[i] = max(ys[i], ys[i - 1] + gap);
+      }
+      if (ys.isNotEmpty && ys.last > maxY) {
+        ys[ys.length - 1] = maxY;
+        for (var i = ys.length - 2; i >= 0; i--) {
+          ys[i] = min(ys[i], ys[i + 1] - gap);
+        }
+      }
+      for (var i = 0; i < column.length; i++) {
+        out[column[i].id] = ys[i];
+      }
+    }
+    return out;
+  }
+
+  Widget _label(_Zone z, double y, double leftEdge, double rightEdge) {
     final marked = _sensation(marks[z.id]);
     final text = Text(
       front ? z.name : z.shortName,
@@ -626,7 +667,7 @@ class _BodyAtlas extends StatelessWidget {
     );
     return Positioned(
       left: z.left ? leftEdge - 4 - _labelWidth : rightEdge + 4,
-      top: dot.dy - 10,
+      top: y - 10,
       width: _labelWidth,
       height: 20,
       child: GestureDetector(
@@ -697,7 +738,8 @@ class _FigurePainter extends CustomPainter {
   final bool front;
   final double scale;
   final Offset origin;
-  final List<(Offset, double)> leaders;
+  /// Hairlines from each dot to its label.
+  final List<(Offset, Offset)> leaders;
 
   _FigurePainter({
     required this.front,
@@ -840,9 +882,9 @@ class _FigurePainter extends CustomPainter {
     final leader = Paint()
       ..strokeWidth = 0.8
       ..color = AppColors.ivory.withOpacity(0.18);
-    for (final (dot, edgeX) in leaders) {
-      final dir = edgeX < dot.dx ? -1 : 1;
-      canvas.drawLine(dot + Offset(dir * 8.0, 0), Offset(edgeX, dot.dy), leader);
+    for (final (dot, end) in leaders) {
+      final dir = end.dx < dot.dx ? -1 : 1;
+      canvas.drawLine(dot + Offset(dir * 8.0, 0), end, leader);
     }
   }
 
@@ -851,7 +893,8 @@ class _FigurePainter extends CustomPainter {
       old.front != front ||
       old.scale != scale ||
       old.origin != origin ||
-      old.leaders.length != leaders.length;
+      old.leaders.length != leaders.length ||
+      old.leaders.first != leaders.first;
 }
 
 // ─────────────────────────────────────────────────────────────────────────

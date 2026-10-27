@@ -2319,7 +2319,13 @@
       "pass_to": "Passa il telefono a {name}",
       "map_of": "Mappa di",
       "tap_hint": "Tocca un punto o un nome per dire come ti piace essere toccato/a lì.",
-      "only_one": "Segnate da uno solo"
+      "only_one": "Segnate da uno solo",
+      "body_ears": "Orecchie",
+      "body_nipples": "Capezzoli",
+      "body_lower_belly": "Basso ventre",
+      "body_intimate": "Zona intima",
+      "body_inner_thighs": "Interno cosce",
+      "body_back_knees": "Dietro le ginocchia"
     },
     "soundtrack": {
       "title": "La Nostra Colonna Sonora",

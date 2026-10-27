@@ -559,7 +559,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   ),
                 ),
               ),
@@ -578,7 +578,7 @@ class _FantasyBuilderScreenState extends State<FantasyBuilderScreen> {
                   ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.rose,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                   ),
                 ),
               ),

@@ -2319,7 +2319,13 @@
       "pass_to": "Pásale el móvil a {name}",
       "map_of": "Mapa de",
       "tap_hint": "Toca un punto o un nombre para decir cómo te gusta que te toquen ahí.",
-      "only_one": "Marcadas solo por uno"
+      "only_one": "Marcadas solo por uno",
+      "body_ears": "Orejas",
+      "body_nipples": "Pezones",
+      "body_lower_belly": "Bajo vientre",
+      "body_intimate": "Zona íntima",
+      "body_inner_thighs": "Muslos (interior)",
+      "body_back_knees": "Detrás de las rodillas"
     },
     "soundtrack": {
       "title": "Nuestra Banda Sonora",

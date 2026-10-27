@@ -2319,7 +2319,13 @@
       "pass_to": "Passe le téléphone à {name}",
       "map_of": "Carte de",
       "tap_hint": "Touche un point ou un nom pour dire comment tu aimes être touché(e) à cet endroit.",
-      "only_one": "Marquées par un seul de vous"
+      "only_one": "Marquées par un seul de vous",
+      "body_ears": "Oreilles",
+      "body_nipples": "Tétons",
+      "body_lower_belly": "Bas-ventre",
+      "body_intimate": "Zone intime",
+      "body_inner_thighs": "Intérieur des cuisses",
+      "body_back_knees": "Arrière des genoux"
     },
     "soundtrack": {
       "title": "Notre Bande Sonore",

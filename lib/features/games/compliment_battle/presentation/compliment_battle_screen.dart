@@ -381,7 +381,7 @@ class _ComplimentBattleScreenState extends State<ComplimentBattleScreen> {
                       ? 'games.compliment_battle.power_used'.tr()
                       : 'games.compliment_battle.power_extra_time'.tr()),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                   ),
                 ),
               ),
@@ -394,7 +394,7 @@ class _ComplimentBattleScreenState extends State<ComplimentBattleScreen> {
                       ? 'games.compliment_battle.power_used'.tr()
                       : 'games.compliment_battle.power_skip'.tr()),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                   ),
                 ),
               ),

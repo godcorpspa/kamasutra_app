@@ -2319,7 +2319,13 @@
       "pass_to": "Hand the phone to {name}",
       "map_of": "Map of",
       "tap_hint": "Tap a point or a name to say how you like to be touched there.",
-      "only_one": "Marked by one of you"
+      "only_one": "Marked by one of you",
+      "body_ears": "Ears",
+      "body_nipples": "Nipples",
+      "body_lower_belly": "Lower belly",
+      "body_intimate": "Intimate area",
+      "body_inner_thighs": "Inner thighs",
+      "body_back_knees": "Back of the knees"
     },
     "soundtrack": {
       "title": "Our Soundtrack",

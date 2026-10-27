@@ -2063,7 +2063,7 @@ class _ContentDialogState extends State<_ContentDialog>
                           fontWeight: FontWeight.w600),
                     ),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
                       side: BorderSide(color: c.withOpacity(0.6)),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
