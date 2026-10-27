@@ -2368,7 +2368,14 @@
       "reaction_nice": "Nice",
       "reaction_meh": "Hmm…",
       "copy_playlist": "Copy the playlist",
-      "copied": "Playlist copied: paste it wherever you like."
+      "copied": "Playlist copied: paste it wherever you like.",
+      "search_hint": "Search for a song or an artist",
+      "search_source": "Open music catalogue by MusicBrainz",
+      "no_results": "No songs found. Try adding the artist, or type it in yourself.",
+      "offline": "Search isn't available right now: type the song in yourself.",
+      "type_manually": "Type it in",
+      "search_catalog": "Search the catalogue",
+      "change_song": "Change song"
     },
     "mirror_challenge": {
       "title": "Mirror Challenge",
@@ -2803,7 +2810,7 @@
     "email_body_suggestion": "My suggestion:\n\n",
     "email_subject_feedback": "[FEEDBACK] - Kamasutra & Couple Games",
     "email_body_feedback": "What I think of the app:\n\n",
-    "privacy_text": "Privacy Policy - Kamasutra & Couple Games\n\nLast updated: 19 February 2026\n\n1. Introduction\nYour privacy matters to us. This policy explains how we collect, use and protect your personal data.\n\n2. Data we collect\n- Authentication data: email and name (if provided through Google or email sign-in).\n- Usage data: preferences, exploration history, progress and badges.\n- Local data: PIN (hashed), app settings.\n\n3. How we use the data\n- To provide and improve the service.\n- To sync your data across devices (optional).\n- We do not sell or share your data with third parties.\n\n4. Storage and security\n- Sensitive data (PIN) is stored only locally on your device.\n- Cloud data is protected by Firebase with encryption in transit and at rest.\n- You can delete all your data at any time from the settings.\n\n5. Third-party services\n- Firebase (Google): authentication and cloud storage.\n- Google Sign-In: optional sign-in.\n\n6. Your rights\n- Access to your personal data.\n- Complete deletion of your data.\n- Data portability.\n- Withdrawal of consent at any time.\n\n7. Contact\nFor privacy questions, contact us at: support@kamasutraapp.com\n\n8. Changes\nWe reserve the right to update this policy. Changes will be announced in the app.",
+    "privacy_text": "Privacy Policy - Kamasutra & Couple Games\n\nLast updated: 27 October 2026\n\n1. Introduction\nYour privacy matters to us. This policy explains how we collect, use and protect your personal data.\n\n2. Data we collect\n- Authentication data: email and name (if provided through Google or email sign-in).\n- Usage data: preferences, exploration history, progress and badges.\n- Local data: PIN (hashed), app settings.\n\n3. How we use the data\n- To provide and improve the service.\n- To sync your data across devices (optional).\n- We do not sell or share your data with third parties.\n\n4. Storage and security\n- Sensitive data (PIN) is stored only locally on your device.\n- Cloud data is protected by Firebase with encryption in transit and at rest.\n- You can delete all your data at any time from the settings.\n\n5. Third-party services\n- Firebase (Google): authentication and cloud storage.\n- Google Sign-In: optional sign-in.\n- MusicBrainz and Cover Art Archive (MetaBrainz Foundation): song search in the Soundtrack game. Only the search terms are sent, no personal data.\n\n6. Your rights\n- Access to your personal data.\n- Complete deletion of your data.\n- Data portability.\n- Withdrawal of consent at any time.\n\n7. Contact\nFor privacy questions, contact us at: support@kamasutraapp.com\n\n8. Changes\nWe reserve the right to update this policy. Changes will be announced in the app.",
     "terms_text": "Terms of Service - Kamasutra & Couple Games\n\nLast updated: 19 February 2026\n\n1. Acceptance of the terms\nBy using the app, you accept these terms of service.\n\n2. Age requirement\nThe app is intended only for adults (18+). Access requires age verification.\n\n3. Use of the app\n- The app is designed for consenting adult couples.\n- Any illegal or unauthorised use is prohibited.\n- The content is provided for educational and entertainment purposes.\n\n4. Account and data\n- You are responsible for the security of your account.\n- You can delete your data at any time.\n- Cloud sync is optional.\n\n5. Intellectual property\nAll content, illustrations, texts and design are protected by copyright.\n\n6. Limitation of liability\nThe app is provided \"as is\". We do not guarantee that the service will be free of errors or interruptions.\n\n7. Consent and safety\n- The app promotes mutual consent in every interaction.\n- Pause and partner check-ins are built in so that both partners stay comfortable.\n\n8. Changes to the terms\nWe reserve the right to change these terms. Changes will be announced in the app.\n\n9. Contact\nFor questions about the terms, contact us at: support@kamasutraapp.com",
     "all_data_deleted": "All data deleted",
     "email_label": "Email",

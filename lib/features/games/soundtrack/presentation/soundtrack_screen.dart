@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import '../../../../app/theme.dart';
 import '../../../../shared/utils/display_text.dart';
 import '../../shared/game_kit.dart';
+import '../data/song_search.dart';
 
 /// Soundtrack: the partners take turns picking a song for a theme ("our
 /// first meeting", "road trip"…); the other reacts to it. At the end the
@@ -73,9 +75,10 @@ class _Song {
   final String artist;
   final _Theme theme;
   final int addedBy;
+  final String? coverUrl;
   String? reaction;
 
-  _Song(this.title, this.artist, this.theme, this.addedBy);
+  _Song(this.title, this.artist, this.theme, this.addedBy, {this.coverUrl});
 
   int get hearts => _reaction(reaction)?.hearts ?? 0;
 }
@@ -85,7 +88,18 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
   final _random = Random();
   final _titleController = TextEditingController();
   final _artistController = TextEditingController();
+  final _searchController = TextEditingController();
+  final _songSearch = SongSearch();
   final List<_Song> _playlist = [];
+
+  // Catalogue search for the current turn.
+  Timer? _debounce;
+  int _searchSeq = 0;
+  bool _searching = false;
+  bool _searchFailed = false;
+  List<SongResult>? _results;
+  SongResult? _picked;
+  bool _manual = false;
 
   _Phase _phase = _Phase.setup;
   int _themeCount = 8;
@@ -98,6 +112,9 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    _songSearch.close();
+    _searchController.dispose();
     _titleController.dispose();
     _artistController.dispose();
     _session.finish();
@@ -123,26 +140,88 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
     });
   }
 
-  void _addSong() {
-    final title = _titleController.text.trim();
-    if (title.isEmpty) {
-      HapticFeedback.lightImpact();
-      setState(() => _missingTitle = true);
+  /// Searches the catalogue a moment after the player stops typing.
+  void _onSearchChanged(String text) {
+    _debounce?.cancel();
+    if (text.trim().length < 3) {
+      _searchSeq++;
+      setState(() {
+        _results = null;
+        _searching = false;
+        _searchFailed = false;
+      });
       return;
+    }
+    _debounce = Timer(const Duration(milliseconds: 700), () => _search(text));
+  }
+
+  Future<void> _search(String text) async {
+    _debounce?.cancel();
+    if (text.trim().length < 2) return;
+    final seq = ++_searchSeq;
+    setState(() {
+      _searching = true;
+      _searchFailed = false;
+    });
+    try {
+      final results = await _songSearch.search(text);
+      if (!mounted || seq != _searchSeq) return;
+      setState(() {
+        _results = results.take(10).toList();
+        _searching = false;
+      });
+    } catch (_) {
+      // Offline, timed out or the service is busy: offer manual entry.
+      if (!mounted || seq != _searchSeq) return;
+      setState(() {
+        _results = null;
+        _searching = false;
+        _searchFailed = true;
+      });
+    }
+  }
+
+  void _resetTurn() {
+    _debounce?.cancel();
+    _searchSeq++;
+    _searchController.clear();
+    _titleController.clear();
+    _artistController.clear();
+    _results = null;
+    _picked = null;
+    _searching = false;
+    _searchFailed = false;
+    _manual = false;
+    _missingTitle = false;
+  }
+
+  void _addSong() {
+    final _Song song;
+    if (_manual) {
+      final title = _titleController.text.trim();
+      if (title.isEmpty) {
+        HapticFeedback.lightImpact();
+        setState(() => _missingTitle = true);
+        return;
+      }
+      final artist = _artistController.text.trim();
+      song = _Song(
+        title,
+        artist.isEmpty ? 'game_ui.unknown_artist'.tr() : artist,
+        _round[_index],
+        _player,
+      );
+    } else {
+      final picked = _picked;
+      if (picked == null) return;
+      song = _Song(picked.title, picked.artist, _round[_index], _player,
+          coverUrl: picked.coverUrl);
     }
     HapticFeedback.mediumImpact();
     FocusScope.of(context).unfocus();
-    final artist = _artistController.text.trim();
-    _playlist.add(_Song(
-      title,
-      artist.isEmpty ? 'game_ui.unknown_artist'.tr() : artist,
-      _round[_index],
-      _player,
-    ));
-    _titleController.clear();
-    _artistController.clear();
+    _playlist.add(song);
     setState(() {
-      _missingTitle = false;
+      _resetTurn();
       _phase = _Phase.reacting;
     });
   }
@@ -154,9 +233,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
   }
 
   void _skipTheme() {
-    _titleController.clear();
-    _artistController.clear();
-    _missingTitle = false;
+    _resetTurn();
     _next();
   }
 
@@ -317,40 +394,12 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
         const SizedBox(height: 18),
         _themeCard(_round[_index]),
         const SizedBox(height: 20),
-        TextField(
-          controller: _titleController,
-          textCapitalization: TextCapitalization.sentences,
-          textInputAction: TextInputAction.next,
-          onChanged: (_) {
-            if (_missingTitle) setState(() => _missingTitle = false);
-          },
-          style: const TextStyle(color: AppColors.ivory),
-          decoration: InputDecoration(
-            labelText: 'game_ui.song_title_label'.tr(),
-            prefixIcon: const Icon(Icons.music_note_outlined),
-            fillColor: AppColors.inkRaised.withOpacity(0.85),
-            errorText:
-                _missingTitle ? 'game_ui.enter_song_title'.tr() : null,
-          ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _artistController,
-          textCapitalization: TextCapitalization.words,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (_) => _addSong(),
-          style: const TextStyle(color: AppColors.ivory),
-          decoration: InputDecoration(
-            labelText: 'game_ui.artist_label'.tr(),
-            prefixIcon: const Icon(Icons.person_outline_rounded),
-            fillColor: AppColors.inkRaised.withOpacity(0.85),
-          ),
-        ),
+        if (_manual) ..._manualEntry() else ..._catalogueSearch(),
         const SizedBox(height: 22),
         GamePrimaryButton(
           label: 'game_ui.add_btn'.tr(),
           icon: Icons.add_rounded,
-          onPressed: _addSong,
+          onPressed: _manual || _picked != null ? _addSong : null,
         ),
         Center(
           child: GameQuietButton(
@@ -361,6 +410,130 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
         ),
       ],
     );
+  }
+
+  List<Widget> _catalogueSearch() {
+    final picked = _picked;
+    if (picked != null) {
+      return [
+        GameSurface(
+          highlighted: true,
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              _Cover(url: picked.coverUrl, size: 56),
+              const SizedBox(width: 14),
+              Expanded(child: _SongText(song: picked)),
+              IconButton(
+                tooltip: 'games.soundtrack.change_song'.tr(),
+                icon: const Icon(Icons.close_rounded, color: AppColors.mist),
+                onPressed: () => setState(() => _picked = null),
+              ),
+            ],
+          ),
+        ),
+      ];
+    }
+    final results = _results;
+    return [
+      TextField(
+        controller: _searchController,
+        textInputAction: TextInputAction.search,
+        onChanged: _onSearchChanged,
+        onSubmitted: _search,
+        style: const TextStyle(color: AppColors.ivory),
+        decoration: InputDecoration(
+          hintText: 'games.soundtrack.search_hint'.tr(),
+          prefixIcon: const Icon(Icons.search_rounded),
+          fillColor: AppColors.inkRaised.withOpacity(0.85),
+          suffixIcon: _searching
+              ? const Padding(
+                  padding: EdgeInsets.all(14),
+                  child: SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 1.6),
+                  ),
+                )
+              : null,
+        ),
+      ),
+      const SizedBox(height: 8),
+      if (_searchFailed)
+        _SearchNote('games.soundtrack.offline'.tr())
+      else if (results != null && results.isEmpty)
+        _SearchNote('games.soundtrack.no_results'.tr())
+      else if (results != null)
+        for (final r in results)
+          _ResultRow(
+            song: r,
+            onTap: () {
+              HapticFeedback.selectionClick();
+              FocusScope.of(context).unfocus();
+              setState(() => _picked = r);
+            },
+          ),
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              'games.soundtrack.search_source'.tr(),
+              style: const TextStyle(fontSize: 11.5, color: AppColors.smoke),
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () => setState(() {
+              _manual = true;
+              final typed = _searchController.text.trim();
+              if (_titleController.text.isEmpty) _titleController.text = typed;
+            }),
+            icon: const Icon(Icons.edit_outlined, size: 16),
+            label: Text('games.soundtrack.type_manually'.tr()),
+          ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _manualEntry() {
+    return [
+      TextField(
+        controller: _titleController,
+        textCapitalization: TextCapitalization.sentences,
+        textInputAction: TextInputAction.next,
+        onChanged: (_) {
+          if (_missingTitle) setState(() => _missingTitle = false);
+        },
+        style: const TextStyle(color: AppColors.ivory),
+        decoration: InputDecoration(
+          labelText: 'game_ui.song_title_label'.tr(),
+          prefixIcon: const Icon(Icons.music_note_outlined),
+          fillColor: AppColors.inkRaised.withOpacity(0.85),
+          errorText: _missingTitle ? 'game_ui.enter_song_title'.tr() : null,
+        ),
+      ),
+      const SizedBox(height: 12),
+      TextField(
+        controller: _artistController,
+        textCapitalization: TextCapitalization.words,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (_) => _addSong(),
+        style: const TextStyle(color: AppColors.ivory),
+        decoration: InputDecoration(
+          labelText: 'game_ui.artist_label'.tr(),
+          prefixIcon: const Icon(Icons.person_outline_rounded),
+          fillColor: AppColors.inkRaised.withOpacity(0.85),
+        ),
+      ),
+      Align(
+        alignment: Alignment.centerRight,
+        child: TextButton.icon(
+          onPressed: () => setState(() => _manual = false),
+          icon: const Icon(Icons.search_rounded, size: 16),
+          label: Text('games.soundtrack.search_catalog'.tr()),
+        ),
+      ),
+    ];
   }
 
   Widget _buildReacting() {
@@ -379,16 +552,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
           highlighted: true,
           child: Row(
             children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: GameTone.selectedBorder),
-                ),
-                child: const Icon(Icons.music_note_rounded,
-                    color: GameTone.accentSoft),
-              ),
+              _Cover(url: song.coverUrl, size: 56),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -565,6 +729,8 @@ class _SongRow extends StatelessWidget {
               ),
             ),
           ),
+          _Cover(url: song.coverUrl, size: 38),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -632,6 +798,121 @@ class _Stat extends StatelessWidget {
             style: const TextStyle(fontSize: 12, color: AppColors.mist),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Album cover from the open Cover Art Archive, or a quiet placeholder when
+/// the song has none (or there is no connection).
+class _Cover extends StatelessWidget {
+  final String? url;
+  final double size;
+
+  const _Cover({required this.url, this.size = 44});
+
+  @override
+  Widget build(BuildContext context) {
+    final placeholder = Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: GameTone.selectedBorder),
+        color: GameTone.selectedFill,
+      ),
+      child: Icon(Icons.music_note_rounded,
+          size: size * 0.42, color: GameTone.accentSoft),
+    );
+    final u = url;
+    if (u == null) return placeholder;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Image.network(
+        u,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => placeholder,
+        // Placeholder until the first frame has actually arrived.
+        frameBuilder: (_, child, frame, sync) =>
+            sync || frame != null ? child : placeholder,
+      ),
+    );
+  }
+}
+
+class _SongText extends StatelessWidget {
+  final SongResult song;
+
+  const _SongText({required this.song});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          song.title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: AppColors.ivory,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          [song.artist, if (song.year != null) song.year].join(' · '),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(fontSize: 12.5, color: AppColors.mist),
+        ),
+      ],
+    );
+  }
+}
+
+class _ResultRow extends StatelessWidget {
+  final SongResult song;
+  final VoidCallback onTap;
+
+  const _ResultRow({required this.song, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        child: Row(
+          children: [
+            _Cover(url: song.coverUrl),
+            const SizedBox(width: 14),
+            Expanded(child: _SongText(song: song)),
+            const Icon(Icons.add_circle_outline_rounded,
+                size: 20, color: AppColors.smoke),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchNote extends StatelessWidget {
+  final String text;
+
+  const _SearchNote(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 13, height: 1.4, color: AppColors.mist),
       ),
     );
   }
