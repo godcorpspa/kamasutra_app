@@ -75,10 +75,9 @@ class _Song {
   final String artist;
   final _Theme theme;
   final int addedBy;
-  final String? coverUrl;
   String? reaction;
 
-  _Song(this.title, this.artist, this.theme, this.addedBy, {this.coverUrl});
+  _Song(this.title, this.artist, this.theme, this.addedBy);
 
   int get hearts => _reaction(reaction)?.hearts ?? 0;
 }
@@ -214,8 +213,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
     } else {
       final picked = _picked;
       if (picked == null) return;
-      song = _Song(picked.title, picked.artist, _round[_index], _player,
-          coverUrl: picked.coverUrl);
+      song = _Song(picked.title, picked.artist, _round[_index], _player);
     }
     HapticFeedback.mediumImpact();
     FocusScope.of(context).unfocus();
@@ -421,7 +419,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
           padding: const EdgeInsets.all(14),
           child: Row(
             children: [
-              _Cover(url: picked.coverUrl, size: 56),
+              const _SongBadge(size: 56),
               const SizedBox(width: 14),
               Expanded(child: _SongText(song: picked)),
               IconButton(
@@ -552,7 +550,7 @@ class _SoundtrackScreenState extends State<SoundtrackScreen> {
           highlighted: true,
           child: Row(
             children: [
-              _Cover(url: song.coverUrl, size: 56),
+              const _SongBadge(size: 56),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -729,7 +727,7 @@ class _SongRow extends StatelessWidget {
               ),
             ),
           ),
-          _Cover(url: song.coverUrl, size: 38),
+          const _SongBadge(size: 38),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -803,17 +801,16 @@ class _Stat extends StatelessWidget {
   }
 }
 
-/// Album cover from the open Cover Art Archive, or a quiet placeholder when
-/// the song has none (or there is no connection).
-class _Cover extends StatelessWidget {
-  final String? url;
+/// A quiet music-note tile beside each song (no album covers: they are
+/// copyrighted artwork).
+class _SongBadge extends StatelessWidget {
   final double size;
 
-  const _Cover({required this.url, this.size = 44});
+  const _SongBadge({this.size = 44});
 
   @override
   Widget build(BuildContext context) {
-    final placeholder = Container(
+    return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
@@ -823,21 +820,6 @@ class _Cover extends StatelessWidget {
       ),
       child: Icon(Icons.music_note_rounded,
           size: size * 0.42, color: GameTone.accentSoft),
-    );
-    final u = url;
-    if (u == null) return placeholder;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        u,
-        width: size,
-        height: size,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => placeholder,
-        // Placeholder until the first frame has actually arrived.
-        frameBuilder: (_, child, frame, sync) =>
-            sync || frame != null ? child : placeholder,
-      ),
     );
   }
 }
@@ -889,7 +871,7 @@ class _ResultRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
         child: Row(
           children: [
-            _Cover(url: song.coverUrl),
+            const _SongBadge(),
             const SizedBox(width: 14),
             Expanded(child: _SongText(song: song)),
             const Icon(Icons.add_circle_outline_rounded,
