@@ -185,7 +185,26 @@ class PreferencesService {
 
   // ============ FAVORITES ============
 
-  List<String> get favoritePositionIds => getStringList('favorite_positions') ?? [];
+  /// Positions removed from the catalogue as duplicates, mapped to the entry
+  /// that replaced them. Lists saved by earlier versions (on the device or
+  /// in the cloud) may still hold the old ids.
+  static const _replacedPositionIds = {
+    'pos_005': 'pos_027', // Loto (Yab-Yum) -> Loto
+    'pos_007': 'pos_025', // Reverse Cowgirl -> Cowgirl Inversa
+    'pos_008': 'pos_123', // Forbici -> Forbice
+    'pos_022': 'pos_123', // Forbici -> Forbice
+    'pos_013': 'pos_033', // Plancetta -> Sfinge
+    'pos_014': 'pos_034', // Aquila Spiegata -> Stella
+  };
+
+  /// Reads a saved list of position ids, replacing removed ids with their
+  /// current entry and dropping the duplicates that creates.
+  List<String> _positionIds(String key) => {
+        for (final id in getStringList(key) ?? const <String>[])
+          _replacedPositionIds[id] ?? id,
+      }.toList();
+
+  List<String> get favoritePositionIds => _positionIds('favorite_positions');
 
   Future<void> setFavoritePositionIds(List<String> positionIds) async {
     await setStringList('favorite_positions', positionIds);
@@ -324,7 +343,7 @@ class PreferencesService {
 
   // ============ POSIZIONI PROVATE ============
 
-  List<String> get triedPositionIds => getStringList('tried_positions') ?? [];
+  List<String> get triedPositionIds => _positionIds('tried_positions');
 
   Future<void> addTriedPosition(String positionId) async {
     final tried = List<String>.from(triedPositionIds);

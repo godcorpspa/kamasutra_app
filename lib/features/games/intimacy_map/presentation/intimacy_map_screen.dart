@@ -354,33 +354,37 @@ class _IntimacyMapScreenState extends State<IntimacyMapScreen> {
             style: const TextStyle(fontSize: 12, color: AppColors.smoke),
           ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: _switchPlayer,
-                  icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-                  label: Text(
-                    GamePlayers.name(_other),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 16),
+          // The switch button takes the width its name needs (up to half
+          // the row); "Compare" fills the rest.
+          LayoutBuilder(
+            builder: (context, box) => Row(
+              children: [
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: box.maxWidth / 2),
+                  child: OutlinedButton.icon(
+                    onPressed: _switchPlayer,
+                    icon: const Icon(Icons.swap_horiz_rounded, size: 18),
+                    label: Text(
+                      GamePlayers.name(_other),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 16),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                flex: 2,
-                child: GamePrimaryButton(
-                  label: 'games.intimacy_map.compare_maps'.tr(),
-                  icon: Icons.compare_arrows_rounded,
-                  onPressed: canCompare ? _compare : null,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: GamePrimaryButton(
+                    label: 'games.intimacy_map.compare'.tr(),
+                    icon: Icons.compare_arrows_rounded,
+                    onPressed: canCompare ? _compare : null,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

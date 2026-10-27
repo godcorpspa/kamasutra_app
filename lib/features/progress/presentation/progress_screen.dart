@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../data/services/preferences_service.dart';
 import '../../../data/repositories/position_repository.dart';
 import '../../../data/providers/providers.dart';
@@ -966,8 +967,11 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
 
   Widget _buildHistoryTab() {
     final locale = context.locale.languageCode;
-    final triedIds = PreferencesService.instance.triedPositionIds;
     final repo = PositionRepository.instance;
+    // Only positions still in the catalogue, so every row opens a card.
+    final triedIds = PreferencesService.instance.triedPositionIds
+        .where((id) => repo.getById(id) != null)
+        .toList();
 
     if (triedIds.isEmpty) {
       return Center(
@@ -1016,7 +1020,17 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
         final positionId = triedIds[triedIds.length - 1 - index];
         final position = repo.getById(positionId);
 
-        return Container(
+        // Opens the position's card; back returns here, refreshed in case
+        // it was un-marked as tried from the card.
+        return InkWell(
+          onTap: position == null
+              ? null
+              : () async {
+                  HapticFeedback.selectionClick();
+                  await context.push('/catalog/${position.id}');
+                  if (mounted) setState(() {});
+                },
+          child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: AppColors.hairline)),
@@ -1060,10 +1074,15 @@ class _ProgressScreenState extends ConsumerState<ProgressScreen>
                   ],
                 ),
               ),
-              if (position != null)
+              if (position != null) ...[
                 DifficultyMeter(difficulty: position.difficulty, barWidth: 6),
+                const SizedBox(width: AppSpacing.sm),
+                const Icon(Icons.chevron_right_rounded,
+                    size: 20, color: AppColors.smoke),
+              ],
             ],
           ),
+        ),
         );
       },
     );
